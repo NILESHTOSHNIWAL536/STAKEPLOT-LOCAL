@@ -3,6 +3,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class PersonLimitPopup {
   static void show(BuildContext context) {
     final controller = collectionsController;
@@ -46,12 +48,13 @@ class PersonLimitPopup {
                   SizedBox(width: width * 0.03),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text("Person Limit",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 16, lWeight: FontWeight.bold)),
                       Text("Set individual spending limit",
-                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 12, color: Colors.grey)),
                     ],
                   ),
                 ],
@@ -94,8 +97,8 @@ class PersonLimitPopup {
                           Expanded(
                             child: Text(
                               m.name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500),
                             ),
                           ),
 
@@ -141,9 +144,8 @@ class PersonLimitPopup {
                           final value =
                               textControllers[m.userId]?.text.trim() ?? "";
                           if (value.isEmpty) continue;
-                          memberLimit.add({
-                            "userId": m.userId, 'limitAmount': value
-                          });
+                          memberLimit
+                              .add({"userId": m.userId, 'limitAmount': value});
                         }
                         await controller.updateMemberLimit(
                             body: memberLimit, context: _context);

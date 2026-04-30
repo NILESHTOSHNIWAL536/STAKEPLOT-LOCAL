@@ -19,6 +19,8 @@ import 'package:get/get.dart';
 import '../../../../../backed_connections/apis_connect.dart';
 import '../../../../../model/collections_model.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ── Design tokens ─────────────────────────────────────────────────────────────
 class _C {
   static const bg = Color(0xFFF5F3EF);
@@ -85,13 +87,12 @@ class BalanceStatusWidget extends StatelessWidget {
                       size: 17, color: _C.navy),
                 ),
                 const SizedBox(width: 10),
-                const Text(
+                Text(
                   'Balance Status',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: _C.textDark,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 16,
+                      lWeight: FontWeight.w700,
+                      color: _C.textDark),
                 ),
                 const Spacer(),
                 Container(
@@ -104,11 +105,10 @@ class BalanceStatusWidget extends StatelessWidget {
                   ),
                   child: Text(
                     '${toPay.length + toReceive.length} entries',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: _C.textMid,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 11,
+                        lWeight: FontWeight.w600,
+                        color: _C.textMid),
                   ),
                 ),
               ],
@@ -182,18 +182,19 @@ class _AllSettledBanner extends StatelessWidget {
                   color: _C.green, size: 22),
             ),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('All Settled!',
-                      style: TextStyle(
+                      style: FontManager().getTextStyle(context,
                           fontSize: 14,
-                          fontWeight: FontWeight.w700,
+                          lWeight: FontWeight.w700,
                           color: Color(0xFF166534))),
                   SizedBox(height: 2),
                   Text('No outstanding balances in this collection.',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF15803D))),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: Color(0xFF15803D))),
                 ],
               ),
             ),
@@ -267,11 +268,8 @@ class _BalanceSummaryCard extends StatelessWidget {
                   ),
                   child: Text(
                     '$count',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: accent,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 11, lWeight: FontWeight.w700, color: accent),
                   ),
                 ),
               ],
@@ -279,31 +277,22 @@ class _BalanceSummaryCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: accent,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 12, lWeight: FontWeight.w600, color: accent),
             ),
             const SizedBox(height: 4),
             Text(
               '₹${total.toStringAsFixed(0)}',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: _C.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 20, lWeight: FontWeight.w800, color: _C.textDark),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
                 Text(
                   'View details',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: accent,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 11, lWeight: FontWeight.w600, color: accent),
                 ),
                 const SizedBox(width: 3),
                 Icon(Icons.arrow_forward_ios_rounded, size: 10, color: accent),
@@ -405,11 +394,10 @@ class _ToPayCard extends StatelessWidget {
             child: Center(
               child: Text(
                 initial,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                ),
+                style: FontManager().getTextStyle(context,
+                    color: Colors.white,
+                    lWeight: FontWeight.w700,
+                    fontSize: 16),
               ),
             ),
           ),
@@ -422,15 +410,15 @@ class _ToPayCard extends StatelessWidget {
               children: [
                 Text(
                   'Pay',
-                  style: const TextStyle(fontSize: 11, color: _C.textLight),
+                  style: FontManager()
+                      .getTextStyle(context, fontSize: 11, color: _C.textLight),
                 ),
                 Text(
                   name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: _C.textDark,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 14,
+                      lWeight: FontWeight.w700,
+                      color: _C.textDark),
                 ),
                 const SizedBox(height: 2),
                 RichText(
@@ -575,11 +563,10 @@ class _ToReceiveCardState extends State<_ToReceiveCard> {
             child: Center(
               child: Text(
                 initial,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                ),
+                style: FontManager().getTextStyle(context,
+                    color: Colors.white,
+                    lWeight: FontWeight.w700,
+                    fontSize: 16),
               ),
             ),
           ),
@@ -592,25 +579,23 @@ class _ToReceiveCardState extends State<_ToReceiveCard> {
                   children: [
                     Text(
                       toUpperCase(name),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: _C.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 14,
+                          lWeight: FontWeight.w700,
+                          color: _C.textDark),
                     ),
                     if (_cleared) ...[
                       const SizedBox(width: 6),
                       Row(
-                        children: const [
+                        children: [
                           Icon(Icons.check_circle_rounded,
                               size: 13, color: _C.green),
                           SizedBox(width: 3),
                           Text('Cleared',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: _C.green,
-                              )),
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 11,
+                                  lWeight: FontWeight.w600,
+                                  color: _C.green)),
                         ],
                       ),
                     ] else ...[
@@ -623,11 +608,8 @@ class _ToReceiveCardState extends State<_ToReceiveCard> {
                 const SizedBox(height: 3),
                 Text(
                   '₹${widget.item.pendingAmount.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: _C.green,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 14, lWeight: FontWeight.w700, color: _C.green),
                 ),
               ],
             ),
@@ -724,13 +706,10 @@ class _ClearSplitDialogState extends State<_ClearSplitDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Clear split',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: _C.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 17, lWeight: FontWeight.w700, color: _C.textDark),
             ),
             const SizedBox(height: 20),
 
@@ -744,23 +723,19 @@ class _ClearSplitDialogState extends State<_ClearSplitDialog> {
               },
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Complete amount',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: _C.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 14,
+                          lWeight: FontWeight.w600,
+                          color: _C.textDark),
                     ),
                   ),
                   Text(
                     '₹${widget.totalAmount.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: _C.navy,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14, lWeight: FontWeight.w700, color: _C.navy),
                   ),
                 ],
               ),
@@ -778,13 +753,12 @@ class _ClearSplitDialogState extends State<_ClearSplitDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Enter Partial Amount',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _C.textDark,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: _C.textDark),
                   ),
                   if (!_isComplete) ...[
                     const SizedBox(height: 10),
@@ -853,11 +827,10 @@ class _ClearSplitDialogState extends State<_ClearSplitDialog> {
                           amount.value > widget.totalAmount
                               ? "Overflow"
                               : "Done",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 15,
+                              lWeight: FontWeight.w700,
+                              color: Colors.white),
                         )),
                   )),
             ),
@@ -943,14 +916,11 @@ Future<bool?> _showConfirmDialog(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Are you sure you want to clear this amount ?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: _C.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 16, lWeight: FontWeight.w700, color: _C.textDark),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -972,13 +942,12 @@ Future<bool?> _showConfirmDialog(
                         splitId, amount, payerId),
                   Navigator.pop(_context, true),
                 },
-                child: const Text(
+                child: Text(
                   'Yes',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 15,
+                      lWeight: FontWeight.w700,
+                      color: Colors.white),
                 ),
               ),
             ),
@@ -994,13 +963,12 @@ Future<bool?> _showConfirmDialog(
                   ),
                 ),
                 onPressed: () => Navigator.pop(_context, false),
-                child: const Text(
+                child: Text(
                   'Cancel',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: _C.textDark,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 15,
+                      lWeight: FontWeight.w600,
+                      color: _C.textDark),
                 ),
               ),
             ),
@@ -1045,11 +1013,8 @@ PreferredSizeWidget _appBar(BuildContext context, String title) {
               const Spacer(),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: _C.textDark,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 17, lWeight: FontWeight.w700, color: _C.textDark),
               ),
               const Spacer(),
               const SizedBox(width: 38),
@@ -1101,16 +1066,16 @@ class _TotalBanner extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 12, color: _C.textMid),
+                  style: FontManager()
+                      .getTextStyle(context, fontSize: 12, color: _C.textMid),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '₹${total.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: _C.textDark,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 26,
+                      lWeight: FontWeight.w800,
+                      color: _C.textDark),
                 ),
               ],
             ),
@@ -1156,11 +1121,8 @@ class _ActionButton extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: textColor,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13, lWeight: FontWeight.w700, color: textColor),
         ),
       ),
     );
@@ -1189,11 +1151,8 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             message,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: _C.textDark,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 15, lWeight: FontWeight.w600, color: _C.textDark),
           ),
         ],
       ),

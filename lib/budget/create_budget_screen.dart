@@ -18,6 +18,8 @@ import '../image_service/avatarProfile.dart';
 import 'budget_assets.dart';
 import 'budget_controller.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ────────────────────────────────────────────────────────────
 //  Theme constants  (match your app palette)
 // ────────────────────────────────────────────────────────────
@@ -26,7 +28,6 @@ const _kBg = Color(0xFFF5F0E8);
 const _kCard = Colors.white;
 const _kText = Color(0xFF1E1E3A);
 const _kSubText = Color(0xFF8A8A9A);
-
 
 // ────────────────────────────────────────────────────────────
 //  Root entry-point widget
@@ -141,11 +142,8 @@ class _Header extends StatelessWidget {
             child: Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: FontManager().getTextStyle(context,
+                  color: Colors.white, fontSize: 18, lWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(width: 40),
@@ -189,10 +187,10 @@ class _PrimaryButton extends StatelessWidget {
               ? const CircularProgressIndicator(
                   color: Colors.white, strokeWidth: 2)
               : Text(label,
-                  style: const TextStyle(
+                  style: FontManager().getTextStyle(context,
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+                      lWeight: FontWeight.w600)),
         ),
       ),
     );
@@ -222,9 +220,9 @@ class _NameStep extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const Text('Add budget name',
-                style: TextStyle(
-                    color: _kText, fontSize: 22, fontWeight: FontWeight.bold)),
+            Text('Add budget name',
+                style: FontManager().getTextStyle(context,
+                    color: _kText, fontSize: 22, lWeight: FontWeight.bold)),
             const SizedBox(height: 32),
             // Illustration
             _Illustration(assetKey: 'addName', height: 220),
@@ -265,9 +263,9 @@ class _AmountStep extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const Text('Add budget amount',
-                style: TextStyle(
-                    color: _kText, fontSize: 22, fontWeight: FontWeight.bold)),
+            Text('Add budget amount',
+                style: FontManager().getTextStyle(context,
+                    color: _kText, fontSize: 22, lWeight: FontWeight.bold)),
             const SizedBox(height: 32),
             _Illustration(assetKey: 'addAmount', height: 220),
             const SizedBox(height: 40),
@@ -279,11 +277,9 @@ class _AmountStep extends StatelessWidget {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
               ],
-              prefix: const Text('₹ ',
-                  style: TextStyle(
-                      color: _kText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+              prefix: Text('₹ ',
+                  style: FontManager().getTextStyle(context,
+                      color: _kText, fontSize: 16, lWeight: FontWeight.w600)),
               onChanged: (v) {
                 ctrl.totalAmount.value = double.tryParse(v) ?? 0;
               },
@@ -317,9 +313,9 @@ class _DurationStep extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const Text('Select duration',
-                style: TextStyle(
-                    color: _kText, fontSize: 22, fontWeight: FontWeight.bold)),
+            Text('Select duration',
+                style: FontManager().getTextStyle(context,
+                    color: _kText, fontSize: 22, lWeight: FontWeight.bold)),
             const SizedBox(height: 32),
             _Illustration(assetKey: 'selectDuration', height: 220),
             const SizedBox(height: 32),
@@ -379,11 +375,10 @@ class _DurationTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label,
-                style: TextStyle(
+                style: FontManager().getTextStyle(context,
                     color: selected ? _kPrimary : _kText,
                     fontSize: 16,
-                    fontWeight:
-                        selected ? FontWeight.w600 : FontWeight.normal)),
+                    lWeight: selected ? FontWeight.w600 : FontWeight.normal)),
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: 22,
@@ -427,9 +422,9 @@ class _CategorySelectStep extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 24),
-          const Text('Add categories',
-              style: TextStyle(
-                  color: _kText, fontSize: 22, fontWeight: FontWeight.bold)),
+          Text('Add categories',
+              style: FontManager().getTextStyle(context,
+                  color: _kText, fontSize: 22, lWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           _Illustration(assetKey: 'addCategories', height: 160),
           const SizedBox(height: 16),
@@ -451,9 +446,10 @@ class _CategorySelectStep extends StatelessWidget {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text('Add categories',
-                      style: TextStyle(color: _kSubText, fontSize: 15)),
+                      style: FontManager().getTextStyle(context,
+                          color: _kSubText, fontSize: 15)),
                   Icon(Icons.add, color: _kSubText),
                 ],
               ),
@@ -555,11 +551,10 @@ class _CategoryGridItem extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: selected ? _kPrimary : _kText,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 10,
+                    color: selected ? _kPrimary : _kText,
+                    lWeight: selected ? FontWeight.w600 : FontWeight.normal),
               ),
             ],
           ),
@@ -604,9 +599,9 @@ class _CategoryAmountStep extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 24),
-          const Text('Add categories',
-              style: TextStyle(
-                  color: _kText, fontSize: 22, fontWeight: FontWeight.bold)),
+          Text('Add categories',
+              style: FontManager().getTextStyle(context,
+                  color: _kText, fontSize: 22, lWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           _Illustration(assetKey: 'addCategories', height: 140),
           const SizedBox(height: 8),
@@ -622,7 +617,8 @@ class _CategoryAmountStep extends StatelessWidget {
                 children: [
                   Text(
                     'Total: ₹${ctrl.totalAmount.value.toStringAsFixed(0)}',
-                    style: const TextStyle(color: _kSubText, fontSize: 13),
+                    style: FontManager()
+                        .getTextStyle(context, color: _kSubText, fontSize: 13),
                   ),
                   Text(
                     balanced
@@ -630,11 +626,10 @@ class _CategoryAmountStep extends StatelessWidget {
                         : (diff > 0
                             ? '₹${diff.toStringAsFixed(0)} remaining'
                             : '₹${(-diff).toStringAsFixed(0)} over budget'),
-                    style: TextStyle(
-                      color: balanced ? Colors.green : Colors.redAccent,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: balanced ? Colors.green : Colors.redAccent,
+                        fontSize: 13,
+                        lWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -733,10 +728,8 @@ class _CategoryAmountTileState extends State<_CategoryAmountTile> {
             // Name
             Expanded(
               child: Text(item.name,
-                  style: const TextStyle(
-                      color: _kText,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500)),
+                  style: FontManager().getTextStyle(context,
+                      color: _kText, fontSize: 15, lWeight: FontWeight.w500)),
             ),
             // Amount chip + edit
             Container(
@@ -748,8 +741,9 @@ class _CategoryAmountTileState extends State<_CategoryAmountTile> {
               child: IntrinsicWidth(
                 child: Row(
                   children: [
-                    const Text('₹',
-                        style: TextStyle(color: Colors.white, fontSize: 13)),
+                    Text('₹',
+                        style: FontManager().getTextStyle(context,
+                            color: Colors.white, fontSize: 13)),
                     const SizedBox(width: 2),
                     SizedBox(
                       width: 70,
@@ -824,9 +818,9 @@ class _Illustration extends StatelessWidget {
       height: height,
       child: path.isNotEmpty
           ? AvatarProfileImage(
-                        url:path,
-                        height: 5,
-                        width: 5,
+              url: path,
+              height: 5,
+              width: 5,
             )
           : _placeholder(height),
     );

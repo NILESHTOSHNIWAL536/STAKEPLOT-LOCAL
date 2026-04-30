@@ -81,13 +81,13 @@ class _AccessState extends State<Access> {
                   }
                 },
               ),
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text(
                     'Final Step',
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 17,
-                        fontWeight: FontWeight.w600,
+                        lWeight: FontWeight.w600,
                         color: Color(0xFF1C1C1E)),
                   ),
                 ),
@@ -284,11 +284,12 @@ class _AccessState extends State<Access> {
             ],
           ),
         ),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(bottom: 12),
           child: Text(
             'Powered securely by Ekjut',
-            style: TextStyle(fontSize: 11, color: Color(0xFFAEAEB2)),
+            style: FontManager()
+                .getTextStyle(context, fontSize: 11, color: Color(0xFFAEAEB2)),
           ),
         ),
       ],
@@ -310,13 +311,13 @@ class _AccessState extends State<Access> {
                 color: const Color(0xFF1C1C1E),
                 onPressed: () => showDetails.value = false,
               ),
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text(
                     'Final Step',
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 17,
-                        fontWeight: FontWeight.w600,
+                        lWeight: FontWeight.w600,
                         color: Color(0xFF1C1C1E)),
                   ),
                 ),
@@ -447,23 +448,24 @@ class _AccessState extends State<Access> {
                 color: const Color(0xFF3D3B5E),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   'Got it',
-                  style: TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      lWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
               ),
             ),
           ),
         ),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(bottom: 12),
           child: Text(
             'Powered securely by Ekjut',
-            style: TextStyle(fontSize: 11, color: Color(0xFFAEAEB2)),
+            style: FontManager()
+                .getTextStyle(context, fontSize: 11, color: Color(0xFFAEAEB2)),
           ),
         ),
       ],
@@ -522,7 +524,8 @@ class _AccessState extends State<Access> {
                       ),
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(FinvuStrings().no,
-                          style: const TextStyle(color: Color(0xFF1C1C1E))),
+                          style: FontManager()
+                              .getTextStyle(context, color: Color(0xFF1C1C1E))),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -536,7 +539,8 @@ class _AccessState extends State<Access> {
                       ),
                       onPressed: () => _decline(),
                       child: Text(FinvuStrings().yes,
-                          style: const TextStyle(color: Colors.white)),
+                          style: FontManager()
+                              .getTextStyle(context, color: Colors.white)),
                     ),
                   ),
                 ],
@@ -747,9 +751,9 @@ class _ConsentActions extends StatelessWidget {
                     ),
                   Text(
                     hasError ? 'Permission unavailable' : 'Grant Consent',
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        lWeight: FontWeight.bold,
                         color: hasError
                             ? Colors.white.withOpacity(0.6)
                             : Colors.white),
@@ -814,13 +818,13 @@ class _HealthBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(top.title,
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                        lWeight: FontWeight.w600,
                         color: iconColor)),
                 const SizedBox(height: 2),
                 Text(top.detail,
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 12, color: iconColor.withOpacity(0.8))),
               ],
             ),
@@ -864,22 +868,22 @@ class _WarningConfirmDialog extends StatelessWidget {
                       size: 20, color: Color(0xFFFB8C00)),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Proceed with caution',
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        lWeight: FontWeight.w600,
                         color: Color(0xFF1C1C1E)),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'We detected issues with this bank. Data access may be affected.',
-              style: TextStyle(
-                  fontSize: 13, color: Color(0xFF636366), height: 1.5),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13, color: Color(0xFF636366), lineHeight: 1.5),
             ),
             const SizedBox(height: 16),
             ...warnings.map((w) => Container(
@@ -902,13 +906,13 @@ class _WarningConfirmDialog extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(w.title,
-                                style: const TextStyle(
+                                style: FontManager().getTextStyle(context,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w600,
+                                    lWeight: FontWeight.w600,
                                     color: Color(0xFFE65100))),
                             const SizedBox(height: 3),
                             Text(w.detail,
-                                style: const TextStyle(
+                                style: FontManager().getTextStyle(context,
                                     fontSize: 11, color: Color(0xFFBF360C))),
                           ],
                         ),
@@ -928,9 +932,9 @@ class _WarningConfirmDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 13),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Go back',
-                        style:
-                            TextStyle(fontSize: 14, color: Color(0xFF3C3C3C))),
+                    child: Text('Go back',
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 14, color: Color(0xFF3C3C3C))),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -947,8 +951,9 @@ class _WarningConfirmDialog extends StatelessWidget {
                       Navigator.of(context).pop();
                       onConfirmed();
                     },
-                    child: const Text('Proceed anyway',
-                        style: TextStyle(fontSize: 14, color: Colors.white)),
+                    child: Text('Proceed anyway',
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 14, color: Colors.white)),
                   ),
                 ),
               ],

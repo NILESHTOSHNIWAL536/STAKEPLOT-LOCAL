@@ -51,7 +51,7 @@ class _ExploreModalState extends State<ExploreModal> {
   final List<TextEditingController> _amountControllers = [];
   bool exploreSubmitted = false;
   final CommunityScreenStrings strings = CommunityScreenStrings();
- bool? _isSquare;
+  bool? _isSquare;
   @override
   void initState() {
     super.initState();
@@ -74,8 +74,8 @@ class _ExploreModalState extends State<ExploreModal> {
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
     final cropController = CustomImageCropController();
     bool isLoading = false; // Track loading state
-   bool localIsSquare = _isSquare ?? true; 
-     bool showCropSelection = _isSquare == null;
+    bool localIsSquare = _isSquare ?? true;
+    bool showCropSelection = _isSquare == null;
     final croppedFile = await showDialog<Map<String, dynamic>?>(
       context: context,
       useRootNavigator: false,
@@ -113,101 +113,96 @@ class _ExploreModalState extends State<ExploreModal> {
                       ),
                     ),
                   ),
-                   if (showCropSelection)
-                      Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
-                    child:Row(
-                      children:[
+                  if (showCropSelection)
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: AppSizes.p12),
+                      child: Row(children: [
                         GestureDetector(
-                              onTap: () {
-                                setDialogState(() {
-                                localIsSquare = true;
-                              });
-                              },
-                              child: AvatarProfileImage(
-                                                url: FinSpaceIcons.square,
-                                                width: 20,
-                                                height: 20,
-                                               
-                                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setDialogState(() {
-                                  localIsSquare = false;
-                                });
-                              },
-                              child: AvatarProfileImage(
-                                                url: FinSpaceIcons.custom,
-                                                width: 20,
-                                                height: 20,
-                                               
-                                              ),
-                            ),
-                      ]
+                          onTap: () {
+                            setDialogState(() {
+                              localIsSquare = true;
+                            });
+                          },
+                          child: AvatarProfileImage(
+                            url: FinSpaceIcons.square,
+                            width: 20,
+                            height: 20,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setDialogState(() {
+                              localIsSquare = false;
+                            });
+                          },
+                          child: AvatarProfileImage(
+                            url: FinSpaceIcons.custom,
+                            width: 20,
+                            height: 20,
+                          ),
+                        ),
+                      ]),
 
+                      // child: Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     ChoiceChip(
+                      //       label: Text(
+                      //         'Square',
+                      //         style: FontManager().getTextStyle(
+                      //           context,
+                      //           lWeight: localIsSquare == 'true'
+                      //               ? FontWeight.bold
+                      //               : FontWeight.normal,
+                      //           fontSize: 14,
+                      //           color: AppColors.bg1,
+                      //         ),
+                      //       ),
+                      //       selected: localIsSquare == 'true',
+                      //       onSelected: (selected) {
+                      //         if (selected) {
+                      //           setDialogState(() {
+                      //             localIsSquare = true;
+                      //           });
+                      //         }
+                      //       },
+                      //       selectedColor: AppColors.primaryColor,
+                      //       backgroundColor: AppColors.textBgColor,
+                      //     ),
+                      //     const SizedBox(width: 10),
+                      //     ChoiceChip(
+                      //       label: Text(
+                      //         'Custom (402:214)',
+                      //         style: FontManager().getTextStyle(
+                      //           context,
+                      //           lWeight: localIsSquare == 'false'
+                      //               ? FontWeight.bold
+                      //               : FontWeight.normal,
+                      //           fontSize: 14,
+                      //           color: AppColors.bg1,
+                      //         ),
+                      //       ),
+                      //       selected: localIsSquare == 'false',
+                      //       onSelected: (selected) {
+                      //         if (selected) {
+                      //           setDialogState(() {
+                      //             localIsSquare = false;
+                      //           });
+                      //         }
+                      //       },
+                      //       selectedColor: AppColors.primaryColor,
+                      //       backgroundColor: AppColors.textBgColor,
+                      //     ),
+                      //   ],
+                      // ),
                     ),
-                   
-                    // child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     ChoiceChip(
-                    //       label: Text(
-                    //         'Square',
-                    //         style: FontManager().getTextStyle(
-                    //           context,
-                    //           lWeight: localIsSquare == 'true'
-                    //               ? FontWeight.bold
-                    //               : FontWeight.normal,
-                    //           fontSize: 14,
-                    //           color: AppColors.bg1,
-                    //         ),
-                    //       ),
-                    //       selected: localIsSquare == 'true',
-                    //       onSelected: (selected) {
-                    //         if (selected) {
-                    //           setDialogState(() {
-                    //             localIsSquare = true;
-                    //           });
-                    //         }
-                    //       },
-                    //       selectedColor: AppColors.primaryColor,
-                    //       backgroundColor: AppColors.textBgColor,
-                    //     ),
-                    //     const SizedBox(width: 10),
-                    //     ChoiceChip(
-                    //       label: Text(
-                    //         'Custom (402:214)',
-                    //         style: FontManager().getTextStyle(
-                    //           context,
-                    //           lWeight: localIsSquare == 'false'
-                    //               ? FontWeight.bold
-                    //               : FontWeight.normal,
-                    //           fontSize: 14,
-                    //           color: AppColors.bg1,
-                    //         ),
-                    //       ),
-                    //       selected: localIsSquare == 'false',
-                    //       onSelected: (selected) {
-                    //         if (selected) {
-                    //           setDialogState(() {
-                    //             localIsSquare = false;
-                    //           });
-                    //         }
-                    //       },
-                    //       selectedColor: AppColors.primaryColor,
-                    //       backgroundColor: AppColors.textBgColor,
-                    //     ),
-                    //   ],
-                    // ),
-                  
-                  ),
                 ],
               ),
               // Crop shape selection
 
-              actionsPadding:
-                  const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
+              actionsPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.p12, vertical: AppSizes.p8),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -217,7 +212,8 @@ class _ExploreModalState extends State<ExploreModal> {
                       onTap: () => Navigator.pop(context),
                       child: Container(
                         width: buttonWidth / 2,
-                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppSizes.p12),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.grey,
@@ -257,7 +253,8 @@ class _ExploreModalState extends State<ExploreModal> {
                             },
                       child: Container(
                         width: buttonWidth / 2,
-                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppSizes.p12),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: isLoading
@@ -266,11 +263,7 @@ class _ExploreModalState extends State<ExploreModal> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: isLoading
-                            ?  SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: Spinner()
-                              )
+                            ? SizedBox(width: 20, height: 20, child: Spinner())
                             : Text(strings.saveButton,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
@@ -297,7 +290,7 @@ class _ExploreModalState extends State<ExploreModal> {
     //     }
     //   });
     // }
-   if (croppedFile != null) {
+    if (croppedFile != null) {
       setState(() {
         if (existingIndex != null) {
           selectedImages[existingIndex] = croppedFile['file'];
@@ -394,8 +387,6 @@ class _ExploreModalState extends State<ExploreModal> {
     return completer.future;
   }
 
- 
-
   Future<void> _submitPost() async {
     if (locationNameController.text.isEmpty ||
         locationAddressController.text.isEmpty) {
@@ -442,12 +433,8 @@ class _ExploreModalState extends State<ExploreModal> {
       "isSquareImage": _isSquare ?? true,
     };
 
-
     try {
-     
-      final response = await postDataApiCall(PostRoutes.post,requestBody
-      );
-
+      final response = await postDataApiCall(PostRoutes.post, requestBody);
 
       if (getFlagOfResponse(response)) {
         setState(() {
@@ -457,12 +444,12 @@ class _ExploreModalState extends State<ExploreModal> {
         var postData = jsonDecode(response.body);
 
         // Update local state
-         postController.feedPostList.insert(0, PostModel.fromJson(postData));
-         postController.getPosted.value = ! postController.getPosted.value;
-         postController.postCount[postData["_id"]] = 0;
-         postController.postCommentCount[postData["_id"]] = 0;
-         postController.posting.value = false;
-         postController.postDis.value = false;
+        postController.feedPostList.insert(0, PostModel.fromJson(postData));
+        postController.getPosted.value = !postController.getPosted.value;
+        postController.postCount[postData["_id"]] = 0;
+        postController.postCommentCount[postData["_id"]] = 0;
+        postController.posting.value = false;
+        postController.postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));
         Navigator.pop(context);
       } else {
@@ -511,7 +498,7 @@ class _ExploreModalState extends State<ExploreModal> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top:AppSizes.p20),
+          padding: const EdgeInsets.only(top: AppSizes.p20),
           child: Container(
             color: AppColors.backgroundColor,
             child: SingleChildScrollView(
@@ -522,14 +509,14 @@ class _ExploreModalState extends State<ExploreModal> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildImageSection(),
-                     SizedBox(height: AppSizes.h10),
+                    SizedBox(height: AppSizes.h10),
                     _buildPlaceSection(),
-                     SizedBox(height: AppSizes.h10),
+                    SizedBox(height: AppSizes.h10),
                     _buildBudgetSection(),
                     _buildRatingSection(),
-                     SizedBox(height: AppSizes.h20),
+                    SizedBox(height: AppSizes.h20),
                     _buildHighlightSection(),
-                     SizedBox(height: AppSizes.h20),
+                    SizedBox(height: AppSizes.h20),
                     _buildSubmitButton(),
                   ],
                 ),
@@ -545,10 +532,12 @@ class _ExploreModalState extends State<ExploreModal> {
     return Row(
       children: [
         const Icon(Icons.explore_sharp, size: 24, color: AppColors.accentColor),
-         SizedBox(width: AppSizes.w8),
+        SizedBox(width: AppSizes.w8),
         Text(strings.exploria,
             style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold, fontSize: 18, color: AppColors.backgroundColor)),
+                lWeight: FontWeight.bold,
+                fontSize: 18,
+                color: AppColors.backgroundColor)),
       ],
     );
   }
@@ -567,7 +556,7 @@ class _ExploreModalState extends State<ExploreModal> {
               color: AppColors.backgroundColor,
             ),
           ),
-           SizedBox(width: AppSizes.w8), // Reduced spacing for better alignment
+          SizedBox(width: AppSizes.w8), // Reduced spacing for better alignment
           RatingStars(
             value: _rating,
             onValueChanged: (value) {
@@ -582,7 +571,8 @@ class _ExploreModalState extends State<ExploreModal> {
             starColor: AppColors.finSpaceColor,
             starOffColor: AppColors.button,
             valueLabelVisibility: false,
-            valueLabelTextStyle: const TextStyle(color: AppColors.backgroundColor),
+            valueLabelTextStyle:
+                const TextStyle(color: AppColors.backgroundColor),
             starBuilder: (index, color) => Icon(
               Icons.star,
               color: color,
@@ -606,7 +596,7 @@ class _ExploreModalState extends State<ExploreModal> {
             color: AppColors.backgroundColor,
           ),
         ),
-         SizedBox(height: AppSizes.h8),
+        SizedBox(height: AppSizes.h8),
         Container(
           height: 120,
           width: double.infinity,
@@ -619,7 +609,8 @@ class _ExploreModalState extends State<ExploreModal> {
               ? Center(
                   child: Text(
                     strings.noImagesSelected,
-                    style: TextStyle(color: AppColors.grey),
+                    style: FontManager()
+                        .getTextStyle(context, color: AppColors.grey),
                   ),
                 )
               : ListView.builder(
@@ -666,7 +657,7 @@ class _ExploreModalState extends State<ExploreModal> {
                               onTap: () => _removeImage(index),
                               child: Container(
                                 padding: const EdgeInsets.all(AppSizes.p2),
-                                decoration:  BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.redColor,
                                 ),
@@ -700,8 +691,9 @@ class _ExploreModalState extends State<ExploreModal> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.add_a_photo, color: AppColors.backgroundColor, size: 20),
-                 SizedBox(width: AppSizes.w8),
+                const Icon(Icons.add_a_photo,
+                    color: AppColors.backgroundColor, size: 20),
+                SizedBox(width: AppSizes.w8),
                 Text(
                   strings.addPhoto,
                   style: FontManager().getTextStyle(
@@ -725,13 +717,15 @@ class _ExploreModalState extends State<ExploreModal> {
       children: [
         Text(strings.aboutPlace,
             style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal, fontSize: 16, color: AppColors.accentColor)),
-         SizedBox(height: AppSizes.h10),
+                lWeight: FontWeight.normal,
+                fontSize: 16,
+                color: AppColors.accentColor)),
+        SizedBox(height: AppSizes.h10),
         TextField(
           controller: locationNameController,
           decoration: _inputDecoration(strings.locationName, Icons.place),
         ),
-         SizedBox(height: AppSizes.h10),
+        SizedBox(height: AppSizes.h10),
         TextField(
           controller: locationAddressController,
           decoration:
@@ -770,7 +764,7 @@ class _ExploreModalState extends State<ExploreModal> {
                         strings.addCategory, Icons.description),
                   ),
                 ),
-                 SizedBox(width: AppSizes.w10),
+                SizedBox(width: AppSizes.w10),
                 Expanded(
                   child: TextField(
                     controller: _amountControllers[index],
@@ -801,13 +795,13 @@ class _ExploreModalState extends State<ExploreModal> {
             color: AppColors.accentColor,
           ),
         ),
-         SizedBox(height: AppSizes.h10),
+        SizedBox(height: AppSizes.h10),
         TextField(
           controller: titleController,
-           maxLines: null,
+          maxLines: null,
           decoration: _inputDecoration(strings.enterTitle, null), // Updated
         ),
-         SizedBox(height: AppSizes.h10),
+        SizedBox(height: AppSizes.h10),
         TextField(
           controller: contentController,
           decoration: _inputDecoration(strings.addThoughts, null), // Updated
@@ -820,7 +814,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
   void callBack() async {
     final isEnabled = locationNameController.text.isNotEmpty &&
-        locationAddressController.text.isNotEmpty  &&
+        locationAddressController.text.isNotEmpty &&
         !_isSubmitting;
 
     isEnabled ? _submitPost() : null;
@@ -828,27 +822,30 @@ class _ExploreModalState extends State<ExploreModal> {
 
   Widget _buildSubmitButton() {
     final bool isEnabled = locationNameController.text.isNotEmpty &&
-      locationAddressController.text.isNotEmpty &&
-      titleController.text.isNotEmpty &&
-      contentController.text.isNotEmpty &&
-      selectedImages.isNotEmpty && // At least one image
-      _isSubmitting == false &&
-      // Check if at least one budget entry is valid (optional, adjust as needed)
-      _textControllers.asMap().entries.any((entry) {
-        int index = entry.key;
-        return _textControllers[index].text.isNotEmpty &&
-            _amountControllers[index].text.isNotEmpty;
-      });
+        locationAddressController.text.isNotEmpty &&
+        titleController.text.isNotEmpty &&
+        contentController.text.isNotEmpty &&
+        selectedImages.isNotEmpty && // At least one image
+        _isSubmitting == false &&
+        // Check if at least one budget entry is valid (optional, adjust as needed)
+        _textControllers.asMap().entries.any((entry) {
+          int index = entry.key;
+          return _textControllers[index].text.isNotEmpty &&
+              _amountControllers[index].text.isNotEmpty;
+        });
 
     return GestureDetector(
       onTap: () {
-         isEnabled?showTagListOfInterestModal(context: context, onConfirm: callBack):null;
+        isEnabled
+            ? showTagListOfInterestModal(context: context, onConfirm: callBack)
+            : null;
       },
       child: _isSubmitting
           ? Center(child: Spinner())
           : Container(
               width: MediaQuery.of(context).size.width / 1.1,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
+              padding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
               decoration: BoxDecoration(
                   color: isEnabled ? AppColors.primaryColor : AppColors.grey,
                   borderRadius: BorderRadius.circular(24)),
@@ -874,7 +871,9 @@ class _ExploreModalState extends State<ExploreModal> {
     return InputDecoration(
       hintText: hintText,
       hintStyle: FontManager().getTextStyle(context,
-          lWeight: FontWeight.normal, fontSize: 16, color: AppColors.accentColor),
+          lWeight: FontWeight.normal,
+          fontSize: 16,
+          color: AppColors.accentColor),
       border: const OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),

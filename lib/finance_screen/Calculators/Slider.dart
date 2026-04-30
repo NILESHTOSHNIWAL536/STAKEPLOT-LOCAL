@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -47,60 +46,59 @@ class _SliderPageState extends State<SliderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (widget.title == "Trip") tripDropDown(),
-      getListOfSliders(widget.slidersList),
-      if (widget.title == "Cars") getBrandsOfCars(),
-    ],
-  );
-}
-
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.title == "Trip") tripDropDown(),
+        getListOfSliders(widget.slidersList),
+        if (widget.title == "Cars") getBrandsOfCars(),
+      ],
+    );
+  }
 
   Widget getListOfSliders(List slidersList) {
-  return Column(
-    children: slidersList
-        .asMap()
-        .entries
-        .map(
-          (entry) => Padding(
-            padding: const EdgeInsets.only(bottom: 4,top:4,), // ✅ spacing
-            child: sliderContainer(entry.value, entry.key),
-          ),
-        )
-        .toList(),
-  );
-}
-
+    return Column(
+      children: slidersList
+          .asMap()
+          .entries
+          .map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(
+                bottom: 4,
+                top: 4,
+              ), // ✅ spacing
+              child: sliderContainer(entry.value, entry.key),
+            ),
+          )
+          .toList(),
+    );
+  }
 
   Widget sliderContainer(data, int index) {
-  return Container(
-    margin: const EdgeInsets.symmetric(vertical: 2,horizontal: 4),
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-
-    decoration: BoxDecoration(
-      color: Colors.white, // ✅ WHITE CARD
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.06),
-          blurRadius: 16,
-          offset: const Offset(0, 8),
-        ),
-      ],
-    ),
-    child:  Column(
-      children: [
-        topContainer(data, index),
-        const SizedBox(height: 10), // ✅ space like image
-        buildSlider(data, index),
-      ],
-    ),
-  );
-}
-
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white, // ✅ WHITE CARD
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          topContainer(data, index),
+          const SizedBox(height: 10), // ✅ space like image
+          buildSlider(data, index),
+        ],
+      ),
+    );
+  }
 
   Widget topContainer(data, int index) {
     bool isFloatField = data['name'] == "Loan Interest Rate" ||
@@ -118,14 +116,14 @@ class _SliderPageState extends State<SliderPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          flex: 2,
-          child: textStyle(
+            flex: 2,
+            child: textStyle(
               context: context,
               text: data['name'],
               fontWeight: FontWeight.w600,
               fontsize: 14,
-              c:Color(0xFF374151),)
-        ), 
+              c: Color(0xFF374151),
+            )),
         SizedBox(
           width: 90,
           height: 36,
@@ -141,7 +139,8 @@ class _SliderPageState extends State<SliderPage> {
             style: FontManager().getTextStyle(
               context,
 
-              color: AppColors.primaryColor, // Change this to your desired color
+              color:
+                  AppColors.primaryColor, // Change this to your desired color
               fontSize: 14, // Optional: change font size
               lWeight: FontWeight.w600, // Optional: make it bolder/lighter
             ),
@@ -165,16 +164,17 @@ class _SliderPageState extends State<SliderPage> {
             //   fillColor: AppColors.amtCal,
             // ),
             decoration: InputDecoration(
-  prefixText: data['flag'] ? data['symbol'] : null,
-  suffixText: data['flag'] ? null : data['symbol'],
-  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(8), // ✅ rounder
-    borderSide: BorderSide.none, // ✅ no border
-  ),
-  filled: true,
-  fillColor: const Color(0xFFE6E6E6), // ✅ grey pill
-),
+              prefixText: data['flag'] ? data['symbol'] : null,
+              suffixText: data['flag'] ? null : data['symbol'],
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8), // ✅ rounder
+                borderSide: BorderSide.none, // ✅ no border
+              ),
+              filled: true,
+              fillColor: const Color(0xFFE6E6E6), // ✅ grey pill
+            ),
 
             onSubmitted: (value) {
               double? newValue = double.tryParse(value);
@@ -218,7 +218,7 @@ class _SliderPageState extends State<SliderPage> {
 
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
-          trackHeight: 8,
+        trackHeight: 8,
         thumbColor: AppColors.primaryColor,
         overlayColor: AppColors.backgroundColor,
         activeTrackColor: AppColors.primaryColor,
@@ -270,7 +270,7 @@ class _SliderPageState extends State<SliderPage> {
           onChanged: (String? newValue) {
             setState(() {
               selectedDestination = newValue!;
-            }); 
+            });
           },
         ),
         SizedBox(height: AppSizes.h10),
@@ -369,8 +369,8 @@ Widget textStyle({
   Color? c,
 }) {
   return Text(text,
-      style: TextStyle(
-          fontWeight: fontWeight,
+      style: FontManager().getTextStyle(context,
+          lWeight: fontWeight,
           fontSize: fontsize,
           color: c ?? AppColors.accentColor));
 }

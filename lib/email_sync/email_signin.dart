@@ -10,6 +10,8 @@ import 'add_credit_card_bank.dart';
 import 'custom_steps.dart';
 import 'email_loading_screen.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -206,19 +208,16 @@ class _SecurityRow extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF37344F),
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w600,
+                    color: Color(0xFF37344F)),
               ),
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade500,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 12, color: Colors.grey.shade500),
               ),
             ],
           ),

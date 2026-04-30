@@ -33,13 +33,15 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
         selectedCategories.add(tag);
       } else {
         // Check if tag is a subcategory
-        bool isSubCategory = categoriesMap.values.any((subList) => subList.contains(tag));
+        bool isSubCategory =
+            categoriesMap.values.any((subList) => subList.contains(tag));
         if (isSubCategory) {
           selectedSubCategories.add(tag);
         }
       }
     }
-    isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+    isListEnabled.value =
+        selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
   }
 
   @override
@@ -63,9 +65,8 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                
                   HeaderWidget(),
-                  
+
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
@@ -74,7 +75,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                     child: UpdateTitleWidget(),
                   ),
                   // Categories List (filtered to exclude selected interests)
-                   GetListOfInterest(),
+                  GetListOfInterest(),
                   // Previously Selected Interests (now with deselection)
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -88,40 +89,40 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   ),
                   // Update Button
                   Align(
-                     alignment: Alignment.bottomCenter,
+                    alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.all(AppSizes.p12),
                       child: Obx(
-                        () => 
-                         AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                height: MediaQuery.sizeOf(context).height/14,
-                                alignment: Alignment.topCenter,
-                               
-                                child: Padding(
-                                  padding: EdgeInsets.all(AppSizes.p12),
-                                  child: isListEnabled.value? UpdateButtonWidget(
+                        () => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          height: MediaQuery.sizeOf(context).height / 14,
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.all(AppSizes.p12),
+                            child: isListEnabled.value
+                                ? UpdateButtonWidget(
                                     onPressed: () {
                                       final combinedList = [
                                         ...selectedSubCategories,
                                         ...selectedCategories
                                       ];
                                       // Update interestedTags
-                                     
+
                                       var body = {
                                         "interestedTags": combinedList,
                                       };
                                       // Call API to update interests
-                                      addMyIntreastAndName(context, body,false,true);
-                                     
+                                      addMyIntreastAndName(
+                                          context, body, false, true);
                                     },
-                                  ):null,
-                                ),
-                              ),
+                                  )
+                                : null,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                   SizedBox(height: AppSizes.h16),
+                  SizedBox(height: AppSizes.h16),
                 ],
               ),
             ),
@@ -135,12 +136,13 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
     setState(() {
       if (selectedCategories.contains(category)) {
         selectedCategories.remove(category);
-        selectedSubCategories
-            .removeWhere((sub) => FinspaceStrings().categories[category]?.contains(sub) ?? false);
+        selectedSubCategories.removeWhere((sub) =>
+            FinspaceStrings().categories[category]?.contains(sub) ?? false);
       } else {
         selectedCategories.add(category);
       }
-      isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+      isListEnabled.value =
+          selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
     });
   }
 
@@ -151,12 +153,11 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
       } else {
         selectedSubCategories.add(subCategory);
       }
-      isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+      isListEnabled.value =
+          selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
     });
   }
 }
-
-
 
 class GetListOfInterest extends StatefulWidget {
   const GetListOfInterest({Key? key}) : super(key: key);
@@ -165,7 +166,8 @@ class GetListOfInterest extends StatefulWidget {
   State<GetListOfInterest> createState() => _GetListOfInterestState();
 }
 
-class _GetListOfInterestState extends State<GetListOfInterest> with TickerProviderStateMixin {
+class _GetListOfInterestState extends State<GetListOfInterest>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -192,14 +194,18 @@ class _GetListOfInterestState extends State<GetListOfInterest> with TickerProvid
           onCategoryToggle: (category) {
             setState(() {
               selectedCategories.add(category);
-              isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+              isListEnabled.value = selectedCategories.isNotEmpty ||
+                  selectedSubCategories.isNotEmpty;
             });
-            _animationController.forward().then((_) => _animationController.reset());
+            _animationController
+                .forward()
+                .then((_) => _animationController.reset());
           },
           onSubCategoryToggle: (subCategory) {
             setState(() {
               selectedSubCategories.add(subCategory);
-              isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+              isListEnabled.value = selectedCategories.isNotEmpty ||
+                  selectedSubCategories.isNotEmpty;
             });
           },
         ),
@@ -218,12 +224,14 @@ class FilteredCategoriesListWidget extends StatelessWidget {
     required this.onSubCategoryToggle,
   }) : super(key: key);
 
-  final Map<String, List<String>> categoriesInterest = FinspaceStrings().categories;
+  final Map<String, List<String>> categoriesInterest =
+      FinspaceStrings().categories;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-if (categoriesInterest.keys.every((category) => selectedCategories.contains(category))) {
+    if (categoriesInterest.keys
+        .every((category) => selectedCategories.contains(category))) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
         child: Center(
@@ -240,12 +248,13 @@ if (categoriesInterest.keys.every((category) => selectedCategories.contains(cate
         ),
       );
     }
-     return SingleChildScrollView(
+    return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
         child: Wrap(
           spacing: screenSize.width * 0.015, // Horizontal spacing between chips
-          runSpacing: screenSize.height * 0.005, // Vertical spacing between rows
+          runSpacing:
+              screenSize.height * 0.005, // Vertical spacing between rows
           alignment: WrapAlignment.start, // Align chips to the start
           children: categoriesInterest.keys.where((category) {
             // Only show categories that are not selected
@@ -340,10 +349,8 @@ if (categoriesInterest.keys.every((category) => selectedCategories.contains(cate
     //     ),
     //   ),
     // );
-  
   }
 }
-
 
 class UpdateTitleWidget extends StatelessWidget {
   const UpdateTitleWidget({Key? key}) : super(key: key);
@@ -408,9 +415,10 @@ class PreviouslySelectedInterestsWidget extends StatelessWidget {
           ),
           SizedBox(height: AppSizes.h8),
           Wrap(
-           alignment: WrapAlignment.start, // Ensure chips start from the left
-                  spacing: screenSize.width * 0.015, // Consistent with FilteredCategoriesListWidget
-                  runSpacing: screenSize.height * 0.005,
+            alignment: WrapAlignment.start, // Ensure chips start from the left
+            spacing: screenSize.width *
+                0.015, // Consistent with FilteredCategoriesListWidget
+            runSpacing: screenSize.height * 0.005,
             children: [
               ...selectedCategories.map((category) => CategoryChip(
                     label: category,
@@ -458,10 +466,8 @@ class UpdateButtonWidget extends StatelessWidget {
         ),
         child: Text(
           'Update',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: FontManager()
+              .getTextStyle(context, fontSize: 16, lWeight: FontWeight.w600),
         ),
       ),
     );

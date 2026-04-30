@@ -10,6 +10,8 @@ import '../model/credit-card-bank.dart';
 import 'custom_steps.dart';
 import 'email_signin.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 RxList<CreditCardBank> creditCardBankList = <CreditCardBank>[].obs;
 
 class AddCreditCardBankScreen extends StatefulWidget {
@@ -29,8 +31,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
     filteredBanks
       ..clear()
       ..addAll(creditCardBankList);
-     cardController.selectedBankName.value = "";
-     cardController.selectedBankId.value = "";
+    cardController.selectedBankName.value = "";
+    cardController.selectedBankId.value = "";
   }
 
   @override
@@ -55,8 +57,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
 
   void _selectBank(CreditCardBank bank) {
     controller.text = bank.name;
-     cardController.selectedBankName.value = bank.name;
-     cardController.selectedBankId.value = bank.id;
+    cardController.selectedBankName.value = bank.name;
+    cardController.selectedBankId.value = bank.id;
     _focusNode.unfocus();
     // Scroll feedback — keep selection visible
     // setState(() {});
@@ -96,10 +98,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
             // ── Subtitle ──────────────────────────────────────────────────
             Text(
               "Which bank issued your credit card?",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14, color: Colors.grey.shade600),
             ),
             SizedBox(height: AppSizes.h12),
 
@@ -148,7 +148,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
             SizedBox(height: AppSizes.h10),
 
             // ── Selected badge ────────────────────────────────────────────
-            Obx(() =>  cardController.selectedBankName.value.isNotEmpty
+            Obx(() => cardController.selectedBankName.value.isNotEmpty
                 ? Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding:
@@ -166,12 +166,11 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                             color: AppColors.primaryColor, size: 16),
                         const SizedBox(width: 8),
                         Text(
-                           cardController.selectedBankName.value,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          ),
+                          cardController.selectedBankName.value,
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 13,
+                              lWeight: FontWeight.w600,
+                              color: AppColors.primaryColor),
                         ),
                       ],
                     ),
@@ -194,12 +193,15 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                         itemCount: filteredBanks.length,
                         itemBuilder: (_, i) {
                           final bank = filteredBanks[i];
-                          final isSelected =  cardController.selectedBankId.value == bank.id;
+                          final isSelected =
+                              cardController.selectedBankId.value == bank.id;
                           return Obx(() => _BankTile(
                                 bank: bank,
                                 isFirst: i == 0,
                                 isLast: i == filteredBanks.length - 1,
-                                isSelected:  cardController.selectedBankId.value == bank.id,
+                                isSelected:
+                                    cardController.selectedBankId.value ==
+                                        bank.id,
                                 onTap: () => _selectBank(bank),
                               ));
                         },
@@ -215,8 +217,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  if ( cardController.selectedBankName.value.isEmpty ||
-                       cardController.selectedBankId.value.isEmpty) {
+                  if (cardController.selectedBankName.value.isEmpty ||
+                      cardController.selectedBankId.value.isEmpty) {
                     snackBarCalledfail(context, "Please select your bank");
                   } else {
                     googleSignInBool.value = false;
@@ -230,14 +232,13 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                   ),
                   elevation: 2,
                 ),
-                child: const Text(
+                child: Text(
                   "Continue",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    letterSpacing: 0.4,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 16,
+                      lWeight: FontWeight.w600,
+                      color: Colors.white,
+                      letterSpacing: 0.4),
                 ),
               ),
             ),
@@ -258,16 +259,16 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
           const SizedBox(height: 12),
           Text(
             "No banks found",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade400,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 15,
+                lWeight: FontWeight.w600,
+                color: Colors.grey.shade400),
           ),
           const SizedBox(height: 4),
           Text(
             "Try a different search term",
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13, color: Colors.grey.shade400),
           ),
         ],
       ),
@@ -326,11 +327,10 @@ class _BankTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   bank.name,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: const Color(0xFF37344F),
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 14,
+                      lWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: const Color(0xFF37344F)),
                 ),
               ),
               // Checkmark

@@ -58,8 +58,8 @@ class _UserListScreenState extends State<UserListScreen> {
         if (dataList.isEmpty) {
           return Center(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: AppSizes.p20),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0, vertical: AppSizes.p20),
               child: Text(
                 widget.isPayable
                     ? 'No pending payments.'
@@ -107,7 +107,8 @@ class _UserListScreenState extends State<UserListScreen> {
 
             // margin: const EdgeInsets.only(bottom: 12),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: AppSizes.p8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 3, vertical: AppSizes.p8),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth;
@@ -152,7 +153,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                 ),
                               ),
 
-                               SizedBox(height: AppSizes.h12),
+                              SizedBox(height: AppSizes.h12),
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -404,16 +405,15 @@ class _UserListScreenState extends State<UserListScreen> {
             padding: const EdgeInsets.all(AppSizes.p12),
             child: Obx(() {
               if (foodieFundsDetailsRemainders.isEmpty) {
-                return const Center(
+                return Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: AppSizes.p24),
                     child: Text(
                       'No details available.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: AppColors.accentColor,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: AppColors.accentColor),
                     ),
                   ),
                 );
@@ -464,15 +464,14 @@ class _UserListScreenState extends State<UserListScreen> {
                             context, 'Friends', Icons.group, animation),
                         SizedBox(height: AppSizes.h8),
                         friends.isEmpty
-                            ? const Padding(
-                                padding: EdgeInsets.only(left:AppSizes.p8),
+                            ? Padding(
+                                padding: EdgeInsets.only(left: AppSizes.p8),
                                 child: Text(
                                   'No friends in this split.',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.accentColor,
-                                  ),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: AppColors.accentColor),
                                 ),
                               )
                             : ListView.builder(
@@ -487,7 +486,8 @@ class _UserListScreenState extends State<UserListScreen> {
                                           context, friend, animation),
                                       if (index < friends.length - 1)
                                         const Padding(
-                                          padding: EdgeInsets.only(top:AppSizes.p8),
+                                          padding:
+                                              EdgeInsets.only(top: AppSizes.p8),
                                           child: Divider(
                                             color: AppColors.accentColor,
                                             thickness: 0.2,
@@ -517,7 +517,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget _buildUserDetails(BuildContext context, Map<String, dynamic> user,
       Animation<double> animation) {
     return Padding(
-      padding: const EdgeInsets.only(left:AppSizes.p8, right:AppSizes.p8),
+      padding: const EdgeInsets.only(left: AppSizes.p8, right: AppSizes.p8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

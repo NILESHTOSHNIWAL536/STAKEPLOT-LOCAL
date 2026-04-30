@@ -49,7 +49,6 @@
 //       return _autoPayColors[index % _autoPayColors.length];
 //     }
 
-    
 //     return Container(
 //       height: cardHeight,
 //       decoration: BoxDecoration(
@@ -518,7 +517,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -560,25 +558,22 @@ class CardWidget extends StatelessWidget {
     final cardHeight = screenSize.height * 0.2; // Responsive card height
     final fontScale = screenSize.width / 375; // Base font scaling
     final padding = screenSize.width * 0.03; // Responsive padding
-    
-    
 
-    
     return Container(
       height: cardHeight,
-       decoration: BoxDecoration(
-    color: AppColors.backgroundColor, // background: #FFF
-    borderRadius: BorderRadius.circular(10.0), // border-radius: 10px
-    border: Border.all(color: AppColors.mt),
-    boxShadow: const [
-      BoxShadow(
-        color: AppColors.transactionCardShadow, // rgba(142,142,142,0.25)
-        blurRadius: 4.0, // blur of 4px
-        spreadRadius: 0.0,
-        offset: Offset(0, 0), // 0 0 (no offset)
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor, // background: #FFF
+        borderRadius: BorderRadius.circular(10.0), // border-radius: 10px
+        border: Border.all(color: AppColors.mt),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.transactionCardShadow, // rgba(142,142,142,0.25)
+            blurRadius: 4.0, // blur of 4px
+            spreadRadius: 0.0,
+            offset: Offset(0, 0), // 0 0 (no offset)
+          ),
+        ],
       ),
-    ],
-  ),
       child: Padding(
         padding: EdgeInsets.all(padding),
         child: Column(
@@ -633,7 +628,8 @@ class CardWidget extends StatelessWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
+                          horizontal: 8 * fontScale,
+                          vertical: AppSizes.p4 * fontScale),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundColor.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(2 * fontScale),
@@ -680,14 +676,15 @@ class CardWidget extends StatelessWidget {
                             },
                             activeColor: AppColors.primaryColor,
                             inactiveThumbColor: Colors.white70,
-                            inactiveTrackColor: AppColors.backgroundColor.withOpacity(0.3),
+                            inactiveTrackColor:
+                                AppColors.backgroundColor.withOpacity(0.3),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                           )),
                     ],
                   ],
                 ),
-                 card.frequency.toLowerCase() == 'daily'
+                card.frequency.toLowerCase() == 'daily'
                     ? SizedBox.shrink()
                     : !card.isActive
                         ? SizedBox.shrink()
@@ -698,7 +695,8 @@ class CardWidget extends StatelessWidget {
                                   horizontal: 8 * fontScale,
                                   vertical: AppSizes.p6 * fontScale),
                               decoration: BoxDecoration(
-                                color: AppColors.backgroundColor.withOpacity(0.2),
+                                color:
+                                    AppColors.backgroundColor.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.circular(10 * fontScale),
                               ),
@@ -715,8 +713,6 @@ class CardWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-              
-               
               ],
             ),
             SizedBox(height: 12 * fontScale),
@@ -729,7 +725,7 @@ class CardWidget extends StatelessWidget {
                 color: AppColors.bg1,
               ),
             ),
-           SizedBox(height: 12 * fontScale),
+            SizedBox(height: 12 * fontScale),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -744,7 +740,8 @@ class CardWidget extends StatelessWidget {
                                   horizontal: 8 * fontScale,
                                   vertical: AppSizes.p4 * fontScale),
                               decoration: BoxDecoration(
-                                color: AppColors.backgroundColor.withOpacity(0.2),
+                                color:
+                                    AppColors.backgroundColor.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.circular(4 * fontScale),
                               ),
@@ -765,8 +762,9 @@ class CardWidget extends StatelessWidget {
                                       horizontal: 8 * fontScale,
                                       vertical: AppSizes.p4 * fontScale),
                                   decoration: BoxDecoration(
-                                   color: const Color.fromRGBO(75, 77, 115, 0.20), // rgba(75,77,115,0.20)
-    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromRGBO(75, 77, 115,
+                                        0.20), // rgba(75,77,115,0.20)
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Text(
                                     date,
@@ -782,8 +780,7 @@ class CardWidget extends StatelessWidget {
                             .toList(),
                   ),
                 ),
-               
-               Row(mainAxisSize: MainAxisSize.min, children: [
+                Row(mainAxisSize: MainAxisSize.min, children: [
                   if (card.isActive || card.isDaily)
                     GestureDetector(
                       onTap: () async {
@@ -853,15 +850,17 @@ class CardWidget extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
+                            horizontal: 8 * fontScale,
+                            vertical: AppSizes.p4 * fontScale),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(10 * fontScale),
                         ),
                         child: Text(
                           "Added",
-                          style: TextStyle(
-                              fontSize: 14 * fontScale, color: AppColors.backgroundColor),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 14 * fontScale,
+                              color: AppColors.backgroundColor),
                         ),
                       ),
                     )
@@ -934,7 +933,7 @@ class CardWidget extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: AppSizes.p12 ,
+                            horizontal: AppSizes.p12,
                             vertical: AppSizes.p4 * fontScale),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
@@ -942,7 +941,9 @@ class CardWidget extends StatelessWidget {
                         ),
                         child: Text(
                           "+ Add",
-                          style:  FontManager().getTextStyle(context, fontSize: 14 * fontScale, color: AppColors.backgroundColor),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 14 * fontScale,
+                              color: AppColors.backgroundColor),
                         ),
                       ),
                     ),
@@ -1018,16 +1019,14 @@ class CardWidget extends StatelessWidget {
                           color: const Color.fromRGBO(75, 77, 115, 0.20),
                           borderRadius: BorderRadius.all(Radius.circular(6)),
                         ),
-                        child: Text(
-                          "x Ignore",
-                          style: FontManager().getTextStyle(context, fontSize: 14 * fontScale, color: AppColors.primaryColor)
-                         
-                        ),
+                        child: Text("x Ignore",
+                            style: FontManager().getTextStyle(context,
+                                fontSize: 14 * fontScale,
+                                color: AppColors.primaryColor)),
                       ),
                     ),
                   ],
                 ])
-             
               ],
             ),
           ],

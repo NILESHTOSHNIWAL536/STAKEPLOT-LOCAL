@@ -518,27 +518,27 @@ class AllCardsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "PayCycles",
-          style: TextStyle(fontSize: 20 * fontScale),
+          style: FontManager().getTextStyle(context, fontSize: 20 * fontScale),
         ),
         backgroundColor: AppColors.backgroundColor,
-         actions: [
-    IconButton(
-      icon: Icon(
-        Icons.add,
-        size: 26,
-        color: AppColors.primaryColor,
-      ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AddPaycycleFromTransactionsScreen(),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              size: 26,
+              color: AppColors.primaryColor,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const AddPaycycleFromTransactionsScreen(),
+                ),
+              );
+            },
           ),
-        );
-      },
-    ),
-  ],
-
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -656,7 +656,6 @@ class AllCardsScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                              
                               ],
                             ),
                           ),
@@ -756,8 +755,8 @@ class SimilarCardsScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    left:AppSizes.p16 * fontScale,
-                    right:AppSizes.p16 * fontScale,
+                    left: AppSizes.p16 * fontScale,
+                    right: AppSizes.p16 * fontScale,
                   ),
                   child: Text(
                     "We’ve grouped similar payments for you.",
@@ -809,10 +808,9 @@ class SimilarCardsScreen extends StatelessWidget {
                       ? Center(
                           child: Text(
                             "No similar cards available",
-                            style: TextStyle(
-                              color: AppColors.backgroundColor,
-                              fontSize: 16 * fontScale,
-                            ),
+                            style: FontManager().getTextStyle(context,
+                                color: AppColors.backgroundColor,
+                                fontSize: 16 * fontScale),
                           ),
                         )
                       : ListView.builder(

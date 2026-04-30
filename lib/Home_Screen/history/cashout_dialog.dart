@@ -7,20 +7,23 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import '../../Constants/colors.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class CashOutDialog extends StatelessWidget {
   double maxAmount;
-   CashOutDialog({super.key,required this.maxAmount});
+  CashOutDialog({super.key, required this.maxAmount});
 
-   TextEditingController controllerName=TextEditingController();
-   TextEditingController controllerAmount=TextEditingController();
+  TextEditingController controllerName = TextEditingController();
+  TextEditingController controllerAmount = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       insetPadding: const EdgeInsets.all(AppSizes.p10),
-       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p24),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p24),
         width: double.infinity,
         child: SingleChildScrollView(
           child: Column(
@@ -31,14 +34,13 @@ class CashOutDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   SizedBox(width: AppSizes.w24), // Empty box for left space
-                  const Text(
+                  SizedBox(width: AppSizes.w24), // Empty box for left space
+                  Text(
                     "Cash Out",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF4C4C7C),
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 22,
+                        lWeight: FontWeight.w600,
+                        color: Color(0xFF4C4C7C)),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
@@ -49,9 +51,9 @@ class CashOutDialog extends StatelessWidget {
               SizedBox(height: AppSizes.h24),
 
               // Name Label
-              const Text(
+              Text(
                 "Name",
-                style: TextStyle(fontSize: 16),
+                style: FontManager().getTextStyle(context, fontSize: 16),
               ),
               SizedBox(height: AppSizes.h6),
               TextFormField(
@@ -60,8 +62,8 @@ class CashOutDialog extends StatelessWidget {
                   hintText: "eg. ",
                   filled: true,
                   fillColor: Colors.grey.shade200,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p14),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.p12, vertical: AppSizes.p14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -71,9 +73,9 @@ class CashOutDialog extends StatelessWidget {
               SizedBox(height: AppSizes.h20),
 
               // Amount Label
-              const Text(
+              Text(
                 "Amount",
-                style: TextStyle(fontSize: 16),
+                style: FontManager().getTextStyle(context, fontSize: 16),
               ),
               SizedBox(height: AppSizes.h6),
               TextFormField(
@@ -83,8 +85,8 @@ class CashOutDialog extends StatelessWidget {
                   hintText: "eg. ₹ 220",
                   filled: true,
                   fillColor: Colors.grey.shade200,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p14),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.p12, vertical: AppSizes.p14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -99,28 +101,46 @@ class CashOutDialog extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // Handle Cash out logic
-                    if(controllerAmount.text.isEmpty || controllerName.text.isEmpty){
-                        snackBarCalledfail(context, 'Add All Fields');
-                        return;
+                    if (controllerAmount.text.isEmpty ||
+                        controllerName.text.isEmpty) {
+                      snackBarCalledfail(context, 'Add All Fields');
+                      return;
                     }
 
-                          final text = controllerAmount.text.trim();
+                    final text = controllerAmount.text.trim();
 
+                    final amount =
+                        double.tryParse(text.replaceAll(RegExp(r'[^\d.]'), ''));
 
-                      final amount = double.tryParse(text.replaceAll(RegExp(r'[^\d.]'), ''));
+                    if (amount == null) {
+                      snackBarCalledfail(context, 'Enter a valid number');
+                      return;
+                    }
 
-                      if (amount == null) {
-                        snackBarCalledfail(context, 'Enter a valid number');
-                        return;
-                      }
-
-                      if (amount > maxAmount) {
-                        snackBarCalledfail(context, "Amount can't be more than ₹$maxAmount");
-                        return;
-                      }
-                       String id=UniqueKey().toString();
-                       balanceOutList[id]=TransactionModel(id: id, type: 'DEBIT', mode: 'CASH', amount: amount, currentBalance: 0, narration: '', reference: '', title: controllerName.text, manualTransaction: true, category: controllerName.text, subcategory: controllerName.text, hidden: false, isBill: false, isDebt: false, isSplit: false,transactionTimestamp: DateTime.now());    
-                       Navigator.pop(context);     
+                    if (amount > maxAmount) {
+                      snackBarCalledfail(
+                          context, "Amount can't be more than ₹$maxAmount");
+                      return;
+                    }
+                    String id = UniqueKey().toString();
+                    balanceOutList[id] = TransactionModel(
+                        id: id,
+                        type: 'DEBIT',
+                        mode: 'CASH',
+                        amount: amount,
+                        currentBalance: 0,
+                        narration: '',
+                        reference: '',
+                        title: controllerName.text,
+                        manualTransaction: true,
+                        category: controllerName.text,
+                        subcategory: controllerName.text,
+                        hidden: false,
+                        isBill: false,
+                        isDebt: false,
+                        isSplit: false,
+                        transactionTimestamp: DateTime.now());
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4C4C7C),
@@ -129,9 +149,10 @@ class CashOutDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child:  Text(
+                  child: Text(
                     "Cash out",
-                    style: TextStyle(fontSize: 16,color: AppColors.backgroundColor),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 16, color: AppColors.backgroundColor),
                   ),
                 ),
               ),

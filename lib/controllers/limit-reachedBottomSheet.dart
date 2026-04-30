@@ -4,6 +4,8 @@ import 'package:share_plus/share_plus.dart';
 
 import 'referal-sharelink.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class LimitReachedBottomSheet {
   static void show(BuildContext context) {
     showModalBottomSheet(
@@ -44,19 +46,19 @@ class LimitReachedBottomSheet {
                 child: const Icon(Icons.lock, size: 40, color: Colors.white),
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 "Limit Reached",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 20,
+                    lWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 "You've reached your collection limit.\nInvite friends and unlock more collections.",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, height: 1.4),
+                style: FontManager().getTextStyle(context,
+                    color: Colors.white70, lineHeight: 1.4),
               ),
               const SizedBox(height: 20),
               Container(
@@ -66,14 +68,15 @@ class LimitReachedBottomSheet {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.white10),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.card_giftcard, color: Colors.amber),
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         "Earn +1 collection for every friend you invite.",
-                        style: TextStyle(color: Colors.white70),
+                        style: FontManager()
+                            .getTextStyle(context, color: Colors.white70),
                       ),
                     ),
                   ],
@@ -94,13 +97,11 @@ class LimitReachedBottomSheet {
                       colors: [Colors.blueAccent, Colors.purpleAccent],
                     ),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       "Invite Friends",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          color: Colors.white, lWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -108,9 +109,10 @@ class LimitReachedBottomSheet {
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
+                child: Text(
                   "Maybe Later",
-                  style: TextStyle(color: Colors.white54),
+                  style: FontManager()
+                      .getTextStyle(context, color: Colors.white54),
                 ),
               ),
               const SizedBox(height: 10),

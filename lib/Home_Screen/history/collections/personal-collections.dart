@@ -302,19 +302,17 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                 children: [
                   Text(
                     "Outstanding Amount",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 13,
+                        color: AppColors.grey,
+                        lWeight: FontWeight.w500),
                   ),
                   Text(
                     "₹${outstanding.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.grey,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 15,
+                        lWeight: FontWeight.w800,
+                        color: AppColors.grey),
                   ),
                 ],
               ),
@@ -416,14 +414,13 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Transactions",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: _C.textDark,
-              letterSpacing: 0.2,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 16,
+                lWeight: FontWeight.w700,
+                color: _C.textDark,
+                letterSpacing: 0.2),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -433,11 +430,8 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
             ),
             child: Text(
               "$count ${count == 1 ? 'entry' : 'entries'}",
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: _C.navy,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 11, lWeight: FontWeight.w700, color: _C.navy),
             ),
           ),
         ],
@@ -469,18 +463,16 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
             _searchQuery.isEmpty
                 ? "No Transactions Yet"
                 : 'No results for "$_searchQuery"',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: _C.textDark,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 15, lWeight: FontWeight.w700, color: _C.textDark),
           ),
           const SizedBox(height: 6),
           Text(
             _searchQuery.isEmpty
                 ? "Add your first transaction using the + button"
                 : "Try searching a different name or category",
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13, color: Colors.grey.shade500),
             textAlign: TextAlign.center,
           ),
         ],
@@ -529,31 +521,27 @@ class _StatTile extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryColor,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 13,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.primaryColor),
               ),
             ],
           ),
           const SizedBox(height: 6),
           Text(
             sub,
-            style: TextStyle(
-              fontSize: 11,
-              color: AppColors.grey,
-            ),
+            style: FontManager()
+                .getTextStyle(context, fontSize: 11, color: AppColors.grey),
           ),
           const SizedBox(height: 6),
           Text(
             "₹${amount.toStringAsFixed(0)}",
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: AppColors.accentColor,
-              letterSpacing: -0.5,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 24,
+                lWeight: FontWeight.w800,
+                color: AppColors.accentColor,
+                letterSpacing: -0.5),
           ),
         ],
       ),

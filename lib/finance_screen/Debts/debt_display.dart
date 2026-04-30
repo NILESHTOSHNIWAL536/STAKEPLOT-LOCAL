@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
+
 class DebtDetailsScreen extends StatefulWidget {
   final Debt debt;
 
@@ -24,13 +25,12 @@ class DebtDetailsScreen extends StatefulWidget {
 class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
   bool _isDeleting = false;
 
-   Future<void> deleteDebt() async {
+  Future<void> deleteDebt() async {
     setState(() {
       _isDeleting = true;
     });
 
     if (widget.debt.id.isEmpty) {
-     
       setState(() {
         _isDeleting = false;
       });
@@ -38,16 +38,14 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
     }
 
     final bool success = await DebtService.deleteDebt(widget.debt.id);
-     
+
     if (success) {
       await Future.delayed(Duration(seconds: 2));
-       DebtService.fetchDebts();
+      DebtService.fetchDebts();
       if (mounted) {
         Navigator.of(context).pop();
       }
-    } else {
-     
-    }
+    } else {}
 
     if (mounted) {
       setState(() {
@@ -55,6 +53,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double labelWidth = 100; // Set a fixed width for labels
@@ -71,8 +70,9 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
         actions: [
           IconButton(
             icon: _isDeleting
-                ? CircularProgressIndicator(color:  AppColors.redColor, strokeWidth: 2)
-                : Icon(Icons.delete, color:  AppColors.redColor),
+                ? CircularProgressIndicator(
+                    color: AppColors.redColor, strokeWidth: 2)
+                : Icon(Icons.delete, color: AppColors.redColor),
             onPressed: _isDeleting
                 ? null
                 : () async {
@@ -80,7 +80,8 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                       context: context,
                       useRootNavigator: false,
                       builder: (context) => AlertDialog(
-                        title: Text(PlotFinanceStaticData().deleteDebtTitle), // Updated
+                        title: Text(
+                            PlotFinanceStaticData().deleteDebtTitle), // Updated
                         content: Text(PlotFinanceStaticData().deleteDebtPrompt),
                         actions: [
                           TextButton(
@@ -93,9 +94,10 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                             onPressed: () {
                               Navigator.of(context).pop(true);
                             },
-                           child: Text(
+                            child: Text(
                               PlotFinanceStaticData().deleteButton, // Updated
-                              style: TextStyle(color:  AppColors.redColor),
+                              style: FontManager().getTextStyle(context,
+                                  color: AppColors.redColor),
                             ),
                           ),
                         ],
@@ -146,16 +148,33 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                     Container(
                       padding: EdgeInsets.all(AppSizes.p12),
                       child: Column(
-                         children: [
-                          rowItem(PlotFinanceStaticData().loanTypeLabel, widget.debt.type, labelWidth, context), // Updated
+                        children: [
+                          rowItem(PlotFinanceStaticData().loanTypeLabel,
+                              widget.debt.type, labelWidth, context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem(PlotFinanceStaticData().amountLabel, "₹${widget.debt.amount.toStringAsFixed(2)}", labelWidth, context), // Updated
+                          rowItem(
+                              PlotFinanceStaticData().amountLabel,
+                              "₹${widget.debt.amount.toStringAsFixed(2)}",
+                              labelWidth,
+                              context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem(PlotFinanceStaticData().interestLabel, "${widget.debt.interest.toString()}", labelWidth, context), // Updated
+                          rowItem(
+                              PlotFinanceStaticData().interestLabel,
+                              "${widget.debt.interest.toString()}",
+                              labelWidth,
+                              context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem(PlotFinanceStaticData().durationLabel, "${widget.debt.durationMonths.toString()} months", labelWidth, context), // Updated
+                          rowItem(
+                              PlotFinanceStaticData().durationLabel,
+                              "${widget.debt.durationMonths.toString()} months",
+                              labelWidth,
+                              context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem(PlotFinanceStaticData().dateLabel, formattedDate(widget.debt.date.toString()), labelWidth, context), // Updated
+                          rowItem(
+                              PlotFinanceStaticData().dateLabel,
+                              formattedDate(widget.debt.date.toString()),
+                              labelWidth,
+                              context), // Updated
                         ],
                       ),
                     ),
@@ -169,7 +188,8 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
     );
   }
 
-  Widget rowItem(String label, String value, double labelWidth, BuildContext context) {
+  Widget rowItem(
+      String label, String value, double labelWidth, BuildContext context) {
     return Row(
       children: [
         SizedBox(

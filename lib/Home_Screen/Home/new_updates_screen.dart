@@ -18,7 +18,8 @@ class UpdatesScreen extends StatelessWidget {
           children: [
             /// -------- HEADER ----------
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p14),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: AppSizes.p14),
               decoration: const BoxDecoration(
                 color: AppColors.newbg,
                 borderRadius: BorderRadius.vertical(
@@ -28,19 +29,19 @@ class UpdatesScreen extends StatelessWidget {
               child: Row(
                 children: [
                   _circleIcon(Icons.arrow_back, context),
-                   SizedBox(width: MediaQuery.sizeOf(context).width/3.6),
-                   Center(
-                     child: Text(
-                       "Updates",
-                         style: FontManager().getTextStyle(
-                   context,
-                   lWeight: FontWeight.w600,
-                   fontSize: 20,
-                   color: AppColors.accentColor,
-                                     ),
-                     ),
-                   ),
-                   // to balance back icon
+                  SizedBox(width: MediaQuery.sizeOf(context).width / 3.6),
+                  Center(
+                    child: Text(
+                      "Updates",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: AppColors.accentColor,
+                      ),
+                    ),
+                  ),
+                  // to balance back icon
                 ],
               ),
             ),
@@ -67,7 +68,7 @@ class UpdatesScreen extends StatelessWidget {
                     //         mainAxisAlignment:
                     //             MainAxisAlignment.spaceBetween,
                     //         children: [
-                    //           const Text(
+                    //           Text(
                     //             "Version 3.5.0",
                     //             style: TextStyle(
                     //               fontSize: 16,
@@ -82,7 +83,7 @@ class UpdatesScreen extends StatelessWidget {
                     //               color: Colors.white,
                     //               borderRadius: BorderRadius.circular(20),
                     //             ),
-                    //             child: const Text(
+                    //             child: Text(
                     //               "42.5 MB",
                     //               style: TextStyle(
                     //                 fontSize: 12,
@@ -93,7 +94,7 @@ class UpdatesScreen extends StatelessWidget {
                     //         ],
                     //       ),
                     //       const SizedBox(height: 6),
-                    //       const Text(
+                    //       Text(
                     //         "Released Dec 10, 2024",
                     //         style: TextStyle(
                     //           fontSize: 13,
@@ -114,7 +115,7 @@ class UpdatesScreen extends StatelessWidget {
                     //             ),
                     //             elevation: 0,
                     //           ),
-                    //           child: const Text(
+                    //           child: Text(
                     //             "Update Now",
                     //             style: TextStyle(
                     //               fontSize: 16,
@@ -131,16 +132,13 @@ class UpdatesScreen extends StatelessWidget {
                     // const SizedBox(height: 24),
 
                     /// -------- NEW FEATURES ----------
-                     Text(
-                      "New Features",
-                      style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppColors.accentColor,
-                  )
-                     
-                    ),
+                    Text("New Features",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        )),
 
                     SizedBox(height: AppSizes.h12),
 
@@ -186,7 +184,7 @@ class UpdatesScreen extends StatelessWidget {
   /// -------- BACK ICON ----------
   Widget _circleIcon(IconData icon, BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.pop(context);
       },
       child: Container(
@@ -203,7 +201,7 @@ class UpdatesScreen extends StatelessWidget {
 
   /// -------- FEATURE CARD ----------
   Widget _featureCard({
-   required BuildContext context,
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String description,
@@ -240,11 +238,11 @@ class UpdatesScreen extends StatelessWidget {
                       child: Text(
                         title,
                         style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppColors.accentColor,
-                  ),
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
                       ),
                     ),
                     Container(
@@ -256,12 +254,12 @@ class UpdatesScreen extends StatelessWidget {
                       ),
                       child: Text(
                         badgeText,
-                         style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w700,
-                    fontSize: 11,
-                    color: AppColors.primaryColor,
-                  ),
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w700,
+                          fontSize: 11,
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ],
@@ -269,7 +267,7 @@ class UpdatesScreen extends StatelessWidget {
                 SizedBox(height: AppSizes.h6),
                 Text(
                   description,
-                   style: FontManager().getTextStyle(
+                  style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,
                     fontSize: 13,

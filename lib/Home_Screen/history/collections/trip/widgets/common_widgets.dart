@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import '../utils/app_theme_collections.dart';
 import '../models/collection_helper_models.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ── Avatar ────────────────────────────────────────────────────────────────────
 class MemberAvatar extends StatelessWidget {
   final MemberModel member;
@@ -35,11 +37,10 @@ class MemberAvatar extends StatelessWidget {
       child: Center(
         child: Text(
           member.name.substring(0, 2),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: size * 0.38,
-            fontWeight: FontWeight.w700,
-          ),
+          style: FontManager().getTextStyle(context,
+              color: Colors.white,
+              fontSize: size * 0.38,
+              lWeight: FontWeight.w700),
         ),
       ),
     );
@@ -80,11 +81,8 @@ class MemberPill extends StatelessWidget {
       ),
       child: Text(
         name,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
+        style: FontManager().getTextStyle(context,
+            color: Colors.white, fontSize: 12, lWeight: FontWeight.w500),
       ),
     );
   }
@@ -135,7 +133,8 @@ class TransactionCard extends StatelessWidget {
               border:
                   collectionsController.selectedTransactions.contains(tx.id) &&
                           showCheckbox
-                      ? Border.all(color: AppColorsForCollection.primaryBlue, width: 1.5)
+                      ? Border.all(
+                          color: AppColorsForCollection.primaryBlue, width: 1.5)
                       : null,
               boxShadow: [
                 BoxShadow(
@@ -311,18 +310,19 @@ class FixedBillCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
-                  color: isPaid ? AppColorsForCollection.paidBadge : AppColorsForCollection.pendingBadge,
+                  color: isPaid
+                      ? AppColorsForCollection.paidBadge
+                      : AppColorsForCollection.pendingBadge,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   isPaid ? 'Paid' : 'Pending',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: isPaid
-                        ? AppColorsForCollection.successGreen
-                        : AppColorsForCollection.warningOrange,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 11,
+                      lWeight: FontWeight.w600,
+                      color: isPaid
+                          ? AppColorsForCollection.successGreen
+                          : AppColorsForCollection.warningOrange),
                 ),
               ),
             ],
@@ -359,11 +359,10 @@ class SectionHeader extends StatelessWidget {
               onTap: onAction,
               child: Text(
                 actionLabel!,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: AppColorsForCollection.primaryBlue,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 13,
+                    color: AppColorsForCollection.primaryBlue,
+                    lWeight: FontWeight.w500),
               ),
             ),
         ],
@@ -394,7 +393,8 @@ class PrimaryButton extends StatelessWidget {
           ? OutlinedButton(
               onPressed: onPressed,
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: AppColorsForCollection.primaryDark),
+                side:
+                    const BorderSide(color: AppColorsForCollection.primaryDark),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14)),
               ),
@@ -416,11 +416,10 @@ class PrimaryButton extends StatelessWidget {
               ),
               child: Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 16,
+                    lWeight: FontWeight.w600,
+                    color: Colors.white),
               ),
             ),
     );

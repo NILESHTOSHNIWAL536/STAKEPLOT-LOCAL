@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../repository/reserve_repository.dart';
 import 'reserve.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class ReserveFlow extends StatefulWidget {
   const ReserveFlow({super.key});
 
@@ -51,20 +53,18 @@ class _ReserveFlowState extends State<ReserveFlow> {
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Text(
+        title: Text(
           'Submission Failed',
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: FontManager().getTextStyle(context, lWeight: FontWeight.w700),
         ),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: Text(
               'OK',
-              style: TextStyle(
-                color: AppColors2.navyBtn,
-                fontWeight: FontWeight.w600,
-              ),
+              style: FontManager().getTextStyle(context,
+                  color: AppColors2.navyBtn, lWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -180,16 +180,15 @@ class _AppHeader extends StatelessWidget {
             ),
           ),
           // Title
-          const Expanded(
+          Expanded(
             child: Text(
               'Reserve',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-              ),
+              style: FontManager().getTextStyle(context,
+                  color: Colors.white,
+                  fontSize: 18,
+                  lWeight: FontWeight.w600,
+                  letterSpacing: 0.3),
             ),
           ),
           // Step badge
@@ -201,11 +200,8 @@ class _AppHeader extends StatelessWidget {
             ),
             child: Text(
               '$step of 3',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+              style: FontManager().getTextStyle(context,
+                  color: Colors.white, fontSize: 12, lWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -237,11 +233,8 @@ class _ActionButton extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: FontManager().getTextStyle(context,
+                color: Colors.white, fontSize: 16, lWeight: FontWeight.w600),
           ),
         ),
       ),
@@ -356,19 +349,16 @@ class _CategoryRow extends StatelessWidget {
                 children: [
                   Text(
                     category.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors2.textDark,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: AppColors2.textDark),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     category.subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors2.textMid,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: AppColors2.textMid),
                   ),
                 ],
               ),
@@ -523,15 +513,14 @@ class _Screen2State extends State<Screen2> {
           const SizedBox(height: 14),
           _AmountInput(controller: _amountCtrl),
           const SizedBox(height: 24),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'Set days',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors2.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14,
+                  lWeight: FontWeight.w600,
+                  color: AppColors2.textDark),
             ),
           ),
           const SizedBox(height: 12),
@@ -539,16 +528,14 @@ class _Screen2State extends State<Screen2> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
                     Icon(Icons.calendar_today, color: AppColors2.accent),
                     SizedBox(width: 10),
                     Text(
                       "Select duration",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors2.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600, color: AppColors2.textDark),
                     ),
                   ],
                 ),
@@ -642,10 +629,8 @@ class _Screen2State extends State<Screen2> {
                     ),
                     child: Text(
                       "${_formatFullDate(widget.state.startDate!)} → ${_formatFullDate(widget.state.endDate!)}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors2.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600, color: AppColors2.textDark),
                     ),
                   ),
 
@@ -656,10 +641,8 @@ class _Screen2State extends State<Screen2> {
                     widget.state.endDate != null)
                   Text(
                     "${widget.state.selectedDays} days selected",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors2.textMid,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: AppColors2.textMid),
                   ),
               ],
             ),
@@ -706,10 +689,8 @@ class _SuggestedChip extends StatelessWidget {
               amount != null
                   ? 'Suggested Amount ₹ ${amount!.toStringAsFixed(2)}'
                   : 'Suggested Amount --',
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors2.textMid,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13, color: AppColors2.textMid),
             ),
     );
   }
@@ -788,11 +769,10 @@ class _DaySelector extends StatelessWidget {
             child: Center(
               child: Text(
                 '$day',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: isSelected ? Colors.white : AppColors2.textMid,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w600,
+                    color: isSelected ? Colors.white : AppColors2.textMid),
               ),
             ),
           ),
@@ -966,13 +946,12 @@ class _NotifySlider extends StatelessWidget {
           children: [
             _IconBox(Icons.notifications_outlined),
             const SizedBox(width: 12),
-            const Text(
+            Text(
               'Get notified at',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors2.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14,
+                  lWeight: FontWeight.w600,
+                  color: AppColors2.textDark),
             ),
             const Spacer(),
             _Badge(label),
@@ -1002,10 +981,8 @@ class _NotifySlider extends StatelessWidget {
           children: ['10%', '20%', '40%', '60%', '80%', '100%']
               .map((e) => Text(
                     e,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors2.textLight,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 10, color: AppColors2.textLight),
                   ))
               .toList(),
         ),
@@ -1049,20 +1026,20 @@ class _ReminderPicker extends StatelessWidget {
             children: [
               _IconBox(Icons.alarm_outlined),
               const SizedBox(width: 12),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Reminder',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors2.textDark,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: AppColors2.textDark),
                   ),
                   Text(
                     'Daily reminder at',
-                    style: TextStyle(fontSize: 12, color: AppColors2.textMid),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: AppColors2.textMid),
                   ),
                 ],
               ),
@@ -1086,11 +1063,11 @@ class _ReminderPicker extends StatelessWidget {
                   children: [
                     Text(
                       timeLabel,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: pickerOpen ? Colors.white : AppColors2.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 13,
+                          lWeight: FontWeight.w600,
+                          color:
+                              pickerOpen ? Colors.white : AppColors2.textDark),
                     ),
                     const SizedBox(width: 4),
                     AnimatedRotation(
@@ -1170,15 +1147,12 @@ class _DrumSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(bottom: 4),
       child: Text(
         ':',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w800,
-          color: AppColors2.textDark,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 24, lWeight: FontWeight.w800, color: AppColors2.textDark),
       ),
     );
   }
@@ -1223,11 +1197,10 @@ class _WheelDrum extends StatelessWidget {
             builder: (_, i) => Center(
               child: Text(
                 items[i],
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors2.textDark,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 20,
+                    lWeight: FontWeight.w700,
+                    color: AppColors2.textDark),
               ),
             ),
           ),
@@ -1276,11 +1249,10 @@ class _ToggleRow extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors2.textDark,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 14,
+              lWeight: FontWeight.w600,
+              color: AppColors2.textDark),
         ),
         const Spacer(),
         _StyledSwitch(value: value, onChanged: onChanged),
@@ -1315,20 +1287,20 @@ class SuccessScreen extends StatelessWidget {
               const Spacer(),
               _SuccessIcon(),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Reserve Created!',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors2.textDark,
-                  letterSpacing: -0.5,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 26,
+                    lWeight: FontWeight.w800,
+                    color: AppColors2.textDark,
+                    letterSpacing: -0.5),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Your reserve has been submitted successfully.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: AppColors2.textMid),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14, color: AppColors2.textMid),
               ),
               const SizedBox(height: 32),
               _PayloadSummaryCard(payload: payload, formatKey: _formatKey),
@@ -1392,14 +1364,13 @@ class _PayloadSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'SUBMITTED PAYLOAD',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: AppColors2.textLight,
-              letterSpacing: 1.2,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 11,
+                lWeight: FontWeight.w700,
+                color: AppColors2.textLight,
+                letterSpacing: 1.2),
           ),
           const SizedBox(height: 14),
           ...payload.entries.map(
@@ -1431,17 +1402,17 @@ class _PayloadRow extends StatelessWidget {
             width: 144,
             child: Text(
               label,
-              style: const TextStyle(fontSize: 13, color: AppColors2.textMid),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13, color: AppColors2.textMid),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AppColors2.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13,
+                  lWeight: FontWeight.w600,
+                  color: AppColors2.textDark),
             ),
           ),
         ],
@@ -1468,13 +1439,10 @@ class _DoneButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
         ),
-        child: const Text(
+        child: Text(
           'Done',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: FontManager().getTextStyle(context,
+              color: Colors.white, fontSize: 16, lWeight: FontWeight.w600),
         ),
       ),
     );
@@ -1516,11 +1484,8 @@ class _Badge extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-          ),
+          style: FontManager().getTextStyle(context,
+              color: Colors.white, fontSize: 13, lWeight: FontWeight.w700),
         ),
       );
 }
@@ -1601,11 +1566,8 @@ class _ScreenTitle extends StatelessWidget {
   Widget build(BuildContext context) => Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: AppColors2.textDark,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 20, lWeight: FontWeight.w700, color: AppColors2.textDark),
       );
 }
 
@@ -1620,11 +1582,8 @@ class _ScreenSubtitle extends StatelessWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 13,
-            color: AppColors2.textMid,
-            height: 1.5,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13, color: AppColors2.textMid, lineHeight: 1.5),
         ),
       );
 }

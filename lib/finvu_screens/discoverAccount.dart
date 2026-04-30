@@ -172,7 +172,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   ? Padding(
                       padding: const EdgeInsets.only(top: 6, bottom: 2),
                       child: Text('$n bank${n > 1 ? 's' : ''} selected',
-                          style: const TextStyle(
+                          style: FontManager().getTextStyle(context,
                               fontSize: 12, color: Color(0xFF8E8E93))),
                     )
                   : const SizedBox(height: 6);
@@ -187,11 +187,11 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   decoration: BoxDecoration(
                       color: const Color(0xFF3D3B5E),
                       borderRadius: BorderRadius.circular(14)),
-                  child: const Center(
+                  child: Center(
                     child: Text('Continue',
-                        style: TextStyle(
+                        style: FontManager().getTextStyle(context,
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            lWeight: FontWeight.bold,
                             color: Colors.white)),
                   ),
                 ),
@@ -221,12 +221,13 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 2, 20, 12),
-              child: Row(children: const [
+              child: Row(children: [
                 Icon(Icons.info_outline_rounded,
                     size: 13, color: Color(0xFF8E8E93)),
                 SizedBox(width: 4),
                 Text('Unable to support joint account holders',
-                    style: TextStyle(fontSize: 12, color: Color(0xFF8E8E93))),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: Color(0xFF8E8E93))),
               ]),
             ),
 
@@ -254,10 +255,10 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     children: [
                       // Popular grid
                       if (showPopular && _popularBanks.isNotEmpty) ...[
-                        const Text('Popular Banks',
-                            style: TextStyle(
+                        Text('Popular Banks',
+                            style: FontManager().getTextStyle(context,
                                 fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                                lWeight: FontWeight.w600,
                                 color: Color(0xFF3D3B5E))),
                         const SizedBox(height: 10),
                         Row(
@@ -293,9 +294,9 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                       textAlign: TextAlign.center,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
+                                      style: FontManager().getTextStyle(context,
                                           fontSize: 11,
-                                          fontWeight: FontWeight.w500,
+                                          lWeight: FontWeight.w500,
                                           color: sel
                                               ? const Color(0xFF3D3B5E)
                                               : const Color(0xFF1C1C1E)),
@@ -319,11 +320,11 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
                       // Bank list
                       if (list.isEmpty)
-                        const Center(
+                        Center(
                             child: Padding(
                                 padding: EdgeInsets.only(top: 30),
                                 child: Text('No banks found',
-                                    style: TextStyle(
+                                    style: FontManager().getTextStyle(context,
                                         fontSize: 14,
                                         color: Color(0xFF8E8E93)))))
                       else
@@ -449,9 +450,9 @@ class _BankRowState extends State<_BankRow> {
                             widget.bankData.fipId,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: FontManager().getTextStyle(context,
                             fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                            lWeight: FontWeight.w500,
                             color: Color(0xFF1C1C1E)),
                       ),
                       if (status != FipHealthStatus.unknown) ...[
@@ -463,7 +464,7 @@ class _BankRowState extends State<_BankRow> {
                                 status != FipHealthStatus.down) ...[
                               const SizedBox(width: 6),
                               Text('${latency.toStringAsFixed(0)} ms',
-                                  style: const TextStyle(
+                                  style: FontManager().getTextStyle(context,
                                       fontSize: 11, color: Color(0xFF8E8E93))),
                             ],
                             if (widget.messages.isNotEmpty) ...[
@@ -475,9 +476,10 @@ class _BankRowState extends State<_BankRow> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(_expanded ? 'Less' : 'Details',
-                                        style: const TextStyle(
+                                        style: FontManager().getTextStyle(
+                                            context,
                                             fontSize: 11,
-                                            fontWeight: FontWeight.w500,
+                                            lWeight: FontWeight.w500,
                                             color: Color(0xFF3D3B5E))),
                                     Icon(
                                       _expanded
@@ -556,14 +558,14 @@ class _InlineMsg extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(message.title,
-                    style: TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                        lWeight: FontWeight.w600,
                         color: c.titleColor)),
                 const SizedBox(height: 2),
                 Text(message.detail,
-                    style: TextStyle(
-                        fontSize: 11, color: c.detailColor, height: 1.4)),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 11, color: c.detailColor, lineHeight: 1.4)),
               ],
             ),
           ),
@@ -639,8 +641,8 @@ class _StatusBadge extends StatelessWidget {
                   BoxDecoration(color: cfg.dot, shape: BoxShape.circle)),
           const SizedBox(width: 4),
           Text(cfg.label,
-              style: TextStyle(
-                  fontSize: 11, fontWeight: FontWeight.w500, color: cfg.text)),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 11, lWeight: FontWeight.w500, color: cfg.text)),
         ],
       ),
     );
@@ -737,9 +739,9 @@ class _FilterPillRow extends StatelessWidget {
                       const SizedBox(width: 5),
                     ],
                     Text(f.label,
-                        style: TextStyle(
+                        style: FontManager().getTextStyle(context,
                             fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            lWeight: FontWeight.w500,
                             color: isActive
                                 ? Colors.white
                                 : const Color(0xFF3C3C3C))),
@@ -891,18 +893,19 @@ class _BankLogo extends StatelessWidget {
         height: size,
         child: uri.isNotEmpty
             ? Image.network(uri,
-                fit: BoxFit.contain, errorBuilder: (_, __, ___) => _fallback())
-            : _fallback(),
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => _fallback(context))
+            : _fallback(context),
       ),
     );
   }
 
-  Widget _fallback() => Container(
+  Widget _fallback(BuildContext context) => Container(
       color: _colors[0],
       alignment: Alignment.center,
       child: Text(_initials,
-          style: TextStyle(
+          style: FontManager().getTextStyle(context,
               fontSize: size * 0.3,
-              fontWeight: FontWeight.w600,
+              lWeight: FontWeight.w600,
               color: _colors[1])));
 }

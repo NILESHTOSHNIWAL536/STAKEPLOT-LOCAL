@@ -279,7 +279,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                 const SizedBox(height: 2),
                 Text(
                   "Manage your collection",
-                  style: TextStyle(fontSize: 12, color: _T.textLight),
+                  style: FontManager()
+                      .getTextStyle(context, fontSize: 12, color: _T.textLight),
                 ),
               ],
             ),
@@ -295,12 +296,11 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
       padding: const EdgeInsets.only(left: 4, bottom: 4),
       child: Text(
         label.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: _T.textLight,
-          letterSpacing: 1.1,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 11,
+            lWeight: FontWeight.w700,
+            color: _T.textLight,
+            letterSpacing: 1.1),
       ),
     );
   }
@@ -364,8 +364,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                         _alertEnabled
                             ? "Notifying when threshold is reached"
                             : "Get notified when a transaction exceeds limit",
-                        style: TextStyle(
-                            fontSize: 12, color: _T.textMid, height: 1.3),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12, color: _T.textMid, lineHeight: 1.3),
                       ),
                     ],
                   ),
@@ -405,14 +405,13 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                               color: _T.navyBg,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 "₹",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: _T.navy,
-                                ),
+                                style: FontManager().getTextStyle(context,
+                                    fontSize: 14,
+                                    lWeight: FontWeight.w700,
+                                    color: _T.navy),
                               ),
                             ),
                           ),
@@ -514,7 +513,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(fontSize: 12, color: _T.textMid),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: _T.textMid),
                     ),
                   ],
                 ),
@@ -583,8 +583,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style:
-                          TextStyle(fontSize: 12, color: Colors.red.shade400),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: Colors.red.shade400),
                     ),
                   ],
                 ),
@@ -623,7 +623,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
           children: [
             Text(
               "Enter a new name for this collection.",
-              style: TextStyle(fontSize: 13, color: _T.textMid, height: 1.5),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13, color: _T.textMid, lineHeight: 1.5),
             ),
             const SizedBox(height: 14),
             _StyledTextField(
@@ -660,7 +661,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         iconColor: Colors.orange,
         content: Text(
           "Are you sure you want to close this collection? You won't be able to add new transactions.",
-          style: TextStyle(fontSize: 13, color: _T.textMid, height: 1.5),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13, color: _T.textMid, lineHeight: 1.5),
         ),
         confirmLabel: "Close Collection",
         confirmColor: Colors.orange,
@@ -690,7 +692,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
           type == "delete"
               ? "This action cannot be undone. All data in this collection will be permanently deleted."
               : "Are you sure you want to exit this collection? You will lose access to all transactions and details.",
-          style: TextStyle(fontSize: 13, color: _T.textMid, height: 1.5),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13, color: _T.textMid, lineHeight: 1.5),
         ),
         confirmLabel: type == "delete" ? "Delete" : "Exit Collection",
         confirmColor: Colors.red,
@@ -736,8 +739,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
               children: [
                 Text(
                   "Are you sure you want to reopen this collection?",
-                  style:
-                      TextStyle(fontSize: 13, color: _T.textMid, height: 1.5),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 13, color: _T.textMid, lineHeight: 1.5),
                 ),
                 const SizedBox(height: 10),
                 Padding(
@@ -821,15 +824,14 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "Edit Duration Range",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: _T.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 16,
+                          lWeight: FontWeight.w700,
+                          color: _T.textDark),
                     ),
                   ),
                   const SizedBox(width: 48),
@@ -943,11 +945,10 @@ class _StyledDialogState extends State<_StyledDialog>
                       padding: const EdgeInsets.only(top: 11),
                       child: Text(
                         widget.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: _T.textDark,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 16,
+                            lWeight: FontWeight.w700,
+                            color: _T.textDark),
                       ),
                     ),
                   ),
@@ -984,13 +985,12 @@ class _StyledDialogState extends State<_StyledDialog>
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Cancel",
-                        style: TextStyle(
-                          color: _T.textDark,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            color: _T.textDark,
+                            fontSize: 14,
+                            lWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -1025,11 +1025,10 @@ class _StyledDialogState extends State<_StyledDialog>
                             )
                           : Text(
                               widget.confirmLabel,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: FontManager().getTextStyle(context,
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  lWeight: FontWeight.w700),
                             ),
                     ),
                   ),
@@ -1127,7 +1126,8 @@ void _showLimitDialog(
         children: [
           Text(
             "Set the maximum spending limit for this member.",
-            style: TextStyle(fontSize: 13, color: _T.textMid, height: 1.5),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13, color: _T.textMid, lineHeight: 1.5),
           ),
           const SizedBox(height: 14),
           _StyledTextField(

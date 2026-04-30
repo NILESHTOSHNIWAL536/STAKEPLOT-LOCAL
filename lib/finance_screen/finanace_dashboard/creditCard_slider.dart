@@ -12,6 +12,8 @@ import '../../controllers/credit_card_controller.dart';
 import '../../email_sync/credit_card_transactions.dart';
 import '../../email_sync/custom_steps.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class CardDueCarousel extends StatefulWidget {
   bool flag = true;
   CardDueCarousel({super.key, this.flag = true});
@@ -21,9 +23,7 @@ class CardDueCarousel extends StatefulWidget {
 }
 
 class _CardDueCarouselState extends State<CardDueCarousel> {
-
-
-    @override
+  @override
   void initState() {
     super.initState();
     cardController.fetchCardData();
@@ -39,9 +39,8 @@ class _CardDueCarouselState extends State<CardDueCarousel> {
               appBar: AppBar(
                 title: Text(
                   'Credit Cards',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                  ),
+                  style: FontManager()
+                      .getTextStyle(context, color: AppColors.primaryColor),
                 ),
                 backgroundColor: AppColors.backgroundColor,
                 leading: leadIcon(context),

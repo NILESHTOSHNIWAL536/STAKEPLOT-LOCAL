@@ -59,7 +59,7 @@ class CardBuilders {
                   maxLines: 1,
                   color: AppColors.primaryColor,
                 ),
-                 SizedBox(height: AppSizes.h6),
+                SizedBox(height: AppSizes.h6),
                 // globalText(
                 //   context: context,
                 //   text:  PlotFinanceStaticData().amountLabel,
@@ -201,158 +201,159 @@ class CardBuilders {
       ),
     );
   }
-static Widget budgetCard(BuildContext context, dynamic data) {
-  double budgetAmount =
-      double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
-  double spentAmount =
-      double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
 
-  // Clamp values
-  if (spentAmount < 0) spentAmount = 0;
-  if (budgetAmount < 0) budgetAmount = 0;
+  static Widget budgetCard(BuildContext context, dynamic data) {
+    double budgetAmount =
+        double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
+    double spentAmount =
+        double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
 
-  double remaining = budgetAmount - spentAmount;
-  if (remaining < 0) remaining = 0;
+    // Clamp values
+    if (spentAmount < 0) spentAmount = 0;
+    if (budgetAmount < 0) budgetAmount = 0;
 
-  double progress =
-      budgetAmount > 0 ? (spentAmount / budgetAmount).clamp(0.0, 1.0) : 0.0;
+    double remaining = budgetAmount - spentAmount;
+    if (remaining < 0) remaining = 0;
 
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyBudgetScreen(data: data),
-        ),
-      );
-    },
-    child: Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
-      constraints: BoxConstraints(
-        minHeight: 80,
-        maxWidth: MediaQuery.of(context).size.width * 0.85,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFF3F4F6),
-          width: 1,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            offset: Offset(0, 1),
-            blurRadius: 2,
+    double progress =
+        budgetAmount > 0 ? (spentAmount / budgetAmount).clamp(0.0, 1.0) : 0.0;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyBudgetScreen(data: data),
           ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
+        constraints: BoxConstraints(
+          minHeight: 80,
+          maxWidth: MediaQuery.of(context).size.width * 0.85,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyBudgetScreen(data: data),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.p16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Top title: "Your Budget"
-                globalText(
-                  context: context,
-                  text: 'Your Budget',
-                  fontWeight: FontWeight.w600,
-                  fontsize: 14,
-                  color: AppColors.accentColor,
+          border: Border.all(
+            color: const Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyBudgetScreen(data: data),
                 ),
-                SizedBox(height: AppSizes.h10),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.p16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Top title: "Your Budget"
+                  globalText(
+                    context: context,
+                    text: 'Your Budget',
+                    fontWeight: FontWeight.w600,
+                    fontsize: 14,
+                    color: AppColors.accentColor,
+                  ),
+                  SizedBox(height: AppSizes.h10),
 
-                // Row with Total Spent and Remaining
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Total Spent
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        globalText(
-                          context: context,
-                          text:
-                              formatMoneyIndian(spentAmount.toStringAsFixed(0)),
-                          fontWeight: FontWeight.w700,
-                          fontsize: 24,
-                          color: AppColors.primaryColor,
-                        ),
-                        SizedBox(height: AppSizes.h2),
-                        globalText(
-                          context: context,
-                          text: 'Total Spent',
-                          fontWeight: FontWeight.w500,
-                          fontsize: 12,
-                          color: Colors.grey[600]!,
-                        ),
-                      ],
-                    ),
+                  // Row with Total Spent and Remaining
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Total Spent
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          globalText(
+                            context: context,
+                            text: formatMoneyIndian(
+                                spentAmount.toStringAsFixed(0)),
+                            fontWeight: FontWeight.w700,
+                            fontsize: 24,
+                            color: AppColors.primaryColor,
+                          ),
+                          SizedBox(height: AppSizes.h2),
+                          globalText(
+                            context: context,
+                            text: 'Total Spent',
+                            fontWeight: FontWeight.w500,
+                            fontsize: 12,
+                            color: Colors.grey[600]!,
+                          ),
+                        ],
+                      ),
 
-                    // Remaining
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        globalText(
-                          context: context,
-                          text:
-                              formatMoneyIndian(remaining.toStringAsFixed(0)),
-                          fontWeight: FontWeight.w700,
-                          fontsize: 24,
-                          color: AppColors.accentColor,
-                        ),
-                        SizedBox(height: AppSizes.h2),
-                        globalText(
-                          context: context,
-                          text: 'Remaining',
-                          fontWeight: FontWeight.w500,
-                          fontsize: 12,
-                          color: Colors.grey[600]!,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      // Remaining
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          globalText(
+                            context: context,
+                            text:
+                                formatMoneyIndian(remaining.toStringAsFixed(0)),
+                            fontWeight: FontWeight.w700,
+                            fontsize: 24,
+                            color: AppColors.accentColor,
+                          ),
+                          SizedBox(height: AppSizes.h2),
+                          globalText(
+                            context: context,
+                            text: 'Remaining',
+                            fontWeight: FontWeight.w500,
+                            fontsize: 12,
+                            color: Colors.grey[600]!,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
 
-                SizedBox(height: AppSizes.h12),
+                  SizedBox(height: AppSizes.h12),
 
-                // Horizontal progress bar
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox(
-                    height: 6,
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        AppColors.primaryColor.withOpacity(0.9),
+                  // Horizontal progress bar
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox(
+                      height: 6,
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primaryColor.withOpacity(0.9),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   // static Widget budgetCard(BuildContext context, dynamic data) {
   //   double budgetAmount =
@@ -532,7 +533,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
   //                           pointColorMapper: (ChartData data, _) => data.color,
   //                           innerRadius: '60%',
   //                           radius: '100%',
-  //                           dataLabelSettings: const DataLabelSettings(
+  //                           dataLabelSettings: DataLabelSettings(
   //                             isVisible: false,
   //                             labelPosition: ChartDataLabelPosition.outside,
   //                             textStyle: TextStyle(
@@ -731,7 +732,8 @@ static Widget budgetCard(BuildContext context, dynamic data) {
           AvatarProfileImageZero(
               url: svgIconPath.financepayReceive, width: 1, height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10, vertical: AppSizes.p20),
             decoration: BoxDecoration(
               // color: AppColors.mt,
               borderRadius: BorderRadius.circular(16),
@@ -839,7 +841,8 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(36),
                       ),
-                      child: Icon(Icons.arrow_forward_ios, color: AppColors.backgroundColor),
+                      child: Icon(Icons.arrow_forward_ios,
+                          color: AppColors.backgroundColor),
                     ),
                   ],
                 ),

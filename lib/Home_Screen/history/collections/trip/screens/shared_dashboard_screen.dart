@@ -13,6 +13,8 @@ import 'select_transactions_sheet.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class SharedCollectionDashboard extends StatefulWidget {
   const SharedCollectionDashboard({super.key});
 
@@ -208,8 +210,8 @@ class _SearchAddBar extends StatelessWidget {
                       color: AppColorsForCollection.textLight, size: 20),
                   contentPadding: const EdgeInsets.symmetric(vertical: 13),
                   hintText: 'Search splits...',
-                  hintStyle:
-                      const TextStyle(color: AppColorsForCollection.textLight, fontSize: 13),
+                  hintStyle: const TextStyle(
+                      color: AppColorsForCollection.textLight, fontSize: 13),
                 ),
               ),
             ),
@@ -326,11 +328,10 @@ class _SectionHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1832),
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 16,
+                lWeight: FontWeight.w700,
+                color: Color(0xFF1A1832)),
           ),
           const SizedBox(width: 8),
           Container(
@@ -341,11 +342,10 @@ class _SectionHeader extends StatelessWidget {
             ),
             child: Text(
               '$count',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppColorsForCollection.primaryDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 11,
+                  lWeight: FontWeight.w700,
+                  color: AppColorsForCollection.primaryDark),
             ),
           ),
           const Spacer(),
@@ -364,16 +364,15 @@ class _SectionHeader extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(Icons.add_rounded, color: Colors.white, size: 15),
                     SizedBox(width: 4),
                     Text(
                       'Add',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          color: Colors.white,
+                          fontSize: 13,
+                          lWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -394,11 +393,10 @@ class _SectionHeader extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     'View Only',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade400,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12,
+                        lWeight: FontWeight.w500,
+                        color: Colors.grey.shade400),
                   ),
                 ],
               ),
@@ -466,11 +464,10 @@ class _SplitCard extends StatelessWidget {
                   child: Center(
                     child: Text(
                       initial,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          color: Colors.white,
+                          lWeight: FontWeight.w700,
+                          fontSize: 16),
                     ),
                   ),
                 ),
@@ -481,11 +478,10 @@ class _SplitCard extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1832),
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 14,
+                            lWeight: FontWeight.w700,
+                            color: Color(0xFF1A1832)),
                       ),
                       const SizedBox(height: 2),
                       // const Text(
@@ -507,11 +503,10 @@ class _SplitCard extends StatelessWidget {
                   ),
                   child: Text(
                     '₹${total.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      color: Color(0xFF2D2B5B),
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: Color(0xFF2D2B5B),
+                        lWeight: FontWeight.w800,
+                        fontSize: 14),
                   ),
                 ),
               ],
@@ -534,11 +529,10 @@ class _SplitCard extends StatelessWidget {
                     ),
                     child: Text(
                       '${s.user?.name ?? 'User'} • ₹${s.amount.toStringAsFixed(0)}',
-                      style:  TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 11,
+                          lWeight: FontWeight.w600,
+                          color: AppColors.primaryColor),
                     ),
                   );
                 }).toList(),
@@ -548,11 +542,10 @@ class _SplitCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
                     '+${split.splits.length - 3} more people',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF4B4D73),
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 11,
+                        color: Color(0xFF4B4D73),
+                        lWeight: FontWeight.w500),
                   ),
                 ),
             ],
@@ -567,10 +560,8 @@ class _SplitCard extends StatelessWidget {
                 const SizedBox(width: 5),
                 Text(
                   split.createdAt != null ? _formatDate(split.createdAt!) : '',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFACACAC),
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 12, color: Color(0xFFACACAC)),
                 ),
                 const Spacer(),
                 Container(
@@ -581,14 +572,13 @@ class _SplitCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
-                    children: const [
+                    children: [
                       Text(
                         'View Details',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF4B4D73),
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 11,
+                            lWeight: FontWeight.w600,
+                            color: Color(0xFF4B4D73)),
                       ),
                       SizedBox(width: 3),
                       Icon(Icons.arrow_forward_ios_rounded,
@@ -649,20 +639,19 @@ class _EmptyDashboard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'No Splits Yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1832),
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 18,
+                lWeight: FontWeight.w700,
+                color: Color(0xFF1A1832)),
           ),
           const SizedBox(height: 8),
           Text(
             'Add transactions and split them\nwith your group members.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 13, color: Colors.grey.shade500, height: 1.5),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13, color: Colors.grey.shade500, lineHeight: 1.5),
           ),
           const SizedBox(height: 28),
           GestureDetector(
@@ -684,16 +673,15 @@ class _EmptyDashboard extends StatelessWidget {
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(Icons.add_rounded, color: Colors.white, size: 18),
                   SizedBox(width: 8),
                   Text(
                     'Add First Transaction',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: Colors.white,
+                        fontSize: 15,
+                        lWeight: FontWeight.w700),
                   ),
                 ],
               ),

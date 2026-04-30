@@ -5,8 +5,10 @@ import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class MaskedNameDialogBox {
-  static  showMaskedNameDialog(BuildContext context) {
+  static showMaskedNameDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -41,54 +43,51 @@ class MaskedNameDialogBox {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title
-          const Text(
+          Text(
             'Create a Masked Name',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppColors.accentColorOpacity,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 20,
+                lWeight: FontWeight.bold,
+                color: AppColors.accentColorOpacity),
           ),
-           SizedBox(height: AppSizes.h12),
+          SizedBox(height: AppSizes.h12),
           // Description
-           Text(
+          Text(
             'Use a masked name to post, like, comment, and more while keeping your identity private.',
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.grey,
-              height: 1.5,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 16, color: AppColors.grey, lineHeight: 1.5),
           ),
-           SizedBox(height: AppSizes.h20),
+          SizedBox(height: AppSizes.h20),
           // Close button
           Row(
             children: [
-               TextButton(
-                onPressed: () async{  
+              TextButton(
+                onPressed: () async {
                   await getMaskedNumber(context);
-                   Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MaskNameScreen(isupdate: true,)),
-                        
-                      );},
-                child: const Text(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MaskNameScreen(
+                              isupdate: true,
+                            )),
+                  );
+                },
+                child: Text(
                   'Create ',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 16,
+                      color: AppColors.primaryColor,
+                      lWeight: FontWeight.w600),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child:  Text(
+                child: Text(
                   'Close',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 16,
+                      color: AppColors.grey,
+                      lWeight: FontWeight.w600),
                 ),
               ),
             ],

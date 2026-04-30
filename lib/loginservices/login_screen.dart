@@ -110,65 +110,69 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppColors.backgroundColor, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),
-                        kIsWeb ? Text(""):   Platform.isAndroid || Platform.isWindows
-                              ? Text('')
-                              : Container(
-                                  width: MediaQuery.sizeOf(context).width / 2.5,
-                                  height:
-                                      MediaQuery.sizeOf(context).height / 16,
-                                  // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: const Color(0xFFE5E7EB),
-                                      width: 1,
-                                    ),
-                                    boxShadow: [AppShadows.soft],
-                                  ),
-                                  child: SignInWithAppleButton(
-                                    text: '',
-                                    onPressed: () async {
-                                      if (Platform.isAndroid) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UserOnboarding()));
-                                      }
-                                      if (appleSignInBool.value)
-                                        return; // Prevent multiple clicks
-                                      appleSignInBool.value =
-                                          true; // Set loading state
-                                      try {
-                                        final userdataApple =
-                                            await AuthService()
-                                                .signInWithApple(context);
+                          kIsWeb
+                              ? Text("")
+                              : Platform.isAndroid || Platform.isWindows
+                                  ? Text('')
+                                  : Container(
+                                      width: MediaQuery.sizeOf(context).width /
+                                          2.5,
+                                      height:
+                                          MediaQuery.sizeOf(context).height /
+                                              16,
+                                      // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: const Color(0xFFE5E7EB),
+                                          width: 1,
+                                        ),
+                                        boxShadow: [AppShadows.soft],
+                                      ),
+                                      child: SignInWithAppleButton(
+                                        text: '',
+                                        onPressed: () async {
+                                          if (Platform.isAndroid) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserOnboarding()));
+                                          }
+                                          if (appleSignInBool.value)
+                                            return; // Prevent multiple clicks
+                                          appleSignInBool.value =
+                                              true; // Set loading state
+                                          try {
+                                            final userdataApple =
+                                                await AuthService()
+                                                    .signInWithApple(context);
 
-                                        if (userdataApple != null &&
-                                            userdataApple['data']
-                                                    ['accessToken'] !=
-                                                null) {
-                                          LoginService.loginCalledData(
-                                              userdataApple, context,
-                                              flag: true);
-                                        } else if (userdataApple != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UserDetailsPage(
-                                                      data: userdataApple,
-                                                      isAppleUser: true,
-                                                    )),
-                                          );
-                                        } else {}
-                                      } finally {
-                                        appleSignInBool.value =
-                                            false; // Reset loading state
-                                      }
-                                    },
-                                  ),
-                                ),
+                                            if (userdataApple != null &&
+                                                userdataApple['data']
+                                                        ['accessToken'] !=
+                                                    null) {
+                                              LoginService.loginCalledData(
+                                                  userdataApple, context,
+                                                  flag: true);
+                                            } else if (userdataApple != null) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserDetailsPage(
+                                                          data: userdataApple,
+                                                          isAppleUser: true,
+                                                        )),
+                                              );
+                                            } else {}
+                                          } finally {
+                                            appleSignInBool.value =
+                                                false; // Reset loading state
+                                          }
+                                        },
+                                      ),
+                                    ),
                         ],
                       ),
                     ],
@@ -246,7 +250,6 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
             emailController,
           );
-          
         },
         child: Container(
           height: MediaQuery.of(context).size.height * 0.06,
@@ -280,10 +283,8 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Or login with',
-            style: TextStyle(
-              color: AppColors.grey,
-              fontSize: 14,
-            ),
+            style: FontManager()
+                .getTextStyle(context, color: AppColors.grey, fontSize: 14),
           ),
         ),
       ],

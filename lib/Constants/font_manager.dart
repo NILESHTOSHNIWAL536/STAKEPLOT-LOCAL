@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FontManager {
-  TextStyle getTextStyle( 
+  TextStyle getTextStyle(
     BuildContext context, {
-    Color color = Colors.black,
+    Color? color = Colors.black,
     FontWeight lWeight = FontWeight.normal,
     lineHeight = 1.0,
     maxLines = 2,
@@ -13,15 +13,16 @@ class FontManager {
     textAlign = TextAlign.start,
     FontStyle lFontStyle = FontStyle.normal,
     softWrap = false,
-    decorationColor = Colors.black,
+    Color? decorationColor = Colors.black,
     double fontSize = 18.0,
     decoration = TextDecoration.none,
     letterSpacing = 0.24,
     TextOverflow overflow = TextOverflow.visible,
     decorationThickness = 0.0,
     decorationStyle = TextDecorationStyle.solid,
+    String? fontFamily,
   }) {
-    return GoogleFonts.roboto(
+    final style = GoogleFonts.roboto(
       fontSize: fontSize,
       fontWeight: lWeight,
       height: lineHeight,
@@ -33,6 +34,8 @@ class FontManager {
       decorationThickness: decorationThickness,
       decorationStyle: decorationStyle,
     );
+
+    return fontFamily == null ? style : style.copyWith(fontFamily: fontFamily);
   }
 }
 // import 'package:flutter/material.dart';
@@ -80,15 +83,14 @@ class FontManager {
 //       decorationColor: decorationColor,
 //       decorationThickness: decorationThickness,
 //       decorationStyle: decorationStyle,
-     
-     
+
 //     );
 //   }
 // }
 class FontManager2 {
   TextStyle getTextStyle(
     BuildContext context, {
-    Color color = Colors.black,
+    Color? color = Colors.black,
     FontWeight lWeight = FontWeight.normal,
     lineHeight = 1.0,
     maxLines = 2,
@@ -96,18 +98,17 @@ class FontManager2 {
     textAlign = TextAlign.start,
     FontStyle lFontStyle = FontStyle.normal,
     softWrap = false,
-    decorationColor = Colors.black,
+    Color? decorationColor = Colors.black,
     double fontSize = 18.0,
     decoration = TextDecoration.none,
     letterSpacing = 0.0,
     TextOverflow overflow = TextOverflow.visible,
     decorationThickness = 0.0,
     decorationStyle = TextDecorationStyle.solid,
-    
+    String? fontFamily,
   }) {
-    return GoogleFonts.roboto(
+    final style = GoogleFonts.roboto(
       fontSize: fontSize,
-      
       fontWeight: lWeight,
       height: lineHeight,
       fontStyle: lFontStyle,
@@ -118,5 +119,7 @@ class FontManager2 {
       decorationThickness: decorationThickness,
       decorationStyle: decorationStyle,
     );
+
+    return fontFamily == null ? style : style.copyWith(fontFamily: fontFamily);
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ─────────────────────────────────────────
 // MODELS
 // ─────────────────────────────────────────
@@ -265,7 +267,8 @@ class _GoaTripPageState extends State<GroupCoolectionsPage> {
                 child: Center(
                   child: Text(
                     'Bills are automatically split between members.',
-                    style: TextStyle(fontSize: 12, color: kTextSecondary),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: kTextSecondary),
                   ),
                 ),
               ),
@@ -280,11 +283,10 @@ class _GoaTripPageState extends State<GroupCoolectionsPage> {
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
                 child: Text(
                   'Transactions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: kTextPrimary,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18,
+                      lWeight: FontWeight.w700,
+                      color: kTextPrimary),
                 ),
               ),
             ),
@@ -306,8 +308,6 @@ class _GoaTripPageState extends State<GroupCoolectionsPage> {
     );
   }
 }
-
-
 
 class _CircleIconBtn extends StatelessWidget {
   final IconData icon;
@@ -359,11 +359,10 @@ class _AvatarCircle extends StatelessWidget {
       child: Center(
         child: Text(
           initial,
-          style: TextStyle(
-            color: textColor,
-            fontWeight: FontWeight.w700,
-            fontSize: size * 0.38,
-          ),
+          style: FontManager().getTextStyle(context,
+              color: textColor,
+              lWeight: FontWeight.w700,
+              fontSize: size * 0.38),
         ),
       ),
     );
@@ -383,16 +382,14 @@ class _SectionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: kTextPrimary)),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 18, lWeight: FontWeight.w700, color: kTextPrimary)),
           if (onViewAll != null)
             GestureDetector(
               onTap: onViewAll,
-              child: const Text('View All',
-                  style: TextStyle(
-                      fontSize: 13, color: kNavy, fontWeight: FontWeight.w500)),
+              child: Text('View All',
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 13, color: kNavy, lWeight: FontWeight.w500)),
             ),
         ],
       ),
@@ -477,11 +474,11 @@ class _GroupInfoBadge extends StatelessWidget {
         color: kNavy.withOpacity(0.08),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
           '4 Members  |  Active since May 2024',
-          style: TextStyle(
-              fontSize: 13, color: kNavy, fontWeight: FontWeight.w500),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13, color: kNavy, lWeight: FontWeight.w500),
         ),
       ),
     );
@@ -522,14 +519,15 @@ class _CombinedAmountCard extends StatelessWidget {
               children: [
                 Text(
                   '₹${13330.toStringAsFixed(0)}',
-                  style: const TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 28,
-                      fontWeight: FontWeight.w800,
+                      lWeight: FontWeight.w800,
                       color: kTextPrimary),
                 ),
                 const SizedBox(height: 2),
-                const Text('Combined Amount',
-                    style: TextStyle(fontSize: 13, color: kTextSecondary)),
+                Text('Combined Amount',
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 13, color: kTextSecondary)),
               ],
             ),
           ),
@@ -577,9 +575,9 @@ class _MemberSpendCard extends StatelessWidget {
               Flexible(
                 child: Text(
                   member.name,
-                  style: const TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                      lWeight: FontWeight.w600,
                       color: kTextPrimary),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -634,11 +632,9 @@ class _BalanceStatusSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Balance Status',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: kTextPrimary)),
+        Text('Balance Status',
+            style: FontManager().getTextStyle(context,
+                fontSize: 18, lWeight: FontWeight.w700, color: kTextPrimary)),
         const SizedBox(height: 12),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -696,9 +692,9 @@ class _BalanceCard extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(title,
-                  style: TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                      lWeight: FontWeight.w600,
                       color: kTextPrimary)),
             ],
           ),
@@ -712,17 +708,15 @@ class _BalanceCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(e.name,
-                        style: const TextStyle(
+                        style: FontManager().getTextStyle(context,
                             fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            lWeight: FontWeight.w500,
                             color: kTextPrimary)),
                   ),
                   Text(
                     '₹${e.amount.toStringAsFixed(0)}',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: amtClr),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 13, lWeight: FontWeight.w600, color: amtClr),
                   ),
                 ],
               ),
@@ -784,14 +778,14 @@ class _BillCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(bill.title,
-                    style: const TextStyle(
+                    style: FontManager().getTextStyle(context,
                         fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                        lWeight: FontWeight.w600,
                         color: kTextPrimary)),
                 const SizedBox(height: 2),
                 Text('Due: ${bill.dueDate}',
-                    style:
-                        const TextStyle(fontSize: 12, color: kTextSecondary)),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: kTextSecondary)),
               ],
             ),
           ),
@@ -799,9 +793,9 @@ class _BillCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text('₹${bill.amount.toStringAsFixed(0)}',
-                  style: const TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                      lWeight: FontWeight.w700,
                       color: kTextPrimary)),
               const SizedBox(height: 4),
               _StatusBadge(isPaid: bill.isPaid),
@@ -827,11 +821,10 @@ class _StatusBadge extends StatelessWidget {
       ),
       child: Text(
         isPaid ? 'Paid' : 'Pending',
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: isPaid ? kGreen : kOrange,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 11,
+            lWeight: FontWeight.w600,
+            color: isPaid ? kGreen : kOrange),
       ),
     );
   }
@@ -857,14 +850,14 @@ class _AddBillButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: kNavy, width: 1.5),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.add_rounded, size: 20, color: kNavy),
             SizedBox(width: 6),
             Text('Add Bill',
-                style: TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w600, color: kNavy)),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 15, lWeight: FontWeight.w600, color: kNavy)),
           ],
         ),
       ),
@@ -915,23 +908,23 @@ class _TransactionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(tx.personName,
-                        style: const TextStyle(
+                        style: FontManager().getTextStyle(context,
                             fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            lWeight: FontWeight.w600,
                             color: kTextPrimary)),
                     Text(
                       '- ₹${tx.amount.toStringAsFixed(2)}',
-                      style: const TextStyle(
+                      style: FontManager().getTextStyle(context,
                           fontSize: 14,
-                          fontWeight: FontWeight.w700,
+                          lWeight: FontWeight.w700,
                           color: kTextPrimary),
                     ),
                   ],
                 ),
                 const SizedBox(height: 2),
                 Text(tx.date,
-                    style:
-                        const TextStyle(fontSize: 12, color: kTextSecondary)),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: kTextSecondary)),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -945,10 +938,10 @@ class _TransactionCard extends StatelessWidget {
                     ),
                     Text(
                       '${tx.addedBy} Added',
-                      style: const TextStyle(
+                      style: FontManager().getTextStyle(context,
                           fontSize: 11,
                           color: kTextSecondary,
-                          fontStyle: FontStyle.italic),
+                          lFontStyle: FontStyle.italic),
                     ),
                   ],
                 ),
@@ -977,11 +970,10 @@ class _Tag extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: isOutlined ? kTextSecondary : Colors.white,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 11,
+            lWeight: FontWeight.w500,
+            color: isOutlined ? kTextSecondary : Colors.white),
       ),
     );
   }

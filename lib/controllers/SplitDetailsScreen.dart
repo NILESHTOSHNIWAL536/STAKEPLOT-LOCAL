@@ -10,21 +10,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../model/collections_model.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ── Design tokens ─────────────────────────────────────────────────────────────
 class _C {
-  static const bg       = Color(0xFFF5F3EF);
-  static const surface  = Colors.white;
-  static const navy     = Color(0xFF2D2B5B);
-  static const navyMid  = Color(0xFF4B4D73);
-  static const navyBg   = Color(0xFFEEEDF8);
-  static const border   = Color(0xFFEBEBEB);
+  static const bg = Color(0xFFF5F3EF);
+  static const surface = Colors.white;
+  static const navy = Color(0xFF2D2B5B);
+  static const navyMid = Color(0xFF4B4D73);
+  static const navyBg = Color(0xFFEEEDF8);
+  static const border = Color(0xFFEBEBEB);
   static const textDark = Color(0xFF1A1832);
-  static const textMid  = Color(0xFF6B7280);
-  static const textLight= Color(0xFFACACAC);
-  static const green    = Color(0xFF22C55E);
-  static const greenBg  = Color(0xFFDCFCE7);
-  static const orange   = Color(0xFFFF8C69);
-  static const red      = Color(0xFFEF4444);
+  static const textMid = Color(0xFF6B7280);
+  static const textLight = Color(0xFFACACAC);
+  static const green = Color(0xFF22C55E);
+  static const greenBg = Color(0xFFDCFCE7);
+  static const orange = Color(0xFFFF8C69);
+  static const red = Color(0xFFEF4444);
 }
 
 class SplitDetailsScreen extends StatelessWidget {
@@ -34,9 +36,9 @@ class SplitDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total  = split.splits.fold(0.0, (sum, e) => sum + e.amount);
-    final size   = MediaQuery.of(context).size;
-    final hPad   = size.width * 0.045;
+    final total = split.splits.fold(0.0, (sum, e) => sum + e.amount);
+    final size = MediaQuery.of(context).size;
+    final hPad = size.width * 0.045;
 
     return Scaffold(
       backgroundColor: _C.bg,
@@ -93,21 +95,24 @@ class SplitDetailsScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
-                    width: 38, height: 38,
+                    width: 38,
+                    height: 38,
                     decoration: BoxDecoration(
                       color: _C.surface,
                       shape: BoxShape.circle,
                       border: Border.all(color: _C.border),
                     ),
-                    child: const Icon(Icons.arrow_back_rounded, size: 18, color: _C.textDark),
+                    child: const Icon(Icons.arrow_back_rounded,
+                        size: 18, color: _C.textDark),
                   ),
                 ),
                 const Spacer(),
-                const Text(
+                Text(
                   'Split Details',
-                  style: TextStyle(
-                    fontSize: 17, fontWeight: FontWeight.w700, color: _C.textDark,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 17,
+                      lWeight: FontWeight.w700,
+                      color: _C.textDark),
                 ),
                 const Spacer(),
                 const SizedBox(width: 38), // balance
@@ -126,13 +131,14 @@ class _HeaderCard extends StatelessWidget {
   final SplitModel split;
   final double hPad;
 
-  const _HeaderCard({required this.total, required this.split, required this.hPad});
+  const _HeaderCard(
+      {required this.total, required this.split, required this.hPad});
 
   @override
   Widget build(BuildContext context) {
-    final name    = split.paidByUser?.name ?? 'Unknown';
+    final name = split.paidByUser?.name ?? 'Unknown';
     final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
-    final date    = split.createdAt != null ? _formatDate(split.createdAt!) : '';
+    final date = split.createdAt != null ? _formatDate(split.createdAt!) : '';
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: hPad),
@@ -166,27 +172,26 @@ class _HeaderCard extends StatelessWidget {
                   children: [
                     Text(
                       'Amount',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white.withOpacity(0.65),
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.65),
+                          lWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '₹${total.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -0.5,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 32,
+                          lWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -0.5),
                     ),
                   ],
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: _C.green.withOpacity(0.18),
                     borderRadius: BorderRadius.circular(20),
@@ -195,17 +200,17 @@ class _HeaderCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.check_circle_rounded, size: 13, color: _C.green),
+                      Icon(Icons.check_circle_rounded,
+                          size: 13, color: _C.green),
                       const SizedBox(width: 5),
                       Text(
                         split.splitType.isNotEmpty
                             ? _capitalize(split.splitType)
                             : 'Shared',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: _C.green,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12,
+                            lWeight: FontWeight.w600,
+                            color: _C.green),
                       ),
                     ],
                   ),
@@ -221,7 +226,8 @@ class _HeaderCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 36, height: 36,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.18),
                     shape: BoxShape.circle,
@@ -229,9 +235,10 @@ class _HeaderCard extends StatelessWidget {
                   child: Center(
                     child: Text(
                       initial,
-                      style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          color: Colors.white,
+                          lWeight: FontWeight.w700,
+                          fontSize: 14),
                     ),
                   ),
                 ),
@@ -241,16 +248,15 @@ class _HeaderCard extends StatelessWidget {
                   children: [
                     Text(
                       'Paid by',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.white.withOpacity(0.55),
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 11, color: Colors.white.withOpacity(0.55)),
                     ),
                     Text(
                       name,
-                      style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 14,
+                          lWeight: FontWeight.w700,
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -258,15 +264,14 @@ class _HeaderCard extends StatelessWidget {
                 if (date.isNotEmpty)
                   Row(
                     children: [
-                      Icon(Icons.calendar_today_outlined, size: 12,
-                          color: Colors.white.withOpacity(0.5)),
+                      Icon(Icons.calendar_today_outlined,
+                          size: 12, color: Colors.white.withOpacity(0.5)),
                       const SizedBox(width: 5),
                       Text(
                         date,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.65),
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12,
+                            color: Colors.white.withOpacity(0.65)),
                       ),
                     ],
                   ),
@@ -279,7 +284,20 @@ class _HeaderCard extends StatelessWidget {
   }
 
   String _formatDate(DateTime dt) {
-    const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const m = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     return '${dt.day} ${m[dt.month - 1]} ${dt.year}';
   }
 
@@ -304,9 +322,8 @@ class _SectionTitle extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w700, color: _C.textDark,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 15, lWeight: FontWeight.w700, color: _C.textDark),
           ),
           if (trailing != null)
             Container(
@@ -317,9 +334,8 @@ class _SectionTitle extends StatelessWidget {
               ),
               child: Text(
                 trailing!,
-                style: const TextStyle(
-                  fontSize: 11, fontWeight: FontWeight.w600, color: _C.navy,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 11, lWeight: FontWeight.w600, color: _C.navy),
               ),
             ),
         ],
@@ -354,19 +370,22 @@ class _TransactionsList extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.03),
-                blurRadius: 8, offset: const Offset(0, 2),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Row(
             children: [
               Container(
-                width: 40, height: 40,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                   color: _C.navyBg,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.receipt_long_rounded, color: _C.navy, size: 18),
+                child: const Icon(Icons.receipt_long_rounded,
+                    color: _C.navy, size: 18),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -375,9 +394,10 @@ class _TransactionsList extends StatelessWidget {
                   children: [
                     Text(
                       tx.narration ?? 'Transaction',
-                      style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w600, color: _C.textDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 13,
+                          lWeight: FontWeight.w600,
+                          color: _C.textDark),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -385,7 +405,8 @@ class _TransactionsList extends StatelessWidget {
                       const SizedBox(height: 3),
                       Text(
                         _formatTs(tx.transactionTimestamp.toString()),
-                        style: const TextStyle(fontSize: 11, color: _C.textLight),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 11, color: _C.textLight),
                       ),
                     ],
                   ],
@@ -397,9 +418,8 @@ class _TransactionsList extends StatelessWidget {
                 children: [
                   Text(
                     '₹${tx.amount.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w800, color: _C.navy,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14, lWeight: FontWeight.w800, color: _C.navy),
                   ),
                   const SizedBox(height: 3),
                   GestureDetector(
@@ -416,12 +436,13 @@ class _TransactionsList extends StatelessWidget {
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Icon(Icons.copy_rounded, size: 11, color: _C.textLight),
                         SizedBox(width: 3),
                         Text(
                           'Copy ID',
-                          style: TextStyle(fontSize: 10, color: _C.textLight),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 10, color: _C.textLight),
                         ),
                       ],
                     ),
@@ -438,7 +459,20 @@ class _TransactionsList extends StatelessWidget {
   String _formatTs(String ts) {
     try {
       final dt = DateTime.parse(ts);
-      const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const m = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+      ];
       final h = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
       final min = dt.minute.toString().padLeft(2, '0');
       final ampm = dt.hour >= 12 ? 'PM' : 'AM';
@@ -457,8 +491,12 @@ class _MembersList extends StatelessWidget {
   const _MembersList({required this.split, required this.hPad});
 
   static const List<Color> _avatarColors = [
-    Color(0xFF2D2B5B), Color(0xFF4B4D73), Color(0xFF6366F1),
-    Color(0xFF0EA5E9), Color(0xFF10B981), Color(0xFFF59E0B),
+    Color(0xFF2D2B5B),
+    Color(0xFF4B4D73),
+    Color(0xFF6366F1),
+    Color(0xFF0EA5E9),
+    Color(0xFF10B981),
+    Color(0xFFF59E0B),
   ];
 
   @override
@@ -472,12 +510,12 @@ class _MembersList extends StatelessWidget {
       itemCount: split.splits.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (ctx, i) {
-        final s       = split.splits[i];
-        final name    = s.user?.name ?? 'User';
+        final s = split.splits[i];
+        final name = s.user?.name ?? 'User';
         final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
-        final color   = _avatarColors[i % _avatarColors.length];
-        final pct     = total > 0 ? (s.amount / total * 100) : 0.0;
-        final isMe    = s.userId == split.paidBy;
+        final color = _avatarColors[i % _avatarColors.length];
+        final pct = total > 0 ? (s.amount / total * 100) : 0.0;
+        final isMe = s.userId == split.paidBy;
 
         return Container(
           padding: const EdgeInsets.all(14),
@@ -491,7 +529,8 @@ class _MembersList extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.03),
-                blurRadius: 8, offset: const Offset(0, 2),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -499,23 +538,26 @@ class _MembersList extends StatelessWidget {
             children: [
               // Avatar
               Container(
-                width: 44, height: 44,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
                       color: color.withOpacity(0.25),
-                      blurRadius: 8, offset: const Offset(0, 3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Center(
                   child: Text(
                     initial,
-                    style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: Colors.white,
+                        lWeight: FontWeight.w700,
+                        fontSize: 16),
                   ),
                 ),
               ),
@@ -530,23 +572,26 @@ class _MembersList extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w700, color: _C.textDark,
-                          ),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 14,
+                              lWeight: FontWeight.w700,
+                              color: _C.textDark),
                         ),
                         if (isMe) ...[
                           const SizedBox(width: 6),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 2),
                             decoration: BoxDecoration(
                               color: _C.navyBg,
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const Text(
+                            child: Text(
                               'You',
-                              style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w700, color: _C.navy,
-                              ),
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 10,
+                                  lWeight: FontWeight.w700,
+                                  color: _C.navy),
                             ),
                           ),
                         ],
@@ -555,7 +600,8 @@ class _MembersList extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '${pct.toStringAsFixed(1)}% of total',
-                      style: const TextStyle(fontSize: 12, color: _C.textMid),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: _C.textMid),
                     ),
                   ],
                 ),
@@ -563,16 +609,16 @@ class _MembersList extends StatelessWidget {
 
               // Amount badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: _C.greenBg,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '₹${s.amount.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w800, color: _C.green,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 14, lWeight: FontWeight.w800, color: _C.green),
                 ),
               ),
             ],

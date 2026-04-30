@@ -7,6 +7,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 /// Example page using the offline-aware scaffold
 class Connections extends StatelessWidget {
   Connections({super.key});
@@ -147,7 +149,9 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
         curve: Curves.easeInOut,
         height: showBottomBar ? 58 : 0,
         decoration: BoxDecoration(
-          color: showBottomBar ? const Color(0xFF202335) : AppColors.transparentColor,
+          color: showBottomBar
+              ? const Color(0xFF202335)
+              : AppColors.transparentColor,
           boxShadow: showBottomBar
               ? [
                   BoxShadow(
@@ -164,7 +168,8 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
                 minimum: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                 child: Row(
                   children: [
-                    const Icon(Icons.wifi_off_rounded, color: AppColors.whiteOpacity07),
+                    const Icon(Icons.wifi_off_rounded,
+                        color: AppColors.whiteOpacity07),
                     SizedBox(width: AppSizes.w10),
                     Expanded(
                       child: Text(
@@ -234,8 +239,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(64, 0, 0, 0)
-,
+                      color: Color.fromARGB(64, 0, 0, 0),
                       blurRadius: 24,
                       spreadRadius: 2,
                     )
@@ -325,7 +329,8 @@ class _FilledActionButton extends StatelessWidget {
       icon: Icon(icon),
       label: Text(label),
       style: FilledButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p14),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
@@ -349,10 +354,13 @@ class _OutlineActionButton extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, color: AppColors.backgroundColor),
-      label: Text(label, style: const TextStyle(color: AppColors.backgroundColor)),
+      label: Text(label,
+          style: FontManager()
+              .getTextStyle(context, color: AppColors.backgroundColor)),
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: Colors.white54, width: 1.2),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p14),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );

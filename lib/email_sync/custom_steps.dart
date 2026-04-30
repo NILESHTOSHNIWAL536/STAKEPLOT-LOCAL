@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import '../Constants/colors.dart';
 import '../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class CustomStepper extends StatelessWidget {
   final int activeStep;
@@ -67,13 +68,12 @@ class CustomStepper extends StatelessWidget {
                   /// 🔹 STEP LABEL
                   Text(
                     "Step ${stepIndex + 1}",
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight:
-                          isActive ? FontWeight.bold : FontWeight.normal,
-                      color:
-                          isCompleted || isActive ? activeColor : Colors.grey,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 11,
+                        lWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                        color: isCompleted || isActive
+                            ? activeColor
+                            : Colors.grey),
                   ),
                 ],
               ),

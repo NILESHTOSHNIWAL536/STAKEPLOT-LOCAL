@@ -49,8 +49,8 @@ class SliderAdddingFinances extends StatelessWidget {
                 pushnameToRoute(context, SelectAnyOptionScreen(), false);
               },
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: AppSizes.p12, horizontal: 3),
+                padding: const EdgeInsets.symmetric(
+                    vertical: AppSizes.p12, horizontal: 3),
                 child: Container(
                   width: 52,
                   decoration: BoxDecoration(
@@ -68,14 +68,13 @@ class SliderAdddingFinances extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       '+',
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          color: AppColors.primaryColor,
+                          fontSize: 32,
+                          lWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -117,7 +116,7 @@ class SliderAdddingFinances extends StatelessWidget {
                       child: CardBuilders.budgetCard(context, budget),
                     ),
                   )),
-                 
+
               // Display Debts
               ...debts.take(2).toList().map((debt) => Padding(
                     padding:
@@ -154,7 +153,8 @@ class SliderAdddingFinances extends StatelessWidget {
           children: [
             SizedBox(width: AppSizes.w18),
             Container(
-              padding: EdgeInsets.symmetric(vertical: AppSizes.p28, horizontal: 0),
+              padding:
+                  EdgeInsets.symmetric(vertical: AppSizes.p28, horizontal: 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

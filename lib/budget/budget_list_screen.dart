@@ -14,6 +14,8 @@ import 'budget_planner_screen.dart';
 import 'create_budget_screen.dart';
 import 'budget_detail_screen.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 const _kPrimary = Color(0xFF4A4580);
 const _kBg = Color(0xFFF5F0E8);
 const _kCard = Colors.white;
@@ -78,13 +80,13 @@ class _BudgetListScreenState extends State<BudgetListScreen> {
                   const Icon(Icons.arrow_back, color: Colors.white, size: 20),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Text('My Budgets',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: FontManager().getTextStyle(context,
                     color: Colors.white,
                     fontSize: 18,
-                    fontWeight: FontWeight.w600)),
+                    lWeight: FontWeight.w600)),
           ),
           GestureDetector(
             onTap: () {
@@ -158,7 +160,9 @@ class _BudgetListScreenState extends State<BudgetListScreen> {
               child: const Text('Cancel')),
           TextButton(
               onPressed: () => Get.back(result: true),
-              child: const Text('Delete', style: TextStyle(color: Colors.red))),
+              child: Text('Delete',
+                  style:
+                      FontManager().getTextStyle(context, color: Colors.red))),
         ],
       ),
     );
@@ -226,10 +230,10 @@ class _BudgetCard extends StatelessWidget {
                     Icon(_categoryIcon(name), color: _kPrimary, size: 20),
                     const SizedBox(width: 8),
                     Text(name,
-                        style: const TextStyle(
+                        style: FontManager().getTextStyle(context,
                             color: _kText,
                             fontSize: 16,
-                            fontWeight: FontWeight.w600)),
+                            lWeight: FontWeight.w600)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -239,10 +243,10 @@ class _BudgetCard extends StatelessWidget {
                   children: [
                     Text(
                       '₹${_formatNum(amount)}',
-                      style: const TextStyle(
+                      style: FontManager().getTextStyle(context,
                           color: _kText,
                           fontSize: 20,
-                          fontWeight: FontWeight.bold),
+                          lWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 10),
                     _Badge(label: '$percentage% spent'),
@@ -272,7 +276,8 @@ class _BudgetCard extends StatelessWidget {
                         color: _kSubText, size: 14),
                     const SizedBox(width: 4),
                     Text('$daysLeft days left',
-                        style: const TextStyle(color: _kSubText, fontSize: 12)),
+                        style: FontManager().getTextStyle(context,
+                            color: _kSubText, fontSize: 12)),
                   ],
                 ),
               ],
@@ -314,8 +319,8 @@ class _BudgetCard extends StatelessWidget {
           const SizedBox(height: 8),
           ListTile(
             leading: const Icon(Icons.delete_outline, color: Colors.red),
-            title: const Text('Delete Budget',
-                style: TextStyle(color: Colors.red)),
+            title: Text('Delete Budget',
+                style: FontManager().getTextStyle(context, color: Colors.red)),
             onTap: () {
               Get.back();
               onDelete();
@@ -357,8 +362,8 @@ class _Badge extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(label,
-          style: const TextStyle(
-              color: _kPrimary, fontSize: 11, fontWeight: FontWeight.w600)),
+          style: FontManager().getTextStyle(context,
+              color: _kPrimary, fontSize: 11, lWeight: FontWeight.w600)),
     );
   }
 }
@@ -396,12 +401,13 @@ class _EmptyState extends StatelessWidget {
           Icon(Icons.account_balance_wallet_outlined,
               size: 72, color: _kPrimary.withOpacity(0.3)),
           const SizedBox(height: 16),
-          const Text('No budgets yet',
-              style: TextStyle(
-                  color: _kText, fontSize: 18, fontWeight: FontWeight.w600)),
+          Text('No budgets yet',
+              style: FontManager().getTextStyle(context,
+                  color: _kText, fontSize: 18, lWeight: FontWeight.w600)),
           const SizedBox(height: 8),
-          const Text('Tap + to create your first budget',
-              style: TextStyle(color: _kSubText, fontSize: 14)),
+          Text('Tap + to create your first budget',
+              style: FontManager()
+                  .getTextStyle(context, color: _kSubText, fontSize: 14)),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: onAdd,

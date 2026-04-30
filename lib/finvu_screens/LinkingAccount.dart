@@ -208,12 +208,11 @@ class _LinkingAccountState extends State<LinkingAccount>
       ),
       title: Text(
         'Select Account To Share',
-        style: TextStyle(
-          fontSize: 17 * textScale,
-          fontWeight: FontWeight.w700,
-          color: const Color(0xFF1A1A2E),
-          letterSpacing: -0.3,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 17 * textScale,
+            lWeight: FontWeight.w700,
+            color: const Color(0xFF1A1A2E),
+            letterSpacing: -0.3),
       ),
       centerTitle: true,
       actions: [
@@ -257,11 +256,10 @@ class _LinkingAccountState extends State<LinkingAccount>
               SizedBox(width: 8 * textScale),
               Text(
                 'Bank Accounts',
-                style: TextStyle(
-                  fontSize: 15 * textScale,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primaryColor,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 15 * textScale,
+                    lWeight: FontWeight.w700,
+                    color: AppColors.primaryColor),
               ),
               SizedBox(width: 6 * textScale),
               Obx(() => Container(
@@ -273,11 +271,10 @@ class _LinkingAccountState extends State<LinkingAccount>
                     ),
                     child: Text(
                       '${count.value} discovered',
-                      style: TextStyle(
-                        fontSize: 10 * textScale,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 10 * textScale,
+                          lWeight: FontWeight.w600,
+                          color: Colors.white),
                     ),
                   )),
             ],
@@ -310,11 +307,10 @@ class _LinkingAccountState extends State<LinkingAccount>
           SizedBox(width: 10 * textScale),
           Text(
             'See what you will share',
-            style: TextStyle(
-              fontSize: 14 * textScale,
-              color: const Color(0xFF8A8A9A),
-              fontWeight: FontWeight.w500,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 14 * textScale,
+                color: const Color(0xFF8A8A9A),
+                lWeight: FontWeight.w500),
           ),
           const Spacer(),
           Icon(Icons.keyboard_arrow_down_rounded,
@@ -330,20 +326,18 @@ class _LinkingAccountState extends State<LinkingAccount>
       children: [
         Text(
           'Missing any accounts?',
-          style: TextStyle(
-            fontSize: 13 * textScale,
-            color: const Color(0xFF8A8A9A),
-            fontWeight: FontWeight.w500,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13 * textScale,
+              color: const Color(0xFF8A8A9A),
+              lWeight: FontWeight.w500),
         ),
         GestureDetector(
           child: Text(
             '+ Add More',
-            style: TextStyle(
-              fontSize: 13 * textScale,
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.w700,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13 * textScale,
+                color: AppColors.primaryColor,
+                lWeight: FontWeight.w700),
           ),
         ),
       ],
@@ -371,11 +365,10 @@ class _LinkingAccountState extends State<LinkingAccount>
               SizedBox(width: 4 * textScale),
               Text(
                 'Double check your selection before authorising',
-                style: TextStyle(
-                  fontSize: 11 * textScale,
-                  color: const Color(0xFF8A8A9A),
-                  fontWeight: FontWeight.w500,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 11 * textScale,
+                    color: const Color(0xFF8A8A9A),
+                    lWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -445,12 +438,11 @@ class _LinkingAccountState extends State<LinkingAccount>
       child: Center(
         child: Text(
           FinvuStrings().authorise,
-          style: TextStyle(
-            fontSize: 16 * textScale,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-            letterSpacing: 0.3,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 16 * textScale,
+              lWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 0.3),
         ),
       ),
     );
@@ -487,11 +479,10 @@ class _LinkingAccountState extends State<LinkingAccount>
                     SizedBox(height: 16 * textScale),
                     Text(
                       "${seletedAccountIds.length} ${FinvuStrings().bankAccountsShared}",
-                      style: TextStyle(
-                        fontSize: 16 * textScale,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1A1A2E),
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 16 * textScale,
+                          lWeight: FontWeight.w700,
+                          color: const Color(0xFF1A1A2E)),
                     ),
                     SizedBox(height: 20 * textScale),
                     GestureDetector(
@@ -508,7 +499,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                     SizedBox(height: 12 * textScale),
                     Text(
                       FinvuStrings().fetchAccountTransactions,
-                      style: TextStyle(
+                      style: FontManager().getTextStyle(context,
                           fontSize: 11 * textScale,
                           color: const Color(0xFF8A8A9A)),
                     ),
@@ -535,18 +526,17 @@ class _LinkingAccountState extends State<LinkingAccount>
         ),
         SizedBox(height: 16 * textScale),
         Text(title,
-            style: TextStyle(
+            style: FontManager().getTextStyle(context,
                 fontSize: 15 * textScale,
-                fontWeight: FontWeight.w700,
+                lWeight: FontWeight.w700,
                 color: const Color(0xFF1A1A2E))),
         SizedBox(height: 8 * textScale),
         Text(
           des,
-          style: TextStyle(
-            fontSize: 13 * textScale,
-            fontWeight: FontWeight.w500,
-            color: AppColors.redColor,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 13 * textScale,
+              lWeight: FontWeight.w500,
+              color: AppColors.redColor),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20 * textScale),
@@ -567,21 +557,19 @@ class _LinkingAccountState extends State<LinkingAccount>
         children: [
           Text(
             FinvuStrings().bankAccounts,
-            style: TextStyle(
-              fontSize: 13 * textScale,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primaryColor,
-              letterSpacing: 0.5,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13 * textScale,
+                lWeight: FontWeight.w700,
+                color: AppColors.primaryColor,
+                letterSpacing: 0.5),
           ),
           SizedBox(height: 4 * textScale),
           Text(
             FinvuStrings().selectAtLeastOneAccount,
-            style: TextStyle(
-              fontSize: 13 * textScale,
-              color: const Color(0xFF6B6B80),
-              fontWeight: FontWeight.w400,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13 * textScale,
+                color: const Color(0xFF6B6B80),
+                lWeight: FontWeight.w400),
           ),
         ],
       ),
@@ -696,11 +684,10 @@ class _LinkingAccountState extends State<LinkingAccount>
             Center(
               child: Text(
                 FinvuStrings().securelyAuthorize,
-                style: TextStyle(
-                  fontSize: 15 * textScale,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1A1A2E),
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 15 * textScale,
+                    lWeight: FontWeight.w700,
+                    color: const Color(0xFF1A1A2E)),
               ),
             ),
             SizedBox(height: 16 * textScale),
@@ -708,21 +695,19 @@ class _LinkingAccountState extends State<LinkingAccount>
             SizedBox(height: 16 * textScale),
             Text(
               FinvuStrings().otpVerification,
-              style: TextStyle(
-                fontSize: 20 * textScale,
-                fontWeight: FontWeight.w800,
-                color: const Color(0xFF1A1A2E),
-                letterSpacing: -0.5,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 20 * textScale,
+                  lWeight: FontWeight.w800,
+                  color: const Color(0xFF1A1A2E),
+                  letterSpacing: -0.5),
             ),
             SizedBox(height: 6 * textScale),
             Text(
               "${FinvuStrings().enterOtpSentTo} ${number.value}",
-              style: TextStyle(
-                fontSize: 13 * textScale,
-                color: const Color(0xFF6B6B80),
-                fontWeight: FontWeight.w400,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13 * textScale,
+                  color: const Color(0xFF6B6B80),
+                  lWeight: FontWeight.w400),
             ),
             SizedBox(height: 16 * textScale),
             Obx(() => TextField(
@@ -782,11 +767,10 @@ class _LinkingAccountState extends State<LinkingAccount>
                         SizedBox(width: 4 * textScale),
                         Text(
                           FinvuStrings().incorrectOtp,
-                          style: TextStyle(
-                            fontSize: 12 * textScale,
-                            color: AppColors.redColor,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 12 * textScale,
+                              color: AppColors.redColor,
+                              lWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -798,10 +782,10 @@ class _LinkingAccountState extends State<LinkingAccount>
               children: [
                 Text(
                   FinvuStrings().didntReceiveOtp,
-                  style: TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 13 * textScale,
                       color: const Color(0xFF8A8A9A),
-                      fontWeight: FontWeight.w400),
+                      lWeight: FontWeight.w400),
                 ),
                 SizedBox(width: 4 * textScale),
                 Obx(() => GestureDetector(
@@ -812,13 +796,12 @@ class _LinkingAccountState extends State<LinkingAccount>
                         canResendOtp.value
                             ? FinvuStrings().resendOtp
                             : "${FinvuStrings().resendInSeconds} ${otpCountdown.value}s",
-                        style: TextStyle(
-                          fontSize: 13 * textScale,
-                          fontWeight: FontWeight.w700,
-                          color: canResendOtp.value
-                              ? AppColors.primaryColor
-                              : const Color(0xFFBBBBC8),
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 13 * textScale,
+                            lWeight: FontWeight.w700,
+                            color: canResendOtp.value
+                                ? AppColors.primaryColor
+                                : const Color(0xFFBBBBC8)),
                       ),
                     )),
               ],
@@ -871,11 +854,10 @@ class _LinkingAccountState extends State<LinkingAccount>
       child: Center(
         child: Text(
           FinvuStrings().verify,
-          style: TextStyle(
-            fontSize: 16 * textScale,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 16 * textScale,
+              lWeight: FontWeight.w700,
+              color: Colors.white),
         ),
       ),
     );
@@ -1012,11 +994,10 @@ class _LinkingAccountState extends State<LinkingAccount>
                             children: [
                               Text(
                                 'Swipe',
-                                style: TextStyle(
-                                  fontSize: 10 * textScale,
-                                  color: const Color(0xFFBBBBC8),
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: FontManager().getTextStyle(context,
+                                    fontSize: 10 * textScale,
+                                    color: const Color(0xFFBBBBC8),
+                                    lWeight: FontWeight.w500),
                               ),
                               SizedBox(width: 3 * textScale),
                               Icon(Icons.arrow_forward_ios_rounded,
@@ -1066,11 +1047,10 @@ class _LinkingAccountState extends State<LinkingAccount>
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 10 * textScale,
-          fontWeight: FontWeight.w600,
-          color: isShared ? Colorcodes.graphColor2 : AppColors.primaryColor,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 10 * textScale,
+            lWeight: FontWeight.w600,
+            color: isShared ? Colorcodes.graphColor2 : AppColors.primaryColor),
       ),
     );
   }
@@ -1088,22 +1068,20 @@ class _LinkingAccountState extends State<LinkingAccount>
       children: [
         Text(
           accountType,
-          style: TextStyle(
-            fontSize: 14 * textScale,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF1A1A2E),
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 14 * textScale,
+              lWeight: FontWeight.w700,
+              color: const Color(0xFF1A1A2E)),
         ),
         SizedBox(height: 2 * textScale),
         Text(
           // bankData.maskedAccountNumber,
           maskedNum,
-          style: TextStyle(
-            fontSize: 12 * textScale,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF8A8A9A),
-            letterSpacing: 1,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 12 * textScale,
+              lWeight: FontWeight.w500,
+              color: const Color(0xFF8A8A9A),
+              letterSpacing: 1),
         ),
       ],
     );
@@ -1257,11 +1235,10 @@ class _LinkingAccountState extends State<LinkingAccount>
               SizedBox(width: 10 * textScale),
               Text(
                 bankData.productName.toString(),
-                style: TextStyle(
-                  fontSize: 15 * textScale,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1A1A2E),
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 15 * textScale,
+                    lWeight: FontWeight.w700,
+                    color: const Color(0xFF1A1A2E)),
               ),
             ],
           ),
@@ -1300,11 +1277,10 @@ class _LinkingAccountState extends State<LinkingAccount>
                         SizedBox(width: 4 * textScale),
                         Text(
                           FinvuStrings().linkNow,
-                          style: TextStyle(
-                            fontSize: 12 * textScale,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 12 * textScale,
+                              lWeight: FontWeight.w700,
+                              color: Colors.white),
                         ),
                       ],
                     ),
@@ -1394,9 +1370,9 @@ class _LinkingAccountState extends State<LinkingAccount>
                   size: 18 * textScale, color: const Color(0xFF8A8A9A)),
               SizedBox(width: 8 * textScale),
               Text(BankText.text1,
-                  style: TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 14 * textScale,
-                      fontWeight: FontWeight.w700,
+                      lWeight: FontWeight.w700,
                       color: const Color(0xFF1A1A2E))),
             ],
           ),
@@ -1408,15 +1384,15 @@ class _LinkingAccountState extends State<LinkingAccount>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('• ',
-                            style: TextStyle(
+                            style: FontManager().getTextStyle(context,
                                 fontSize: 13 * textScale,
                                 color: const Color(0xFF8A8A9A))),
                         Expanded(
                           child: Text(t,
-                              style: TextStyle(
+                              style: FontManager().getTextStyle(context,
                                   fontSize: 13 * textScale,
                                   color: const Color(0xFF6B6B80),
-                                  fontWeight: FontWeight.w400)),
+                                  lWeight: FontWeight.w400)),
                         ),
                       ],
                     ),

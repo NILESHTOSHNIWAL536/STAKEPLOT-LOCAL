@@ -358,7 +358,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               width: screenWidth * 0.02), // 5% of screen width
                           Text(
                             "It will take around 10 minutes to fetch the data.",
-                            style: TextStyle(
+                            style: FontManager().getTextStyle(context,
                                 fontSize:
                                     screenWidth * 0.02), // 4% of screen width
                           ),
@@ -370,7 +370,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           Container(
                             child: Text(
                               mess.value,
-                              style: TextStyle(
+                              style: FontManager().getTextStyle(context,
                                   fontSize:
                                       screenWidth * 0.02), // 4% of screen width
                             ),

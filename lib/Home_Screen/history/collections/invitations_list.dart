@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/components/shared_utils.dart'
 import 'package:get/get.dart';
 import '../../../backed_connections/apis_connect.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class InvitationsList extends StatelessWidget {
   const InvitationsList({Key? key}) : super(key: key);
 
@@ -43,10 +45,8 @@ class InvitationsList extends StatelessWidget {
                   child: Text(
                     invite.invitedBy?.name?.substring(0, 1).toUpperCase() ??
                         "A",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: Colors.white, lWeight: FontWeight.bold),
                   ),
                 ),
 
@@ -66,8 +66,8 @@ class InvitationsList extends StatelessWidget {
                                 Flexible(
                                   child: Text(
                                     invite.collection?.name ?? "",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.w600,
                                         fontSize: 16,
                                         color: Colors.black87),
                                     overflow: TextOverflow.ellipsis,
@@ -85,7 +85,7 @@ class InvitationsList extends StatelessWidget {
                                   ),
                                   child: Text(
                                     invite.role.toLowerCase(),
-                                    style: const TextStyle(
+                                    style: FontManager().getTextStyle(context,
                                         fontSize: 10, color: Colors.black87),
                                   ),
                                 ),
@@ -97,10 +97,8 @@ class InvitationsList extends StatelessWidget {
                           Text(
                             formatWhatsAppDate(
                                 invite.createdAt ?? DateTime.now()),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey.shade600,
-                            ),
+                            style: FontManager().getTextStyle(context,
+                                fontSize: 10, color: Colors.grey.shade600),
                           ),
                         ],
                       ),
@@ -110,10 +108,8 @@ class InvitationsList extends StatelessWidget {
                       /// MESSAGE
                       Text(
                         "You have been invited by ${invite.invitedBy?.name ?? "someone"}",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade700,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12, color: Colors.grey.shade700),
                       ),
 
                       const SizedBox(height: 10),
@@ -134,13 +130,12 @@ class InvitationsList extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 alignment: Alignment.center,
-                                child: const Text(
+                                child: Text(
                                   "Accept",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: FontManager().getTextStyle(context,
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      lWeight: FontWeight.w500),
                                 ),
                               ),
                             ),
@@ -163,13 +158,12 @@ class InvitationsList extends StatelessWidget {
                                       Border.all(color: Colors.grey.shade300),
                                 ),
                                 alignment: Alignment.center,
-                                child: const Text(
+                                child: Text(
                                   "Delete",
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: FontManager().getTextStyle(context,
+                                      color: Colors.black87,
+                                      fontSize: 12,
+                                      lWeight: FontWeight.w500),
                                 ),
                               ),
                             ),
@@ -219,8 +213,8 @@ class InvitationsList extends StatelessWidget {
 
                     Text(
                       isAccept ? "Accept Invitation?" : "Delete Invitation?",
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w600),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 18, lWeight: FontWeight.w600),
                     ),
 
                     const SizedBox(height: 10),
@@ -230,7 +224,8 @@ class InvitationsList extends StatelessWidget {
                           ? "Do you want to accept this invite?"
                           : "This action will remove the invite permanently.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade600),
+                      style: FontManager()
+                          .getTextStyle(context, color: Colors.grey.shade600),
                     ),
 
                     const SizedBox(height: 24),
@@ -332,10 +327,8 @@ class InvitationsList extends StatelessWidget {
                 // Title
                 Text(
                   isAccept ? "Accept Invitation?" : "Delete Invitation?",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18, lWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
 
@@ -346,10 +339,8 @@ class InvitationsList extends StatelessWidget {
                   isAccept
                       ? "Do you want to accept this invite?"
                       : "This action will remove the invite permanently.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 14, color: Colors.grey.shade600),
                   textAlign: TextAlign.center,
                 ),
 

@@ -30,13 +30,12 @@ import '../../controllers/collections_controller.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 
-
 Future<void> callApi(context) async {
   contextGlobal = context;
 
   final userController = Get.find<UserController>();
   final insightsController = Get.put(InsightsController());
-  final budgetController = Get.find<BudgetControllerScreenModel>();
+  // final budgetController = Get.find<BudgetControllerScreenModel>();
 
   // ✅ STEP 1: Only CRITICAL (block minimal)
   await userController.fetchUserInfo();
@@ -49,7 +48,7 @@ Future<void> callApi(context) async {
         getAck(),
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
-        budgetController.getBudget(),
+        // budgetController.getBudget(),
         getHiddenTransactions(context),
         insightsController.getHomePageInsights(context),
         insightsController.getHomePageMoneyMapInsights(context),

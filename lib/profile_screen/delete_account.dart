@@ -9,7 +9,6 @@ import 'package:flutter_application_code_stakeplot/profile_screen/emailVerifyDel
 import '../Constants/core/app_padding_sizes.dart';
 import '../repository/delete_banks_users.dart';
 
-
 class DeleteAccountScreen extends StatefulWidget {
   @override
   _DeleteAccountScreenState createState() => _DeleteAccountScreenState();
@@ -38,12 +37,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ),
         title: Text(
           'Delete Account',
-           style: FontManager().getTextStyle(
-          context,
-          fontSize: 18,
-          lWeight: FontWeight.w600,
-          color: AppColors.accentColor,
-        ),
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 18,
+            lWeight: FontWeight.w600,
+            color: AppColors.accentColor,
+          ),
         ),
         centerTitle: true,
       ),
@@ -54,40 +53,32 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: AppSizes.h40),
-              
-              
               Center(
                 child: Text(
                   "We're sorry to see you go!",
                   style: FontManager().getTextStyle(
-          context,
-          fontSize: 18,
-          lWeight: FontWeight.w600,
-          color: AppColors.accentColor,
-        ),
+                    context,
+                    fontSize: 18,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.accentColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              
               SizedBox(height: AppSizes.h24),
-              
-              
               Center(
                 child: Text(
                   "Please help us improve by letting us know why you're deleting your account",
-                   style: FontManager().getTextStyle(
-          context,
-          fontSize: 16,
-          lWeight: FontWeight.w400,
-          color: AppColors.accentColor,
-        ),
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 16,
+                    lWeight: FontWeight.w400,
+                    color: AppColors.accentColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              
               SizedBox(height: AppSizes.h40),
-              
-              
               Center(
                 child: Container(
                   height: 120,
@@ -99,9 +90,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      
                       Positioned(
-                        top:AppSizes.p20,
+                        top: AppSizes.p20,
                         left: 40,
                         child: Container(
                           width: 60,
@@ -113,8 +103,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                         ),
                       ),
                       Positioned(
-                        top:AppSizes.p30,
-                        right:AppSizes.p40,
+                        top: AppSizes.p30,
+                        right: AppSizes.p40,
                         child: Container(
                           width: 60,
                           height: 80,
@@ -124,7 +114,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           ),
                         ),
                       ),
-                      
                       Container(
                         width: 70,
                         height: 90,
@@ -142,29 +131,23 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   ),
                 ),
               ),
-              
               SizedBox(height: AppSizes.h40),
-              
-              
               Text(
                 'Reason for Deletion (Required)',
                 style: FontManager().getTextStyle(
-          context,
-          fontSize: 16,
-          lWeight: FontWeight.w600,
-          color: AppColors.accentColor,
-        ),
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.w600,
+                  color: AppColors.accentColor,
+                ),
               ),
-              
               SizedBox(height: AppSizes.h16),
-              
-              
               Expanded(
                 child: ListView.builder(
                   itemCount: reasons.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.only(bottom:AppSizes.p16),
+                      margin: EdgeInsets.only(bottom: AppSizes.p16),
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -200,12 +183,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             Expanded(
                               child: Text(
                                 reasons[index],
-                                 style: FontManager().getTextStyle(
-          context,
-          fontSize: 16,
-          lWeight: FontWeight.w500,
-          color: AppColors.accentColor,
-        ),
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  fontSize: 16,
+                                  lWeight: FontWeight.w500,
+                                  color: AppColors.accentColor,
+                                ),
                               ),
                             ),
                           ],
@@ -215,17 +198,14 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   },
                 ),
               ),
-              
-              
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 24),
                 child: ElevatedButton(
-
-                   onPressed: selectedReason != null
+                  onPressed: selectedReason != null
                       ? () async {
-                         
-                          if (userController.email.value != null && userController.userName.value != null) {
+                          if (userController.email.value != null &&
+                              userController.userName.value != null) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -239,8 +219,9 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Error: Unable to fetch user email'),
-                                backgroundColor:  AppColors.redColor,
+                                content:
+                                    Text('Error: Unable to fetch user email'),
+                                backgroundColor: AppColors.redColor,
                               ),
                             );
                           }
@@ -257,13 +238,13 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                     elevation: 0,
                   ),
                   child: Text(
-                     isGoogleUser.value ? 'Delete':'Continue',
+                    isGoogleUser.value ? 'Delete' : 'Continue',
                     style: FontManager().getTextStyle(
-          context,
-          fontSize: 18,
-          lWeight: FontWeight.w600,
-          color: AppColors.accentColor,
-        ),
+                      context,
+                      fontSize: 18,
+                      lWeight: FontWeight.w600,
+                      color: AppColors.accentColor,
+                    ),
                   ),
                 ),
               ),
@@ -275,11 +256,11 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   }
 }
 
-
 class ConfirmDeleteScreen extends StatefulWidget {
   final String selectedReason;
 
-  const ConfirmDeleteScreen({Key? key, required this.selectedReason}) : super(key: key);
+  const ConfirmDeleteScreen({Key? key, required this.selectedReason})
+      : super(key: key);
 
   @override
   _ConfirmDeleteScreenState createState() => _ConfirmDeleteScreenState();
@@ -303,11 +284,11 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
         title: Text(
           'Delete Account',
           style: FontManager().getTextStyle(
-          context,
-          fontSize: 18,
-          lWeight: FontWeight.w600,
-          color: AppColors.accentColor,
-        ),
+            context,
+            fontSize: 18,
+            lWeight: FontWeight.w600,
+            color: AppColors.accentColor,
+          ),
         ),
         centerTitle: true,
       ),
@@ -318,8 +299,6 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: AppSizes.h40),
-              
-              
               Container(
                 padding: EdgeInsets.all(AppSizes.p16),
                 decoration: BoxDecoration(
@@ -349,15 +328,16 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                           children: [
                             TextSpan(
                               text: 'Important: ',
-                               style: FontManager().getTextStyle(
-          context,
-          fontSize: 16,
-          lWeight: FontWeight.w600,
-          color: AppColors.accentColor,
-        ),
+                              style: FontManager().getTextStyle(
+                                context,
+                                fontSize: 16,
+                                lWeight: FontWeight.w600,
+                                color: AppColors.accentColor,
+                              ),
                             ),
                             TextSpan(
-                              text: 'Deleting your account is permanent and cannot be undone. All your data will be erased.',
+                              text:
+                                  'Deleting your account is permanent and cannot be undone. All your data will be erased.',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: AppColors.accentColor,
@@ -371,22 +351,15 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   ],
                 ),
               ),
-              
               SizedBox(height: AppSizes.h40),
-              
-              
               Text(
                 'Re-enter Password',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.accentColor,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 16,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.accentColor),
               ),
-              
               SizedBox(height: AppSizes.h12),
-              
-              
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
@@ -396,7 +369,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   onChanged: (value) {
-                    setState(() {}); 
+                    setState(() {});
                   },
                   decoration: InputDecoration(
                     hintText: 'enter password',
@@ -430,17 +403,14 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   ),
                 ),
               ),
-              
-              
               Spacer(),
-              
-              
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 32),
                 child: ElevatedButton(
                   onPressed: _passwordController.text.isNotEmpty
-                      ? () => showDeleteConfirmationDialog(context,widget.selectedReason)
+                      ? () => showDeleteConfirmationDialog(
+                          context, widget.selectedReason)
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _passwordController.text.isNotEmpty
@@ -455,13 +425,12 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   ),
                   child: Text(
                     'Delete Account',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: _passwordController.text.isNotEmpty
-                          ? AppColors.backgroundColor
-                          : Colors.grey[600],
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 16,
+                        lWeight: FontWeight.w600,
+                        color: _passwordController.text.isNotEmpty
+                            ? AppColors.backgroundColor
+                            : Colors.grey[600]),
                   ),
                 ),
               ),
@@ -472,8 +441,6 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
     );
   }
 
- 
-
   @override
   void dispose() {
     _passwordController.dispose();
@@ -481,137 +448,123 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
   }
 }
 
-
-
- void showDeleteConfirmationDialog(context2,selectedReason) {
-    showDialog(
-      context: context2,
-      useRootNavigator: false,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Text(
-            'Confirm Account Deletion',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Selected reason: ${selectedReason}',
-                style: TextStyle(
+void showDeleteConfirmationDialog(context2, selectedReason) {
+  showDialog(
+    context: context2,
+    useRootNavigator: false,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: Text(
+          'Confirm Account Deletion',
+          style: FontManager()
+              .getTextStyle(context, fontSize: 18, lWeight: FontWeight.w600),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Selected reason: ${selectedReason}',
+              style: FontManager().getTextStyle(context,
                   fontSize: 14,
                   color: Colors.grey[600],
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              SizedBox(height: AppSizes.h12),
-              Text(
-                'This action is permanent and cannot be undone. All your data will be permanently deleted.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                  lFontStyle: FontStyle.italic),
             ),
-            TextButton(
-              onPressed: () async{
-                Navigator.pop(context); 
-                await deleteUserAccount(context2,selectedReason);
-                // if(accountDeleted)performAccountDeletion(context2);
-               },
-              child: Text(
-                'Delete Account',
-                style: TextStyle(
-                  color: Color(0xFFDC2626),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            SizedBox(height: AppSizes.h12),
+            Text(
+              'This action is permanent and cannot be undone. All your data will be permanently deleted.',
+              style: FontManager().getTextStyle(context,
+                  fontSize: 16, color: Colors.grey[700], lineHeight: 1.4),
             ),
           ],
-        );
-      },
-    );
-  }
-
-
- void performAccountDeletion(context2) {
-    
-    showDialog(
-      context: context2,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width/1.1,
-          padding: EdgeInsets.all(AppSizes.p20),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            borderRadius: BorderRadius.circular(12),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: FontManager().getTextStyle(context,
+                  color: Colors.grey[600],
+                  fontSize: 16,
+                  lWeight: FontWeight.w500),
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-             Spinner(
-                size: 40,
-                color: Color(0xFFDC2626),
-              ),
-              SizedBox(height: AppSizes.h16),
-              textStyle(
-                  context: context,
-                  text:  'Deleting account...',
-                  fontsize: 16,
-                  fontWeight: FontWeight.w500,
-              ),
-            ],
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await deleteUserAccount(context2, selectedReason);
+              // if(accountDeleted)performAccountDeletion(context2);
+            },
+            child: Text(
+              'Delete Account',
+              style: FontManager().getTextStyle(context,
+                  color: Color(0xFFDC2626),
+                  fontSize: 16,
+                  lWeight: FontWeight.w600),
+            ),
           ),
+        ],
+      );
+    },
+  );
+}
+
+void performAccountDeletion(context2) {
+  showDialog(
+    context: context2,
+    barrierDismissible: false,
+    builder: (context) => Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width / 1.1,
+        padding: EdgeInsets.all(AppSizes.p20),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Spinner(
+              size: 40,
+              color: Color(0xFFDC2626),
+            ),
+            SizedBox(height: AppSizes.h16),
+            textStyle(
+              context: context,
+              text: 'Deleting account...',
+              fontsize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Future.delayed(Duration(seconds: 2), () {
+    Navigator.pop(context2);
+    Navigator.pop(context2);
+    Navigator.pop(context2);
+
+    ScaffoldMessenger.of(context2).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: AppColors.backgroundColor),
+            SizedBox(width: AppSizes.w8),
+            Text('Account deleted successfully'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
-
-    
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pop(context2); 
-      Navigator.pop(context2); 
-      Navigator.pop(context2); 
-      
-      
-      ScaffoldMessenger.of(context2).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: AppColors.backgroundColor),
-              SizedBox(width: AppSizes.w8),
-              Text('Account deleted successfully'),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
-    });
-  }
+  });
+}
