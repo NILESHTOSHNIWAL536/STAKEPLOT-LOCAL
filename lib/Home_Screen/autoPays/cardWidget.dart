@@ -37,7 +37,7 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final screenSize = MediaQuery.of(context).size;
-    final cardHeight = screenSize.height * 0.2;
+    final cardHeight = screenSize.height * 0.22;
     final fontScale = screenSize.width / 375;
     final padding = screenSize.width * 0.03;
 
@@ -308,8 +308,7 @@ class CardWidget extends StatelessWidget {
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, false),
+                                  onPressed: () => Navigator.pop(ctx, false),
                                   child: Text(
                                     "Cancel",
                                     style: FontManager().getTextStyle(
@@ -321,8 +320,7 @@ class CardWidget extends StatelessWidget {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, true),
+                                  onPressed: () => Navigator.pop(ctx, true),
                                   child: Text(
                                     "Remove",
                                     style: FontManager().getTextStyle(
@@ -401,8 +399,7 @@ class CardWidget extends StatelessWidget {
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, false),
+                                  onPressed: () => Navigator.pop(ctx, false),
                                   child: Text(
                                     "Cancel",
                                     style: FontManager().getTextStyle(
@@ -414,8 +411,7 @@ class CardWidget extends StatelessWidget {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, true),
+                                  onPressed: () => Navigator.pop(ctx, true),
                                   child: Text(
                                     "Add",
                                     style: FontManager().getTextStyle(
@@ -431,9 +427,8 @@ class CardWidget extends StatelessWidget {
                           );
                           if (confirm == true) {
                             if (card.frequency.toLowerCase() == 'daily') {
-                              final success =
-                                  await addRecurringPaymentForDaily(
-                                      card.id, true);
+                              final success = await addRecurringPaymentForDaily(
+                                  card.id, true);
                               snackBarCalled(
                                 parentContext,
                                 success
@@ -497,8 +492,7 @@ class CardWidget extends StatelessWidget {
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, false),
+                                  onPressed: () => Navigator.pop(ctx, false),
                                   child: Text(
                                     "Cancel",
                                     style: FontManager().getTextStyle(
@@ -510,8 +504,7 @@ class CardWidget extends StatelessWidget {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, true),
+                                  onPressed: () => Navigator.pop(ctx, true),
                                   child: Text(
                                     "Delete",
                                     style: FontManager().getTextStyle(

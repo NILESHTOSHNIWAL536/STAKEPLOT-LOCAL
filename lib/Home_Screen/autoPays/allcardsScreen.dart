@@ -696,7 +696,7 @@ class SimilarPayCyclesScreen extends StatelessWidget {
   double _calculateAverageAmount(List<CardData> cards) {
     if (cards.isEmpty) return 0.0;
     final total = cards.fold<double>(0.0, (sum, card) {
-      final cleaned = card.amount.replaceAll(RegExp(r’[^0-9\.]’), ‘’);
+      final cleaned = card.amount.replaceAll(RegExp(r"[^0-9\.]"), "");
       final value = double.tryParse(cleaned) ?? 0.0;
       return sum + value;
     });
@@ -769,7 +769,7 @@ class SimilarPayCyclesScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      ‘Average Amount:’,
+                    "Average Amount:",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
@@ -779,7 +779,7 @@ class SimilarPayCyclesScreen extends StatelessWidget {
                     ),
                     SizedBox(width: AppSizes.w8),
                     Text(
-                      ‘₹${_calculateAverageAmount(filteredCards).toStringAsFixed(0)}’,
+                      "₹${_calculateAverageAmount(filteredCards).toStringAsFixed(0)}",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w700,
