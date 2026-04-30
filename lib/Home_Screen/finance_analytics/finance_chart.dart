@@ -834,12 +834,13 @@ import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
 import '../../repository/finance_repository.dart';
 import '../finance_analytics/expanded_finance.dart';
+import '../../Constants/theme_helper.dart';
 
-class SpendingCardTwoPanels extends StatefulWidget {
-  const SpendingCardTwoPanels({super.key});
+class MonthlySpendingChart extends StatefulWidget {
+  const MonthlySpendingChart({super.key});
 
   @override
-  State<SpendingCardTwoPanels> createState() => _SpendingCardTwoPanelsState();
+  State<MonthlySpendingChart> createState() => _MonthlySpendingChartState();
 }
 
 class ChartData {
@@ -849,7 +850,7 @@ class ChartData {
   final double debit;
 }
 
-class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
+class _MonthlySpendingChartState extends State<MonthlySpendingChart> {
   int selectedIndex = 0;
   bool _isInitialSelectionSet = false;
 
@@ -948,12 +949,14 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     final double selCred = data[selectedIndex].credit;
     final double selDeb = data[selectedIndex].debit;
 
+    final colors = context.appColors;
+
     return Container(
       width: screenWidth,
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: colors.background,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.financeChartBorder),
+        border: Border.all(color: colors.border),
         boxShadow: [AppShadows.tabs],
       ),
       child: Padding(
@@ -998,7 +1001,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                           context,
                           lWeight: FontWeight.w500,
                           fontSize: 14,
-                          color: AppColors.primaryColor,
+                          color: colors.primary,
                         ),
                       ),
                       Row(
@@ -1009,7 +1012,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                               context,
                               lWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: AppColors.primaryColor,
+                              color: colors.primary,
                             ),
                           ),
                           SizedBox(width: AppSizes.w8),
@@ -1018,7 +1021,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                             style: FontManager().getTextStyle(
                               context,
                               fontSize: 12,
-                              color: AppColors.primaryColor,
+                              color: colors.primary,
                             ),
                           ),
                         ],
@@ -1031,7 +1034,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                               context,
                               lWeight: FontWeight.w500,
                               fontSize: 14,
-                              color: AppColors.debitedAmount,
+                              color: colors.debit,
                             ),
                           ),
                           SizedBox(width: AppSizes.w8),
@@ -1040,7 +1043,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                             style: FontManager().getTextStyle(
                               context,
                               fontSize: 12,
-                              color: AppColors.debitedAmount,
+                              color: colors.debit,
                             ),
                           ),
                         ],
@@ -1085,7 +1088,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                color: AppColors.financeChartBarBorder,
+                                color: colors.border,
                               ),
                             ),
                             child: Column(
@@ -1098,9 +1101,8 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: isSel
-                                        ? AppColors.primaryColor
-                                        : AppColors.primaryColor
-                                            .withOpacity(0.22),
+                                        ? colors.primary
+                                        : colors.primary.withOpacity(0.22),
                                     borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(6),
                                       topRight: Radius.circular(6),
@@ -1113,9 +1115,8 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: isSel
-                                        ? AppColors.debitedAmount
-                                        : AppColors.debitedAmount
-                                            .withOpacity(0.22),
+                                        ? colors.debit
+                                        : colors.debit.withOpacity(0.22),
                                     borderRadius: const BorderRadius.only(
                                       bottomLeft: Radius.circular(6),
                                       bottomRight: Radius.circular(6),
@@ -1136,7 +1137,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                           style: FontManager().getTextStyle(
                             context,
                             fontSize: 11,
-                            color: AppColors.debitedAmount,
+                            color: colors.secondaryText,
                           ),
                         ),
                       ),

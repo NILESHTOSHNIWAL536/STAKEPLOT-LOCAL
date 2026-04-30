@@ -908,15 +908,16 @@ import 'package:get/get.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../controllers/controllerManagement.dart';
+import '../../Constants/theme_helper.dart';
 
 final RxString selectedPeriod = 'Month'.obs;
-class SwipeableCardsScreen extends StatelessWidget {
+class FinoraInsightsSection extends StatelessWidget {
 
-   SwipeableCardsScreen({super.key});
+   FinoraInsightsSection({super.key});
    final controller = Get.find<FinoraController>();
   @override
   Widget build(BuildContext context) {
-    
+    final colors = context.appColors;
     final screenSize = MediaQuery.of(context).size;
     final padding = screenSize.width * 0.04;
 
@@ -924,7 +925,7 @@ class SwipeableCardsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         // color: AppColors.redColor,
         borderRadius: BorderRadius.circular(padding),
-        
+
       ),
       padding: EdgeInsets.symmetric(
         horizontal: padding / 2,
@@ -939,9 +940,9 @@ class SwipeableCardsScreen extends StatelessWidget {
               AvatarProfileImageZero(url: HomePageIcons.finoraIcon, width: 30, height: 40),
               SizedBox(width: AppSizes.w10),
               Text( HomepageStringsDart().finora,
-              style: FontManager().getTextStyle(context, color: AppColors.primaryColor, letterSpacing: 2.2, fontSize: 16, lWeight: FontWeight.w500),
+              style: FontManager().getTextStyle(context, color: colors.primary, letterSpacing: 2.2, fontSize: 16, lWeight: FontWeight.w500),
               )
-             
+
             ],
           ),
 
@@ -984,15 +985,16 @@ class SwipeableCardsScreen extends StatelessWidget {
   Size screenSize,
   Widget card,
 ) {
+  final colors = context.appColors;
   return Padding(
-    padding: const EdgeInsets.only(right:AppSizes.p12), 
+    padding: const EdgeInsets.only(right:AppSizes.p12),
     child: Container(
       width: screenSize.width * 0.8, // 👈 KEY CHANGE (peek effect)
       height: screenSize.height * 0.14,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(screenSize.width * 0.03),
         border: Border.all(
-          color: AppColors.border,
+          color: colors.border,
           width: 1,
         ),
       ),
@@ -1016,10 +1018,12 @@ class TotalSpendingCard extends StatelessWidget {
     // final padding = screenSize.width * 0.03;
 
     return Obx(
-      () => Container(
+      () {
+        final colors = context.appColors;
+        return Container(
         height: MediaQuery.of(context).size.height / 4,
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.background,
         ),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
         child: Center(
@@ -1032,11 +1036,10 @@ class TotalSpendingCard extends StatelessWidget {
                  Container(
                    padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
-                      
-                       color: const Color.fromRGBO(75, 77, 115, 0.04),
-    borderRadius: BorderRadius.circular(13),
+                       color: colors.primary.withOpacity(0.04),
+                       borderRadius: BorderRadius.circular(13),
                     ),
-                  child: Icon(Icons.sunny, color: AppColors.primaryColor,size: 24,)),
+                  child: Icon(Icons.sunny, color: colors.primary, size: 24,)),
                  SizedBox(width: AppSizes.w8),
                   Text(
                     'Monthly Summary',
@@ -1044,7 +1047,7 @@ class TotalSpendingCard extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.primaryColor,
+                      color: colors.primary,
                     ),
                   ),
                 ],
@@ -1066,7 +1069,7 @@ class TotalSpendingCard extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: AppColors.primaryColor,
+                          color: colors.primary,
                         ),
                       ),
                       SizedBox(
@@ -1080,8 +1083,7 @@ class TotalSpendingCard extends StatelessWidget {
                             context,
                             lWeight: FontWeight.w500,
                             fontSize:20,
-                               
-                            color: AppColors.primaryColor,
+                            color: colors.primary,
                           ),
                         ),
                       ),
@@ -1097,7 +1099,7 @@ class TotalSpendingCard extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: AppColors.primaryColor,
+                          color: colors.primary,
                         ),
                       ),
                       SizedBox(
@@ -1110,8 +1112,7 @@ class TotalSpendingCard extends StatelessWidget {
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
                               fontSize:20,
-                                 
-                              color: AppColors.primaryColor,
+                              color: colors.primary,
                               overflow: TextOverflow.ellipsis),
                         ),
                       ),
@@ -1122,7 +1123,8 @@ class TotalSpendingCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      );
+      },
     );
   }
 }
@@ -1137,9 +1139,11 @@ class OverspentCategoriesCard extends StatelessWidget {
     final padding = screenSize.width * 0.03;
 
     return Obx(
-      () => Container(
+      () {
+        final colors = context.appColors;
+        return Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.background,
         ),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
         child: Column(
@@ -1158,7 +1162,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                         context,
                         lWeight: FontWeight.bold,
                         fontSize: screenSize.width * 0.04,
-                        color: AppColors.primaryColor,
+                        color: colors.primary,
                       ),
                     ),
                     SizedBox(height: AppSizes.h4),
@@ -1168,7 +1172,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: screenSize.width * 0.02,
-                        color: AppColors.bg3,
+                        color: colors.secondaryText,
                       ),
                     ),
                   ],
@@ -1180,7 +1184,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                   },
                   child: Icon(
                     Icons.swap_horiz,
-                    color: AppColors.primaryColor,
+                    color: colors.primary,
                     size: screenSize.width * 0.06,
                   ),
                 ),
@@ -1190,7 +1194,8 @@ class OverspentCategoriesCard extends StatelessWidget {
             _buildCategoryList(screenSize, padding, context),
           ],
         ),
-      ),
+      );
+      },
     );
   }
 
@@ -1201,6 +1206,7 @@ class OverspentCategoriesCard extends StatelessWidget {
     final categoryList =
         isMonthPeriod ?  controller.moreDrasticChange :  controller.moreDrasticChangeWeek;
 
+    final colors = context.appColors;
     if (categoryList == null || categoryList.isEmpty) {
       return Center(
         child: Text(
@@ -1209,7 +1215,7 @@ class OverspentCategoriesCard extends StatelessWidget {
             context,
             lWeight: FontWeight.w500,
             fontSize: screenSize.width * 0.035,
-            color: AppColors.primaryColor.withOpacity(0.8),
+            color: colors.primary.withOpacity(0.8),
           ),
         ),
       );
@@ -1236,7 +1242,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                   context,
                   lWeight: FontWeight.w600,
                   fontSize: screenSize.width * 0.035,
-                  color: AppColors.accentColor,
+                  color: colors.onBackground,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -1246,7 +1252,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                   context,
                   lWeight: FontWeight.w500,
                   fontSize: screenSize.width * 0.033,
-                  color: AppColors.accentColor,
+                  color: colors.onBackground,
                 ),
               ),
             ],
@@ -1267,9 +1273,10 @@ class FrequentTransactionCard extends StatelessWidget {
     final padding = screenSize.width * 0.03;
 
     return Obx(() {
+      final colors = context.appColors;
       return Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.background,
         ),
         padding: EdgeInsets.all(padding),
         child: Column(
@@ -1281,11 +1288,10 @@ class FrequentTransactionCard extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
-                      
-                       color: const Color.fromRGBO(75, 77, 115, 0.04),
-    borderRadius: BorderRadius.circular(13),
+                       color: colors.primary.withOpacity(0.04),
+                       borderRadius: BorderRadius.circular(13),
                     ),
-                    child: Icon(Icons.graphic_eq, color: AppColors.primaryColor,size: 24,)),
+                    child: Icon(Icons.graphic_eq, color: colors.primary, size: 24,)),
                  SizedBox(width: AppSizes.w8),
                   Text(
                     'Most Frequent Payment',
@@ -1293,7 +1299,7 @@ class FrequentTransactionCard extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.primaryColor,
+                      color: colors.primary,
                     ),
                   ),
               
@@ -1306,7 +1312,7 @@ class FrequentTransactionCard extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w600,
                       fontSize: screenSize.width * 0.045,
-                      color: AppColors.accentColor,
+                      color: colors.onBackground,
                     ),
                   )
                 :
@@ -1316,7 +1322,7 @@ class FrequentTransactionCard extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w600,
                       fontSize: screenSize.width * 0.04,
-                      color: AppColors.accentColor,
+                      color: colors.onBackground,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -1331,7 +1337,7 @@ class FrequentTransactionCard extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w400,
                           fontSize: screenSize.width * 0.035,
-                          color: AppColors.bg3,
+                          color: colors.secondaryText,
                         ),
                       ),
                       Text(
@@ -1340,7 +1346,7 @@ class FrequentTransactionCard extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w500,
                           fontSize: screenSize.width * 0.05,
-                          color: AppColors.primaryColor,
+                          color: colors.primary,
                         ),
                       ),
                     ],

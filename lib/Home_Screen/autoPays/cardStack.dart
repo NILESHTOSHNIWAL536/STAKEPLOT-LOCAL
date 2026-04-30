@@ -404,13 +404,14 @@ import 'package:flutter_application_code_stakeplot/repository/autopay_repository
 import 'package:get/get.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
+import '../../Constants/theme_helper.dart';
 
-class CardStackScreen extends StatefulWidget {
+class AutoPayCarousel extends StatefulWidget {
   @override
-  _CardStackScreenState createState() => _CardStackScreenState();
+  _AutoPayCarouselState createState() => _AutoPayCarouselState();
 }
 
-class _CardStackScreenState extends State<CardStackScreen> {
+class _AutoPayCarouselState extends State<AutoPayCarousel> {
   final RxList<CardData> cards = <CardData>[].obs;
   final RxList<CardData> allCards = <CardData>[].obs;
   final RxInt selectedCardIndex = (-1).obs;
@@ -626,7 +627,9 @@ class _CardStackScreenState extends State<CardStackScreen> {
     final cardWidth = screenSize.width * 0.72; // width for horizontal card
     final cardHeight = screenSize.height * 0.22;
 
+    final colors = context.appColors;
     return Scaffold(
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
@@ -643,12 +646,12 @@ class _CardStackScreenState extends State<CardStackScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "AutoPay", // change title if you want
+                      "AutoPay",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w700,
                         fontSize: 18 * fontScale,
-                        color: AppColors.accentColor,
+                        color: colors.onBackground,
                       ),
                     ),
                     TextButton(
@@ -656,7 +659,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(
                             horizontal: AppSizes.p12 * fontScale, vertical: AppSizes.p8 * fontScale),
-                        backgroundColor: AppColors.backgroundColor,
+                        backgroundColor: colors.surface,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8 * fontScale),
                         ),
@@ -667,7 +670,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                           context,
                           lWeight: FontWeight.w600,
                           fontSize: 14 * fontScale,
-                          color: AppColors.primaryColor,
+                          color: colors.primary,
                         ),
                       ),
                     ),
@@ -712,7 +715,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 14 * fontScale,
-                        color: AppColors.bg3,
+                        color: colors.secondaryText,
                       ),
                     ),
                   ),

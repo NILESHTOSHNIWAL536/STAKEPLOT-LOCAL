@@ -429,6 +429,7 @@ import '../components/shared_utils.dart';
 import '../controllers/finora_controller.dart';
 import '../controllers/transactions_controller.dart';
 import '../repository/transactions_repository.dart';
+import '../Constants/theme_helper.dart';
 
 // RxInt selectedIndex = (-1).obs;
 // RxList<ChartData> spendingsOnCategories = <ChartData>[].obs;
@@ -443,12 +444,12 @@ class ChartData {
   ChartData(this.category, this.value, this.color, this.persentage);
 }
 
-class DoughnutChartExample extends StatefulWidget {
+class SpendingCategoryChart extends StatefulWidget {
   @override
-  State<DoughnutChartExample> createState() => _DoughnutChartExampleState();
+  State<SpendingCategoryChart> createState() => _SpendingCategoryChartState();
 }
 
-class _DoughnutChartExampleState extends State<DoughnutChartExample> {
+class _SpendingCategoryChartState extends State<SpendingCategoryChart> {
    final controller = Get.find<FinoraController>();
   
   @override
@@ -461,6 +462,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Container(
       padding: const EdgeInsets.all(AppSizes.p8),
       child: Column(
@@ -475,7 +477,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   context,
                   lWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: AppColors.bg3,
+                  color: colors.onBackground,
                 ),
               ),
               Obx(() => controller.spendingsOnCategoriesBool.value
@@ -502,6 +504,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   }
 
   Widget checkFlagCount() {
+    final colors = context.appColors;
     return controller.spendingsOnCategories.length >= 7
         ? TextButton(
             onPressed: () {
@@ -518,13 +521,14 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 context,
                 lWeight: FontWeight.w500,
                 fontSize: 14,
-                color: AppColors.bg3,
+                color: colors.primary,
               ),
             ))
         : const SizedBox.shrink();
   }
 
   Widget checkFlag() {
+    final colors = context.appColors;
     return controller.spendingsOnCategories.isEmpty
         ? Center(
             child: Text(
@@ -533,7 +537,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 context,
                 lWeight: FontWeight.bold,
                 fontSize: 16,
-                color: AppColors.bg3.withOpacity(0.8),
+                color: colors.secondaryText,
               ),
             ),
           )
@@ -564,7 +568,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
           category: data.category,
           amount: data.value,
           percentage: percentage,
-          color: AppColors.backgroundColor,
+          color: context.appColors.surface,
           // color: UniversalColors.categoryColors[index % UniversalColors.categoryColors.length],
         );
       },
@@ -580,7 +584,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 context,
                 lWeight: FontWeight.bold,
                 fontSize: 18,
-                color: AppColors.accentColor,
+                color: context.appColors.onBackground,
               ),
             )),
       ],
@@ -635,7 +639,7 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: AppColors.accentColor.withAlpha(26), // Shadow color
+              color: context.appColors.onBackground.withAlpha(26),
               spreadRadius: 2, // Spread radius
               blurRadius: 5, // Blur radius
               offset: Offset(0, 5), // Changes the position of the shadow
@@ -666,7 +670,7 @@ class CategoryCard extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w500,
                           fontSize: 14,
-                          color: AppColors.bg3,
+                          color: context.appColors.secondaryText,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -688,7 +692,7 @@ class CategoryCard extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w500,
                           fontSize: 16,
-                          color: AppColors.accentColor,
+                          color: context.appColors.onBackground,
                         ),
                       ),
                     ),
@@ -706,10 +710,9 @@ class CategoryCard extends StatelessWidget {
                                 ? amount / controller.totalValue.value
                                 : 0.0,
                             backgroundColor:
-                                AppColors.bg3.withOpacity(0.2),
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                AppColors
-                                    .primaryColor), // Use the assigned color
+                                context.appColors.border,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                context.appColors.primary),
                             minHeight: 6,
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -729,7 +732,7 @@ class CategoryCard extends StatelessWidget {
                                   ? AppColors.redColor
                                   : percentage.startsWith("+")
                                       ? AppColors.green
-                                      : AppColors.bg3,
+                                      : context.appColors.secondaryText,
                             ),
                           ),
                         ),
@@ -751,8 +754,9 @@ class AllCategoriesPage extends StatelessWidget {
    AllCategoriesPage({required this.controller});
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: colors.background,
       appBar: AppBar(
         title: Text(
           HomepageStringsDart().allCategories,
@@ -760,13 +764,13 @@ class AllCategoriesPage extends StatelessWidget {
             context,
             lWeight: FontWeight.bold,
             fontSize: 18,
-            color: AppColors.bg3,
+            color: colors.onBackground,
           ),
         ),
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: colors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.bg3),
+          icon: Icon(Icons.arrow_back, color: colors.onBackground),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -784,7 +788,7 @@ class AllCategoriesPage extends StatelessWidget {
                       context,
                       lWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: AppColors.bg3.withOpacity(0.8),
+                      color: colors.secondaryText,
                     ),
                   ),
                 )
@@ -799,13 +803,7 @@ class AllCategoriesPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final data = sortedData[index];
                     String percentage = data.persentage;
-                    //  totalValue.value > 0
-                    //     ? (data.value / totalValue.value) * 100
-                    //     : 0.0;
-                    // Assign a unique color from UniversalColors
-                    final color = AppColors.backgroundColor;
-                    // final color = UniversalColors
-                    //     .categoryColors[index % UniversalColors.categoryColors.length];
+                    final color = colors.surface;
                     return CategoryCard(
                       controller: controller,
                       category: data.category,

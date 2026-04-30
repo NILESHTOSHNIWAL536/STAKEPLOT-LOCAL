@@ -69,13 +69,13 @@ class IndexScreen extends StatelessWidget {
                             const EdgeInsets.symmetric(vertical: AppSizes.h10),
                         child: SizedBox(
                           height: AppComponentSizes.h5,
-                          child: const SpendingCardTwoPanels(),
+                          child: const MonthlySpendingChart(),
                         ),
                       ),
 
                       Obx(() => isFinoraVisible.value
-                          ?  SwipeableCardsScreen()
-                          :  SwipeableCardsScreen()),
+                          ?  FinoraInsightsSection()
+                          :  FinoraInsightsSection()),
 
                       Obx(() => isAutoPayFected.value
                           ? GetAutopays(height)
@@ -83,7 +83,7 @@ class IndexScreen extends StatelessWidget {
 
                       // SizedBox(height: height * 0.5, child: InsightsScreen()),
 
-                      DoughnutChartExample(),
+                      SpendingCategoryChart(),
                       const SizedBox(
                         height: 14,
                       ),
@@ -109,7 +109,7 @@ class IndexScreen extends StatelessWidget {
   Widget GetAutopays(height) {
     return allAutoPayData.isEmpty
         ? const SizedBox.shrink()
-        : SizedBox(height: AppComponentSizes.h3, child: CardStackScreen());
+        : SizedBox(height: AppComponentSizes.h3, child: AutoPayCarousel());
   }
 
   // Widget GetFinora(double height) {
