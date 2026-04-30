@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -75,20 +76,20 @@ class _EditDetailsState extends State<EditDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Scaffold(
-      backgroundColor: Theme.of(context)
-          .scaffoldBackgroundColor, // AppColors.backgroundColor,
+      backgroundColor: colors.background,
       appBar: AppBar(
         title: textStyleOnly2(
           context: context,
           text: ProfileScreenStrings().editProfileTitle,
           fontsize: 18,
-          color: AppColors.accentColor,
+          color: colors.onBackground,
           fontWeight: FontWeight.bold,
         ),
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: colors.appBarBackground,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.accentColor),
+        iconTheme: IconThemeData(color: colors.onBackground),
         actions: [
           InkWell(
             onTap: () {
@@ -97,10 +98,11 @@ class _EditDetailsState extends State<EditDetails> {
             child: Icon(
               Icons.color_lens_outlined,
               size: 30,
+              color: colors.onBackground,
             ),
           ),
           IconButton(
-            icon: Icon(Icons.delete, color: AppColors.redColor),
+            icon: Icon(Icons.delete, color: colors.error),
             onPressed: () {
               Navigator.push(
                 context,
@@ -112,7 +114,7 @@ class _EditDetailsState extends State<EditDetails> {
               ? SizedBox.shrink()
               : IconButton(
                   icon: Icon(Icons.remember_me_outlined,
-                      color: AppColors.redColor, size: 25),
+                      color: colors.error, size: 25),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -156,7 +158,7 @@ class _EditDetailsState extends State<EditDetails> {
                     context: context,
                     text: ProfileScreenStrings().personalDetailsLabel,
                     fontsize: 16,
-                    color: AppColors.bg3,
+                    color: colors.labelText,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -171,14 +173,14 @@ class _EditDetailsState extends State<EditDetails> {
                         },
                         child: Row(
                           children: [
-                            const Icon(Icons.lock_reset,
-                                color: AppColors.primaryColor, size: 20),
+                            Icon(Icons.lock_reset,
+                                color: colors.primary, size: 20),
                             SizedBox(width: AppSizes.w4),
                             textStyleOnly2(
                               context: context,
                               text: ProfileScreenStrings().resetPinLabel,
                               fontsize: 14,
-                              color: AppColors.primaryColor,
+                              color: colors.primary,
                               fontWeight: FontWeight.w600,
                             ),
                           ],
@@ -189,7 +191,7 @@ class _EditDetailsState extends State<EditDetails> {
             SizedBox(height: AppSizes.h20),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.mt,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -317,28 +319,29 @@ class _EditDetailsState extends State<EditDetails> {
   Widget _buildNonEditableField(IconData icon, String label, String value) {
     final isEmailField = label == ProfileScreenStrings().emailLabel;
 
+    final colors = context.appColors;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 0),
       width: MediaQuery.of(context).size.width / 1.1,
       child: TextFormField(
-        controller: _controllers[label]!
-          ..text = value, // Update controller text
-        enabled: isEmailField, // Only email field is editable via dialog
+        controller: _controllers[label]!..text = value,
+        enabled: isEmailField,
+        style: TextStyle(color: colors.onBackground),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(AppSizes.p6),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.button,
+                color: colors.iconBackground,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppColors.primaryColor),
+              child: Icon(icon, color: colors.primary),
             ),
           ),
           suffixIcon: isEmailField
               ? IconButton(
-                  icon: const Icon(Icons.edit, color: AppColors.primaryColor),
+                  icon: Icon(Icons.edit, color: colors.primary),
                   onPressed: () {
                     showSnackBarContext = context;
                     _showEmailEditDialog(context, userController.email.value);
@@ -349,6 +352,7 @@ class _EditDetailsState extends State<EditDetails> {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: value,
+          hintStyle: TextStyle(color: colors.hintText),
         ),
       ),
     );
@@ -363,13 +367,14 @@ class _EditDetailsState extends State<EditDetails> {
       barrierDismissible: true,
       useRootNavigator: false,
       builder: (BuildContext context) {
+        final colors = context.appColors;
         return AlertDialog(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: colors.dialogBackground,
           title: textStyleOnly2(
             context: context,
             text: "Update Email",
             fontsize: 18,
-            color: AppColors.primaryColor,
+            color: colors.primary,
             fontWeight: FontWeight.w600,
           ),
           content: Form(
@@ -377,29 +382,24 @@ class _EditDetailsState extends State<EditDetails> {
             child: TextFormField(
               controller: newEmailController,
               keyboardType: TextInputType.emailAddress,
+              style: TextStyle(color: colors.onBackground),
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: AppColors.border,
-                    width: 1.5,
-                  ),
+                  borderSide: BorderSide(color: colors.border, width: 1.5),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: AppColors.border,
-                    width: 1.8,
-                  ),
+                  borderSide: BorderSide(color: colors.primary, width: 1.8),
                 ),
                 filled: true,
-                fillColor: AppColors.backgroundColor,
+                fillColor: colors.inputBackground,
                 hintText: "Enter new email address",
                 hintStyle: FontManager().getTextStyle(
                   context,
                   fontSize: 12,
                   lWeight: FontWeight.w500,
-                  color: AppColors.grey,
+                  color: colors.hintText,
                 ),
               ),
               validator: (value) {
@@ -426,7 +426,7 @@ class _EditDetailsState extends State<EditDetails> {
                   context,
                   fontSize: 16,
                   lWeight: FontWeight.w500,
-                  color: AppColors.bg1,
+                  color: colors.secondaryText,
                 ),
               ),
             ),
@@ -443,7 +443,7 @@ class _EditDetailsState extends State<EditDetails> {
                   context,
                   fontSize: 16,
                   lWeight: FontWeight.w500,
-                  color: AppColors.primaryColor,
+                  color: colors.primary,
                 ),
               ),
             ),
@@ -457,15 +457,16 @@ class _EditDetailsState extends State<EditDetails> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final colors = context.appColors;
         return AlertDialog(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: colors.dialogBackground,
           title: Text(
             "Confirm Email Update",
             style: FontManager().getTextStyle(
               context,
               fontSize: 18,
               lWeight: FontWeight.w500,
-              color: AppColors.accentColor,
+              color: colors.onBackground,
             ),
           ),
           content: Text(
@@ -474,7 +475,7 @@ class _EditDetailsState extends State<EditDetails> {
               context,
               fontSize: 14,
               lWeight: FontWeight.w500,
-              color: AppColors.bg1,
+              color: colors.secondaryText,
             ),
           ),
           actions: [
@@ -486,7 +487,7 @@ class _EditDetailsState extends State<EditDetails> {
                   context,
                   fontSize: 16,
                   lWeight: FontWeight.w500,
-                  color: AppColors.bg1,
+                  color: colors.secondaryText,
                 ),
               ),
             ),
@@ -501,7 +502,7 @@ class _EditDetailsState extends State<EditDetails> {
                   context,
                   fontSize: 16,
                   lWeight: FontWeight.w500,
-                  color: AppColors.primaryColor,
+                  color: colors.primary,
                 ),
               ),
             ),
@@ -570,42 +571,46 @@ class _EditDetailsState extends State<EditDetails> {
     BankAccountModel data,
     String logo,
   ) {
+    final colors = context.appColors;
     return InkWell(
       onTap: () {
-        // shareBankData(bankAccountLinkedList[index]);
         shareBankDataFromModel(data);
       },
       child: Card(
-        elevation: 2,
-        color: AppColors.mt,
+        elevation: 0,
+        color: colors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: colors.border),
+        ),
         child: ListTile(
           leading: Image.network(
             logo,
             width: 30,
             height: 30,
             fit: BoxFit.fitWidth,
-            errorBuilder: (context, error, stackTrace) => const Icon(
+            errorBuilder: (context, error, stackTrace) => Icon(
               Icons.account_balance,
               size: 30,
-              color: AppColors.primaryColor,
+              color: colors.primary,
             ),
           ),
           title: textStyleOnly2(
             context: context,
             text: bankName,
             fontsize: 14,
-            color: AppColors.bg2,
+            color: colors.onBackground,
             fontWeight: FontWeight.w600,
           ),
           subtitle: textStyleOnly2(
             context: context,
             text: accountNumber,
             fontsize: 14,
-            color: AppColors.bg3,
+            color: colors.secondaryText,
             fontWeight: FontWeight.w400,
           ),
           trailing: IconButton(
-            icon: const Icon(Icons.delete, color: AppColors.debitColor),
+            icon: Icon(Icons.delete, color: colors.debit),
             onPressed: () {
               showDialog(
                 context: context,

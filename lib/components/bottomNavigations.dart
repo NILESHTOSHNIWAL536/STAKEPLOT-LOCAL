@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/community_screen.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/colors.dart";
+import "package:flutter_application_code_stakeplot/Constants/theme_helper.dart";
 import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import "package:flutter_application_code_stakeplot/components/helper.dart";
@@ -95,9 +96,9 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   @override
   Widget build(BuildContext context) {
 
-    return 
+    return
     BottomAppBar(
-  color: AppColors.backgroundColor,
+  color: context.appColors.bottomBarBackground,
   elevation: 0,
   child: SafeArea(
     top: false,
@@ -163,39 +164,39 @@ Widget imageurl(String url, int index) {
 
   bool isAvatar = index == 3 || index == 4;
 
+  final colors = context.appColors;
+  final activeColor = colors.primary;
+  final inactiveColor = colors.secondaryText;
+
   return Padding(
-    padding: isAvatar?const EdgeInsets.only(bottom: 2):const EdgeInsets.all(0),
+    padding: isAvatar ? const EdgeInsets.only(bottom: 2) : EdgeInsets.zero,
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         /// ICON
         isAvatar
             ? Obx(() => CircleAvatar(
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: activeColor,
               radius: 17,
-            child: Text(
-    userController.userName.value.trim().isNotEmpty
-        ? userController.userName.value.trim()[0].toUpperCase()
-        : '',
-        style: FontManager().getTextStyle(context, color: AppColors.backgroundColor, fontSize: 16),
-    ),
-    
-              
+              child: Text(
+                userController.userName.value.trim().isNotEmpty
+                    ? userController.userName.value.trim()[0].toUpperCase()
+                    : '',
+                style: FontManager().getTextStyle(context, color: Colors.white, fontSize: 16),
+              ),
             ))
-            // AvatarProfile(
-            //       name: userController.userName.value,
-            //       width: 8,
-            //       height: 16,
-            //       background: userController.avatarBackGround.value,
-            //     ))
             : SvgPicture.asset(
                 iconPath,
                 width: MediaQuery.of(context).size.width / 30,
                 height: MediaQuery.of(context).size.height / 30,
+                colorFilter: ColorFilter.mode(
+                  isSelected ? activeColor : inactiveColor,
+                  BlendMode.srcIn,
+                ),
               ),
-    
-         SizedBox(height: AppSizes.h4),
-    
+
+        SizedBox(height: AppSizes.h4),
+
         /// TEXT LABEL
         Text(
           _tabNames[index],
@@ -203,9 +204,7 @@ Widget imageurl(String url, int index) {
             context,
             fontSize: 10,
             lWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected
-                ? AppColors.primaryColor
-                : AppColors.bg1,
+            color: isSelected ? activeColor : inactiveColor,
           ),
         ),
       ],
