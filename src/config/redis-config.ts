@@ -26,12 +26,12 @@ const redisClient: RedisClientType = createClient({
     port: Number(ServerConfig.REDIS_PORT) || 6379,
     reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
   },
-  // password: ServerConfig.REDIS_PASSWORD,
+  password: ServerConfig.REDIS_PASSWORD,
 });
 
 // Handle Redis connection events
-redisClient.on('error', (err) => console.error('Redis Error:', err));
-redisClient.on('connect', () => console.log('Redis Connected!'));
-redisClient.on('reconnecting', () => console.log('Redis Reconnecting...'));
+redisClient.on('error', (err) =>{});
+redisClient.on('connect', () =>{});
+redisClient.on('reconnecting', () => {});
 
 export default redisClient;

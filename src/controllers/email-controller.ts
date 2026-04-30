@@ -107,18 +107,23 @@ const generateAccessTokenImpl = async (
   try {
     const { user } = req as AuthenticatedRequest;
     const userId = user._id;
-    const { idToken } = req.body as { idToken: string };
-
-    const result = await EmailScrapingService.generateAccessToken(userId, idToken);
+    const { idToken,bankId } = req.body as { idToken: string, bankId: string };
+    const result = await EmailScrapingService.generateAccessToken(userId, idToken,bankId);
 
     const responseBody = { ...SuccessResponse, data: result };
     res.status(StatusCodes.OK).json(responseBody);
   } catch (error: any) {
-    const errMessage =
-      error?.response?.data?.error || error?.message || 'Unauthorized';
-
+    const errMessage =error?.response?.data?.error || error?.message || 'Unauthorized';
     const responseBody = { ...ErrorResponse, error: errMessage };
-    res.status(StatusCodes.UNAUTHORIZED).json(responseBody);
+     const statusCode =
+    error?.statusCode ||  // 🔥 for AppError
+    error?.response?.status || // 🔥 for axios
+    StatusCodes.INTERNAL_SERVER_ERROR;
+    
+    console.error('Error in generateAccessTokenImpl:', error);
+    console.error('Error message:', errMessage);
+    console.error('Status code:', statusCode);
+    res.status(statusCode).json(responseBody);
   }
 };
 
@@ -130,9 +135,9 @@ const scrapeEmailsByBankIdImpl = async (
   try {
     const { user } = req as AuthenticatedRequest;
     const userId = user._id;
-    const { bankIds } = req.body as { bankIds: string[] };
+    const { bankIds,email } = req.body as { bankIds: string[], email: string };
 
-    const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds);
+    const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds, email);
 
     const responseBody = { ...SuccessResponse, data: response };
     res.status(StatusCodes.CREATED).json(responseBody);

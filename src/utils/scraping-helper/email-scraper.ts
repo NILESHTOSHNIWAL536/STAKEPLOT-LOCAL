@@ -25,6 +25,8 @@ export default async function emailScraperHelper(
 
   do {
     pageCount++;
+    console.log("pageCount");
+    console.log(pageCount);
     const pageStart = performance.now();
     const listRes = await EmailServiceHelper.listEmails(
       gmail,
@@ -64,6 +66,7 @@ export default async function emailScraperHelper(
             msg,
             meta.data.payload
           );
+          // console.log(body);
 
           const preparedAttachments = (
   await Promise.allSettled(
