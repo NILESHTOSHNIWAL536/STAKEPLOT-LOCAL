@@ -45,7 +45,7 @@ class _ManualTransactionPageState extends State<ManualTransactionPage>
     return Scaffold(
       backgroundColor: AppColors.border,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
             children: [

@@ -134,7 +134,7 @@ class FinanceDashboard extends StatefulWidget {
 
 class _FinanceDashboardState extends State<FinanceDashboard>
     with TickerProviderStateMixin {
-  bool isLoading = true;
+  bool isLoading = false;
 
   double _panelProgress = 0.0;
   late AnimationController _panelController;
@@ -256,6 +256,14 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       );
     }
     return false;
+  }
+
+  void _openTopPanel() {
+    _panelController.animateTo(
+      1.0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   @override
@@ -848,13 +856,16 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  PlotFinanceStaticData().moneyConsoleTitle,
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 20,
-                      lineHeight: 28 / 16,
-                      color: AppColors.accentColor),
+                GestureDetector(
+                  onDoubleTap: _openTopPanel,
+                  child: Text(
+                    PlotFinanceStaticData().moneyConsoleTitle,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 20,
+                        lineHeight: 28 / 16,
+                        color: AppColors.accentColor),
+                  ),
                 ),
                 SizedBox(height: AppSizes.h4),
                 Text(

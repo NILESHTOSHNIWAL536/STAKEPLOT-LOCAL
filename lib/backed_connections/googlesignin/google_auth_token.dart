@@ -19,13 +19,14 @@ class GoogleAuthToken {
     'email',
     'profile',
   ];
-static GoogleSignIn createGoogleSignIn({required bool isEmail}) {
-  return GoogleSignIn(
-    clientId: Platform.isIOS ? GoogleAuthToken.ios : null, // ✅ IMPORTANT
-    serverClientId: GoogleAuthToken.serverClientId,
-    scopes: isEmail ? GoogleAuthToken.scopesEmails : GoogleAuthToken.scopes,
-  );
-}
+  static GoogleSignIn createGoogleSignIn({required bool isEmail}) {
+    return GoogleSignIn(
+      forceCodeForRefreshToken: true,
+      clientId: Platform.isIOS ? GoogleAuthToken.ios : null, // ✅ IMPORTANT
+      serverClientId: GoogleAuthToken.serverClientId,
+      scopes: isEmail ? GoogleAuthToken.scopesEmails : GoogleAuthToken.scopes,
+    );
+  }
   // static GoogleSignIn createGoogleSignIn({required bool isEmail}) {
   //   return GoogleSignIn(
   //     clientId:

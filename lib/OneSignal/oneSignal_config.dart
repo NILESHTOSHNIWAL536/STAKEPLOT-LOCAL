@@ -166,6 +166,7 @@ Future<void> getDeviceInfo(
     deviceData.value = DeviceModel.empty(); // optional fallback
   }
   LoginService.userVerification(emailController, context);
+  print("device data ${deviceData.value.toJson()}");
 }
 
 Future<void> getDeviceLocalDetails(String playerId, context) async {

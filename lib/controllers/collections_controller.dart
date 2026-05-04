@@ -1128,16 +1128,16 @@ class CollectionsController extends GetxController {
     }
   }
 
-  Future<void> splitManulaTansactions(String transactionId, context) async {
+  Future<void> splitManulaTansactions(String transactionId, context, Map<String, TextEditingController>? controllersList) async {
     final List<Map<String, dynamic>> members =
         collectionDetails.value!.members.where((e) {
-      final text = controllersList[e.userId]?.text;
+      final text = controllersList?[e.userId]?.text;
       final value = double.tryParse(text ?? '');
       return value != null && value > 0;
     }).map((e) {
       return {
         "userId": e.userId,
-        "amount": double.parse(controllersList[e.userId]!.text),
+        "amount": double.parse(controllersList?[e.userId]?.text??""),
       };
     }).toList();
 
@@ -1149,6 +1149,6 @@ class CollectionsController extends GetxController {
         customSplits: members,
         clearn: false);
 
-    controllersList.clear();
+    controllersList?.clear();
   }
 }

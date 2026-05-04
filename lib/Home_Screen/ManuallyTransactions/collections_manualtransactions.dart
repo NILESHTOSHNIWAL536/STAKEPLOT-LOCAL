@@ -9,7 +9,7 @@ import '../../Utils/homepageStrings.dart.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../finvu_screens/shareAccountLogin.dart';
 
-final Map<String, TextEditingController> controllersList = {};
+
 
 class CollectionsManualtransactions extends StatefulWidget {
   double amount;
@@ -25,6 +25,7 @@ class CollectionsManualtransactions extends StatefulWidget {
 
 class _CollectionsManualtransactionsState
     extends State<CollectionsManualtransactions> {
+      final Map<String, TextEditingController> controllersList = {};
   // ✅ Title Case Converter
   String toTitleCase(String text) {
     if (text.isEmpty) return "";
@@ -76,7 +77,7 @@ class _CollectionsManualtransactionsState
 
                   if (collectionsController.selectedCollectionId != "") {
                     collectionsController.splitManulaTansactions(
-                        widget.transactionId.toString(), context);
+                        widget.transactionId.toString(), context ,controllersList);
                   }
                   cashInAndOut.value = false;
                 },

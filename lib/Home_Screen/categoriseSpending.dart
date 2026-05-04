@@ -443,12 +443,12 @@ class ChartData {
   ChartData(this.category, this.value, this.color, this.persentage);
 }
 
-class DoughnutChartExample extends StatefulWidget {
+class CategoriseSpending extends StatefulWidget {
   @override
-  State<DoughnutChartExample> createState() => _DoughnutChartExampleState();
+  State<CategoriseSpending> createState() => _CategoriseSpendingState();
 }
 
-class _DoughnutChartExampleState extends State<DoughnutChartExample> {
+class _CategoriseSpendingState extends State<CategoriseSpending> {
    final controller = Get.find<FinoraController>();
   
   @override

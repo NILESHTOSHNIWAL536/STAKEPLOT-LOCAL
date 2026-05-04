@@ -389,7 +389,7 @@ class _ModalContentState extends State<ModalContent>
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
         child: Container(
-          color: AppColors.border,
+          color: AppColors.newbg,
           child: Padding(
             padding: const EdgeInsets.only(top: AppSizes.p10),
             child: showKeyboard

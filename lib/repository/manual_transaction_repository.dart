@@ -23,7 +23,10 @@ import 'package:flutter_application_code_stakeplot/routes/route_transactions.dar
 // adding manual transaction api call function
 void addTransaction(String amount, String subCategory, String categories,
     BuildContext context, String dropdownValue,
-    [bool isSplit = false, bool snackBar = true, bool isDebit = true]) async {
+    [bool isSplit = false,
+    bool snackBar = true,
+    bool isDebit = true,
+    Map<String, TextEditingController>? controllersList]) async {
   // final budgetController = Get.find<BudgetController>();
   // BudgetControllerScreenModel budgetController = ControllerManagement.budgetController;
   var body = {
@@ -43,7 +46,7 @@ void addTransaction(String amount, String subCategory, String categories,
         TransactionModel.fromJson(body['data'][0]['data']);
     if (collectionsController.selectedCollectionId != "") {
       collectionsController.splitManulaTansactions(
-          addedTransactions.id.toString(), context);
+          addedTransactions.id.toString(), context, controllersList);
     }
     transactionsHistory.insert(0, addedTransactions);
 

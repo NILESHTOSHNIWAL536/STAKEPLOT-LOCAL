@@ -1193,6 +1193,55 @@ Widget manualTransactionButton(BuildContext context) {
   );
 }
 
+Widget actionButtonForCashAndHistory({
+  required BuildContext context,
+  required String text,
+  required String icon,
+  required VoidCallback onTap,
+}) {
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      width: MediaQuery.sizeOf(context).width / 2.4,
+      height: MediaQuery.sizeOf(context).height / 21,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppColors.primaryColor,
+          width: 1,
+        ),
+        boxShadow: [AppShadows.soft],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AvatarProfileImageZero(
+            url: icon,
+            width: 5,
+            height: 32,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w500,
+              fontSize: 13,
+              color: AppColors.accentColor,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget globalbackArrow() {
   return const CustomStyledContainer(
     radius: 20,
