@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
@@ -14,12 +12,9 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:get/get.dart';
-
 import '../../Constants/core/app_component_sizes.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/helper.dart';
-import '../../controllers/controllerManagement.dart';
-import '../../controllers/finora_controller.dart';
 import '../Home/home_AppBar.dart';
 import '../Home/init_Api_Calls.dart';
 
@@ -111,17 +106,6 @@ class IndexScreen extends StatelessWidget {
         ? const SizedBox.shrink()
         : SizedBox(height: AppComponentSizes.h3, child: AutoPayCarousel());
   }
-
-  // Widget GetFinora(double height) {
-  //   return Obx(() {
-  //     return SizedBox(
-  //       height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.2),
-  //       child: totalDebitThisMonth.value <= 0
-  //           ? FinoraLastTwoMonthsDashboard()
-  //           : const SwipeableCardsScreen(),
-  //     );
-  //   });
-  // }
 }
 
 Widget buildTopSection(BuildContext context) {

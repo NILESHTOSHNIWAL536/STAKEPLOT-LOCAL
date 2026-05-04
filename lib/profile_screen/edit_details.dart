@@ -125,7 +125,6 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
         ],
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.p16),
         child: Column(
@@ -232,6 +231,8 @@ class _EditDetailsState extends State<EditDetails> {
             ),
 
             SizedBox(height: AppSizes.h20),
+            _buildAppearanceCard(),
+            SizedBox(height: AppSizes.h20),
             const Divider(),
             SizedBox(height: AppSizes.h10),
             Row(
@@ -277,6 +278,120 @@ class _EditDetailsState extends State<EditDetails> {
             getListOfBankConnected(),
             SizedBox(height: AppSizes.h20),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppearanceCard() {
+    final colors = context.appColors;
+    final controller = ControllerManagement.themeController;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSizes.p12),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.border),
+      ),
+      child: Obx(() {
+        final current = controller.themeMode.value;
+        return Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: colors.iconBackground,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                current == ThemeMode.dark
+                    ? Icons.dark_mode_rounded
+                    : current == ThemeMode.light
+                        ? Icons.light_mode_rounded
+                        : Icons.brightness_auto_rounded,
+                color: colors.primary,
+              ),
+            ),
+            SizedBox(width: AppSizes.w12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  textStyleOnly2(
+                    context: context,
+                    text: "Appearance",
+                    fontsize: 14,
+                    color: colors.onBackground,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  SizedBox(height: AppSizes.h4),
+                  textStyleOnly2(
+                    context: context,
+                    text: "Choose the app theme",
+                    fontsize: 12,
+                    color: colors.secondaryText,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: colors.surfaceVariant,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  _themeSegment(
+                    icon: Icons.brightness_auto_rounded,
+                    selected: current == ThemeMode.system,
+                    onTap: () => controller.changeTheme(ThemeMode.system),
+                  ),
+                  _themeSegment(
+                    icon: Icons.light_mode_rounded,
+                    selected: current == ThemeMode.light,
+                    onTap: () => controller.changeTheme(ThemeMode.light),
+                  ),
+                  _themeSegment(
+                    icon: Icons.dark_mode_rounded,
+                    selected: current == ThemeMode.dark,
+                    onTap: () => controller.changeTheme(ThemeMode.dark),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _themeSegment({
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    final colors = context.appColors;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        width: 34,
+        height: 32,
+        decoration: BoxDecoration(
+          color: selected ? colors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          icon,
+          size: 18,
+          color: selected ? Colors.white : colors.secondaryText,
         ),
       ),
     );

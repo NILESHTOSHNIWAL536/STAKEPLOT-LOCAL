@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:get/get.dart';
 import '../../../Constants/app_styles.dart';
-import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
+import '../../../Constants/theme_helper.dart';
 import '../history_button.dart';
-import '../transactionHistoryScreen.dart';
 import 'collection_setting.dart';
-import 'group_collections_page.dart';
 import 'personal-collections.dart';
 import 'trip/screens/select_transactions_sheet.dart';
 import 'trip/screens/shared_dashboard_screen.dart';
@@ -52,7 +49,7 @@ class CollectionDetailsPage extends StatelessWidget {
           return true;
         },
         child: Scaffold(
-          backgroundColor: AppColors.newbg,
+          backgroundColor: context.appColors.background,
           body: SafeArea(
             child: Column(
               children: [
@@ -74,8 +71,9 @@ class CollectionDetailsPage extends StatelessWidget {
 
   /// ---------------- APP BAR ----------------
   Widget _appBar(BuildContext context) {
+    final colors = context.appColors;
     return Container(
-      color: AppColors.newbg,
+      color: colors.appBarBackground,
       child: Padding(
         padding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p2),
@@ -84,10 +82,10 @@ class CollectionDetailsPage extends StatelessWidget {
             /// BACK
             InkWell(
               onTap: () => {navToHistoryReplacment(context)},
-              child: const CircleAvatar(
-                backgroundColor: AppColors.white,
+              child: CircleAvatar(
+                backgroundColor: colors.surface,
                 child: Icon(Icons.arrow_back,
-                    size: 18, color: AppColors.accentColor),
+                    size: 18, color: colors.onBackground),
               ),
             ),
 
@@ -106,6 +104,7 @@ class CollectionDetailsPage extends StatelessWidget {
                       context,
                       fontSize: 18,
                       lWeight: FontWeight.w600,
+                      color: colors.onBackground,
                     ),
                     overflow: TextOverflow.ellipsis,
                   )),
@@ -118,8 +117,9 @@ class CollectionDetailsPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   horizontal: AppSizes.p8, vertical: AppSizes.p2),
               decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: colors.border),
               ),
               child: Row(
                 children: [
@@ -127,7 +127,7 @@ class CollectionDetailsPage extends StatelessWidget {
 
                   VerticalDashDivider(
                     height: 30,
-                    color: AppColors.border,
+                    color: colors.border,
                     dashGap: 0,
                   ),
 
@@ -188,6 +188,7 @@ class CollectionDetailsPage extends StatelessWidget {
     required double amount,
     required bool isCredit,
   }) {
+    final colors = context.appColors;
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -199,11 +200,11 @@ class CollectionDetailsPage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundColor: Colors.grey.shade200,
+                  backgroundColor: colors.iconBackground,
                   child: Icon(
                     isCredit ? Icons.arrow_downward : Icons.arrow_upward,
                     size: 18,
-                    color: const Color(0xFF4B4E78),
+                    color: colors.primary,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -213,6 +214,7 @@ class CollectionDetailsPage extends StatelessWidget {
                     context,
                     fontSize: 13,
                     lWeight: FontWeight.w600,
+                    color: colors.onSurface,
                   ),
                 ),
               ],
@@ -226,7 +228,7 @@ class CollectionDetailsPage extends StatelessWidget {
               style: FontManager().getTextStyle(
                 context,
                 fontSize: 11,
-                color: Colors.grey,
+                color: colors.secondaryText,
               ),
             ),
 
@@ -239,6 +241,7 @@ class CollectionDetailsPage extends StatelessWidget {
                 context,
                 fontSize: 20,
                 lWeight: FontWeight.w700,
+                color: colors.onSurface,
               ),
             ),
           ],
@@ -248,6 +251,7 @@ class CollectionDetailsPage extends StatelessWidget {
   }
 
   Widget _summaryCard(BuildContext context) {
+    final colors = context.appColors;
     final data = collectionsController.collectionDetails.value;
 
     final totalCredit = data?.collection.totalCredit ?? 0;
@@ -260,8 +264,9 @@ class CollectionDetailsPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.border),
         ),
         child: Column(
           children: [
@@ -280,7 +285,7 @@ class CollectionDetailsPage extends StatelessWidget {
                 Container(
                   height: 70,
                   width: 1,
-                  color: Colors.grey.shade300,
+                  color: colors.divider,
                 ),
 
                 _topItem(
@@ -294,7 +299,7 @@ class CollectionDetailsPage extends StatelessWidget {
             ),
 
             /// Bottom divider
-            Divider(color: Colors.grey.shade300, height: 1),
+            Divider(color: colors.divider, height: 1),
 
             /// 🔥 OUTSTANDING
             Padding(
@@ -307,7 +312,7 @@ class CollectionDetailsPage extends StatelessWidget {
                     style: FontManager().getTextStyle(
                       context,
                       fontSize: 13,
-                      color: Colors.grey,
+                      color: colors.secondaryText,
                     ),
                   ),
                   Text(
@@ -316,6 +321,7 @@ class CollectionDetailsPage extends StatelessWidget {
                       context,
                       fontSize: 14,
                       lWeight: FontWeight.w600,
+                      color: colors.onSurface,
                     ),
                   ),
                 ],
@@ -328,8 +334,9 @@ class CollectionDetailsPage extends StatelessWidget {
   }
 
   Widget _transactionsUI(BuildContext context) {
+    final colors = context.appColors;
     return Container(
-      color: AppColors.border,
+      color: colors.background,
       child: Column(
         children: [
           _appBar(context),
@@ -359,8 +366,9 @@ Widget emptyTransactionsUI(
   BuildContext context,
   String splitType,
 ) {
+  final colors = context.appColors;
   return Container(
-    color: AppColors.border,
+    color: colors.background,
     child: Padding(
       padding:
           const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
@@ -399,6 +407,7 @@ Widget emptyTransactionsUI(
                     context,
                     fontSize: 20,
                     lWeight: FontWeight.w700,
+                    color: colors.onBackground,
                   ),
                 ),
 
@@ -410,7 +419,7 @@ Widget emptyTransactionsUI(
                   style: FontManager().getTextStyle(
                     context,
                     fontSize: 14,
-                    color: AppColors.grey,
+                    color: colors.secondaryText,
                   ),
                 ),
 
@@ -422,7 +431,7 @@ Widget emptyTransactionsUI(
                   height: 52,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
+                      backgroundColor: colors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -437,7 +446,7 @@ Widget emptyTransactionsUI(
                         context,
                         fontSize: 16,
                         lWeight: FontWeight.w500,
-                        color: AppColors.backgroundColor,
+                        color: Colors.white,
                       ),
                     ),
                   ),

@@ -7,19 +7,19 @@ import 'package:flutter/material.dart';
 @immutable
 class AppThemeColors extends ThemeExtension<AppThemeColors> {
   // ── Backgrounds ──────────────────────────────────────────────────────────
-  final Color background;       // Scaffold / page background
-  final Color surface;          // Slightly elevated surface (cards, tiles)
-  final Color surfaceVariant;   // Input fields, icon containers
+  final Color background; // Scaffold / page background
+  final Color surface; // Slightly elevated surface (cards, tiles)
+  final Color surfaceVariant; // Input fields, icon containers
   final Color appBarBackground;
   final Color bottomBarBackground;
   final Color dialogBackground;
 
   // ── Text ─────────────────────────────────────────────────────────────────
-  final Color onBackground;     // Primary text
-  final Color onSurface;        // Text on cards / surface
-  final Color secondaryText;    // Muted / secondary text
-  final Color hintText;         // Placeholder / hint text
-  final Color labelText;        // Small labels, section headers
+  final Color onBackground; // Primary text
+  final Color onSurface; // Text on cards / surface
+  final Color secondaryText; // Muted / secondary text
+  final Color hintText; // Placeholder / hint text
+  final Color labelText; // Small labels, section headers
 
   // ── Borders & Dividers ───────────────────────────────────────────────────
   final Color border;
@@ -27,16 +27,16 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
 
   // ── Interactive elements ─────────────────────────────────────────────────
   final Color inputBackground;
-  final Color iconBackground;   // Rounded icon container background
-  final Color selectedChip;     // Chip / tab selected bg
-  final Color unselectedChip;   // Chip / tab unselected bg
+  final Color iconBackground; // Rounded icon container background
+  final Color selectedChip; // Chip / tab selected bg
+  final Color unselectedChip; // Chip / tab unselected bg
 
   // ── Status (unchanged across themes) ────────────────────────────────────
-  final Color primary;          // Brand purple-indigo
-  final Color primaryLight;     // Lighter primary for dark backgrounds
-  final Color debit;            // Expense / debit
-  final Color credit;           // Income / credit
-  final Color error;            // Error / danger
+  final Color primary; // Brand purple-indigo
+  final Color primaryLight; // Lighter primary for dark backgrounds
+  final Color debit; // Expense / debit
+  final Color credit; // Income / credit
+  final Color error; // Error / danger
 
   const AppThemeColors({
     required this.background,
@@ -65,27 +65,23 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
 
   // ── Light theme tokens ───────────────────────────────────────────────────
   static const light = AppThemeColors(
-    background: Color(0xFFFFFFFF),
-    surface: Color(0xFFF4F4F4),
-    surfaceVariant: Color(0xFFF0F0F0),
-    appBarBackground: Color(0xFFFFFFFF),
+    background: Color(0xFFFFF9F0),
+    surface: Color(0xFFFFFFFF),
+    surfaceVariant: Color(0xFFF3F5F5),
+    appBarBackground: Color(0xFFFFF9F0),
     bottomBarBackground: Color(0xFFFFFFFF),
     dialogBackground: Color(0xFFFFFFFF),
-
     onBackground: Color(0xFF2A2A2A),
     onSurface: Color(0xFF2A2A2A),
     secondaryText: Color(0xFF6B6B6B),
     hintText: Color(0xFFACACAC),
     labelText: Color(0xFF48484A),
-
     border: Color(0xFFEBEBEB),
     divider: Color(0xFFEBEBEB),
-
-    inputBackground: Color(0xFFE6EAEB),
+    inputBackground: Color(0xFFFFFFFF),
     iconBackground: Color(0xFFE6EAEB),
     selectedChip: Color(0xFF4B4D73),
     unselectedChip: Color(0xFFE4E4E4),
-
     primary: Color(0xFF4B4D73),
     primaryLight: Color(0xFF6E70A8),
     debit: Color(0xFFCF7671),
@@ -97,27 +93,24 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   // Uses ~12-15% HSL lightness (vs pure black ~7%) — industry standard
   // reference: VS Code (#1E1E1E), Notion (#191919), Discord (#313338 surface)
   static const dark = AppThemeColors(
-    background: Color(0xFF1E1E1E),
-    surface: Color(0xFF272727),
-    surfaceVariant: Color(0xFF303030),
-    appBarBackground: Color(0xFF1E1E1E),
-    bottomBarBackground: Color(0xFF1A1A1A),
-    dialogBackground: Color(0xFF272727),
-
+    background: Color(0xFF11121A),
+    surface: Color(0xFF1A1B25),
+    surfaceVariant: Color(0xFF242637),
+    appBarBackground: Color(0xFF11121A),
+    bottomBarBackground: Color(0xFF151620),
+    dialogBackground: Color(0xFF1A1B25),
     onBackground: Color(0xFFF0F0F0),
     onSurface: Color(0xFFE8E8E8),
     secondaryText: Color(0xFF9E9E9E),
     hintText: Color(0xFF6B6B6B),
     labelText: Color(0xFFB0B0B0),
-
-    border: Color(0xFF3A3A3A),
-    divider: Color(0xFF3A3A3A),
-
-    inputBackground: Color(0xFF303030),
-    iconBackground: Color(0xFF3A3A3A),
+    // border: Color(0xFFB0B0B0),
+    border: Color(0xFF303247),
+    divider: Color(0xFF303247),
+    inputBackground: Color(0xFF202231),
+    iconBackground: Color(0xFF242637),
     selectedChip: Color(0xFF8E91D9),
     unselectedChip: Color(0xFF303030),
-
     primary: Color(0xFF8E91D9),
     primaryLight: Color(0xFFB0B3E8),
     debit: Color(0xFFEF8E8A),
@@ -183,9 +176,12 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       background: Color.lerp(background, other.background, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
-      appBarBackground: Color.lerp(appBarBackground, other.appBarBackground, t)!,
-      bottomBarBackground: Color.lerp(bottomBarBackground, other.bottomBarBackground, t)!,
-      dialogBackground: Color.lerp(dialogBackground, other.dialogBackground, t)!,
+      appBarBackground:
+          Color.lerp(appBarBackground, other.appBarBackground, t)!,
+      bottomBarBackground:
+          Color.lerp(bottomBarBackground, other.bottomBarBackground, t)!,
+      dialogBackground:
+          Color.lerp(dialogBackground, other.dialogBackground, t)!,
       onBackground: Color.lerp(onBackground, other.onBackground, t)!,
       onSurface: Color.lerp(onSurface, other.onSurface, t)!,
       secondaryText: Color.lerp(secondaryText, other.secondaryText, t)!,

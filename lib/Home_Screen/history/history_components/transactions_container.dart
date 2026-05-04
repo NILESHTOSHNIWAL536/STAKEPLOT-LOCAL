@@ -16,6 +16,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/services.dart';
 
 import '../../../Constants/core/app_padding_sizes.dart';
+import '../../../Constants/theme_helper.dart';
 import '../../autoPays/CreateAutoPayFromTransactionScreen.dart';
 
 class TransactionContainer extends StatelessWidget {
@@ -65,38 +66,39 @@ class TransactionContainer extends StatelessWidget {
     required this.context,
     required this.fromAutoPay,
   });
-void _navigateToAutoPayPage(
-  BuildContext context,
-  TransactionModel transaction,
-) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => CreateAutoPayFromTransactionScreen(
-        transaction: transaction,
+  void _navigateToAutoPayPage(
+    BuildContext context,
+    TransactionModel transaction,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateAutoPayFromTransactionScreen(
+          transaction: transaction,
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: isExcluded
-    ? () => _showExcludeConfirmationDialog(context, transaction.id, index)
-    : () {
-        if (fromAutoPay) {
-          _navigateToAutoPayPage(context, transaction);
-        } else {
-          _handleTap(context, transaction, id, index, isManual, hide);
-        }
-      },
+          ? () => _showExcludeConfirmationDialog(context, transaction.id, index)
+          : () {
+              if (fromAutoPay) {
+                _navigateToAutoPayPage(context, transaction);
+              } else {
+                _handleTap(context, transaction, id, index, isManual, hide);
+              }
+            },
 
       // onTap: isExcluded
       //     ? () => _showExcludeConfirmationDialog(context, transaction.id, index)
       //     : () => _handleTap(context, transaction, id, index, isManual, hide),
-      onLongPress: isExcluded || hide || isExpanded ||fromAutoPay
+      onLongPress: isExcluded || hide || isExpanded || fromAutoPay
           ? null
           : () {
               showCheckBox.value = true;
@@ -107,22 +109,22 @@ void _navigateToAutoPayPage(
         margin: EdgeInsets.symmetric(
             vertical: AppSizes.p6, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(10),
           border: !isReview
-              ? Border.all(color: AppColors.grey, width: 0.1)
+              ? Border.all(color: colors.border, width: 0.8)
               : Border.all(color: AppColors.redColor, width: 0.5),
-         
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           child: Stack(
             children: [
-              
               Column(
                 children: [
-                 isReview? SizedBox(height: fontSizes.padding): const SizedBox(height: 4),
+                  isReview
+                      ? SizedBox(height: fontSizes.padding)
+                      : const SizedBox(height: 4),
                   TransactionContent(
                     transaction: transaction,
                     isExcluded: isExcluded,
@@ -145,30 +147,28 @@ void _navigateToAutoPayPage(
                   ),
                 ],
               ),
-                ( isReview)
-              ?
-              Positioned(
-                  top: -2,
-                  right: -1.6,
-                  child:reviewTagTransactions(
-                  isReview,
-                  fontSizes.scaleFactor,
-                  isSplit,
-                  fontSizes.margin,
-                  fontSizes.badgeSize,
-                  fontSizes.fontSizeSmall,
-                  context,
-                  index,
-                  transaction.id,
-                ))
-              :  SizedBox(height: AppSizes.h10),
+              (isReview)
+                  ? Positioned(
+                      top: -2,
+                      right: -1.6,
+                      child: reviewTagTransactions(
+                        isReview,
+                        fontSizes.scaleFactor,
+                        isSplit,
+                        fontSizes.margin,
+                        fontSizes.badgeSize,
+                        fontSizes.fontSizeSmall,
+                        context,
+                        index,
+                        transaction.id,
+                      ))
+                  : SizedBox(height: AppSizes.h10),
               if (isExcluded)
                 Positioned(
-                  top: 0,
-                  right: -2,
-                  child: AvatarProfileImageZero(url: HomePageIcons.notMIne, width: 50, height: 50)
-                  
-                ),
+                    top: 0,
+                    right: -2,
+                    child: AvatarProfileImageZero(
+                        url: HomePageIcons.notMIne, width: 50, height: 50)),
             ],
           ),
         ),
@@ -181,8 +181,9 @@ void _navigateToAutoPayPage(
     final shouldExclude = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
+        final colors = context.appColors;
         return Dialog(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: colors.dialogBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -199,21 +200,21 @@ void _navigateToAutoPayPage(
                   textStyle(
                     context: context,
                     text: "Include transaction?",
-                    c: AppColors.accentColor,
+                    c: colors.onBackground,
                     fontsize: 16,
                     fontWeight: FontWeight.w600,
                   ),
-                   SizedBox(height: AppSizes.h10),
+                  SizedBox(height: AppSizes.h10),
                   textStyle(
                     context: context,
                     text:
                         "Are you sure you want to add this transaction? It will be included in your category spending and reflected in your insights.",
-                    c: AppColors.grey,
+                    c: colors.secondaryText,
                     fontsize: 14,
                     fontWeight: FontWeight.w400,
                     iswrap: true,
                   ),
-                   SizedBox(height: AppSizes.h16),
+                  SizedBox(height: AppSizes.h16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -223,14 +224,14 @@ void _navigateToAutoPayPage(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: AppSizes.p8),
                           decoration: BoxDecoration(
-                            color: AppColors.backgroundColor,
+                            color: colors.surface,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.grey),
+                            border: Border.all(color: colors.border),
                           ),
                           child: textStyle(
                             context: context,
                             text: "Cancel",
-                            c: AppColors.grey,
+                            c: colors.secondaryText,
                             fontsize: 14,
                             fontWeight: FontWeight.w600,
                             iswrap: true,
@@ -244,13 +245,13 @@ void _navigateToAutoPayPage(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: AppSizes.p8),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
+                            color: colors.primary,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: textStyle(
                             context: context,
                             text: "Include",
-                            c: AppColors.backgroundColor,
+                            c: Colors.white,
                             fontsize: 14,
                             fontWeight: FontWeight.w600,
                             iswrap: true,
@@ -296,7 +297,10 @@ void _navigateToAutoPayPage(
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TransactionDetailsPage(transaction: transaction, index: index,),
+          builder: (context) => TransactionDetailsPage(
+            transaction: transaction,
+            index: index,
+          ),
         ),
       );
       // showModalBottomSheet(

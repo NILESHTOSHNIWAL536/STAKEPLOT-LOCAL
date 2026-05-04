@@ -719,11 +719,11 @@ class _LinkingAccountState extends State<LinkingAccount>
                   style: TextStyle(
                       fontSize: 16 * textScale,
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 4),
+                      letterSpacing: 4.0),
                   decoration: InputDecoration(
                     hintText: FinvuStrings().enterOtp,
                     hintStyle: TextStyle(
-                        letterSpacing: 0,
+                        letterSpacing: 0.0,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xFFBBBBC8)),
                     filled: true,
@@ -1081,7 +1081,7 @@ class _LinkingAccountState extends State<LinkingAccount>
               fontSize: 12 * textScale,
               lWeight: FontWeight.w500,
               color: const Color(0xFF8A8A9A),
-              letterSpacing: 1),
+              letterSpacing: 1.0),
         ),
       ],
     );

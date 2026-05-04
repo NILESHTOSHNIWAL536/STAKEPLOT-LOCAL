@@ -55,7 +55,7 @@ Widget historyButton(BuildContext context) {
       decoration: BoxDecoration(
         color: colors.background,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: colors.primary, width: 1),
+        border: Border.all(color: colors.border, width: 1),
         boxShadow: [AppShadows.soft],
       ),
       child: Center(
@@ -83,5 +83,3 @@ Widget historyButton(BuildContext context) {
     ),
   );
 }
-
-      

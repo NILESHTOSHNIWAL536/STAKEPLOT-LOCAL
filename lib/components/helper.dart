@@ -1184,15 +1184,20 @@ Widget manualTransactionButton(BuildContext context) {
 }
 
 Widget globalbackArrow() {
-  return const CustomStyledContainer(
+  return CustomStyledContainer(
     radius: 20,
-    child: Padding(
-      padding: EdgeInsets.all(AppSizes.p8),
-      child: Icon(
-        Icons.arrow_back,
-        color: AppColors.accentColor,
-        size: 24,
-      ),
+    child: Builder(
+      builder: (context) {
+        final colors = context.appColors;
+        return Padding(
+          padding: EdgeInsets.all(AppSizes.p8),
+          child: Icon(
+            Icons.arrow_back,
+            color: colors.onBackground,
+            size: 24,
+          ),
+        );
+      },
     ),
   );
 }
