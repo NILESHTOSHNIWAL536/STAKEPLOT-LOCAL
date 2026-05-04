@@ -33,7 +33,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.primaryColor,
                 ),
               ),
-               SizedBox(height: AppSizes.h16),
+              SizedBox(height: AppSizes.h16),
 
               // Description
               Text(
@@ -45,7 +45,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.accentColor,
                 ),
               ),
-               SizedBox(height: AppSizes.h16),
+              SizedBox(height: AppSizes.h16),
 
               // Bullet points
               _buildBulletPoint(
@@ -73,7 +73,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.accentColor,
                 ),
               ),
-               SizedBox(height: AppSizes.h20),
+              SizedBox(height: AppSizes.h20),
 
               // Done button
               Center(
@@ -87,19 +87,18 @@ void showEarningScoreDialog(BuildContext context) {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A4A68),
                       foregroundColor: AppColors.backgroundColor,
-                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: AppSizes.p4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       elevation: 0,
                     ),
                     child: Center(
-                      child: const Text(
+                      child: Text(
                         'Done',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 14, lWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -118,7 +117,7 @@ Widget _buildBulletPoint(String text, BuildContext context) {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        margin: const EdgeInsets.only(top:AppSizes.p6, right:AppSizes.p8),
+        margin: const EdgeInsets.only(top: AppSizes.p6, right: AppSizes.p8),
         width: 4,
         height: 4,
         decoration: BoxDecoration(

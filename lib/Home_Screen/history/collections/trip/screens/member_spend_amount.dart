@@ -8,6 +8,8 @@ import '../../../../../backed_connections/apis_connect.dart';
 import '../../../../../model/collections_model.dart';
 import '../utils/app_theme_collections.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class MembersSpendSection extends StatelessWidget {
   const MembersSpendSection({super.key});
 
@@ -69,11 +71,10 @@ class MembersSpendSection extends StatelessWidget {
                     const SizedBox(width: 5),
                     Text(
                       '${members.length} member${members.length != 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColorsForCollection.primaryDark,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12,
+                          lWeight: FontWeight.w600,
+                          color: AppColorsForCollection.primaryDark),
                     ),
                   ],
                 ),
@@ -179,11 +180,10 @@ class MemberSpendCardNew extends StatelessWidget {
                 child: Center(
                   child: Text(
                     member.name.isNotEmpty ? member.name[0].toUpperCase() : "U",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: Colors.white,
+                        lWeight: FontWeight.w700,
+                        fontSize: 14),
                   ),
                 ),
               ),
@@ -265,11 +265,10 @@ class MemberSpendCardNew extends StatelessWidget {
               padding: const EdgeInsets.only(top: 5),
               child: Text(
                 'Over limit!',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFFEF4444),
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 10,
+                    lWeight: FontWeight.w600,
+                    color: const Color(0xFFEF4444)),
               ),
             ),
         ],

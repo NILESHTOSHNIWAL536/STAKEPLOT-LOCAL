@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 import '../routes/index_route.dart'; // API.urlWithLocallHost
 
 late IO.Socket socket;
@@ -7,8 +9,8 @@ late IO.Socket socket;
 class GroupChatScreen extends StatefulWidget {
   final String groupId;
   final String groupName;
-  final String myId;        // 🔥 current user id
-  final String myName;      // 🔥 current user name
+  final String myId; // 🔥 current user id
+  final String myName; // 🔥 current user name
 
   const GroupChatScreen({
     super.key,
@@ -45,7 +47,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     socket.connect();
 
     /// 3️⃣ On connect → join group room
-    socket.onConnect((_) {   
+    socket.onConnect((_) {
       socket.emit("joinRoom", widget.groupId);
     });
 
@@ -119,10 +121,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 return ListTile(
                   title: Text(
                     msg['sender']!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold, fontSize: 12),
                   ),
                   subtitle: Text(msg['message']!),
                 );

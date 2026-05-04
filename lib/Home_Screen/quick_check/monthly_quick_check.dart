@@ -278,11 +278,10 @@ class _BalanceScreenState extends State<BalanceScreen> {
                         child: globalbackArrow()),
                     Text(
                       'Balance',
-                      style: TextStyle(
-                        color: primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          color: primaryText,
+                          fontSize: 20,
+                          lWeight: FontWeight.w500),
                     ),
                     _roundIconButton(Icons.download, context),
                   ],
@@ -327,10 +326,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
                   bank == null
                       ? 'Combined Balance'
                       : '${bank.bankName} Balance',
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      color: Colors.white70, fontSize: 12),
                 );
               }),
 
@@ -339,21 +336,19 @@ class _BalanceScreenState extends State<BalanceScreen> {
                 if (selectedBankData.value == null) {
                   return Text(
                     '₹${controller.quickCheck.value?.currentBalance.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      color: primaryText,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: primaryText,
+                        fontSize: 26,
+                        lWeight: FontWeight.bold),
                   );
                 }
 
                 return Text(
                   '₹${(selectedBankData.value!.currentBalance ?? 0).toStringAsFixed(2)}',
-                  style: TextStyle(
-                    color: primaryText,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      color: primaryText,
+                      fontSize: 26,
+                      lWeight: FontWeight.bold),
                 );
               }),
 
@@ -474,11 +469,10 @@ class _BalanceScreenState extends State<BalanceScreen> {
                 const SizedBox(width: 6),
                 Text(
                   label,
-                  style: TextStyle(
-                    color: isSelected ? cardColor : Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      color: isSelected ? cardColor : Colors.white,
+                      fontSize: 12,
+                      lWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -501,7 +495,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
           // const SizedBox(width: 4),
           Text(
             amount,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: FontManager()
+                .getTextStyle(context, color: Colors.white, fontSize: 14),
           ),
           const SizedBox(width: 2),
         ],
@@ -578,28 +573,24 @@ class _BalanceScreenState extends State<BalanceScreen> {
               children: [
                 Text(
                   currentSelectedTypeLabel ?? '',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 14,
+                      lWeight: FontWeight.w600,
+                      color: Colors.black87),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   currentSelectedAmountString,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 20,
+                      lWeight: FontWeight.w700,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${currentSelectedPercentage.toStringAsFixed(2)}% of total',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black45,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 12, color: Colors.black45),
                 ),
               ],
             ));
@@ -829,11 +820,10 @@ class _BalanceScreenState extends State<BalanceScreen> {
         ),
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : cardColor,
-          ),
+          style: FontManager().getTextStyle(context,
+              fontSize: 14,
+              lWeight: FontWeight.w600,
+              color: isSelected ? Colors.white : cardColor),
         ),
       ),
     );
@@ -861,7 +851,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
                 ? availableMonths.map((m) {
                     return DropdownMenuItem(
                       value: m,
-                      child: Text(m, style: const TextStyle(fontSize: 12)),
+                      child: Text(m,
+                          style: FontManager()
+                              .getTextStyle(context, fontSize: 12)),
                     );
                   }).toList()
                 : availableYears.map((y) {
@@ -869,7 +861,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
                       value: y,
                       child: Text(
                         y.toString(),
-                        style: const TextStyle(fontSize: 12),
+                        style:
+                            FontManager().getTextStyle(context, fontSize: 12),
                       ),
                     );
                   }).toList(),
@@ -1019,20 +1012,18 @@ class _BalanceScreenState extends State<BalanceScreen> {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
-                color: isSelected ? activeColor : Colors.black54,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 10,
+                  lWeight: FontWeight.w800,
+                  color: isSelected ? activeColor : Colors.black54),
             ),
             const SizedBox(width: 8, height: 2),
             Text(
               '($percentage)',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
-                color: isSelected ? activeColor : Colors.black45,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 10,
+                  lWeight: FontWeight.w800,
+                  color: isSelected ? activeColor : Colors.black45),
             ),
           ],
         ),
@@ -1107,7 +1098,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
                       DateFormat.MMM().format(
                         DateTime(0, m['month']),
                       ),
-                      style: const TextStyle(fontSize: 12, color: Colors.black),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: Colors.black),
                     ),
                   ],
                 ),

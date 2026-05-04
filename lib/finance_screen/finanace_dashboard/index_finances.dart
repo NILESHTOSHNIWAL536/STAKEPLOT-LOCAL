@@ -190,6 +190,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
 
   Future<void> _loadData() async {
     try {
+      isLoading = false;
       await Future.wait([
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
@@ -199,7 +200,6 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
           isReserveLoading = false;
         });
       }

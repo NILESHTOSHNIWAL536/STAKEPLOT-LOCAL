@@ -5,6 +5,8 @@ import '../models/collection_helper_models.dart';
 import '../utils/app_theme_collections.dart';
 import '../widgets/common_widgets.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class SplitConfirmationScreen extends StatefulWidget {
   final List<TransactionForCollections> selectedTransactions;
   final List<SplitEntry> splitEntries;
@@ -103,7 +105,8 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                     '₹${widget.totalAmount.toStringAsFixed(2)}',
                     style: AppTextStyles.amountLarge,
                   ),
-                  const Divider(height: 24, color: AppColorsForCollection.divider),
+                  const Divider(
+                      height: 24, color: AppColorsForCollection.divider),
                   Text(
                     '${widget.selectedTransactions.length} Transaction${widget.selectedTransactions.length > 1 ? 's' : ''} • ${widget.splitEntries.length} Members',
                     style: AppTextStyles.bodySmall,
@@ -138,11 +141,10 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                     ),
                     Text(
                       '-₹${tx.amount.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColorsForCollection.errorRed,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 14,
+                          lWeight: FontWeight.w600,
+                          color: AppColorsForCollection.errorRed),
                     ),
                   ],
                 ),
@@ -173,8 +175,9 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                     ),
                     Text(
                       '₹${e.amount.toStringAsFixed(2)}',
-                      style: AppTextStyles.amountMedium
-                          .copyWith(color: AppColorsForCollection.primaryBlue, fontSize: 15),
+                      style: AppTextStyles.amountMedium.copyWith(
+                          color: AppColorsForCollection.primaryBlue,
+                          fontSize: 15),
                     ),
                   ],
                 ),

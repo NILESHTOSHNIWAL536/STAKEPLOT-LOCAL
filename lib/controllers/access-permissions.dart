@@ -227,7 +227,7 @@ Widget _memberRow(BuildContext context, MemberModel m) {
             backgroundColor: AppColors.primaryColor, // primary cool color
             child: Text(
               m.name[0].toUpperCase(),
-              style: const TextStyle(color: Colors.white),
+              style: FontManager().getTextStyle(context, color: Colors.white),
             ),
           ),
 

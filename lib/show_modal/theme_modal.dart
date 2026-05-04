@@ -4,6 +4,8 @@ import '../Constants/core/app_padding_sizes.dart';
 import '../controllers/controllerManagement.dart';
 import '../controllers/theme_controller.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 void showThemeSelectorModal(BuildContext context) {
   final ThemeController controller = ControllerManagement.themeController;
 
@@ -23,13 +25,14 @@ void showThemeSelectorModal(BuildContext context) {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(
+              Center(
                 child: Text(
                   "Choose Theme",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18, lWeight: FontWeight.bold),
                 ),
               ),
-               SizedBox(height: AppSizes.h12),
+              SizedBox(height: AppSizes.h12),
               ListTile(
                 leading: const Icon(Icons.brightness_auto),
                 title: const Text('System Default'),

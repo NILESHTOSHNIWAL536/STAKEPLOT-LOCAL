@@ -2,15 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_data/insights_model.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';
@@ -99,7 +96,7 @@ Future<void> init_finance() async {
           'Month',
           getFormattedDate(),
         );
-         getGraphData.value = true;
+        getGraphData.value = true;
       }
     },
   );
@@ -136,16 +133,16 @@ Future<void> initCardsData() async {
     onLoaded: () => CardsLocalStorage.loadCardsFromHive(),
   );
 }
-  
+
 Future<void> init_post() async {
   try {
     // Register all post-related adapters
-     HiveHelper.registerAdapterSafe(PostTypesAdapter());
-     HiveHelper.registerAdapterSafe(PollOptionModelsAdapter());
-     HiveHelper.registerAdapterSafe(PollModelsAdapter());
-     HiveHelper.registerAdapterSafe(AuthorModelsAdapter());
-     HiveHelper.registerAdapterSafe(BudgetModelsAdapter());
-     HiveHelper.registerAdapterSafe(PostModelsAdapter());
+    HiveHelper.registerAdapterSafe(PostTypesAdapter());
+    HiveHelper.registerAdapterSafe(PollOptionModelsAdapter());
+    HiveHelper.registerAdapterSafe(PollModelsAdapter());
+    HiveHelper.registerAdapterSafe(AuthorModelsAdapter());
+    HiveHelper.registerAdapterSafe(BudgetModelsAdapter());
+    HiveHelper.registerAdapterSafe(PostModelsAdapter());
 
     // Open + Load Trending
     await HiveHelper.initHiveBox<PostModels>(
@@ -164,27 +161,27 @@ Future<void> init_post() async {
     await HiveHelper.initHiveBox<PostModels>(
       adapter: PostModelsAdapter(),
       boxName: HiveStorage.userPostName,
-      onLoaded: () => PostLocalStorage.loadPostsFromHive(isPostTranding: false,isUserPost: true),
+      onLoaded: () => PostLocalStorage.loadPostsFromHive(
+          isPostTranding: false, isUserPost: true),
     );
 
     // Open + Load Saved
     await HiveHelper.initHiveBox<PostModels>(
       adapter: PostModelsAdapter(),
       boxName: HiveStorage.savedPostName,
-      onLoaded: () =>
-          PostLocalStorage.loadPostsFromHive(isPostTranding: true, isSavedPost: true),
+      onLoaded: () => PostLocalStorage.loadPostsFromHive(
+          isPostTranding: true, isSavedPost: true),
     );
-  } catch (e)
-  {
-  }
+  } catch (e) {}
 }
+
 Future<void> clearSpecificBox(String boxName) async {
   if (Hive.isBoxOpen(boxName)) {
     await Hive.box(boxName).clear();
-  } else
-  {
+  } else {
     final key = await HiveHelper.getOrCreateKey();
-    final box = await Hive.openBox(boxName,encryptionCipher:HiveAesCipher(key));
+    final box =
+        await Hive.openBox(boxName, encryptionCipher: HiveAesCipher(key));
     await box.clear();
   }
 }

@@ -12,22 +12,35 @@ import '../../controllers/credit_card_controller.dart';
 import '../../email_sync/credit_card_transactions.dart';
 import '../../email_sync/custom_steps.dart';
 
-class CardDueCarousel extends StatelessWidget {
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
+class CardDueCarousel extends StatefulWidget {
   bool flag = true;
   CardDueCarousel({super.key, this.flag = true});
 
   @override
+  State<CardDueCarousel> createState() => _CardDueCarouselState();
+}
+
+class _CardDueCarouselState extends State<CardDueCarousel> {
+  @override
+  void initState() {
+    super.initState();
+    cardController.fetchCardData();
+    cardController.getBanksListCrediCard();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return !flag
+      return !widget.flag
           ? getDataListView(context)
           : Scaffold(
               appBar: AppBar(
                 title: Text(
                   'Credit Cards',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                  ),
+                  style: FontManager()
+                      .getTextStyle(context, color: AppColors.primaryColor),
                 ),
                 backgroundColor: AppColors.backgroundColor,
                 leading: leadIcon(context),
@@ -38,56 +51,54 @@ class CardDueCarousel extends StatelessWidget {
   }
 
   Widget getDataListView(context) {
-    return Expanded(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: cardController.cardList.isEmpty
-            ? cardController.loading.value
-                ? Center(child: Spinner())
-                : NoCreditCardUi(context)
-            : ListView.builder(
-                scrollDirection: Axis.vertical,
-                // padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: AppSizes.p12),
-                itemCount: cardController.cardList.length,
-                itemBuilder: (context, index) {
-                  final card = cardController.cardList[index];
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(
-                        vertical: AppSizes.p10, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundColor,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          blurRadius: 8,
-                          spreadRadius: 2,
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: cardController.cardList.isEmpty
+          ? cardController.loading.value
+              ? Center(child: Spinner())
+              : NoCreditCardUi(context)
+          : ListView.builder(
+              scrollDirection: Axis.vertical,
+              // padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: AppSizes.p12),
+              itemCount: cardController.cardList.length,
+              itemBuilder: (context, index) {
+                final card = cardController.cardList[index];
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: AppSizes.p10, horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundColor,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CreditCardTransactionCard(
+                        txn: CreditCardTransaction(
+                          bank: card.bank,
+                          date: card.date,
+                          transactionId: card.transactionId,
+                          amount: card.amount,
+                          cardNumber: card.cardNumber,
+                          merchant: 'merchant',
+                          logo: card.logo,
+                          bankName: card.bankName,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CreditCardTransactionCard(
-                          txn: CreditCardTransaction(
-                            bank: card.bank,
-                            date: card.date,
-                            transactionId: card.transactionId,
-                            amount: card.amount,
-                            cardNumber: card.cardNumber,
-                            merchant: 'merchant',
-                            logo: card.logo,
-                            bankName: card.bankName,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-      ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
 

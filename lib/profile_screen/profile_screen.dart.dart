@@ -345,7 +345,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           child: Text(
             ProfileScreenStrings().appVersionLabel,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey, fontSize: 12),
+            style: FontManager()
+                .getTextStyle(context, color: Colors.grey, fontSize: 12),
           ),
         ),
       ],

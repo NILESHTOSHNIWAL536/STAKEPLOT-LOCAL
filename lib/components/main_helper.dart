@@ -9,15 +9,10 @@ import 'package:flutter_application_code_stakeplot/widget_services/widget_servic
 import 'package:get/get.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Constants/colors.dart';
-import '../Constants/core/app_component_sizes.dart';
 import '../OneSignal/deviceConfig.dart';
-import '../Profile/friends.dart';
 import '../Utils/socket_connect.dart';
-import '../backed_connections/apis_connect.dart';
 import '../routes/index_route.dart';
-import '../widget_services/widget_bridge.dart';
 
 Future<void> main_apis_call_init() async {
   securityCheck();

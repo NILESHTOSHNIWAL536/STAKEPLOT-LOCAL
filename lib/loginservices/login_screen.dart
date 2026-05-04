@@ -35,7 +35,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "");
+  final TextEditingController emailController = TextEditingController(text: "testuserc@gmail.com");
   final AuthService authService = AuthService();
   RxString isLoggedIn = "".obs;
 
@@ -283,10 +283,8 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Or login with',
-            style: TextStyle(
-              color: AppColors.grey,
-              fontSize: 14,
-            ),
+            style: FontManager()
+                .getTextStyle(context, color: AppColors.grey, fontSize: 14),
           ),
         ),
       ],

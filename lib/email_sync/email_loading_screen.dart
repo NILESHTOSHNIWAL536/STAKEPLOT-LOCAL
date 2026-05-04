@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/collections/create_collection_pages/create_collection_flow.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,8 @@ import '../controllers/credit_card_controller.dart';
 import '../finance_screen/Budgets/Budget.dart';
 import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
 import 'add_credit_card_bank.dart';
+
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 RxBool loadingBankdetails = false.obs;
 
@@ -100,7 +104,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
     _startStepCycle();
 
     loadingBankdetails.value = false;
-    CardDueController().LinkBankData(context);
+    cardController.LinkBankData(context);
 
     // Watch for completion
     ever(loadingBankdetails, (bool done) {
@@ -210,11 +214,10 @@ class _GettingDataScreenState extends State<GettingDataScreen>
               if (!_finished)
                 Text(
                   'Step ${_currentStep + 1} of ${_loadingSteps.length}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade500,
-                    letterSpacing: 0.4,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                      letterSpacing: 0.4),
                 ),
 
               // const Spacer(),
@@ -281,19 +284,16 @@ class _GettingDataScreenState extends State<GettingDataScreen>
               children: [
                 Text(
                   step['title'] as String,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF37344F),
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 15,
+                      lWeight: FontWeight.w700,
+                      color: Color(0xFF37344F)),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   step['subtitle'] as String,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 13, color: Colors.grey.shade500),
                 ),
               ],
             ),
@@ -327,22 +327,22 @@ class _GettingDataScreenState extends State<GettingDataScreen>
                 color: Color(0xFF2E7D32), size: 28),
           ),
           const SizedBox(width: 16),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'All done!',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF1B5E20),
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 15,
+                      lWeight: FontWeight.w700,
+                      color: Color(0xFF1B5E20)),
                 ),
                 SizedBox(height: 4),
                 Text(
                   'Your credit card data is ready to view.',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF388E3C)),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 13, color: Color(0xFF388E3C)),
                 ),
               ],
             ),
@@ -402,13 +402,13 @@ class _GettingDataScreenState extends State<GettingDataScreen>
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           elevation: 4,
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('View My Cards',
-                style: TextStyle(
+                style: FontManager().getTextStyle(context,
                     fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    lWeight: FontWeight.w600,
                     color: Colors.white)),
             SizedBox(width: 8),
             Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
@@ -436,10 +436,8 @@ class _GettingDataScreenState extends State<GettingDataScreen>
         const SizedBox(height: 10),
         Text(
           'This may take up to 30-40 seconds…',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade500,
-          ),
+          style: FontManager()
+              .getTextStyle(context, fontSize: 12, color: Colors.grey.shade500),
         ),
       ],
     );

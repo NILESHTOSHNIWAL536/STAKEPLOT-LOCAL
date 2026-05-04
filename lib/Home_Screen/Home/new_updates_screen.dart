@@ -68,7 +68,7 @@ class UpdatesScreen extends StatelessWidget {
                     //         mainAxisAlignment:
                     //             MainAxisAlignment.spaceBetween,
                     //         children: [
-                    //           const Text(
+                    //           Text(
                     //             "Version 3.5.0",
                     //             style: TextStyle(
                     //               fontSize: 16,
@@ -83,7 +83,7 @@ class UpdatesScreen extends StatelessWidget {
                     //               color: Colors.white,
                     //               borderRadius: BorderRadius.circular(20),
                     //             ),
-                    //             child: const Text(
+                    //             child: Text(
                     //               "42.5 MB",
                     //               style: TextStyle(
                     //                 fontSize: 12,
@@ -94,7 +94,7 @@ class UpdatesScreen extends StatelessWidget {
                     //         ],
                     //       ),
                     //       const SizedBox(height: 6),
-                    //       const Text(
+                    //       Text(
                     //         "Released Dec 10, 2024",
                     //         style: TextStyle(
                     //           fontSize: 13,
@@ -115,7 +115,7 @@ class UpdatesScreen extends StatelessWidget {
                     //             ),
                     //             elevation: 0,
                     //           ),
-                    //           child: const Text(
+                    //           child: Text(
                     //             "Update Now",
                     //             style: TextStyle(
                     //               fontSize: 16,

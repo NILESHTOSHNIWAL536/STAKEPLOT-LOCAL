@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart'; // Assuming FontManager2 is here
@@ -10,7 +9,6 @@ import 'package:get/get.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/history/dotted_Border.dart';
 import '../backed_connections/apis_connect.dart';
-
 
 void showTagListOfInterestModal({
   required BuildContext context,
@@ -65,24 +63,35 @@ void showTagListOfInterestModal({
               ),
               SizedBox(height: screenSize.height * 0.02), // Responsive spacing
               // List of interests
-              
-                Container(
-                  height: MediaQuery.sizeOf(context).height/2,
-                  
-                  child: GetListOfInterest(height: 0, limitTagbool: true,enableAnimations: false, ), // Let it take available space
-                ),
-              
+
+              Container(
+                height: MediaQuery.sizeOf(context).height / 2,
+
+                child: GetListOfInterest(
+                  height: 0,
+                  limitTagbool: true,
+                  enableAnimations: false,
+                ), // Let it take available space
+              ),
+
               SizedBox(height: screenSize.height * 0.02),
               // Continue button
-              
-              Obx(()=> InkWell(
-                onTap: ()
-                {
-                  if(!isListEnabled.value)return;
-                  onConfirm();// Call the passed function
-                  Navigator.pop(context); // Close the modal
-                },
-                child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Add", AppColors.grey,AppColors.bg1,)),
+
+              Obx(
+                () => InkWell(
+                    onTap: () {
+                      if (!isListEnabled.value) return;
+                      onConfirm(); // Call the passed function
+                      Navigator.pop(context); // Close the modal
+                    },
+                    child: isListEnabled.value
+                        ? getButton(context, "Continue")
+                        : getButton(
+                            context,
+                            "Add",
+                            AppColors.grey,
+                            AppColors.bg1,
+                          )),
               ),
             ],
           ),
@@ -92,18 +101,14 @@ void showTagListOfInterestModal({
   );
 }
 
-
-
 class InterestSelectionPage extends StatelessWidget {
   final String question;
   final List<Map<String, dynamic>> options;
   final Function(String, List<Map<String, dynamic>>) onConfirm;
 
-
-
   const InterestSelectionPage({
     Key? key,
-     required this.question,
+    required this.question,
     required this.options,
     required this.onConfirm,
   }) : super(key: key);
@@ -114,109 +119,101 @@ class InterestSelectionPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-   
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PollStepHeader(
-  title: "Create Poll",
-  step: 2,
-),
+            title: "Create Poll",
+            step: 2,
+          ),
 
           /// Interest list
-          /// 
+          ///
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: AppSizes.h16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: Text(
-                                  "Select a Category",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w700,
-                                    fontSize: 24,
-                                    color: AppColors.accentColor,
-                                  ),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Text(
+                    "Select a Category",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w700,
+                      fontSize: 24,
+                      color: AppColors.accentColor,
+                    ),
                   ),
-                    SizedBox(height: AppSizes.h10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: Text(
-                                  "Choose the topic that best fits your poll",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: AppColors.primaryColor,
-                                  ),
-                      ),
+                ),
+                SizedBox(height: AppSizes.h10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Text(
+                    "Choose the topic that best fits your poll",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.primaryColor,
+                    ),
                   ),
-                  SizedBox(height: AppSizes.h16),
-            
-                    Container(
-              height: MediaQuery.sizeOf(context).height/1.6,
-              child: GetListOfInterest(
-                height: 0,
-                limitTagbool: true,
-                enableAnimations: false,
-              ),
-            ),
-                  
-            SizedBox(height: AppSizes.h16),
-                  
-            /// Continue button
-            Obx(
-              () => InkWell(
-                onTap: () async{
-                  if (!isListEnabled.value) return;
-               final result = await Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => PollPreviewPage(
-      question: question,
-      options: options,
-      selectedCategories: selectedCategories.toList(),
-    ),
-  ),
-);
+                ),
+                SizedBox(height: AppSizes.h16),
 
-if (result != null) {
-  onConfirm(result["question"], result["options"]);
-}
+                Container(
+                  height: MediaQuery.sizeOf(context).height / 1.6,
+                  child: GetListOfInterest(
+                    height: 0,
+                    limitTagbool: true,
+                    enableAnimations: false,
+                  ),
+                ),
 
+                SizedBox(height: AppSizes.h16),
 
-
-
-                  // onConfirm();
-                  // Navigator.pop(context);
-                },
-                child: isListEnabled.value
-                    ? getButton(context, "Continue")
-                    : getButton(
+                /// Continue button
+                Obx(
+                  () => InkWell(
+                    onTap: () async {
+                      if (!isListEnabled.value) return;
+                      final result = await Navigator.push(
                         context,
-                        "Add",
-                        AppColors.grey,
-                        AppColors.bg1,
-                      ),
-              ),
-            ),
-                    
+                        MaterialPageRoute(
+                          builder: (_) => PollPreviewPage(
+                            question: question,
+                            options: options,
+                            selectedCategories: selectedCategories.toList(),
+                          ),
+                        ),
+                      );
+
+                      if (result != null) {
+                        onConfirm(result["question"], result["options"]);
+                      }
+
+                      // onConfirm();
+                      // Navigator.pop(context);
+                    },
+                    child: isListEnabled.value
+                        ? getButton(context, "Continue")
+                        : getButton(
+                            context,
+                            "Add",
+                            AppColors.grey,
+                            AppColors.bg1,
+                          ),
+                  ),
+                ),
               ],
             ),
           ),
-          
         ],
       ),
     );
   }
 }
-
-
 
 class PollStepHeader extends StatelessWidget {
   final String title;
@@ -253,7 +250,8 @@ class PollStepHeader extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
+                icon: const Icon(Icons.arrow_back,
+                    color: AppColors.backgroundColor),
                 onPressed: () => Navigator.pop(context),
               ),
               const Spacer(),
@@ -263,7 +261,7 @@ class PollStepHeader extends StatelessWidget {
                   context,
                   lWeight: FontWeight.w500,
                   fontSize: 20,
-                  lineHeight: 28/fontSize,
+                  lineHeight: 28 / fontSize,
                   color: AppColors.backgroundColor,
                 ),
               ),
@@ -279,13 +277,14 @@ class PollStepHeader extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.sizeOf(context).width/1.56,
+                  width: MediaQuery.sizeOf(context).width / 1.56,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 6,
-                      backgroundColor: AppColors.backgroundColor.withOpacity(0.3),
+                      backgroundColor:
+                          AppColors.backgroundColor.withOpacity(0.3),
                       valueColor:
                           const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
@@ -309,7 +308,6 @@ class PollStepHeader extends StatelessWidget {
     );
   }
 }
-
 
 class PollPreviewPage extends StatefulWidget {
   final String question;
@@ -378,9 +376,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 
     Navigator.pop(context, {
       "question": questionCtrl.text.trim(),
-      "options": optionCtrls
-          .map((c) => {"option": c.text.trim()})
-          .toList(),
+      "options": optionCtrls.map((c) => {"option": c.text.trim()}).toList(),
     });
     Navigator.pop(context);
   }
@@ -399,13 +395,13 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 
           Expanded(
             child: SingleChildScrollView(
-           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p20),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 30, vertical: AppSizes.p20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   /// QUESTION (EDITABLE)
-                   /// CATEGORIES (READ ONLY)
+                  /// CATEGORIES (READ ONLY)
                   Text(
                     "Selected Categories",
                     style: FontManager().getTextStyle(
@@ -416,37 +412,39 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                   ),
                   SizedBox(height: AppSizes.h8),
 
-                 SingleChildScrollView(
-  scrollDirection: Axis.horizontal,
-  child: Row(
-    children: widget.selectedCategories.map((tag) {
-      return Padding(
-        padding: const EdgeInsets.only(right:AppSizes.p4), // 👈 tight spacing
-        child: Chip(
-          label:  Text(
-                    tag,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 14,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: widget.selectedCategories.map((tag) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              right: AppSizes.p4), // 👈 tight spacing
+                          child: Chip(
+                            label: Text(
+                              tag,
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            backgroundColor: AppColors.backgroundColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              side: BorderSide(
+                                color: AppColors.backgroundColor,
+                                width: 1,
+                              ),
+                            ),
+                            visualDensity:
+                                VisualDensity.compact, // 👈 reduces height
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
-          backgroundColor: AppColors.backgroundColor,
-          shape: RoundedRectangleBorder(
-             borderRadius: BorderRadius.circular(6),
-    side: BorderSide(
-      color: AppColors.backgroundColor,
-      width: 1,
-    ),
-  ),
-          visualDensity: VisualDensity.compact, // 👈 reduces height
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-      );
-    }).toList(),
-  ),
-),
-
 
                   SizedBox(height: AppSizes.h20),
                   Text(
@@ -484,7 +482,6 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                           fontSize: 14,
                         ),
                       ),
-                     
                     ],
                   ),
                   SizedBox(height: AppSizes.h8),
@@ -494,96 +491,90 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                     final index = entry.key;
                     final ctrl = entry.value;
 
-                   return Padding(
-  padding: const EdgeInsets.only(bottom: 10),
-  child: Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      /// OPTION CONTAINER
-      Container(
-        width: MediaQuery.sizeOf(context).width/1.3,
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: AppColors.border,
-          ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 14,
-              backgroundColor: AppColors.border,
-              child: Text(
-                "${index + 1}",
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            SizedBox(width: AppSizes.w12),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          /// OPTION CONTAINER
+                          Container(
+                            width: MediaQuery.sizeOf(context).width / 1.3,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.p12,
+                                vertical: AppSizes.p10),
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundColor,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: AppColors.border,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 14,
+                                  backgroundColor: AppColors.border,
+                                  child: Text(
+                                    "${index + 1}",
+                                    style: FontManager()
+                                        .getTextStyle(context, fontSize: 12),
+                                  ),
+                                ),
+                                SizedBox(width: AppSizes.w12),
+                                Expanded(
+                                  child: TextField(
+                                    controller: ctrl,
+                                    decoration: const InputDecoration(
+                                      hintText: "",
+                                      border: InputBorder.none,
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
-            Expanded(
-              child: TextField(
-                controller: ctrl,
-                decoration: const InputDecoration(
-                  hintText: "",
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      /// DELETE ICON (OUTSIDE CONTAINER)
-      if (optionCtrls.length > 2)
-        InkWell(
-          onTap: () => removeOption(index),
-          borderRadius: BorderRadius.circular(20),
-          child:  Icon(
-            Icons.close,
-            size: 26,
-            color: AppColors.redColor,
-          ),
-        ),
-    ],
-  ),
-);
-
+                          /// DELETE ICON (OUTSIDE CONTAINER)
+                          if (optionCtrls.length > 2)
+                            InkWell(
+                              onTap: () => removeOption(index),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Icon(
+                                Icons.close,
+                                size: 26,
+                                color: AppColors.redColor,
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
                   }),
 
                   SizedBox(height: AppSizes.h20),
-                   if (optionCtrls.length < 4)
-                              GestureDetector
-                              
-                              (
-                                onTap:addOption,
-                                child: DottedBorderBox(
-
-                                  
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.add),
-                                      Text(
-                                      "Add Option",
-                                      style: FontManager().getTextStyle(
-                                        context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.bg1,
-                                      ),
-                                    )
-                                    ],
-                                  ),
-                                ),
+                  if (optionCtrls.length < 4)
+                    GestureDetector(
+                      onTap: addOption,
+                      child: DottedBorderBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.add),
+                            Text(
+                              "Add Option",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.normal,
+                                fontSize: 14,
+                                color: AppColors.bg1,
                               ),
-                  
-
-                 
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

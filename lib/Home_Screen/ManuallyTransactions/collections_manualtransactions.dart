@@ -257,7 +257,8 @@ class _CollectionsManualtransactionsState
                             backgroundColor: AppColors.button,
                             child: Text(
                               (member.name ?? "U")[0].toUpperCase(),
-                              style: const TextStyle(color: Colors.white),
+                              style: FontManager()
+                                  .getTextStyle(context, color: Colors.white),
                             ),
                           ),
                           const SizedBox(width: 8),

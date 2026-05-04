@@ -6,6 +6,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 
 import '../../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 double cardBalance = 300.0;
 double totalInterestPaid = 130.0;
 
@@ -42,21 +44,17 @@ class _PieChartGraphState extends State<PieChartGraph> {
 
   Widget buildPieChart() {
     return Container(
-      
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)
-      ),
-      
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         
           Padding(
             padding: EdgeInsets.only(
-                 top: Colorcodes.paddingSize / 2,
-                left: Colorcodes.paddingSize / 2,
-                // bottom: Colorcodes.paddingSize / 2
-                ),
+              top: Colorcodes.paddingSize / 2,
+              left: Colorcodes.paddingSize / 2,
+              // bottom: Colorcodes.paddingSize / 2
+            ),
             // child: Column(
             //   children: widget.graphDisc.map((e) => getSubtext(e)).toList(),
             // ),
@@ -69,14 +67,16 @@ class _PieChartGraphState extends State<PieChartGraph> {
                 //   ),
                 // ),
                 Padding(
-                  padding: const EdgeInsets.only(right:AppSizes.p14 ),
+                  padding: const EdgeInsets.only(right: AppSizes.p14),
                   child: Row(
                     children: List.generate(
                       widget.graphDisc.length,
                       (index) => Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(
-                            right: index == widget.graphDisc.length - 1 ? 0 : 12, // ✅ spacing
+                            right: index == widget.graphDisc.length - 1
+                                ? 0
+                                : 12, // ✅ spacing
                           ),
                           child: getSubtext(widget.graphDisc[index]),
                         ),
@@ -101,16 +101,13 @@ class _PieChartGraphState extends State<PieChartGraph> {
                 //     ),
                 //   ),
                 // ),
-
-
-      ],
+              ],
             ),
           ),
           SizedBox(
             height: Colorcodes.paddingSize,
           ),
           getGraph(),
-          
         ],
       ),
     );
@@ -121,52 +118,47 @@ class _PieChartGraphState extends State<PieChartGraph> {
     // Get index for color
 
     return Padding(
-      padding: const EdgeInsets.only(top:20),
+      padding: const EdgeInsets.only(top: 20),
       child: Container(
         width: MediaQuery.of(context).size.shortestSide * 0.15,
         height: MediaQuery.of(context).size.shortestSide * 0.20,
-         padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
         //  color:Colors.pink,
-         decoration: BoxDecoration(
-        color: Colors.white, // ✅ white card
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      
-     
-        child:  Row(
+        decoration: BoxDecoration(
+          color: Colors.white, // ✅ white card
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Container(
-                
-                
-                
                 decoration: BoxDecoration(
                   color: AppColors.backgroundColor, // Match pie chart color
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),
-            const SizedBox(width:20),
+            const SizedBox(width: 20),
             // Expanded(
             //   child: Container(
-           
-                
+
             //     decoration: BoxDecoration(
             //        color: AppColors.backgroundColor,// Match pie chart color
             //       borderRadius: BorderRadius.circular(2),
             //     ),
             //   ),
             // ),
-           
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -191,155 +183,146 @@ class _PieChartGraphState extends State<PieChartGraph> {
     );
   }
 
-
-
- Widget getSubtext(Map<String, dynamic> data) {
-  return Container(
-    height: 80,
-    width: 150,
-    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12,vertical:AppSizes. p8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: Colors.grey.withOpacity(0.15),
+  Widget getSubtext(Map<String, dynamic> data) {
+    return Container(
+      height: 80,
+      width: 150,
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.15),
+        ),
       ),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // TITLE
-        textStyle(
-          context: context,
-          fontWeight: FontWeight.w700,
-          fontsize: 12,
-          c: AppColors.newfontcolor,
-          text: data['title'], // ✅ from graphDisc
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // TITLE
+          textStyle(
+            context: context,
+            fontWeight: FontWeight.w700,
+            fontsize: 12,
+            c: AppColors.newfontcolor,
+            text: data['title'], // ✅ from graphDisc
+          ),
 
-         const SizedBox(height: AppSizes. h15), // ✅ vertical gap works in Column
+          const SizedBox(
+              height: AppSizes.h15), // ✅ vertical gap works in Column
 
-        // AMOUNT
-        textStyle(
-          context: context,
-          fontWeight: FontWeight.bold,
-          fontsize: 14,
-          c: AppColors.accentColor,
-          text: data['amount'], // ✅ already formatted string
-        ),
-      ],
-    ),
-  );
-}
-
-
-Widget getGraph() {
-  final double total = widget.graphData.fold(
-  0.0,
-  (sum, item) => sum + (item['value'] as double),
-);
-
-  return Container(
-    margin: EdgeInsets.only(top: AppSizes. m8,left:AppSizes. m4),
-    padding: const EdgeInsets.only(left:AppSizes. p10,top:AppSizes. p20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 5,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    width: MediaQuery.of(context).size.width / 1.1,
-    child: Column(
-      
-      children: [
-        // Title at the top
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'Principal vs Interest',
-              style: TextStyle(
-                
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height:AppSizes. h20),
-        // Pie Chart
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 4,
-          child: PieChart(
-            PieChartData(
-              borderData: FlBorderData(
-                show: false,
-              ),
-              sectionsSpace: 0,
-              sections: widget.graphData
-    .asMap()
-    .entries
-    .map(
-      (entry) => getPieChartSectionData(
-        entry.value,
-        entry.key,
-        total, // ✅ THIS is the key
+          // AMOUNT
+          textStyle(
+            context: context,
+            fontWeight: FontWeight.bold,
+            fontsize: 14,
+            c: AppColors.accentColor,
+            text: data['amount'], // ✅ already formatted string
+          ),
+        ],
       ),
-    )
-    .toList(),
+    );
+  }
 
+  Widget getGraph() {
+    final double total = widget.graphData.fold(
+      0.0,
+      (sum, item) => sum + (item['value'] as double),
+    );
+
+    return Container(
+      margin: EdgeInsets.only(top: AppSizes.m8, left: AppSizes.m4),
+      padding: const EdgeInsets.only(left: AppSizes.p10, top: AppSizes.p20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: Column(
+        children: [
+          // Title at the top
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Principal vs Interest',
+                style: FontManager().getTextStyle(context,
+                    fontSize: 18,
+                    lWeight: FontWeight.w600,
+                    color: Colors.black),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSizes.h20),
+          // Pie Chart
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 4,
+            child: PieChart(
+              PieChartData(
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                sectionsSpace: 0,
+                sections: widget.graphData
+                    .asMap()
+                    .entries
+                    .map(
+                      (entry) => getPieChartSectionData(
+                        entry.value,
+                        entry.key,
+                        total, // ✅ THIS is the key
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
-        ),
-        SizedBox(height: AppSizes. h20),
-        // Legend at the bottom
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildLegendItem(Color(0xFF9ECAD7), 'Principal'),
-            SizedBox(width: AppSizes. w20),
+          SizedBox(height: AppSizes.h20),
+          // Legend at the bottom
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildLegendItem(Color(0xFF9ECAD7), 'Principal'),
+              SizedBox(width: AppSizes.w20),
               _buildLegendItem(Color(0xFF4B4D73), 'Interest'),
-          ],
-        ),
-         SizedBox(height: AppSizes. h20),
-      ],
-    ),
-  );
-  
-}
+            ],
+          ),
+          SizedBox(height: AppSizes.h20),
+        ],
+      ),
+    );
+  }
 
 // Helper method for legend items
-Widget _buildLegendItem(Color color, String label) {
-  return Row(
-    children: [
-      Container(
-        width: MediaQuery.of(context).size.width * 0.04,
-height: MediaQuery.of(context).size.height * 0.017, 
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.zero,
+  Widget _buildLegendItem(Color color, String label) {
+    return Row(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.04,
+          height: MediaQuery.of(context).size.height * 0.017,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.zero,
+          ),
         ),
-      ),
-      SizedBox(width:AppSizes. w8),
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black,
+        SizedBox(width: AppSizes.w8),
+        Text(
+          label,
+          style: FontManager()
+              .getTextStyle(context, fontSize: 14, color: Colors.black),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 
 // PieChartSectionData getPieChartSectionData(dynamic data, int index) {
 //   Color sectionColor;
@@ -372,84 +355,83 @@ height: MediaQuery.of(context).size.height * 0.017,
 // }
 // }
 
-PieChartSectionData getPieChartSectionData(
-  dynamic data,
-  int index,
-  double total,
-) {
-  Color sectionColor;
-  String label;
+  PieChartSectionData getPieChartSectionData(
+    dynamic data,
+    int index,
+    double total,
+  ) {
+    Color sectionColor;
+    String label;
 
-  if (data['title'].toString().toLowerCase().contains('principal')) {
-    sectionColor = const Color(0xFF9ECAD7);
-    label = 'Principal';
-  } else {
-    sectionColor = const Color(0xFF4B4D73);
-    label = 'Interest';
+    if (data['title'].toString().toLowerCase().contains('principal')) {
+      sectionColor = const Color(0xFF9ECAD7);
+      label = 'Principal';
+    } else {
+      sectionColor = const Color(0xFF4B4D73);
+      label = 'Interest';
+    }
+
+    final double value = data['value'];
+    final double percent = total == 0 ? 0 : (value / total) * 100;
+
+    return PieChartSectionData(
+      value: value, // slice size (amount)
+      showTitle: true,
+      title: '$label\n${percent.toStringAsFixed(1)}%', // ✅ NAME + %
+      titleStyle: const TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+        height: 1.3, // spacing between lines
+      ),
+      color: sectionColor,
+      radius: 110,
+      titlePositionPercentageOffset: 0.55,
+    );
   }
-
-  final double value = data['value'];
-  final double percent = total == 0 ? 0 : (value / total) * 100;
-
-  return PieChartSectionData(
-    value: value, // slice size (amount)
-    showTitle: true,
-    title: '$label\n${percent.toStringAsFixed(1)}%', // ✅ NAME + %
-    titleStyle: const TextStyle(
-      fontSize: 13,
-      fontWeight: FontWeight.w600,
-      color: Colors.white,
-      height: 1.3, // spacing between lines
-    ),
-    color: sectionColor,
-    radius: 110,
-    titlePositionPercentageOffset: 0.55,
-  );
 }
-}
-  // Widget getGraph() {
-  //   return Container(
-  //     margin: EdgeInsets.only(top: 10),
-  //     width: MediaQuery.of(context).size.width / 1.1,
-  //     height: MediaQuery.of(context).size.height / 4,
-  //     child: PieChart(
-  //       PieChartData(
-  //           borderData: FlBorderData(
-  //             show: false,
-  //           ),
-  //           sections: widget.graphData
-  //               .asMap()
-  //               .entries
-  //               .map((entry) => getPieChartSectionData(entry.value, entry.key))
-  //               .toList()),
-  //     ),
-  //   );
-  // }
+// Widget getGraph() {
+//   return Container(
+//     margin: EdgeInsets.only(top: 10),
+//     width: MediaQuery.of(context).size.width / 1.1,
+//     height: MediaQuery.of(context).size.height / 4,
+//     child: PieChart(
+//       PieChartData(
+//           borderData: FlBorderData(
+//             show: false,
+//           ),
+//           sections: widget.graphData
+//               .asMap()
+//               .entries
+//               .map((entry) => getPieChartSectionData(entry.value, entry.key))
+//               .toList()),
+//     ),
+//   );
+// }
 
-  // PieChartSectionData getPieChartSectionData(data, index) {
-  //   return PieChartSectionData(
-  //     value: data['value'],
-  //     showTitle: false,
-  //     // badgeWidget: Container(
-  //     //   padding: EdgeInsets.all(10),
-  //     //   decoration: BoxDecoration(
-  //     //       color: pieChatColor[index], borderRadius: BorderRadius.circular(4)),
-  //     //   child: textStyleOnly(
-  //     //       context: context,
-  //     //      text: data['title'],
-  //     //       fontWeight: FontWeight.bold,
-  //     //       fontsize: 12,
-  //     //       c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
-  //     // ),
+// PieChartSectionData getPieChartSectionData(data, index) {
+//   return PieChartSectionData(
+//     value: data['value'],
+//     showTitle: false,
+//     // badgeWidget: Container(
+//     //   padding: EdgeInsets.all(10),
+//     //   decoration: BoxDecoration(
+//     //       color: pieChatColor[index], borderRadius: BorderRadius.circular(4)),
+//     //   child: textStyleOnly(
+//     //       context: context,
+//     //      text: data['title'],
+//     //       fontWeight: FontWeight.bold,
+//     //       fontsize: 12,
+//     //       c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
+//     // ),
 
-  //     // title: data['title'],
-  //     color: pieChatColor[index] ?? AppColors.uncoloredPie,
-  //     radius: 50,
-  //     // titlePositionPercentageOffset: 1.8,
-  //     badgePositionPercentageOffset: 1.7,
-  //   );
-  // }
-
+//     // title: data['title'],
+//     color: pieChatColor[index] ?? AppColors.uncoloredPie,
+//     radius: 50,
+//     // titlePositionPercentageOffset: 1.8,
+//     badgePositionPercentageOffset: 1.7,
+//   );
+// }
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -529,7 +511,7 @@ PieChartSectionData getPieChartSectionData(
 //               ),
 //             ],
 //           ),),
-       
+
 //       ],
 //     );
 //   }
@@ -563,7 +545,7 @@ PieChartSectionData getPieChartSectionData(
 //   Widget getLegendItem(dynamic graphData, int index) {
 //     return Container(
 //       child: Row(
-        
+
 //         //mainAxisSize: MainAxisSize.min,
 //         children: [
 //           Container(

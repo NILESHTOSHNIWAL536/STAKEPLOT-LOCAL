@@ -226,11 +226,10 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               children: [
                 Text(
                   'Select an Avatar',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18,
+                      lWeight: FontWeight.w600,
+                      color: Colors.black87),
                 ),
                 SizedBox(height: AppSizes.h16),
                 Container(
@@ -372,7 +371,6 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                     icon: Icon(Icons.auto_fix_high,
                         color: AppColors.finSpaceColor),
                     onPressed: () async {
-                      
                       await getMaskedNumber(context);
                     },
                   ),

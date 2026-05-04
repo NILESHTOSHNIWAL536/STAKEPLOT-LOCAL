@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/services/app_icon_changer.dar
 import '../Constants/colors.dart';
 import '../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class IconPickerModal {
   static void show(BuildContext context) {
@@ -41,8 +42,10 @@ class _IconPickerContentState extends State<_IconPickerContent> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(success ? "App icon changed successfully!" : "Failed to change app icon."),
-        backgroundColor: success ? Colors.green :  AppColors.redColor,
+        content: Text(success
+            ? "App icon changed successfully!"
+            : "Failed to change app icon."),
+        backgroundColor: success ? Colors.green : AppColors.redColor,
         duration: Duration(seconds: 2),
       ),
     );
@@ -74,7 +77,8 @@ class _IconPickerContentState extends State<_IconPickerContent> {
             SizedBox(height: AppSizes.h8),
             Text(
               label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14, lWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -89,7 +93,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top:AppSizes.p10, bottom: 20),
+            margin: EdgeInsets.only(top: AppSizes.p10, bottom: 20),
             height: 5,
             width: 50,
             decoration: BoxDecoration(
@@ -97,14 +101,17 @@ class _IconPickerContentState extends State<_IconPickerContent> {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Text("Choose App Icon", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text("Choose App Icon",
+              style: FontManager().getTextStyle(context,
+                  fontSize: 18, lWeight: FontWeight.bold)),
           SizedBox(height: AppSizes.h20),
           isLoading
               ? Center(child: CircularProgressIndicator())
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _iconItem("Default", "assets/app_icons/mainicon.png", "IconDefault"),
+                    _iconItem("Default", "assets/app_icons/mainicon.png",
+                        "IconDefault"),
                     _iconItem("Icon 1", "assets/app_icons/icon1.png", "Icon1"),
                     _iconItem("Icon 2", "assets/app_icons/icon2.png", "Icon2"),
                     _iconItem("Icon 3", "assets/app_icons/icon3.png", "Icon3"),

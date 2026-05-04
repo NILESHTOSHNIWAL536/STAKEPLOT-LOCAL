@@ -23,8 +23,7 @@ final RxBool showBrands = false.obs;
 class CouponPopupUtils {
   static void showCouponPopup(
       BuildContext context, Function(String) onCategorySelected) {
-        if (MediaQuery.maybeOf(context) == null) {
-     
+    if (MediaQuery.maybeOf(context) == null) {
       return;
     }
     showModalBottomSheet(
@@ -60,7 +59,8 @@ class CouponPopupUtils {
                   ? gridList(sheetContext, onCategorySelected)
                   : Container(
                       height: MediaQuery.of(sheetContext).size.height / 3,
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                       child: Center(
                         child: textStyleImage(
                             context: sheetContext,
@@ -95,7 +95,7 @@ class CouponPopupUtils {
           itemBuilder: (context, index) {
             final category = categoriesOfReward[index];
             return Container(
-              margin: EdgeInsets.only(right:AppSizes.p12),
+              margin: EdgeInsets.only(right: AppSizes.p12),
               child: _buildCategoryCard(
                 category['title'],
                 category['emoji'],
@@ -128,7 +128,7 @@ class CouponPopupUtils {
                 ),
                 child: Text(
                   '🎁',
-                  style: TextStyle(fontSize: 20),
+                  style: FontManager().getTextStyle(context, fontSize: 20),
                 ),
               ),
               SizedBox(width: AppSizes.w12),
@@ -164,7 +164,8 @@ class CouponPopupUtils {
 
   static Widget getHeaderForCoupons(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -213,7 +214,6 @@ class CouponPopupUtils {
           // If coupons are available, show the coupon selection popup
           CouponPopupUtils.showCouponSelectionPopup(context, title);
         } else {
-        
           // If no coupons, show the status in the card (handled in UI below)
           onCategorySelected(title);
           await getCouponRequestCheck(title.trim());
@@ -231,7 +231,7 @@ class CouponPopupUtils {
           children: [
             Text(
               emoji,
-              style: TextStyle(fontSize: 20),
+              style: FontManager().getTextStyle(context, fontSize: 20),
             ),
             SizedBox(height: AppSizes.h4),
             Text(
@@ -253,12 +253,11 @@ class CouponPopupUtils {
   static void showCouponSelectionPopup(
       BuildContext context, String categoryTitle) async {
     await getCouponRequestCheck(categoryTitle);
-if (MediaQuery.maybeOf(context) == null) {
+    if (MediaQuery.maybeOf(context) == null) {
       return;
     }
     showDialog(
       context: context,
-      
       builder: (BuildContext sheetContext) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -336,7 +335,8 @@ if (MediaQuery.maybeOf(context) == null) {
                                                     .width /
                                                 2,
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: AppSizes.p10),
+                                                horizontal: 10,
+                                                vertical: AppSizes.p10),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -350,7 +350,8 @@ if (MediaQuery.maybeOf(context) == null) {
                                                   context,
                                                   fontSize: 16,
                                                   lWeight: FontWeight.w600,
-                                                  color: AppColors.backgroundColor,
+                                                  color:
+                                                      AppColors.backgroundColor,
                                                 ),
                                               ),
                                             ),
@@ -368,7 +369,8 @@ if (MediaQuery.maybeOf(context) == null) {
                                                     .width /
                                                 2,
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: AppSizes.p10),
+                                                horizontal: 10,
+                                                vertical: AppSizes.p10),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -445,7 +447,8 @@ if (MediaQuery.maybeOf(context) == null) {
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height / 2.2,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p20),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 16, vertical: AppSizes.p20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -873,22 +876,21 @@ class _RewardsOverviewState extends State<RewardsOverview>
 
                     // ✅ Brand name at top-left
                     Positioned(
-                      top:AppSizes.p8,
-                      left:AppSizes.p8,
+                      top: AppSizes.p8,
+                      left: AppSizes.p8,
                       child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p4),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8, vertical: AppSizes.p4),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundColor.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           coupon.brand,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.accentColor,
-                          ),
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 12,
+                              lWeight: FontWeight.bold,
+                              color: AppColors.accentColor),
                         ),
                       ),
                     ),

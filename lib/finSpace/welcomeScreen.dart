@@ -28,7 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         builder: (BuildContext context) {
           return SafeArea(
             child: Container(
-              height: MediaQuery.sizeOf(context).height/4,
+              height: MediaQuery.sizeOf(context).height / 4,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: AppColors.finSpaceColor,
@@ -42,23 +42,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                     Text(
-                      "Finspace",
-                      style: FontManager2().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.backgroundColor)
-                    ),
-                     Text(
-                      "A safe and supportive space to share your financial thoughts, questions, and experiences—completely anonymously. No names, no pressure—just open, respectful conversations.",
-                      //  textAlign: TextAlign.center,
-                     style: FontManager2().getTextStyle(context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14,
-                        lineHeight: 1.3,
-                        color: AppColors.backgroundColor)),
+                    Text("Finspace",
+                        style: FontManager2().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppColors.backgroundColor)),
+                    Text(
+                        "A safe and supportive space to share your financial thoughts, questions, and experiences—completely anonymously. No names, no pressure—just open, respectful conversations.",
+                        //  textAlign: TextAlign.center,
+                        style: FontManager2().getTextStyle(context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 14,
+                            lineHeight: 1.3,
+                            color: AppColors.backgroundColor)),
                     // ElevatedButton(
                     //   onPressed: () {
                     //     getMaskedNumber(context);
@@ -72,31 +70,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     //     fontSize: 20,
                     //     color: AppColors.finSpaceColor)),
                     // ),
-                     SizedBox(
-              width: MediaQuery.sizeOf(context).width/4,
-              child: ElevatedButton(
-                    onPressed: () {
-                        getMaskedNumber(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MaskNameScreen()),
-                        );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.backgroundColor,
-                 
-                  padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text('Continue',
-                    style: FontManager2().getTextStyle(context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: AppColors.finSpaceColor)),
-              ),
-            ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width / 4,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          getMaskedNumber(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MaskNameScreen()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.backgroundColor,
+                          padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text('Continue',
+                            style: FontManager2().getTextStyle(context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.finSpaceColor)),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -117,27 +115,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Welcome to",
-                style: TextStyle(
+                style: FontManager().getTextStyle(context,
                     fontFamily: 'Urbanist',
                     fontSize: 39.58,
-                    fontWeight: FontWeight.w500,
-                    height: 1.0,
+                    lWeight: FontWeight.w500,
+                    lineHeight: 1.0,
                     letterSpacing: 0,
                     color: AppColors.accentColor),
               ),
-              const Text(
+              Text(
                 "Finspace",
-                style: TextStyle(
+                style: FontManager().getTextStyle(context,
                     fontFamily: 'Urbanist',
                     fontSize: 39.58,
-                    fontWeight: FontWeight.w700,
-                    height: 1.0,
+                    lWeight: FontWeight.w700,
+                    lineHeight: 1.0,
                     letterSpacing: 0,
                     color: AppColors.finSpaceColor),
               ),
-               SizedBox(height: AppSizes.h20),
+              SizedBox(height: AppSizes.h20),
               AvatarProfileImage(
                 url: FinSpaceIcons.welcome,
                 height: 3,

@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../apis_connect.dart';
 import 'credentials.dart';
 
 class GoogleAuthToken {
@@ -19,10 +21,14 @@ class GoogleAuthToken {
     'email',
     'profile',
   ];
-  static GoogleSignIn createGoogleSignIn({required bool isEmail}) {
+
+  static GoogleSignIn createGoogleSignIn({
+    required bool isEmail,
+    bool forceCodeForRefreshToken = false,
+  }) {
     return GoogleSignIn(
-      forceCodeForRefreshToken: true,
-      clientId: Platform.isIOS ? GoogleAuthToken.ios : null, // ✅ IMPORTANT
+      forceCodeForRefreshToken: true, // ✅ correct
+      clientId: Platform.isIOS ? GoogleAuthToken.ios : null,
       serverClientId: GoogleAuthToken.serverClientId,
       scopes: isEmail ? GoogleAuthToken.scopesEmails : GoogleAuthToken.scopes,
     );

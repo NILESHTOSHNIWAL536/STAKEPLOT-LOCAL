@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import '../../Constants/colors.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 /// 🎨 COLORS (match your design)
 const Color keyBg = Color(0xFFF2F2F2);
 const Color actionKeyBg = Color(0xFFB6B4D8);
 const Color submitKeyBg = AppColors.primaryColor;
 const Color keyText = AppColors.bg1;
-const Color actionText =AppColors.backgroundColor;
+const Color actionText = AppColors.backgroundColor;
 
 /// 🔘 REUSABLE KEY BUTTON
 Widget keyButton({
@@ -16,7 +18,6 @@ Widget keyButton({
   Color bgColor = keyBg,
 }) {
   return InkWell(
-  
     onTap: onTap,
     child: Container(
       height: 40,
@@ -69,11 +70,10 @@ class CustomNumericKeyboard extends StatelessWidget {
         // 🔢 Keyboard grid
         Container(
           color: AppColors.backgroundColor,
-          
-          padding: EdgeInsets.only(left:AppSizes.p12,right:AppSizes.p12, bottom: 30),
+          padding: EdgeInsets.only(
+              left: AppSizes.p12, right: AppSizes.p12, bottom: 30),
           child: GridView.count(
-            
-            childAspectRatio: 5/3,
+            childAspectRatio: 5 / 3,
             shrinkWrap: true,
             crossAxisCount: 4,
             mainAxisSpacing: 12,
@@ -81,19 +81,23 @@ class CustomNumericKeyboard extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               // Row 1
-              _number("1"), _number("2"), _number("3"),
+              _number(context, "1"), _number(context, "2"),
+              _number(context, "3"),
               _action("-", Icons.remove),
-          
+
               // Row 2
-              _number("4"), _number("5"), _number("6"),
+              _number(context, "4"), _number(context, "5"),
+              _number(context, "6"),
               _action("enter", Icons.keyboard_return),
-          
+
               // Row 3
-              _number("7"), _number("8"), _number("9"),
+              _number(context, "7"), _number(context, "8"),
+              _number(context, "9"),
               _backspace(),
-          
+
               // Row 4
-              _number(","), _number("0"), _number("."),
+              _number(context, ","), _number(context, "0"),
+              _number(context, "."),
               _submit(),
             ],
           ),
@@ -103,16 +107,13 @@ class CustomNumericKeyboard extends StatelessWidget {
   }
 
   /// 🔢 NUMBER KEY
-  Widget _number(String value) {
+  Widget _number(BuildContext context, String value) {
     return keyButton(
       onTap: () => onKeyTap(value),
       child: Text(
         value,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: keyText,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 18, lWeight: FontWeight.w500, color: keyText),
       ),
     );
   }

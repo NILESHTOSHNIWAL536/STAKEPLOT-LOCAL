@@ -6,6 +6,8 @@ import '../utils/app_theme_collections.dart';
 import '../widgets/common_widgets.dart';
 import 'split_confirmation_screen.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ─── Color palette (uses AppColors + local overrides) ────────────────────────
 class _C {
   static const bg = Color(0xFFF5F3EF);
@@ -270,19 +272,16 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                         children: [
                           Text(
                             '${widget.selectedMembers.length} People',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: _C.textDark,
-                            ),
+                            style: FontManager().getTextStyle(context,
+                                fontSize: 16,
+                                lWeight: FontWeight.w700,
+                                color: _C.textDark),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             '${widget.selectedTransactions.length} transaction${widget.selectedTransactions.length != 1 ? 's' : ''}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: _C.textMid,
-                            ),
+                            style: FontManager().getTextStyle(context,
+                                fontSize: 12, color: _C.textMid),
                           ),
                         ],
                       ),
@@ -369,21 +368,19 @@ class _TotalAmountCard extends StatelessWidget {
               children: [
                 Text(
                   'Total to Split',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white.withOpacity(0.65),
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 12,
+                      color: Colors.white.withOpacity(0.65),
+                      lWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '₹${totalAmount.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 26,
+                      lWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: -0.5),
                 ),
               ],
             ),
@@ -401,13 +398,12 @@ class _TotalAmountCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                   const SizedBox(width: 5),
-                  const Text(
+                  Text(
                     'Split',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        color: Colors.white,
+                        fontSize: 13,
+                        lWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -449,11 +445,10 @@ class _DistributionChip extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             isComplete ? 'Done' : '${(ratio * 100).toStringAsFixed(0)}%',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: isComplete ? _C.success : _C.accent,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 12,
+                lWeight: FontWeight.w700,
+                color: isComplete ? _C.success : _C.accent),
           ),
         ],
       ),
@@ -482,12 +477,11 @@ class _LeftoverBanner extends StatelessWidget {
           Expanded(
             child: Text(
               '₹${leftover.toStringAsFixed(2)} remaining — edit or tap "Settle & Split"',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFF92400E),
-                fontWeight: FontWeight.w500,
-                height: 1.4,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 12,
+                  color: Color(0xFF92400E),
+                  lWeight: FontWeight.w500,
+                  lineHeight: 1.4),
             ),
           ),
         ],
@@ -548,11 +542,10 @@ class _SplitMemberCard extends StatelessWidget {
                     children: [
                       Text(
                         entry.member.name,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: _C.textDark,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 14,
+                            lWeight: FontWeight.w600,
+                            color: _C.textDark),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
@@ -560,11 +553,10 @@ class _SplitMemberCard extends StatelessWidget {
                         children: [
                           Text(
                             '${(pct * 100).toStringAsFixed(1)}%',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: isEdited ? _C.edited : _C.textLight,
-                            ),
+                            style: FontManager().getTextStyle(context,
+                                fontSize: 11,
+                                lWeight: FontWeight.w500,
+                                color: isEdited ? _C.edited : _C.textLight),
                           ),
                           if (isEdited) ...[
                             const SizedBox(width: 6),
@@ -584,7 +576,7 @@ class _SplitMemberCard extends StatelessWidget {
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: const [
+                                  children: [
                                     Icon(
                                       Icons.refresh_rounded,
                                       size: 10,
@@ -593,11 +585,10 @@ class _SplitMemberCard extends StatelessWidget {
                                     SizedBox(width: 3),
                                     Text(
                                       'Reset',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: _C.edited,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: FontManager().getTextStyle(context,
+                                          fontSize: 10,
+                                          color: _C.edited,
+                                          lWeight: FontWeight.w600),
                                     ),
                                   ],
                                 ),
@@ -655,11 +646,8 @@ class _MemberAvatar extends StatelessWidget {
       child: Center(
         child: Text(
           name.isNotEmpty ? name[0].toUpperCase() : 'U',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
+          style: FontManager().getTextStyle(context,
+              color: Colors.white, fontSize: 16, lWeight: FontWeight.w700),
         ),
       ),
     );
@@ -695,11 +683,10 @@ class _AmountInput extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             '₹',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: isEdited ? _C.edited : _C.textMid,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 15,
+                lWeight: FontWeight.w700,
+                color: isEdited ? _C.edited : _C.textMid),
           ),
           const SizedBox(width: 4),
           Expanded(
@@ -869,22 +856,20 @@ class _TotalSummaryRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Current Total',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: _C.textMid,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 11,
+                      color: _C.textMid,
+                      lWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '₹${currentTotal.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: _C.textDark,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 15,
+                      lWeight: FontWeight.w700,
+                      color: _C.textDark),
                 ),
               ],
             ),
@@ -906,20 +891,18 @@ class _TotalSummaryRow extends StatelessWidget {
               children: [
                 Text(
                   canProceed ? 'Balanced' : 'Leftover',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: canProceed ? _C.success : const Color(0xFF92400E),
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 11,
+                      color: canProceed ? _C.success : const Color(0xFF92400E),
+                      lWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '₹${leftover.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: canProceed ? _C.success : const Color(0xFF92400E),
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 15,
+                      lWeight: FontWeight.w700,
+                      color: canProceed ? _C.success : const Color(0xFF92400E)),
                 ),
               ],
             ),
@@ -967,11 +950,8 @@ class _ActionButton extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   label,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      color: textColor, fontSize: 14, lWeight: FontWeight.w700),
                 ),
               ],
             ),

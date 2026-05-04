@@ -6,6 +6,8 @@ import '../models/collection_helper_models.dart';
 import '../widgets/common_widgets.dart';
 import 'select_members_screen.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ── Local tokens ──────────────────────────────────────────────────────────────
 class _S {
   static const bg = Color(0xFFF5F3EF);
@@ -232,13 +234,12 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                                       color: _S.navyBg,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'Load more',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: _S.navy,
-                                      ),
+                                      style: FontManager().getTextStyle(context,
+                                          fontSize: 13,
+                                          lWeight: FontWeight.w600,
+                                          color: _S.navy),
                                     ),
                                   ),
                                 ),
@@ -284,15 +285,12 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                   size: 20, color: _S.textDark),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
               'Select Transactions',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: _S.textDark,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 16, lWeight: FontWeight.w700, color: _S.textDark),
             ),
           ),
           widget.splitType == 'SHARED'
@@ -389,11 +387,10 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                         '${collectionsController.selectedTransactions.length} '
                         'transaction${collectionsController.selectedTransactions.length != 1 ? 's' : ''} '
                         'selected',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 13,
+                            lWeight: FontWeight.w600,
+                            color: Colors.white),
                       )),
                   const Spacer(),
                   Container(
@@ -405,11 +402,10 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                     ),
                     child: Text(
                       '₹${_selectedTotal.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12,
+                          lWeight: FontWeight.w700,
+                          color: Colors.white),
                     ),
                   ),
                 ],
@@ -425,14 +421,13 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 6),
           child: Row(
             children: [
-              const Text(
+              Text(
                 'Transactions',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: _S.textDark,
-                  letterSpacing: 0.2,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w700,
+                    color: _S.textDark,
+                    letterSpacing: 0.2),
               ),
               const Spacer(),
               Container(
@@ -444,11 +439,8 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                 ),
                 child: Text(
                   '${collectionsController.AllTransactions.length} available',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: _S.navy,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 11, lWeight: FontWeight.w600, color: _S.navy),
                 ),
               ),
             ],
@@ -473,19 +465,17 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                 color: _S.navy, size: 32),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'No transactions available',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: _S.textDark,
-            ),
+            style: FontManager().getTextStyle(context,
+                fontSize: 15, lWeight: FontWeight.w600, color: _S.textDark),
           ),
           const SizedBox(height: 6),
           Text(
             'Transactions from your bank account\nwill appear here',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+            style: FontManager().getTextStyle(context,
+                fontSize: 13, color: Colors.grey.shade400),
           ),
         ],
       ),
@@ -538,11 +528,10 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                           'Continue with '
                           '${collectionsController.selectedTransactions.length} '
                           'transaction${collectionsController.selectedTransactions.length != 1 ? 's' : ''}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: FontManager().getTextStyle(context,
+                              color: Colors.white,
+                              fontSize: 15,
+                              lWeight: FontWeight.w700),
                         )),
                     const SizedBox(width: 8),
                     const Icon(Icons.arrow_forward_rounded,
@@ -585,11 +574,10 @@ class _SplitButton extends StatelessWidget {
             const SizedBox(width: 5),
             Text(
               'Split',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: enabled ? Colors.white : Colors.grey.shade400,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13,
+                  lWeight: FontWeight.w600,
+                  color: enabled ? Colors.white : Colors.grey.shade400),
             ),
           ],
         ),

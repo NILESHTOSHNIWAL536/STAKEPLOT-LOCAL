@@ -1,31 +1,58 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+int _financeGraphRequestId = 0;
+final Map<String, Future<void>> _financeGraphRequests = {};
 
 Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     {String weekORmonth = 'month',
     String? endDate,
     bool isSplashScreen = false}) async {
-  String storedPeriod = weekORmonth == 'month'
+  final String requestKey =
+      '${accountId.value}_${weekORmonth.toLowerCase()}_$date${endDate ?? ''}';
+  final inFlight = _financeGraphRequests[requestKey];
+  if (inFlight != null) return inFlight;
+
+  final request = _getWeeklyGraphAndCustomDateGraph(
+    date,
+    context,
+    weekORmonth: weekORmonth,
+    endDate: endDate,
+    isSplashScreen: isSplashScreen,
+  ).whenComplete(() => _financeGraphRequests.remove(requestKey));
+
+  _financeGraphRequests[requestKey] = request;
+  return request;
+}
+
+Future<void> _getWeeklyGraphAndCustomDateGraph(
+  String date,
+  BuildContext context, {
+  String weekORmonth = 'month',
+  String? endDate,
+  bool isSplashScreen = false,
+}) async {
+  final int requestId = ++_financeGraphRequestId;
+  final String accountAtRequest = accountId.value;
+  final String period = weekORmonth.toLowerCase();
+  final String storedPeriod = period == 'month'
       ? 'Month'
-      : weekORmonth == 'week'
+      : period == 'week'
           ? 'Week'
           : 'Custom';
 
   // Format date to YYYY-MM
   String formattedDate = date;
-  if (weekORmonth != 'Custom') {
+  if (storedPeriod != 'Custom') {
     try {
       DateTime parsedDate = DateTime.parse(date);
       formattedDate = DateFormat('yyyy-MM').format(parsedDate);
@@ -35,35 +62,43 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     }
   }
 
-  // if (accountId.value.trim().isEmpty)
-  // {
-  //   _setEmptyState(weekORmonth, date, endDate);
-  //   return;
-  // }
+  if (accountAtRequest.trim().isEmpty) {
+    _setEmptyState(storedPeriod, formattedDate, endDate);
+    return;
+  }
 
-  // if ((weekORmonth == 'month' || weekORmonth == 'Month') && !isSplashScreen) {
-  //   await FinanceLocalStorage.loadFinanceFromHive(
-  //       accountId.value, storedPeriod, formattedDate, endDate);
-  // }
+  final cached = await FinanceLocalStorage.loadFinanceFromHive(
+      accountAtRequest, storedPeriod, formattedDate, endDate, !isSplashScreen);
+  if (requestId != _financeGraphRequestId ||
+      accountAtRequest != accountId.value) {
+    return;
+  }
+  if (cached == null && !isSplashScreen) {
+    _setEmptyState(storedPeriod, formattedDate, endDate);
+  }
 
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
 
-  String urlPath = endDate != null && weekORmonth == 'Custom'
+  String urlPath = endDate != null && storedPeriod == 'Custom'
       ? BankTransactionRoutes.getAllCustomTransactions(
-          accountId: accountId.value,
-          type: weekORmonth.toLowerCase(),
+          accountId: accountAtRequest,
+          type: period,
           value: "$formattedDate,${getNextDay(endDate)}",
         )
       : BankTransactionRoutes.getAllCustomTransactions(
-          accountId: accountId.value,
-          type: weekORmonth.toLowerCase(),
+          accountId: accountAtRequest,
+          type: period,
           value: formattedDate,
         );
 
   try {
     final response = await getDataApiCall(urlPath);
+    if (requestId != _financeGraphRequestId ||
+        accountAtRequest != accountId.value) {
+      return;
+    }
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
       transactionChatGraph.clear();
@@ -79,7 +114,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
                 500;
         if (maxYValue.value == 0) maxYValue.value = 500.0;
 
-        if (weekORmonth == 'Custom' && endDate != null) {
+        if (storedPeriod == 'Custom' && endDate != null) {
           DateTime startDate = DateTime.parse(formattedDate);
           DateTime end = DateTime.parse(endDate);
           int daysDiff = end.difference(startDate).inDays + 1;
@@ -104,7 +139,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
           });
         } else {
           data.forEach((key, value) {
-            String label = weekORmonth == 'Custom'
+            String label = storedPeriod == 'Custom'
                 ? key
                 : key.toString().substring(key.length - 2);
             labelsLocal.add(label);
@@ -113,7 +148,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
           });
         }
 
-        if (weekORmonth == 'Week') {
+        if (storedPeriod == 'Week') {
           labelsLocal = getWeekDays();
           if (debitList.length < 7) {
             debitList = List.filled(7, 0.0)
@@ -141,27 +176,27 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
             totalDebitValue: totalDebitValue.value,
             totalDebitValuePercent: totalDebitValuePercent.value,
             maxYValue: maxYValue.value,
-            accountId: accountId.value,
+            accountId: accountAtRequest,
           ));
         } else {
-          _setEmptyState(weekORmonth, formattedDate, endDate);
+          _setEmptyState(storedPeriod, formattedDate, endDate);
           await FinanceLocalStorage.loadFinanceFromHive(
-              accountId.value, storedPeriod, formattedDate, endDate);
+              accountAtRequest, storedPeriod, formattedDate, endDate);
         }
       } catch (e) {
-        _setEmptyState(weekORmonth, formattedDate, endDate);
+        _setEmptyState(storedPeriod, formattedDate, endDate);
         await FinanceLocalStorage.loadFinanceFromHive(
-            accountId.value, storedPeriod, formattedDate, endDate);
+            accountAtRequest, storedPeriod, formattedDate, endDate);
       }
     } else {
-      _setEmptyState(weekORmonth, formattedDate, endDate);
+      _setEmptyState(storedPeriod, formattedDate, endDate);
       await FinanceLocalStorage.loadFinanceFromHive(
-          accountId.value, storedPeriod, formattedDate, endDate);
+          accountAtRequest, storedPeriod, formattedDate, endDate);
     }
   } catch (e) {
-    _setEmptyState(weekORmonth, formattedDate, endDate);
+    _setEmptyState(storedPeriod, formattedDate, endDate);
     await FinanceLocalStorage.loadFinanceFromHive(
-        accountId.value, storedPeriod, formattedDate, endDate);
+        accountAtRequest, storedPeriod, formattedDate, endDate);
   }
 }
 

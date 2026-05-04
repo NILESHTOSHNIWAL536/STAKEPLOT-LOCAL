@@ -1,16 +1,17 @@
-
 import 'package:flutter/material.dart';
 
 import '../ManuallyTransactions/collections_manualtransactions.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 // ─── Color tokens (mirrors _K inside the widget) ─────────────────────────────
-const _primary   = Color(0xFF2D2B5B);
-const _accent    = Color(0xFF4B4D73);
-const _textDark  = Color(0xFF1A1832);
-const _textMid   = Color(0xFF6B7280);
-const _border    = Color(0xFFEBEBEB);
-const _surface   = Colors.white;
-const _bg        = Color(0xFFF5F3EF);
+const _primary = Color(0xFF2D2B5B);
+const _accent = Color(0xFF4B4D73);
+const _textDark = Color(0xFF1A1832);
+const _textMid = Color(0xFF6B7280);
+const _border = Color(0xFFEBEBEB);
+const _surface = Colors.white;
+const _bg = Color(0xFFF5F3EF);
 
 class CollectionsSplitBottomSheet extends StatelessWidget {
   final double amount;
@@ -65,21 +66,18 @@ class CollectionsSplitBottomSheet extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Split Transaction',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: _textDark,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 16,
+                            lWeight: FontWeight.w700,
+                            color: _textDark),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         'Allocate ₹${amount.toStringAsFixed(2)} across members',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: _textMid,
-                        ),
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12, color: _textMid),
                       ),
                     ],
                   ),
@@ -160,11 +158,8 @@ class _AmountPill extends StatelessWidget {
       ),
       child: Text(
         '₹${amount.toStringAsFixed(2)}',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-        ),
+        style: FontManager().getTextStyle(context,
+            color: Colors.white, fontSize: 13, lWeight: FontWeight.w700),
       ),
     );
   }

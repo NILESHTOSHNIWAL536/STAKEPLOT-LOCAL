@@ -42,7 +42,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
   bool _isSearchFocused = false;
   // Declare a Map to track the deletion state for each category
   Map<String, bool> _isDeletingMap = {};
-final budgetController = Get.find<BudgetControllerScreenModel>();
+  final budgetController = Get.find<BudgetControllerScreenModel>();
   @override
   void initState() {
     super.initState();
@@ -226,7 +226,7 @@ final budgetController = Get.find<BudgetControllerScreenModel>();
               fontsize: 14,
               fontWeight: FontWeight.w500,
             ),
-             SizedBox(width: AppSizes.w8),
+            SizedBox(width: AppSizes.w8),
             AnimatedContainer(
               duration:
                   Duration(milliseconds: 200), // Duration of the animation
@@ -307,7 +307,7 @@ final budgetController = Get.find<BudgetControllerScreenModel>();
           )
         : Center(
             child: Text(PlotFinanceStaticData().noCategoriesFound,
-                style: TextStyle(color: Colors.grey)),
+                style: FontManager().getTextStyle(context, color: Colors.grey)),
           );
   }
 

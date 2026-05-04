@@ -1,9 +1,10 @@
-
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import '../backed_connections/apis_connect.dart';
 import 'user-controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS
@@ -154,12 +155,11 @@ class _InviteSelectUsersScreenState extends State<InviteSelectUsersScreen> {
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
       child: Text(
         label,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: _AppColors.textSecondary,
-          letterSpacing: 0.5,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 12,
+            lWeight: FontWeight.w600,
+            color: _AppColors.textSecondary,
+            letterSpacing: 0.5),
       ),
     );
   }
@@ -208,11 +208,11 @@ class _InviteSelectUsersScreenState extends State<InviteSelectUsersScreen> {
                 count == 0
                     ? "Select Friends to Continue"
                     : "Next → $count Selected",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: count == 0 ? _AppColors.textSecondary : Colors.white,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 15,
+                    lWeight: FontWeight.w600,
+                    color:
+                        count == 0 ? _AppColors.textSecondary : Colors.white),
               ),
             ),
           ),
@@ -285,11 +285,10 @@ class _FriendTile extends StatelessWidget {
               child: Center(
                 child: Text(
                   friend["name"][0].toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : avatarColor,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 16,
+                      lWeight: FontWeight.w700,
+                      color: isSelected ? Colors.white : avatarColor),
                 ),
               ),
             ),
@@ -303,19 +302,16 @@ class _FriendTile extends StatelessWidget {
                 children: [
                   Text(
                     friend["name"],
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _AppColors.textPrimary,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: _AppColors.textPrimary),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     friend["username"] ?? "",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: _AppColors.textSecondary,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12, color: _AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -373,11 +369,10 @@ class _SelectedAvatarRow extends StatelessWidget {
             child: Center(
               child: Text(
                 u["name"][0].toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: FontManager().getTextStyle(context,
+                    color: Colors.white,
+                    fontSize: 13,
+                    lWeight: FontWeight.w700),
               ),
             ),
           );
@@ -518,18 +513,15 @@ class _InviteAssignRoleScreenState extends State<InviteAssignRoleScreen> {
             children: [
               Text(
                 "${widget.users.length} friend${widget.users.length == 1 ? '' : 's'} selected",
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: _AppColors.textPrimary,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w700,
+                    color: _AppColors.textPrimary),
               ),
-              const Text(
+              Text(
                 "Choose View or Contribute for each",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: _AppColors.textSecondary,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 12, color: _AppColors.textSecondary),
               ),
             ],
           ),
@@ -544,12 +536,11 @@ class _InviteAssignRoleScreenState extends State<InviteAssignRoleScreen> {
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
       child: Text(
         label.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: _AppColors.textSecondary,
-          letterSpacing: 0.8,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 11,
+            lWeight: FontWeight.w700,
+            color: _AppColors.textSecondary,
+            letterSpacing: 0.8),
       ),
     );
   }
@@ -582,18 +573,17 @@ class _InviteAssignRoleScreenState extends State<InviteAssignRoleScreen> {
                     color: Colors.white,
                   ),
                 )
-              : const Row(
+              : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.send_rounded, size: 18, color: Colors.white),
                     SizedBox(width: 8),
                     Text(
                       "Send Invite",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 15,
+                          lWeight: FontWeight.w600,
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -649,11 +639,8 @@ class _RoleTile extends StatelessWidget {
             child: Center(
               child: Text(
                 name[0].toUpperCase(),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: avatarColor,
-                ),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 16, lWeight: FontWeight.w700, color: avatarColor),
               ),
             ),
           ),
@@ -664,11 +651,10 @@ class _RoleTile extends StatelessWidget {
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: _AppColors.textPrimary,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14,
+                  lWeight: FontWeight.w600,
+                  color: _AppColors.textPrimary),
             ),
           ),
 
@@ -703,14 +689,14 @@ class _RoleToggle extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _toggleChip("View", Icons.visibility_rounded),
-          _toggleChip("Contribute", Icons.edit_rounded),
+          _toggleChip(context, "View", Icons.visibility_rounded),
+          _toggleChip(context, "Contribute", Icons.edit_rounded),
         ],
       ),
     );
   }
 
-  Widget _toggleChip(String role, IconData icon) {
+  Widget _toggleChip(BuildContext context, String role, IconData icon) {
     final isActive = selected == role;
     return GestureDetector(
       onTap: () => onChanged(role),
@@ -734,11 +720,10 @@ class _RoleToggle extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               role,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: isActive ? Colors.white : _AppColors.textSecondary,
-              ),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 12,
+                  lWeight: FontWeight.w600,
+                  color: isActive ? Colors.white : _AppColors.textSecondary),
             ),
           ],
         ),
@@ -770,12 +755,11 @@ PreferredSizeWidget _buildAppBar(BuildContext context, String title) {
     ),
     title: Text(
       title,
-      style: const TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.w700,
-        color: _AppColors.textPrimary,
-        letterSpacing: -0.3,
-      ),
+      style: FontManager().getTextStyle(context,
+          fontSize: 17,
+          lWeight: FontWeight.w700,
+          color: _AppColors.textPrimary,
+          letterSpacing: -0.3),
     ),
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(1),

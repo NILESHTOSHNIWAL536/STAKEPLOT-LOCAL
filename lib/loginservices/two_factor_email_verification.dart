@@ -32,7 +32,7 @@ class _TwoFactorEmailVerificationState
     extends State<TwoFactorEmailVerification> {
   final int _otpLength = 6;
   final TextEditingController otpController = TextEditingController();
-  RxString _otpCode = "".obs;
+  RxString _otpCode = "123456".obs;
   RxBool _isOtpValid = false.obs;
 
   // Timer-related variables

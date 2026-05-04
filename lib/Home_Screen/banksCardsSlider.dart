@@ -51,11 +51,47 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   void initState() {
     super.initState();
 
-    activeIndex = scrollBankPage.value;
+    activeIndex = _safeBankIndex(scrollBankPage.value);
 
     _pageController = PageController(
       initialPage: activeIndex,
     );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    firstDigitController.dispose();
+    secondDigitController.dispose();
+    super.dispose();
+  }
+
+  int _safeBankIndex(int index) {
+    if (bankAccountLinkedList.isEmpty) return 0;
+    if (index < 0 || index >= bankAccountLinkedList.length) return 0;
+    return index;
+  }
+
+  void _selectBank(int index) {
+    final safeIndex = _safeBankIndex(index);
+    setState(() => activeIndex = safeIndex);
+    bankInfoController.selectBankAccount(safeIndex, context);
+  }
+
+  void _flipToBank(int index) {
+    final safeIndex = _safeBankIndex(index);
+    _selectBank(safeIndex);
+    if (_pageController.hasClients) {
+      _pageController.jumpToPage(safeIndex);
+    }
+    setState(() {
+      flipToIndex = safeIndex;
+      showFlipSlider = true;
+    });
+
+    Future.delayed(const Duration(milliseconds: 750), () {
+      if (mounted) setState(() => showFlipSlider = false);
+    });
   }
 
   int getEmojiIndex(String accountId) {
@@ -63,6 +99,23 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       accountId,
       () => Random().nextInt(lock.length),
     );
+  }
+
+  String _displayMaskedAccount(BankAccountModel data) {
+    final masked = data.maskedAccNumber.trim();
+    final hasVisibleDigit = RegExp(r'\d').hasMatch(masked);
+    final isOnlyMaskChars =
+        masked.isNotEmpty && RegExp(r'^[xX*]+$').hasMatch(masked);
+
+    if (masked.isNotEmpty && hasVisibleDigit && !isOnlyMaskChars) {
+      return masked;
+    }
+
+    if (data.type.trim().isNotEmpty) {
+      return '${data.bankName} ${data.type}';
+    }
+
+    return data.bankName.isNotEmpty ? data.bankName : 'Linked account';
   }
 
   @override
@@ -80,6 +133,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   Widget avatarSlider() {
     if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
 
+    activeIndex = _safeBankIndex(activeIndex);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -87,20 +142,9 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
           height: AppComponentSizes.h4,
           child: PageView.builder(
             itemCount: bankAccountLinkedList.length,
-            controller: PageController(
-              viewportFraction: 1.0,
-              initialPage: scrollBankPage.value,
-            ),
+            controller: _pageController,
             onPageChanged: (index) {
-              final account = bankAccountLinkedList[index];
-              accountId.value = account.accountId;
-              LastFetchDate.value = account.lastFetch;
-              nextFecthDate.value = account.nextFetch;
-              fetchCount.value = account.fetchCount.toString();
-              BankName.value = account.bankName;
-              BankUrl.value = account.bankLogo;
-              scrollBankPage.value = index;
-              calledFunctionToFetchData(context);
+              _selectBank(index);
             },
             itemBuilder: (context, index) {
               final account = bankAccountLinkedList[index];
@@ -136,33 +180,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
   Widget avatarSlider2() {
     if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
-    Future.microtask(() {
-      _pageController.jumpToPage(flipToIndex);
-
-      setState(() {
-        activeIndex = flipToIndex;
-        scrollBankPage.value = flipToIndex;
-      });
-
-      final account = bankAccountLinkedList[flipToIndex];
-      accountId.value = account.accountId;
-      LastFetchDate.value = account.lastFetch;
-      nextFecthDate.value = account.nextFetch;
-      fetchCount.value = account.fetchCount.toString();
-      BankName.value = account.bankName;
-      BankUrl.value = account.bankLogo;
-
-      calledFunctionToFetchData(context);
-
-      // 🔁 return to normal slider after flip
-      Future.delayed(const Duration(milliseconds: 750), () {
-        if (mounted) {
-          setState(() {
-            showFlipSlider = false;
-          });
-        }
-      });
-    });
+    activeIndex = _safeBankIndex(activeIndex);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -299,13 +317,16 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                         errorBuilder: getErrorBankLogo(),
                       ),
                       SizedBox(width: AppSizes.w8),
-                      Text(
-                        data.maskedAccNumber,
-                        style: FontManager().getTextStyle(
-                          context,
-                          fontSize: 16,
-                          lWeight: FontWeight.w700,
-                          color: AppColors.backgroundColor,
+                      Expanded(
+                        child: Text(
+                          _displayMaskedAccount(data),
+                          overflow: TextOverflow.ellipsis,
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 16,
+                            lWeight: FontWeight.w700,
+                            color: AppColors.backgroundColor,
+                          ),
                         ),
                       ),
                     ],
@@ -412,10 +433,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 6),
                         child: InkWell(
                           onTap: () {
-                            setState(() {
-                              flipToIndex = entry.key;
-                              showFlipSlider = true;
-                            });
+                            _flipToBank(entry.key);
                           },
                           child: Image.network(
                             entry.value.bankLogo,

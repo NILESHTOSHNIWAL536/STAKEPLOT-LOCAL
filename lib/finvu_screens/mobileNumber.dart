@@ -213,9 +213,9 @@ class _MobileNumberState extends State<MobileNumber> {
                                     )
                                   : Text(
                                       'Continue',
-                                      style: TextStyle(
+                                      style: FontManager().getTextStyle(context,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          lWeight: FontWeight.bold,
                                           color: isValid
                                               ? Colors.white
                                               : const Color(0xFF8E8E93)),
@@ -284,10 +284,10 @@ class _PhoneField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Mobile Number',
-            style: TextStyle(
+        Text('Mobile Number',
+            style: FontManager().getTextStyle(context,
                 fontSize: 13,
-                fontWeight: FontWeight.w500,
+                lWeight: FontWeight.w500,
                 color: Color(0xFF1C1C1E))),
         const SizedBox(height: 8),
         Container(
@@ -307,11 +307,11 @@ class _PhoneField extends StatelessWidget {
                     right: BorderSide(color: Color(0xFFE5E5EA), width: 0.8),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   '+91',
-                  style: TextStyle(
+                  style: FontManager().getTextStyle(context,
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      lWeight: FontWeight.w600,
                       color: Color(0xFF1C1C1E)),
                 ),
               ),

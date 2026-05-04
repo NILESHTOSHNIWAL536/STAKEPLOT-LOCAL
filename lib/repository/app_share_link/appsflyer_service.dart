@@ -16,6 +16,8 @@ import '../../finance_screen/Calculators/veg_nonveg.dart';
 import '../../main.dart';
 import '../../signInOut/referral_code_screen.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class AppsflyerService {
   static late AppsflyerSdk _appsflyerSdk;
 
@@ -309,12 +311,12 @@ class _OwnReferralCodeDialog extends StatelessWidget {
                   size: 30, color: Color(0xFF4B4D73)),
             ),
             const SizedBox(height: 18),
-            const Text(
+            Text(
               'This is your own referral link',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: FontManager().getTextStyle(context,
                   fontSize: 20,
-                  fontWeight: FontWeight.w700,
+                  lWeight: FontWeight.w700,
                   color: Color(0xFF1F2230)),
             ),
             const SizedBox(height: 10),
@@ -323,8 +325,8 @@ class _OwnReferralCodeDialog extends StatelessWidget {
               'Share it with a friend to unlock rewards, but it '
               'cannot be applied on your own account.',
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 14, height: 1.5, color: Color(0xFF63697A)),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14, lineHeight: 1.5, color: Color(0xFF63697A)),
             ),
             const SizedBox(height: 22),
             SizedBox(
@@ -338,11 +340,11 @@ class _OwnReferralCodeDialog extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   elevation: 0,
                 ),
-                child: const Text('Continue',
-                    style: TextStyle(
+                child: Text('Continue',
+                    style: FontManager().getTextStyle(context,
                         color: Colors.white,
                         fontSize: 15,
-                        fontWeight: FontWeight.w600)),
+                        lWeight: FontWeight.w600)),
               ),
             ),
           ],

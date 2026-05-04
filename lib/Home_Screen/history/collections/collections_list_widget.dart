@@ -15,9 +15,7 @@ import 'create_collection_pages/create_collection_flow.dart';
 import 'invitations_list.dart';
 
 Widget buildCollectionsBody(BuildContext context) {
-
   return Obx(() {
-
     final hasInvitations = collectionsController.invitationsList.isNotEmpty;
     final invitationCount = collectionsController.invitationsList.length;
 
@@ -136,8 +134,6 @@ Widget CollectionsBody(BuildContext context) {
   /// Call once — controller skips if data already loaded
 
   return Obx(() {
-
-
     if (collectionsController.isLoading.value &&
         collectionsController.collectionsList.isEmpty) {
       return const _LoadingShimmer();
@@ -222,11 +218,10 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w700,
-          color: AppColors.primaryColor,
-        ),
+        style: FontManager().getTextStyle(context,
+            fontSize: 17,
+            lWeight: FontWeight.w700,
+            color: AppColors.primaryColor),
       ),
     );
   }
@@ -567,11 +562,8 @@ class _MemberCircle extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
+        style: FontManager().getTextStyle(context,
+            color: Colors.white, fontSize: 12, lWeight: FontWeight.w600),
       ),
     );
   }
@@ -628,16 +620,15 @@ class CreateCollectionButton extends StatelessWidget {
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.add, size: 18, color: Colors.white),
                   SizedBox(width: 8),
                   Text(
                     "Create",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 15,
+                        lWeight: FontWeight.w600,
+                        color: Colors.white),
                   ),
                 ],
               ),
@@ -661,7 +652,7 @@ class CreateCollectionButton extends StatelessWidget {
               onPressed: () {
                 LimitReachedBottomSheet.show(parentContext);
               },
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.person_add,
@@ -669,11 +660,10 @@ class CreateCollectionButton extends StatelessWidget {
                   SizedBox(width: 8),
                   Text(
                     "Invite",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primaryColor,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 15,
+                        lWeight: FontWeight.w600,
+                        color: AppColors.primaryColor),
                   ),
                 ],
               ),

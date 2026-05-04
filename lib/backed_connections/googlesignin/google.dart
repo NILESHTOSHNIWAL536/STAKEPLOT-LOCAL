@@ -1,11 +1,16 @@
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-// import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-// import 'google_auth_token.dart';
+import '../../components/shared_utils.dart';
+import '../../repository/auth_service/login_apis.dart';
+import '../apis_connect.dart';
+import 'google_auth_token.dart';
 
 // class AuthService {
 //    GoogleSignIn _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail:false );
@@ -32,9 +37,10 @@
 //           if(!flag)return {};
 //         }
 
+//       updateDeviceData(deviceData);
 //       final response = await postDataApiCall(AuthApiRoutes.googleAuth,
 
-//         {'idToken': idToken}
+//         {'idToken': idToken,'deviceInfo': deviceData.value.toJson(),}
 //       );
 
 //       if (getFlagOfResponse(response)) return json.decode(response.body);
@@ -87,18 +93,6 @@
 //   }
 // }
 
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
-import 'package:flutter_application_code_stakeplot/repository/auth_service/login_apis.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
-import 'google_auth_token.dart';
-
 class AuthService {
   // ── Keep a single instance per sign-in mode to avoid re-init overhead ──
   static GoogleSignIn? _emailSignIn;
@@ -106,7 +100,9 @@ class AuthService {
 
   GoogleSignIn _getSignIn({required bool isEmail}) {
     if (isEmail) {
-      _emailSignIn ??= GoogleAuthToken.createGoogleSignIn(isEmail: true);
+      _emailSignIn ??= GoogleAuthToken.createGoogleSignIn(
+          isEmail: true,
+          forceCodeForRefreshToken: cardController.forceLogin.value);
       return _emailSignIn!;
     } else {
       _basicSignIn ??= GoogleAuthToken.createGoogleSignIn(isEmail: false);
@@ -134,6 +130,7 @@ class AuthService {
           await googleUser.authentication;
       final String? idToken = googleAuth.idToken;
       final String? authCode = googleUser.serverAuthCode;
+      cardController.selectedEmail.value = googleUser.email;
 
       if (idToken == null) return null;
 
@@ -142,12 +139,34 @@ class AuthService {
         // Run generateToken in background — don't await unless flag demands it
         final tokenFuture = postDataApiCall(
           AuthApiRoutes.generateToken,
-          {'idToken': authCode},
+          {
+            'idToken': authCode,
+            'bankId': cardController.selectedBankId.value,
+          },
         );
 
         if (!flag) {
           // Wait for token only (email-scoped flow), skip main auth
-          await tokenFuture;
+
+          try {
+            var response = await tokenFuture;
+            if (!getFlagOfResponse(response)) {
+              var data = jsonDecode(response.body);
+              if (response.statusCode == 400) {
+                cardController.forceLogin.value = true;
+              }
+              snackBarCalled(
+                  context, data['error'] ?? "Token generation failed");
+              pushnameToRoute(context, AddCreditCardBankScreen());
+              return null;
+            } else {
+              cardController.forceLogin.value = false;
+            }
+          } catch (e) {
+            snackBarCalled(context, "Token generation failed: $e");
+            pushnameToRoute(context, AddCreditCardBankScreen());
+            return null;
+          }
           return {};
         }
 
@@ -172,8 +191,12 @@ class AuthService {
       // No serverAuthCode — single call path
       if (!flag) return {};
 
-      final response =
-          await postDataApiCall(AuthApiRoutes.googleAuth, {'idToken': idToken});
+      updateDeviceData(deviceData);
+
+      final response = await postDataApiCall(AuthApiRoutes.googleAuth, {
+        'idToken': idToken,
+        'deviceInfo': deviceData.value.toJson(),
+      });
 
       if (getFlagOfResponse(response)) return json.decode(response.body);
     } catch (e) {

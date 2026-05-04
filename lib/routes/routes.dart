@@ -64,6 +64,7 @@ var routes = {
   '/addcreditCard': (context) => AddCreditCardBankScreen(),
   '/AllCalculator': (context) => AllCalculatorScreen(),
   '/create': (context) => CreateBudgetScreen(),
+  '/selectBank': (context) => AddCreditCardBankScreen(),
 };
 
 var colorcodes = const {

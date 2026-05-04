@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/indexScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/noaccountSelected.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
@@ -15,16 +14,17 @@ import 'package:flutter_application_code_stakeplot/components/bottomNavigations.
 import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:get/get.dart';
 
-
 import '../../repository/bankinfo.dart';
 
 RxBool sectionReached = false.obs;
 RxString weekOfThis = "This week".obs;
 late AppLifecycleHandler lifecycleHandler;
 RxBool isBankLoading = true.obs;
- // initially TRUE
+// initially TRUE
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
         onWillPop: () async {
           exit(0);
@@ -83,16 +84,25 @@ class _HomePageState extends State<HomePage> {
               ? RewardsScreen()
               : Scaffold(
                   bottomNavigationBar: BottomNavigations(
-                                      data: 0,
-                                      onHomeDoubleTap: _scrollToTop,
-                                    ),
-                  
+                    data: 0,
+                    onHomeDoubleTap: _scrollToTop,
+                  ),
                   backgroundColor: AppColors.backgroundColor,
-                 
-                  body: 
-                  Obx(() => isBankLinked.value
-                      ? IndexScreen(scrollControllerHome: _scrollControllerPage)
-                      : NoAccountScreen()),
+                  body: Obx(() {
+                    final hasResolvedBankState =
+                        bankInfoController.hasLoadedLocalData.value ||
+                            bankAccountLinkedList.isNotEmpty ||
+                            !isBankLoading.value;
+
+                    if (!hasResolvedBankState) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return isBankLinked.value
+                        ? IndexScreen(
+                            scrollControllerHome: _scrollControllerPage)
+                        : NoAccountScreen();
+                  }),
                 ),
         ));
   }

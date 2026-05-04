@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../loginservices/login.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class FetchLinkedAccounts extends StatefulWidget {
   const FetchLinkedAccounts({Key? key}) : super(key: key);
@@ -77,7 +78,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
     try {
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
-     
+
       if (seletedAccountIds.isEmpty) {
         snackBarCalledfail(
             context, "No account was selected. Please add an account.");
@@ -91,7 +92,6 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-     
 
       snackBarCalled(context,
           "Successfully approved the consent request for ${seletedAccountInfomations.length} accounts.");
@@ -118,21 +118,15 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
           children: [
             Text(
               bankData.fipName.toString(),
-              style: TextStyle(
-                fontSize: 15,
-              ),
+              style: FontManager().getTextStyle(context, fontSize: 15),
             ),
             Text(
               bankData.accountType.toString(),
-              style: TextStyle(
-                fontSize: 15,
-              ),
+              style: FontManager().getTextStyle(context, fontSize: 15),
             ),
             Text(
               bankData.accountReferenceNumber.toString(),
-              style: TextStyle(
-                fontSize: 15,
-              ),
+              style: FontManager().getTextStyle(context, fontSize: 15),
             ),
           ],
         ),
@@ -140,5 +134,3 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
     );
   }
 }
-
-

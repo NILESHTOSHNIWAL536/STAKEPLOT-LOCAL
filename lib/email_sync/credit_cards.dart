@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart'
 
 import '../Constants/core/app_padding_sizes.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 class CreditCardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,9 +21,9 @@ class CreditCardsScreen extends StatelessWidget {
           leading: leadIcon(context),
           title: Text(
             "Credit Cards",
-            style: TextStyle(
+            style: FontManager().getTextStyle(context,
                 color: Color(0xFF37344F),
-                fontWeight: FontWeight.w600,
+                lWeight: FontWeight.w600,
                 fontSize: 18),
           ),
           centerTitle: false,
