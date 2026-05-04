@@ -17,7 +17,7 @@ class FinanceLocalStorage {
     required String accountId,
   }) async {
     try {
-      final box = await Hive.box<FinanceModel>('financeBox');
+      final box = Hive.box<FinanceModel>('financeBox');
       final cacheKey =
           '${accountId}_${period}_$startDate${endDate != null ? '_$endDate' : ''}';
 
@@ -44,9 +44,9 @@ class FinanceLocalStorage {
 
   static Future<FinanceModel?> loadFinanceFromHive(
       String accountId, String period, String startDate,
-      [String? endDate]) async {
+      [String? endDate, bool showLoaderWhenMissing = true]) async {
     try {
-      final box = await Hive.box<FinanceModel>('financeBox');
+      final box = Hive.box<FinanceModel>('financeBox');
       final cacheKey =
           '${accountId}_${period}_$startDate${endDate != null ? '_$endDate' : ''}';
 
@@ -59,7 +59,7 @@ class FinanceLocalStorage {
         totalDebitValuePercent.value = finance.totalDebitValuePercent;
         maxYValue.value = finance.maxYValue;
         getGraphData.value = true;
-      } else {
+      } else if (showLoaderWhenMissing) {
         getGraphData.value = false;
       }
       return finance;
@@ -86,4 +86,3 @@ class FinanceLocalStorage {
     } catch (e) {}
   }
 }
-

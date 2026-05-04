@@ -268,7 +268,6 @@ Future<void> logoutUserFromDevice(BuildContext? context2) async {
   final context = context2 ?? navigatorKey.currentState!.context;
 
   try {
- 
     /// ✅ 1. Send logout API safely
     storeDeviceInfo(context);
 
@@ -393,6 +392,9 @@ void initGetControllersIfisRegistered() {
   }
   if (!Get.isRegistered<QuickCheckController>()) {
     Get.put(QuickCheckController());
+  }
+  if (!Get.isRegistered<BankInfoController>()) {
+    Get.put(BankInfoController(), permanent: true);
   }
   if (!Get.isRegistered<BudgetController>()) {
     Get.put(BudgetController());

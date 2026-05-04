@@ -24,12 +24,22 @@ import '../finance_screen/Budgets/Budget.dart';
 import '../finance_screen/Calculators/veg_nonveg.dart';
 import '../loginservices/login_screen.dart';
 import '../main.dart';
-import '../repository/auth_service/login_apis.dart';
 import '../services/secure_storage.dart';
 import '../signInOut/referral_code_screen.dart';
 
+Future<void>? _hiveWarmupFuture;
+Future<Widget>? _authNavigationFuture;
+
+Future<void> _ensureHiveReady() {
+  return _hiveWarmupFuture ??= initAllHive();
+}
+
+Future<Widget> _ensureAuthNavigation() {
+  return _authNavigationFuture ??= checkAuthAndNavigate();
+}
+
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -39,14 +49,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initGetControllers();
+    _authNavigationFuture = null;
+    initGetControllersIfisRegistered();
     _loadStaticData();
     _checkForUpdates();
   }
 
   void _loadStaticData() async {
     try {
-      await initAllHive();
+      await _ensureHiveReady();
       await Future.wait([
         SigninData().fetchConstants().then((_) {}),
         SignupData().fetchConstants().then((_) {}),
@@ -77,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final size = MediaQuery.of(context).size;
     return AnimatedSplashScreen.withScreenFunction(
       backgroundColor: AppColors.backgroundColor,
-      duration: 1800,
+      duration: 900,
       splashIconSize: size.height,
       splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.fade,
@@ -85,10 +96,10 @@ class _SplashScreenState extends State<SplashScreen> {
         width: size.width,
         height: size.height,
         child: Lottie.asset("assets/splashScreen/appScreen.json",
-            fit: BoxFit.cover),
+            fit: BoxFit.cover, repeat: false),
       ),
       // Single source of truth for navigation decisions.
-      screenFunction: checkAuthAndNavigate,
+      screenFunction: _ensureAuthNavigation,
     );
   }
 }
@@ -110,7 +121,11 @@ Future<Widget> checkAuthAndNavigate() async {
   final bool isLoggedIn =
       await SecureStorageService().containsKey("accessToken");
 
-  if (!isLoggedIn) return LoginScreen();
+  if (!isLoggedIn) return const LoginScreen();
+
+  // Keep Hive warming in the background so the splash cannot be held on-screen
+  // by local cache setup. Home renders cached/API data as soon as each source is ready.
+  _ensureHiveReady();
 
   // Read and immediately clear the pending deep-link screen.
   final String? pendingScreen = await SecureStorageService().read("Screen");
@@ -122,13 +137,14 @@ Future<Widget> checkAuthAndNavigate() async {
   Future(() {
     try {
       final ctx = navigatorKey.currentContext;
+      // ignore: use_build_context_synchronously
       if (ctx != null) callApi(ctx);
     } catch (_) {}
   });
 
   return (pendingScreen != null && pendingScreen.trim().isNotEmpty)
       ? navigatePath(pendingScreen)
-      : HomePage();
+      : const HomePage();
 }
 
 Widget navigatePath(String navigate) {
@@ -136,15 +152,15 @@ Widget navigatePath(String navigate) {
     case "home":
     case "/home":
     case "signup":
-      return HomePage();
+      return const HomePage();
     case "budget":
-      return Budget();
+      return const Budget();
     case "calculator":
     case "veg_nonveg":
-      return VegNonVegCalculator();
+      return const VegNonVegCalculator();
     case "code":
-      return ReferralCodeScreen();
+      return const ReferralCodeScreen();
     default:
-      return HomePage();
+      return const HomePage();
   }
 }

@@ -7,7 +7,9 @@ class HiveHelper {
       if (!Hive.isAdapterRegistered(adapter.typeId)) {
         Hive.registerAdapter(adapter);
       }
-    } catch (e) {}
+    } catch (e) {
+      // Adapter may already be registered by another startup path.
+    }
   }
 
   /// Open a Hive box if not already open
@@ -20,7 +22,9 @@ class HiveHelper {
           encryptionCipher: HiveAesCipher(key),
         );
       }
-    } catch (e) {}
+    } catch (e) {
+      // Local cache failures should not block app startup.
+    }
   }
 
   /// Generic Hive initializer
@@ -32,12 +36,12 @@ class HiveHelper {
     registerAdapterSafe(adapter);
     await openBoxIfNot<T>(boxName);
     if (Hive.isBoxOpen(boxName)) {
-      onLoaded?.call();
+      await onLoaded?.call();
     }
   }
 
   static Future<List<int>> getOrCreateKey() async {
-     final secureStorage = FlutterSecureStorage(
+    const secureStorage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
       iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
     );

@@ -30,7 +30,18 @@ import '../../controllers/collections_controller.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 
+Future<void>? _callApiFuture;
+
 Future<void> callApi(context) async {
+  if (_callApiFuture != null) return _callApiFuture!;
+
+  _callApiFuture = _callApi(context).whenComplete(() {
+    _callApiFuture = null;
+  });
+  return _callApiFuture!;
+}
+
+Future<void> _callApi(context) async {
   contextGlobal = context;
 
   final userController = Get.find<UserController>();
