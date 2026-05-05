@@ -547,8 +547,9 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                 showModalBottomSheet(
                   context: context,
                   backgroundColor: Colorcodes.appBarColor,
-                  builder: (context) {
-                    return setPassword(context);
+                  builder: (context2) {
+                    return setPassword(
+                        context, ThemeHelper(context).appColors.surface);
                   },
                 );
               },
@@ -588,7 +589,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     });
   }
 
-  Widget setPassword(context) {
+  Widget setPassword(BuildContext context, Color color) {
     double height = MediaQuery.of(context).size.height;
     RxInt selectedNumber1 = 0.obs; // Make first digit reactive
     RxInt selectedNumber2 = 0.obs; // Second selected number
@@ -599,7 +600,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-          color: context.appColors.surface,
+          // color: context.appColors.surface,
+          color: color,
         ),
         width: MediaQuery.of(context).size.width,
         height: height > 0 ? height / 3.8 : 100, // Fallback height
