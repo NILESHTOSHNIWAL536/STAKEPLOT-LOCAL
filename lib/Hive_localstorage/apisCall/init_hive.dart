@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/collections_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
@@ -46,6 +47,7 @@ Future<void> initAllHive() async {
   await initCardInsightsData(controller);
   // await initFinoraLastTwoMonthsData();
   await init_insights();
+  await init_collections();
 }
 
 Future<void> init_user() async {
@@ -173,6 +175,10 @@ Future<void> init_post() async {
           isPostTranding: true, isSavedPost: true),
     );
   } catch (e) {}
+}
+
+Future<void> init_collections() async {
+  await CollectionsLocalStorage.ensureBox();
 }
 
 Future<void> clearSpecificBox(String boxName) async {

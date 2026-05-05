@@ -23,6 +23,7 @@ import 'package:flutter_application_code_stakeplot/loginservices/login_screen.da
 import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/referral_code_screen.dart';
 import '../Home_Screen/home_screen_state/home_page.dart';
+import '../Home_Screen/dummy_insight_api_screen.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import '../budget/budget_detail_screen.dart';
 import '../budget/budget_list_screen.dart';
@@ -65,6 +66,7 @@ var routes = {
   '/AllCalculator': (context) => AllCalculatorScreen(),
   '/create': (context) => CreateBudgetScreen(),
   '/selectBank': (context) => AddCreditCardBankScreen(),
+  '/dummyInsights': (context) => const DummyInsightApiScreen(),
 };
 
 var colorcodes = const {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/collections_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 import '../Home_Screen/ManuallyTransactions/collections_manualtransactions.dart';
@@ -80,6 +81,122 @@ class CollectionsController extends GetxController {
         .firstWhereOrNull((m) => m.id == userController.userId);
   }
 
+  List<CollectionModel> _parseCollectionsList(dynamic data) {
+    final parsed = <CollectionModel>[];
+    if (data is! List) return parsed;
+
+    for (final item in data) {
+      if (item is! Map) continue;
+      try {
+        parsed.add(CollectionModel.fromJson(
+          Map<String, dynamic>.from(item),
+          {},
+        ));
+      } catch (e) {
+        debugPrint("CollectionModel parse error: $e — item: $item");
+      }
+    }
+    return parsed;
+  }
+
+  Future<void> _loadCollectionsFromHive() async {
+    final cached =
+        await CollectionsLocalStorage.readJson(CollectionsLocalStorage.collectionsKey);
+    final parsed = _parseCollectionsList(cached);
+    if (parsed.isNotEmpty) {
+      collectionsList.assignAll(parsed);
+    }
+
+    final limitSummary =
+        await CollectionsLocalStorage.readJson(CollectionsLocalStorage.limitSummaryKey);
+    if (limitSummary is Map) {
+      _applyCollectionLimitSummary(Map<String, dynamic>.from(limitSummary));
+    }
+  }
+
+  Future<void> _loadCollectionDetailsFromHive(String id) async {
+    final cached = await CollectionsLocalStorage.readJson(
+      CollectionsLocalStorage.detailsKey(id),
+    );
+    if (cached is! Map) return;
+
+    try {
+      final details = CollectionDetailsModel.fromJson(
+        Map<String, dynamic>.from(cached),
+      );
+      collectionDetails.value = details;
+      selectedCollection.value = details.collection;
+      currentUser = details.members.firstWhereOrNull(
+        (m) =>
+            m.userId.toString().trim() ==
+            userController.userId.toString().trim(),
+      );
+    } catch (e) {
+      debugPrint("load collection details from Hive error: $e");
+    }
+  }
+
+  Future<void> _loadSplitsFromHive(String id) async {
+    final cached =
+        await CollectionsLocalStorage.readJson(CollectionsLocalStorage.splitsKey(id));
+    if (cached is! List) return;
+
+    try {
+      final list = cached
+          .whereType<Map>()
+          .map((e) => SplitModel.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+      splitsList.assignAll(list);
+    } catch (e) {
+      debugPrint("load splits from Hive error: $e");
+    }
+  }
+
+  Future<void> _loadBalancesFromHive(String id) async {
+    final cached = await CollectionsLocalStorage.readJson(
+      CollectionsLocalStorage.balancesKey(id),
+    );
+    if (cached is! Map) return;
+
+    try {
+      final balanceData =
+          BalanceDataModel.fromJson(Map<String, dynamic>.from(cached));
+      balancesListPay.assignAll(balanceData.toPay);
+      balancesListReceive.assignAll(balanceData.toReceive);
+      totalToPay.value = balanceData.totalToPay;
+      totalToReceive.value = balanceData.totalToReceive;
+    } catch (e) {
+      debugPrint("load balances from Hive error: $e");
+    }
+  }
+
+  void _openCollectionDetailsPage(
+    BuildContext context,
+    CollectionDetailsModel details,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CollectionDetailsPage(
+          title: details.collection.name,
+          type: details.collection.type,
+          hasTransactions: details.collection.type == "SHARED"
+              ? splitsList.isNotEmpty
+              : details.transactions.isNotEmpty,
+        ),
+      ),
+    );
+  }
+
+  void _applyCollectionLimitSummary(Map<String, dynamic> data) {
+    collectionBaseLimit.value = data['baseLimit'] ?? 0;
+    collectionReferralBonus.value = data['referralBonus'] ?? 0;
+    collectionTotalLimit.value = data['totalLimit'] ?? 4;
+    usedCollectionCount.value = data['usedCollections'] ?? 0;
+    remainingCollectionLimit.value = data['remainingCollections'] ??
+        (collectionTotalLimit.value - usedCollectionCount.value);
+  }
+
   // =========================
   // GET COLLECTIONS LIST
   // =========================
@@ -89,7 +206,11 @@ class CollectionsController extends GetxController {
 
     _isFetchingCollections = true;
     try {
-      isLoading.value = true;
+      if (!forceRefresh && collectionsList.isEmpty) {
+        await _loadCollectionsFromHive();
+      }
+
+      isLoading.value = collectionsList.isEmpty;
 
       final response = await getDataApiCall(CollectionsRoute.getCollections);
 
@@ -109,6 +230,10 @@ class CollectionsController extends GetxController {
           /// Batch update — single UI rebuild
           collectionsList.clear();
           collectionsList.assignAll(parsed);
+          await CollectionsLocalStorage.saveJson(
+            CollectionsLocalStorage.collectionsKey,
+            list,
+          );
         }
       }
 
@@ -131,12 +256,11 @@ class CollectionsController extends GetxController {
       final decoded = json.decode(response.body);
       final data = decoded['data'] ?? {};
 
-      collectionBaseLimit.value = data['baseLimit'] ?? 0;
-      collectionReferralBonus.value = data['referralBonus'] ?? 0;
-      collectionTotalLimit.value = data['totalLimit'] ?? 4;
-      usedCollectionCount.value = data['usedCollections'] ?? 0;
-      remainingCollectionLimit.value = data['remainingCollections'] ??
-          (collectionTotalLimit.value - usedCollectionCount.value);
+      _applyCollectionLimitSummary(Map<String, dynamic>.from(data));
+      await CollectionsLocalStorage.saveJson(
+        CollectionsLocalStorage.limitSummaryKey,
+        data,
+      );
     } catch (e) {
       appLog("fetchCollectionLimitSummary error: $e");
     }
@@ -153,8 +277,26 @@ class CollectionsController extends GetxController {
     _isFetchingDetails = true;
 
     try {
-      isLoading.value = true;
-      collectionDetails.value = null;
+      var openedFromCache = false;
+
+      if (!forceRefresh) {
+        await Future.wait([
+          _loadCollectionDetailsFromHive(id),
+          _loadSplitsFromHive(id),
+          _loadBalancesFromHive(id),
+        ]);
+
+        final cachedDetails = collectionDetails.value;
+        if (cachedDetails != null && context.mounted) {
+          _openCollectionDetailsPage(context, cachedDetails);
+          openedFromCache = true;
+        }
+      }
+
+      isLoading.value = collectionDetails.value == null;
+      if (!openedFromCache) {
+        collectionDetails.value = null;
+      }
 
       final response =
           await getDataApiCall(CollectionsRoute.getCollectionById(id));
@@ -165,6 +307,10 @@ class CollectionsController extends GetxController {
       final details = CollectionDetailsModel.fromJson(data['data']);
       collectionDetails.value = details;
       selectedCollection.value = details.collection;
+      await CollectionsLocalStorage.saveJson(
+        CollectionsLocalStorage.detailsKey(id),
+        data['data'],
+      );
       currentUser = details.members.firstWhereOrNull(
         (m) =>
             m.userId.toString().trim() ==
@@ -180,18 +326,9 @@ class CollectionsController extends GetxController {
       splitsList.clear();
       await getSplits(id);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => CollectionDetailsPage(
-            title: details.collection.name,
-            type: details.collection.type,
-            hasTransactions: details.collection.type == "SHARED"
-                ? splitsList.isNotEmpty
-                : details.transactions.isNotEmpty,
-          ),
-        ),
-      );
+      if (!openedFromCache && context.mounted) {
+        _openCollectionDetailsPage(context, details);
+      }
 
       balancesListReceive.clear();
       balancesListPay.clear();
@@ -225,6 +362,10 @@ class CollectionsController extends GetxController {
         final details = CollectionDetailsModel.fromJson(data['data']);
         collectionDetails.value = details;
         selectedCollection.value = details.collection;
+        await CollectionsLocalStorage.saveJson(
+          CollectionsLocalStorage.detailsKey(collectionId),
+          data['data'],
+        );
         AllTransactions.clear();
         await Future.wait([
           getSplits(collectionId),
@@ -286,9 +427,13 @@ class CollectionsController extends GetxController {
             CollectionsRoute.getCollectionById(collectionId));
 
         if (getFlagOfResponse(detailsResponse)) {
-          final data = json.decode(detailsResponse.body);
+        final data = json.decode(detailsResponse.body);
           collectionDetails.value =
               CollectionDetailsModel.fromJson(data['data']);
+          await CollectionsLocalStorage.saveJson(
+            CollectionsLocalStorage.detailsKey(collectionId),
+            data['data'],
+          );
           selectedCollection.value = collectionDetails.value?.collection;
         }
         return true;
@@ -377,6 +522,7 @@ class CollectionsController extends GetxController {
         balancesListPay.clear();
         balancesListReceive.clear();
         collectionsList.removeWhere((e) => e.id == id);
+        await CollectionsLocalStorage.clearCollection(id);
         AppNavigator.pushReplacement(context, TransactionHistoryScreen());
       }
     } catch (e) {
@@ -398,6 +544,7 @@ class CollectionsController extends GetxController {
         balancesListPay.clear();
         balancesListReceive.clear();
         collectionsList.removeWhere((e) => e.id == id);
+        await CollectionsLocalStorage.clearCollection(id);
         AppNavigator.pushReplacement(context, TransactionHistoryScreen());
       }
     } catch (e) {
@@ -420,6 +567,10 @@ class CollectionsController extends GetxController {
         final list =
             (data['data'] as List).map((e) => SplitModel.fromJson(e)).toList();
         splitsList.assignAll(list);
+        await CollectionsLocalStorage.saveJson(
+          CollectionsLocalStorage.splitsKey(collectionId),
+          data['data'],
+        );
       }
     } catch (e) {
       debugPrint("getSplits error: $e");
@@ -594,6 +745,10 @@ class CollectionsController extends GetxController {
         final dataJson = json.decode(response.body)['data'];
 
         final balanceData = BalanceDataModel.fromJson(dataJson);
+        await CollectionsLocalStorage.saveJson(
+          CollectionsLocalStorage.balancesKey(collectionId),
+          dataJson,
+        );
         // balancesList.assignAll(tempList);
 
         /// 🔥 If you want single combined list

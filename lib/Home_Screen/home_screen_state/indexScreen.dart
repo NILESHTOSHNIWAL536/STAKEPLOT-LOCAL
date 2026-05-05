@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/dummy_insight_api_screen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
@@ -57,6 +58,9 @@ class IndexScreen extends StatelessWidget {
                             historyButton(context)
                           ]),
 
+                      const SizedBox(height: 10),
+                      _insightDashboardButton(context),
+
                       Padding(
                         padding:
                             const EdgeInsets.symmetric(vertical: AppSizes.h10),
@@ -94,6 +98,48 @@ class IndexScreen extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _insightDashboardButton(BuildContext context) {
+    final colors = context.appColors;
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const DummyInsightApiScreen(),
+          ),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+        decoration: BoxDecoration(
+          color: colors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colors.primary.withValues(alpha: 0.18)),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.insights, color: colors.primary, size: 22),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                "Spending insights",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 15,
+                  lWeight: FontWeight.w700,
+                  color: colors.primary,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.primary),
+          ],
         ),
       ),
     );
