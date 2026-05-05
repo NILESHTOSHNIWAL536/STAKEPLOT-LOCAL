@@ -8,6 +8,7 @@ import wealthscapeRoutes from './wealthscape-routes';
 import collectionRoutes from './collection-routes';
 import reserveRoutes from './reserve-routes';
 import referralRoutes from './referral-routes';
+import insightRoutes from './insight-routes';
 import webHook from '@/utils/webHook';
 
 const router = express.Router();
@@ -23,5 +24,6 @@ router.use('/wealthscape', wealthscapeRoutes);
 router.use('/collections', collectionRoutes);
 router.use('/reserve', reserveRoutes);
 router.use('/referral', referralRoutes);
+router.use('/insight', insightRoutes);
 
 export default router;
