@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/components/notification_icon.dart';
 import 'package:lottie/lottie.dart';
@@ -73,7 +74,7 @@ class TopRightIconsWidget extends StatelessWidget {
               padding: const EdgeInsets.all(1),
               margin: const EdgeInsets.only(left: AppSizes.p4),
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.appColors.border,
                   borderRadius: BorderRadius.circular(12)),
               child: AvatarProfileImageZero(
                 url: Strides.stride,
@@ -209,7 +210,7 @@ class _AutoHintIconState extends State<AutoHintIcon> {
             padding: EdgeInsets.symmetric(
                 horizontal: _showText ? 8 : 2, vertical: _showText ? 4 : 2),
             decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
+              color: context.appColors.background,
               borderRadius: _showText
                   ? BorderRadius.circular(30)
                   : BorderRadius.circular(12),
@@ -217,9 +218,6 @@ class _AutoHintIconState extends State<AutoHintIcon> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Icon (always visible)
-
-                // Space + text only when visible
                 if (_showText) ...[
                   Text(
                     widget.text,
@@ -227,7 +225,7 @@ class _AutoHintIconState extends State<AutoHintIcon> {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 11,
-                      color: AppColors.primaryColor,
+                      color: context.appColors.primary,
                     ),
                   ),
                 ],

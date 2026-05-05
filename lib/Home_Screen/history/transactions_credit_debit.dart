@@ -1,176 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-// import 'package:flutter_application_code_stakeplot/components/helper.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-// import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-
-// import '../../components/shared_utils.dart';
-
-// class TransactionCreditDebitScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: MediaQuery.of(context).size.width,
-//       height: MediaQuery.of(context).size.height / 7.5,
-//       padding: const EdgeInsets.all(5.0),
-//       child: ListView(
-//         scrollDirection: Axis.horizontal,
-//         children: [
-//           TransactionCard(
-//             title: 'This week transaction(s)',
-//             credits: lastWeekjson['credit'].toString(),
-//             debits: lastWeekjson['debit'].toString(),
-//           ),
-//           TransactionCard(
-//             title: 'This month transaction(s)',
-//             credits: lastmonthjson['credit'].toString(),
-//             debits: lastmonthjson['debit'].toString(),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class TransactionCard extends StatelessWidget {
-//   final String title;
-//   final String credits;
-//   final String debits;
-
-//   TransactionCard(
-//       {required this.title, required this.credits, required this.debits});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: MediaQuery.of(context).size.width /
-//           (credits.toString().length <= 4
-//               ? 2.2
-//               : credits.toString().length <= 5
-//                   ? 2
-//                   : credits.toString().length <= 6
-//                       ? 1.8
-//                       : 1.6),
-//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-//       margin: EdgeInsets.symmetric(horizontal: 4),
-//       decoration: BoxDecoration(
-//         color: AppColors.backgroundColor,
-//         borderRadius: BorderRadius.circular(5),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Color.fromRGBO(137, 137, 137,
-//                 0.25), // Equivalent to rgba(137, 137, 137, 0.25);
-//             blurRadius: 4, // Equivalent to box-shadow: 0 0 4px 0;
-//             offset: Offset(0, 0), // Equivalent to box-shadow: 0 0 4px 0;
-//           ),
-//         ],
-//         // border: Border.all(width: .3)
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           SizedBox(height: 10),
-//           textStyle(
-//               context: context,
-//               text: title,
-//               fontsize: 14,
-//               c: AppColors.grey,
-//               fontWeight: FontWeight.w600),
-//           SizedBox(height: 10),
-//           Padding(
-//             padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     credits.toString().length >= 6
-//                         ? SizedBox(
-//                             width: MediaQuery.of(context).size.width /
-//                                 4, // adjust as needed
-//                             child: SingleChildScrollView(
-//                               scrollDirection: Axis.horizontal,
-//                               child: textStyle(
-//                                   context: context,
-//                                   text: '+ ₹${formatMoneyIndian(credits)}',
-//                                   fontsize: 14,
-//                                   c: AppColors.primaryColor,
-//                                   fontWeight: FontWeight.w700),
-//                             ),
-//                           )
-//                         : textStyle(
-//                             context: context,
-//                             text: '+ ₹${formatMoneyIndian(credits)}',
-//                             fontsize: 14,
-//                             c: AppColors.primaryColor,
-//                             fontWeight: FontWeight.w700),
-//                     const SizedBox(
-//                       height: 4,
-//                     ),
-//                     textStyle(
-//                         context: context,
-//                         text: 'credits',
-//                         fontsize: 14,
-//                         c: AppColors.grey,
-//                         fontWeight: FontWeight.bold),
-//                   ],
-//                 ),
-//                 Container(
-//                   height: 30,
-//                   child: VerticalDivider(
-//                     thickness: .9,
-//                     color: AppColors.greyCard,
-//                     width: 1,
-//                   ),
-//                 ),
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   children: [
-//                     debits.toString().length >= 6
-//                         ? SizedBox(
-//                             width: MediaQuery.of(context).size.width /
-//                                 5, // adjust as needed
-//                             child: SingleChildScrollView(
-//                               scrollDirection: Axis.horizontal,
-//                               child: textStyle(
-//                                   context: context,
-//                                   text: '- ₹${formatMoneyIndian(debits)}',
-//                                   fontsize: 14,
-//                                   c: AppColors.primaryColor,
-//                                   fontWeight: FontWeight.w700),
-//                             ),
-//                           )
-//                         : textStyle(
-//                             context: context,
-//                             text:'- ₹${formatMoneyIndian(debits)}',
-//                             fontsize: 14,
-//                             c: AppColors.primaryColor,
-//                             fontWeight: FontWeight.w700),
-//                     const SizedBox(
-//                       height: 4,
-//                     ),
-//                     textStyle(
-//                         context: context,
-//                         text: 'debits',
-//                         fontsize: 14,
-//                         c: AppColors.grey,
-//                         fontWeight: FontWeight.bold),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
@@ -188,36 +18,34 @@ class _TransactionCreditDebitCardState
     extends State<TransactionCreditDebitCard> {
   bool isWeekSelected = true;
 
-  String get credits =>
-      isWeekSelected
-          ? lastWeekjson['credit'].toString()
-          : lastmonthjson['credit'].toString();
+  String get credits => isWeekSelected
+      ? lastWeekjson['credit'].toString()
+      : lastmonthjson['credit'].toString();
 
-  String get debits =>
-      isWeekSelected
-          ? lastWeekjson['debit'].toString()
-          : lastmonthjson['debit'].toString();
+  String get debits => isWeekSelected
+      ? lastWeekjson['debit'].toString()
+      : lastmonthjson['debit'].toString();
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p12),
-      margin: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p12),
-      
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p12),
+      margin: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p12),
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-         borderRadius: BorderRadius.circular(8),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromRGBO(137, 137, 137,
-                                  0.25), // Equivalent to rgba(137, 137, 137, 0.25);
-                              blurRadius:
-                                  4, // Equivalent to box-shadow: 0 0 4px 0;
-                              offset: Offset(
-                                  0, 0), // Equivalent to box-shadow: 0 0 4px 0;
-                            ),
-                          ],
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.onBackground.withOpacity(0.08),
+            blurRadius: 4, // Equivalent to box-shadow: 0 0 4px 0;
+            offset: Offset(0, 0), // Equivalent to box-shadow: 0 0 4px 0;
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,15 +58,14 @@ class _TransactionCreditDebitCardState
                 context: context,
                 text: 'Amount',
                 fontsize: 14,
-                c: AppColors.accentColor,
+                c: colors.onSurface,
                 fontWeight: FontWeight.w400,
               ),
-
               _weekMonthToggle(),
             ],
           ),
 
-           SizedBox(height: AppSizes.h16),
+          SizedBox(height: AppSizes.h16),
 
           /// 🔹 CREDIT / DEBIT ROW
           Row(
@@ -249,9 +76,6 @@ class _TransactionCreditDebitCardState
                 value: '₹${formatMoneyIndian(credits)}',
                 label: 'Credited',
               ),
-
-            
-
               _amountBlock(
                 context,
                 value: '₹${formatMoneyIndian(debits)}',
@@ -266,11 +90,11 @@ class _TransactionCreditDebitCardState
 
   /// 🔹 TOGGLE BUTTON
   Widget _weekMonthToggle() {
+    final colors = context.appColors;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: colors.surfaceVariant,
         borderRadius: BorderRadius.circular(6),
-        
       ),
       child: Row(
         children: [
@@ -287,25 +111,24 @@ class _TransactionCreditDebitCardState
   }
 
   Widget _toggleItem(String text, bool selected, VoidCallback onTap) {
+    final colors = context.appColors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p6),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.p14, vertical: AppSizes.p6),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primaryColor : AppColors.backgroundColor,
+          color: selected ? colors.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
-           boxShadow: [
-          AppShadows.soft
-        ],
+          boxShadow: [if (selected) AppShadows.soft],
         ),
         child: textStyle(
-                context: context,
-                text: text,
-                fontsize: 14,
-                c: selected ? AppColors.backgroundColor : AppColors.grey,
-                fontWeight: FontWeight.w400,
-              ),
-       
+          context: context,
+          text: text,
+          fontsize: 14,
+          c: selected ? Colors.white : colors.secondaryText,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
   }
@@ -316,8 +139,9 @@ class _TransactionCreditDebitCardState
     required String value,
     required String label,
   }) {
+    final colors = context.appColors;
     return SizedBox(
-      width: MediaQuery.sizeOf(context).width/2.3,
+      width: MediaQuery.sizeOf(context).width / 2.3,
       child: Row(
         // crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -326,7 +150,7 @@ class _TransactionCreditDebitCardState
             context: context,
             text: value,
             fontsize: 14,
-            c: AppColors.primaryColor,
+            c: colors.primary,
             fontWeight: FontWeight.w500,
           ),
           SizedBox(width: AppSizes.w6),
@@ -334,13 +158,11 @@ class _TransactionCreditDebitCardState
             context: context,
             text: label,
             fontsize: 13,
-            c: AppColors.grey,
+            c: colors.secondaryText,
             fontWeight: FontWeight.w400,
           ),
         ],
       ),
     );
   }
-
-  
 }

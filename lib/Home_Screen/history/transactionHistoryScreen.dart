@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
@@ -175,6 +176,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   Widget build(
     BuildContext context,
   ) {
+    final colors = context.appColors;
     double screenHeight = widget.isFromCollection
         ? MediaQuery.sizeOf(context).height / 1.5
         : MediaQuery.sizeOf(context).height;
@@ -191,12 +193,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
           return true;
         },
         child: Scaffold(
-          backgroundColor: AppColors.newbg,
+          backgroundColor: colors.background,
           // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
           body: SafeArea(
             child: Container(
-              color:
-                  widget.isFromCollection ? AppColors.border : AppColors.border,
+              color: colors.background,
               child: widget.isFromCollection
                   ? Column(
                       children: [
@@ -208,7 +209,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                   : Column(
                       children: [
                         Container(
-                          color: AppColors.newbg,
+                          color: colors.appBarBackground,
                           child: Column(
                             children: [
                               isSearchActive
@@ -255,7 +256,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                         // ),
                         Expanded(
                           child: Container(
-                            color: AppColors.border,
+                            color: colors.background,
                             child: Obx(() {
                               return selectedTab.value == "All"
                                   ? _buildTransactionBody(context)
@@ -279,6 +280,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   Widget _buildTabChip(String title) {
     return Obx(() {
       final isSelected = selectedTab.value == title;
+      final colors = context.appColors;
 
       return GestureDetector(
         onTap: () {
@@ -296,8 +298,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
           padding: const EdgeInsets.symmetric(
               horizontal: AppSizes.p18, vertical: AppSizes.p12),
           decoration: BoxDecoration(
-            color:
-                isSelected ? AppColors.primaryColor : AppColors.backgroundColor,
+            color: isSelected ? colors.primary : colors.surface,
+            border:
+                Border.all(color: isSelected ? colors.primary : colors.border),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [AppShadows.tabs],
           ),
@@ -308,7 +311,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                 context,
                 fontSize: 14,
                 lWeight: FontWeight.w400,
-                color: isSelected ? AppColors.backgroundColor : AppColors.grey,
+                color: isSelected ? Colors.white : colors.secondaryText,
               ),
             ),
           ),
@@ -318,11 +321,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   }
 
   Widget historyHeader(BuildContext context, bool fromAutoPay) {
+    final colors = context.appColors;
     return Container(
       padding:
           const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p12),
-      decoration: const BoxDecoration(
-        color: AppColors.newbg,
+      decoration: BoxDecoration(
+        color: colors.appBarBackground,
       ),
       child: SafeArea(
         bottom: false,
@@ -366,7 +370,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                             context,
                             lWeight: FontWeight.w500,
                             fontSize: 17,
-                            color: AppColors.accentColor,
+                            color: colors.onBackground,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -415,11 +419,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   }
 
   Widget _buildSearchAndTabsSection(BuildContext context) {
+    final colors = context.appColors;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: AppColors.newbg,
+      decoration: BoxDecoration(
+        color: colors.appBarBackground,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,10 +535,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   }
 
   Widget _buildSearchInput(BuildContext context) {
+    final colors = context.appColors;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: colors.border),
         boxShadow: [AppShadows.tabs],
       ),
       child: TextField(
@@ -545,7 +552,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
           prefixIcon: const Icon(Icons.search),
           suffixIcon: _buildClearButton(),
           filled: true,
-          fillColor: AppColors.backgroundColor,
+          fillColor: colors.surface,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
@@ -553,7 +560,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
           contentPadding:
               const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
         ),
-        style: const TextStyle(color: AppColors.accentColor),
+        style: TextStyle(color: colors.onBackground),
       ),
     );
   }
@@ -561,6 +568,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
 // Change the search field for collection screen
   Widget _buildSearchFieldForCollection(
       BuildContext context, bool isFromCollection) {
+    final colors = context.appColors;
     return Padding(
       padding:
           const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p8),
@@ -579,7 +587,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _buildClearButton(),
                 filled: true,
-                fillColor: AppColors.backgroundColor,
+                fillColor: colors.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -587,7 +595,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                 contentPadding: const EdgeInsets.symmetric(
                     vertical: AppSizes.p6, horizontal: 15),
               ),
-              style: const TextStyle(color: AppColors.accentColor),
+              style: TextStyle(color: colors.onBackground),
             ),
           ),
           SizedBox(width: AppSizes.w10),
@@ -596,13 +604,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                   ? const SizedBox.shrink()
                   : GestureDetector(
                       onTap: () {},
-                      child: const CustomStyledContainer(
+                      child: CustomStyledContainer(
                         radius: 5.0,
                         height: 36,
                         width: 36,
                         child: Icon(
                           Icons.add,
-                          color: AppColors.primaryColor,
+                          color: colors.primary,
                           size: 24,
                         ),
                       ),
@@ -627,9 +635,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   }
 
   _buildClearButton() {
+    final colors = context.appColors;
     return tnxSearchController.text.isNotEmpty
         ? IconButton(
-            icon: const Icon(Icons.clear, color: AppColors.accentColor),
+            icon: Icon(Icons.clear, color: colors.onBackground),
             onPressed: () {
               tnxSearchController.clear();
               searchTextController.value = '';
@@ -743,13 +752,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   // }
 
   Widget _buildCheckBoxButtons() {
+    final colors = context.appColors;
     return Padding(
       padding: const EdgeInsets.only(right: AppSizes.p10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _coloredButton(
-              "Selected (${redioButton.length})", AppColors.primaryColor),
+          _coloredButton("Selected (${redioButton.length})", colors.primary),
           InkWell(
             onTap: () {
               showCheckBox.value = false;
@@ -761,8 +770,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
             },
             child: _coloredButton(
               "Cancel",
-              AppColors.primaryColor,
-              bg: AppColors.backgroundColor,
+              colors.primary,
+              bg: colors.surface,
             ),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -41,6 +42,7 @@ void navToHistoryReplacment(context) {
 }
 
 Widget historyButton(BuildContext context) {
+  final colors = context.appColors;
   return InkWell(
     onTap: () {
       navToHistory(context);
@@ -51,17 +53,9 @@ Widget historyButton(BuildContext context) {
       height: MediaQuery.sizeOf(context).height / 21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
-        // base white fill
-        color: AppColors.backgroundColor,
-        // semi-opaque white overlay (matches your linear-gradient with same stops)
-
-        borderRadius:
-            BorderRadius.circular(10), // nice rounded corners similar to SVG
-        border: Border.all(
-          color: AppColors.primaryColor, // stroke color from SVG
-          width: 1,
-        ),
-        // subtle elevation feel — optional, remove if you don't want it
+        color: colors.background,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: colors.border, width: 1),
         boxShadow: [AppShadows.soft],
       ),
       child: Center(
@@ -73,17 +67,14 @@ Widget historyButton(BuildContext context) {
               width: 5,
               height: 32,
             ),
-
             SizedBox(width: AppSizes.w8),
-
-            // Text label
             Text(
               'History',
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w500,
                 fontSize: 13,
-                color: AppColors.accentColor,
+                color: colors.onBackground,
               ),
             ),
           ],
@@ -92,5 +83,3 @@ Widget historyButton(BuildContext context) {
     ),
   );
 }
-
-      

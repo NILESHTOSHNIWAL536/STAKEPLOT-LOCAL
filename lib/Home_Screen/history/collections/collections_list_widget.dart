@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:get/get.dart';
 import '../../../Constants/app_styles.dart';
-import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/core/container_border.dart';
 import '../../../Constants/font_manager.dart';
+import '../../../Constants/theme_helper.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../controllers/limit-reachedBottomSheet.dart';
 import '../../../image_service/avatarProfile.dart';
@@ -15,6 +15,7 @@ import 'create_collection_pages/create_collection_flow.dart';
 import 'invitations_list.dart';
 
 Widget buildCollectionsBody(BuildContext context) {
+  final colors = context.appColors;
   return Obx(() {
     final hasInvitations = collectionsController.invitationsList.isNotEmpty;
     final invitationCount = collectionsController.invitationsList.length;
@@ -29,12 +30,12 @@ Widget buildCollectionsBody(BuildContext context) {
               child: Container(
                 height: 45,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: colors.surfaceVariant,
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: TabBar(
                   indicator: BoxDecoration(
-                    color: Colors.white,
+                    color: colors.surface,
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: const [
                       BoxShadow(
@@ -44,8 +45,8 @@ Widget buildCollectionsBody(BuildContext context) {
                       ),
                     ],
                   ),
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
+                  labelColor: colors.onBackground,
+                  unselectedLabelColor: colors.secondaryText,
                   dividerColor: Colors.transparent,
                   indicatorSize: TabBarIndicatorSize.tab,
                   tabs: [
@@ -214,14 +215,13 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Text(
         title,
         style: FontManager().getTextStyle(context,
-            fontSize: 17,
-            lWeight: FontWeight.w700,
-            color: AppColors.primaryColor),
+            fontSize: 17, lWeight: FontWeight.w700, color: colors.primary),
       ),
     );
   }
@@ -230,6 +230,7 @@ class _SectionTitle extends StatelessWidget {
 class _CollectionLimitInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Obx(() {
       final remaining = collectionsController.remainingCollectionLimit.value;
       final total = collectionsController.collectionTotalLimit.value;
@@ -239,9 +240,9 @@ class _CollectionLimitInfo extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.grey.withOpacity(0.2)),
+          border: Border.all(color: colors.border),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -255,7 +256,7 @@ class _CollectionLimitInfo extends StatelessWidget {
                   context,
                   fontSize: 13,
                   lWeight: FontWeight.w600,
-                  color: AppColors.primaryColor,
+                  color: colors.primary,
                 ),
               ),
             ),
@@ -266,8 +267,7 @@ class _CollectionLimitInfo extends StatelessWidget {
                 context,
                 fontSize: 12,
                 lWeight: FontWeight.w600,
-                color:
-                    remaining > 0 ? AppColors.accentColor : AppColors.redColor,
+                color: remaining > 0 ? colors.onBackground : colors.error,
               ),
             ),
           ],
@@ -319,6 +319,7 @@ class _TimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +337,7 @@ class _TimelineItem extends StatelessWidget {
                     bottom: 9,
                     child: Container(
                       width: 2,
-                      color: AppColors.primaryColor,
+                      color: colors.primary,
                     ),
                   ),
 
@@ -347,7 +348,7 @@ class _TimelineItem extends StatelessWidget {
                     bottom: 0,
                     child: Container(
                       width: 2,
-                      color: AppColors.primaryColor,
+                      color: colors.primary,
                     ),
                   ),
 
@@ -358,9 +359,9 @@ class _TimelineItem extends StatelessWidget {
                     width: 18,
                     height: 18,
                     decoration: BoxDecoration(
-                      color: AppColors.border,
+                      color: colors.surface,
                       border: Border.all(
-                        color: AppColors.primaryColor,
+                        color: colors.primary,
                         width: 2,
                       ),
                       shape: BoxShape.circle,
@@ -398,17 +399,19 @@ class _CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: item.status.toLowerCase() == "closed"
-            ? AppColors.grey
-            : AppColors.backgroundColor,
+            ? colors.surfaceVariant
+            : colors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
+        border: Border.all(color: colors.border),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x0A000000),
+            color: colors.onBackground.withOpacity(0.04),
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -428,7 +431,7 @@ class _CollectionCard extends StatelessWidget {
                     context,
                     fontSize: 15,
                     lWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
+                    color: colors.primary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -438,7 +441,7 @@ class _CollectionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.08),
+                  color: colors.primary.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -446,7 +449,7 @@ class _CollectionCard extends StatelessWidget {
                   style: FontManager().getTextStyle(
                     context,
                     fontSize: 11,
-                    color: AppColors.primaryColor,
+                    color: colors.primary,
                     lWeight: FontWeight.w500,
                   ),
                 ),
@@ -467,7 +470,7 @@ class _CollectionCard extends StatelessWidget {
                   style: FontManager().getTextStyle(
                     context,
                     fontSize: 12,
-                    color: AppColors.grey,
+                    color: colors.secondaryText,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -478,7 +481,7 @@ class _CollectionCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.border,
+                          color: colors.surfaceVariant,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -486,7 +489,7 @@ class _CollectionCard extends StatelessWidget {
                           style: FontManager().getTextStyle(
                             context,
                             fontSize: 11,
-                            color: AppColors.primaryColor,
+                            color: colors.primary,
                           ),
                         ),
                       ),
@@ -531,7 +534,7 @@ class _CollectionCard extends StatelessWidget {
                 style: FontManager().getTextStyle(
                   context,
                   fontSize: 12,
-                  color: AppColors.accentColor,
+                  color: colors.secondaryText,
                 ),
               ),
             ],
@@ -548,14 +551,15 @@ class _MemberCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Container(
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
+        color: colors.primary,
         shape: BoxShape.circle,
         border: Border.all(
-          color: Colors.white, // 🔥 important for overlap look
+          color: colors.surface,
           width: 1,
         ),
       ),
@@ -581,6 +585,7 @@ class CreateCollectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final height = MediaQuery.of(context).size.height * 0.06;
 
     return Row(
@@ -591,7 +596,7 @@ class CreateCollectionButton extends StatelessWidget {
             height: height,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
+                backgroundColor: colors.primary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -644,7 +649,7 @@ class CreateCollectionButton extends StatelessWidget {
             height: height,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: AppColors.primaryColor),
+                side: BorderSide(color: colors.primary),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -655,15 +660,14 @@ class CreateCollectionButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.person_add,
-                      size: 18, color: AppColors.primaryColor),
+                  Icon(Icons.person_add, size: 18, color: colors.primary),
                   SizedBox(width: 8),
                   Text(
                     "Invite",
                     style: FontManager().getTextStyle(context,
                         fontSize: 15,
                         lWeight: FontWeight.w600,
-                        color: AppColors.primaryColor),
+                        color: colors.primary),
                   ),
                 ],
               ),
@@ -681,12 +685,13 @@ class CreateCollectionButton2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.06,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: colors.primary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -717,7 +722,7 @@ class CreateCollectionButton2 extends StatelessWidget {
             context,
             fontSize: 16,
             lWeight: FontWeight.w500,
-            color: AppColors.backgroundColor,
+            color: Colors.white,
           ),
         ),
       ),
@@ -731,6 +736,7 @@ class CreateCollectionButtonInRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return GestureDetector(
       onTap: () {
         if (collectionsController.hasReachedCollectionLimit) {
@@ -763,7 +769,7 @@ class CreateCollectionButtonInRow extends StatelessWidget {
               context,
               fontSize: 16,
               lWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
+              color: colors.primary,
             ),
           ),
         ),
@@ -853,6 +859,7 @@ class _ShimmerCard extends StatelessWidget {
 /// EMPTY STATE
 /// ------------------------------
 Widget _buildEmptyCollectionsUI(BuildContext context) {
+  final colors = context.appColors;
   return Center(
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -890,6 +897,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
               context,
               fontSize: 22,
               lWeight: FontWeight.w700,
+              color: colors.onBackground,
             ),
           ),
           SizedBox(height: AppSizes.h10),
@@ -900,7 +908,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
               context,
               fontSize: 14,
               lWeight: FontWeight.w400,
-              color: AppColors.grey,
+              color: colors.secondaryText,
             ),
           ),
           SizedBox(height: AppSizes.h30),

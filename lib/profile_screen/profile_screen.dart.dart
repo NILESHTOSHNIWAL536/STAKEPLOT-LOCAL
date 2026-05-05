@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
@@ -93,9 +94,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     BuildContext context,
   ) {
     UserController userController = ControllerManagement.userController;
+    final colors = context.appColors;
     return Scaffold(
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -126,7 +128,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           Text(userController.userName.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w600,
-                                  color: AppColors.primaryColor)),
+                                  color: colors.primary)),
                           Obx(() => Container(
                                 width: MediaQuery.of(context).size.width / 2.1,
                                 padding:
@@ -138,7 +140,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                     context,
                                     lWeight: FontWeight.w500,
                                     fontSize: 15,
-                                    color: AppColors.bg1,
+                                    color: colors.secondaryText,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -162,10 +164,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         );
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width *
-                            0.2, // Adjust the multiplier as needed
+                        width: MediaQuery.of(context).size.width * 0.2,
                         decoration: BoxDecoration(
-                            color: AppColors.mt,
+                            color: colors.surface,
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Row(
@@ -173,23 +174,15 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             children: [
                               Icon(
                                 Icons.edit_outlined,
-                                color: AppColors.primaryColor,
+                                color: colors.primary,
                                 size: 24,
                               ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              // AvatarProfileImage(
-                              //   url: ProfileIcons.edit,
-                              //   height: 40,
-                              //   width: 40,
-                              // ),
+                              const SizedBox(width: 4),
                               Text(ProfileScreenStrings().editProfileLabel,
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.w600,
-                                      //fontSize: MediaQuery.of(context).size.width * 0.04,
                                       fontSize: 16,
-                                      color: AppColors.accentColor))
+                                      color: colors.onBackground))
                             ],
                           ),
                         ),
@@ -206,9 +199,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 child: Column(children: [
                   Container(
                     decoration: BoxDecoration(
-                        color: AppColors.mt,
+                        color: colors.surface,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.border)),
+                        border: Border.all(color: colors.border)),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                       child: Column(
@@ -260,9 +253,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                   SizedBox(height: AppSizes.h10),
                   Container(
                     decoration: BoxDecoration(
-                        color: AppColors.mt,
+                        color: colors.surface,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.border)),
+                        border: Border.all(color: colors.border)),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
                       child: Column(
@@ -316,18 +309,18 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   }
 
   Widget logoutWidget() {
+    final colors = context.appColors;
     return Column(
       children: [
         InkWell(
           onTap: () async {
-            // await storeDeviceInfo(context);
             logoutUserFromDevice(context);
           },
           child: Container(
             decoration: BoxDecoration(
-                color: AppColors.mt,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.border)),
+                border: Border.all(color: colors.border)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
               child: _buildOption(
@@ -346,7 +339,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             ProfileScreenStrings().appVersionLabel,
             textAlign: TextAlign.center,
             style: FontManager()
-                .getTextStyle(context, color: Colors.grey, fontSize: 12),
+                .getTextStyle(context, color: colors.hintText, fontSize: 12),
           ),
         ),
       ],
@@ -355,15 +348,15 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
   Widget _buildOption(Widget icon, String title, String subtitle,
       {Function()? onTap, bool isLogout = false}) {
+    final colors = context.appColors;
     double h = MediaQuery.sizeOf(context).height;
-    double w = MediaQuery.sizeOf(context).width;
     return ListTile(
       leading: Container(
         padding: EdgeInsets.all(AppSizes.p12),
         decoration: BoxDecoration(
-            color: AppColors.button,
+            color: colors.iconBackground,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.border)),
+            border: Border.all(color: colors.border)),
         child: SizedBox(
           height: 20,
           width: 20,
@@ -374,12 +367,12 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
               fontSize: h / 52,
-              color: AppColors.bg1)),
+              color: colors.onBackground)),
       subtitle: Text(subtitle,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w400,
               fontSize: h / 72,
-              color: AppColors.bg1)),
+              color: colors.secondaryText)),
       onTap: onTap,
     );
   }

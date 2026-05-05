@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/bankSlider.dart';
@@ -167,8 +168,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   width: 8, // active dot grows
                   decoration: BoxDecoration(
                     color: scrollBankPage.value == index
-                        ? AppColors.primaryColor
-                        : AppColors.accentColor.withOpacity(0.4),
+                        ? context.appColors.primary
+                        : context.appColors.secondaryText.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -259,8 +260,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   width: 8, // active dot grows
                   decoration: BoxDecoration(
                     color: scrollBankPage.value == index
-                        ? AppColors.primaryColor
-                        : AppColors.accentColor.withOpacity(0.4),
+                        ? context.appColors.primary
+                        : context.appColors.secondaryText.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -595,10 +596,10 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     return SafeArea(
       child: Container(
         //  color: AppColors.backgroundColor,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-          color: AppColors.backgroundColor,
+          color: context.appColors.surface,
         ),
         width: MediaQuery.of(context).size.width,
         height: height > 0 ? height / 3.8 : 100, // Fallback height
@@ -674,9 +675,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                           horizontal: 5, vertical: AppSizes.p20),
                       decoration: BoxDecoration(
                         color: isInvalidPin
-                            ? AppColors.grey
-                            : AppColors
-                                .primaryColor, // Button color based on validity
+                            ? context.appColors.secondaryText
+                            : context.appColors.primary,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
@@ -711,7 +711,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
   Widget connectBankAccount(BuildContext context) {
     return Container(
-      color: AppColors.backgroundColor,
+      color: context.appColors.background,
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Center(
         child: InkWell(
