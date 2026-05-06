@@ -21,6 +21,8 @@ class InsightRoutes {
   static String spendVelocity = "$_urlPath/spend-velocity";
   static String categoryHealth = "$_urlPath/category-health";
   static String incomeSources = "$_urlPath/income-sources";
+  static String upcomingExpensePrediction =
+      "$_urlPath/upcoming-expense-prediction";
 
   static String withQuery(
     String url, {

@@ -26,6 +26,8 @@ class UserInsightController extends GetxController {
         "largestTransactions", InsightRoutes.largestTransactions),
     InsightApiEndpoint("balanceTrend", InsightRoutes.balanceTrend),
     InsightApiEndpoint("spendVelocity", InsightRoutes.spendVelocity),
+    InsightApiEndpoint(
+        "upcomingExpensePrediction", InsightRoutes.upcomingExpensePrediction),
     InsightApiEndpoint("actionItems", InsightRoutes.actionItems,
         useQuery: false),
   ];

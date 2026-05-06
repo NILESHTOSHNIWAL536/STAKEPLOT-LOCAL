@@ -142,6 +142,12 @@ class _DummyInsightApiScreenState extends State<DummyInsightApiScreen> {
                 ],
               ),
               const SizedBox(height: 12),
+              _UpcomingExpensePredictionCard(
+                data: controller.map("upcomingExpensePrediction"),
+                money: controller.money,
+                numValue: controller.numValue,
+              ),
+              const SizedBox(height: 12),
               _CategoryProgressSection(
                 items: controller.list("categoryHealth"),
                 money: controller.money,
@@ -184,7 +190,8 @@ class _DummyInsightApiScreenState extends State<DummyInsightApiScreen> {
               const SizedBox(height: 12),
               _SimpleListSection(
                 title: "Income sources",
-                description:"Frequent or high-value credit sources found in bank data.",
+                description:
+                    "Frequent or high-value credit sources found in bank data.",
                 items: controller.list("incomeSources"),
                 titleKey: "name",
                 amountKey: "amount",
@@ -998,6 +1005,8 @@ class _SimpleListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     if (items.isEmpty) {
       return _InfoCard(
         title: title,
@@ -1021,20 +1030,23 @@ class _SimpleListSection extends StatelessWidget {
                   map["narration"]?.toString() ??
                   "Unknown";
 
-          return Container(
+          final amount = money(map[amountKey]);
+
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
             margin: EdgeInsets.only(
               bottom: index == items.take(5).length - 1 ? 0 : 14,
             ),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colors.surface,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: Colors.black.withOpacity(.05),
+                color: colors.border.withValues(alpha: 0.6),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(.04),
+                  color: colors.onBackground.withValues(alpha: 0.04),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -1043,16 +1055,22 @@ class _SimpleListSection extends StatelessWidget {
             child: Row(
               children: [
                 // Container(
-                //   height: 46,
-                //   width: 46,
+                //   height: 48,
+                //   width: 48,
                 //   decoration: BoxDecoration(
                 //     borderRadius: BorderRadius.circular(14),
-                //     color: Colors.black.withOpacity(.05),
+                //     gradient: LinearGradient(
+                //       colors: [
+                //         colors.primary.withValues(alpha: 0.18),
+                //         colors.primary.withValues(alpha: 0.08),
+                //       ],
+                //     ),
                 //   ),
                 //   child: Center(
                 //     child: Text(
                 //       name.isNotEmpty ? name[0].toUpperCase() : "?",
-                //       style: const TextStyle(
+                //       style: TextStyle(
+                //         color: colors.primary,
                 //         fontWeight: FontWeight.w900,
                 //         fontSize: 18,
                 //       ),
@@ -1068,7 +1086,8 @@ class _SimpleListSection extends StatelessWidget {
                         name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
+                          color: colors.onSurface,
                           fontWeight: FontWeight.w800,
                           fontSize: 14.5,
                         ),
@@ -1079,7 +1098,7 @@ class _SimpleListSection extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Colors.black.withOpacity(.55),
+                          color: colors.secondaryText,
                           fontSize: 11.5,
                           fontWeight: FontWeight.w500,
                         ),
@@ -1087,33 +1106,34 @@ class _SimpleListSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      money(map[amountKey]),
-                      style: const TextStyle(
+                      amount,
+                      style: TextStyle(
+                        color: colors.onSurface,
                         fontWeight: FontWeight.w900,
-                        fontSize: 15,
+                        fontSize: 15.5,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                        horizontal: 9,
+                        vertical: 5,
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Colors.green.withOpacity(.08),
+                        color: colors.primary.withValues(alpha: 0.10),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Insight",
                         style: TextStyle(
+                          color: colors.primary,
                           fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.green,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
@@ -1164,6 +1184,194 @@ class _ActionItemsCard extends StatelessWidget {
             label: "Hidden",
             value: data["hiddenCount"] ?? 0,
             helper: "Hidden transactions excluded from insights.",
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _UpcomingExpensePredictionCard extends StatelessWidget {
+  const _UpcomingExpensePredictionCard({
+    required this.data,
+    required this.money,
+    required this.numValue,
+  });
+
+  final Map<String, dynamic> data;
+  final String Function(dynamic) money;
+  final double Function(dynamic) numValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final items = data["items"] is List ? data["items"] as List : [];
+
+    if (items.isEmpty) {
+      return const _InfoCard(
+        title: "Upcoming Expense Prediction",
+        child: _NoDataText(),
+      );
+    }
+
+    return _InfoCard(
+      title: "Upcoming Expense Prediction",
+      description:
+          "Expected recurring debits due soon, cleaned up from bank narrations.",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _PredictionSummaryPill(
+                  label: "Predicted",
+                  value: money(data["totalPredictedAmount"]),
+                  icon: Icons.event_available_outlined,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _PredictionSummaryPill(
+                  label: "Next ${data["days"] ?? 60} days",
+                  value: "${data["predictedCount"] ?? items.length} items",
+                  icon: Icons.repeat,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...items.take(5).map((item) {
+            final map = Map<String, dynamic>.from(item as Map);
+            final title = map["title"]?.toString().isNotEmpty == true
+                ? map["title"].toString()
+                : map["merchant"]?.toString() ?? "Upcoming expense";
+            final dueInDays = numValue(map["dueInDays"]).round();
+            final dueLabel = dueInDays == 0
+                ? "Due today"
+                : dueInDays == 1
+                    ? "Due tomorrow"
+                    : "Due in $dueInDays days";
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.background,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: colors.border),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    height: 38,
+                    width: 38,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF7ED),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.notifications_active_outlined,
+                      color: Color(0xFFF97316),
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: colors.onSurface,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          "$dueLabel | ${_modeLabel(map["frequency"])}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: colors.secondaryText,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    money(map["amount"]),
+                    style: TextStyle(
+                      color: colors.onSurface,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _PredictionSummaryPill extends StatelessWidget {
+  const _PredictionSummaryPill({
+    required this.label,
+    required this.value,
+    required this.icon,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF7ED),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: const Color(0xFFF97316), size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.secondaryText,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.onSurface,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
