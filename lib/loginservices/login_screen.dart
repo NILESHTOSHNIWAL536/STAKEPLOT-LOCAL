@@ -22,6 +22,7 @@ import 'package:lottie/lottie.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/theme_helper.dart';
 import '../backed_connections/apiAutomations/install_apk_api.dart';
 import '../repository/auth_service/login_apis.dart';
 import '../services/secure_storage.dart';
@@ -35,7 +36,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "testuserc@gmail.com");
+  final TextEditingController emailController =
+      TextEditingController(text: "testuserc@gmail.com");
   final AuthService authService = AuthService();
   RxString isLoggedIn = "".obs;
 
@@ -212,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
         acceptReset.value = false;
       },
       cursorColor: AppColors.backgroundColor,
-      style: const TextStyle(color: AppColors.accentColor),
+      style: TextStyle(color: ThemeHelper(context).appColors.secondaryText),
       decoration: InputDecoration(
         // fillColor: Color.fromRGBO(255, 255, 255, 0.23),
         border: UnderlineInputBorder(),

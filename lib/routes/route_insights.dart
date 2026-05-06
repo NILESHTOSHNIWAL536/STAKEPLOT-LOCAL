@@ -1,9 +1,7 @@
 import 'index_route.dart';
 
 class InsightRoutes {
-  static final String _urlPath = "${API.BankApiUrl}/insight";
-    // static final String _urlPath = "${API.BankApiUrl}/collections";
-
+  static final String _urlPath = "${API.BankApiUrl}/insights";
 
   static String catalog = "$_urlPath/catalog";
   static String summary = "$_urlPath/summary";

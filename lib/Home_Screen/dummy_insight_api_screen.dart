@@ -120,26 +120,11 @@ class _DummyInsightApiScreenState extends State<DummyInsightApiScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: _MetricCard(
-                      title: "Projected",
-                      value: controller.money(velocity["projectedSpend"]),
-                      icon: Icons.trending_up,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _MetricCard(
-                      title: "Safe/day",
-                      value: controller
-                          .money(velocity["safeDailySpendForRemainingDays"]),
-                      icon: Icons.shield_outlined,
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 12),
+              _SpendVelocityCard(
+                data: velocity,
+                money: controller.money,
+                numValue: controller.numValue,
               ),
               const SizedBox(height: 12),
               _UpcomingExpensePredictionCard(
@@ -364,6 +349,239 @@ class _MetricCard extends StatelessWidget {
   }
 }
 
+class _SpendVelocityCard extends StatelessWidget {
+  const _SpendVelocityCard({
+    required this.data,
+    required this.money,
+    required this.numValue,
+  });
+
+  final Map<String, dynamic> data;
+  final String Function(dynamic) money;
+  final double Function(dynamic) numValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final risk = (data["riskLevel"] ?? "LOW").toString().toUpperCase();
+    final riskColor = risk == "HIGH"
+        ? colors.error
+        : risk == "MEDIUM"
+            ? const Color(0xFFF59E0B)
+            : colors.credit;
+    final dailySpend = numValue(data["dailySpendVelocity"]);
+    final safeDailySpend = numValue(data["safeDailySpendForRemainingDays"]);
+    final remainingDays = numValue(data["remainingDays"]).round();
+    final progress = safeDailySpend <= 0
+        ? 1.0
+        : (dailySpend / safeDailySpend).clamp(0.0, 1.0);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: colors.onBackground.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 42,
+                width: 42,
+                decoration: BoxDecoration(
+                  color: colors.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.speed_outlined,
+                  color: colors.primary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Spend Velocity",
+                      style: TextStyle(
+                        color: colors.onSurface,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      remainingDays > 0
+                          ? "$remainingDays days left to adjust this month's pace."
+                          : "Month-end pace is locked for this period.",
+                      style: TextStyle(
+                        color: colors.secondaryText,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _RiskBadge(label: risk, color: riskColor),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: _VelocityMetric(
+                  label: "Daily spend",
+                  value: money(dailySpend),
+                  icon: Icons.bolt_outlined,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _VelocityMetric(
+                  label: "Safe/day",
+                  value: money(safeDailySpend),
+                  icon: Icons.shield_outlined,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _VelocityMetric(
+            label: "Projected month spend",
+            value: money(data["projectedSpend"]),
+            icon: Icons.trending_up,
+            fullWidth: true,
+          ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 8,
+              backgroundColor: colors.surfaceVariant,
+              color: riskColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _velocityAdvice(risk, dailySpend, safeDailySpend, money),
+            style: TextStyle(
+              color: colors.secondaryText,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VelocityMetric extends StatelessWidget {
+  const _VelocityMetric({
+    required this.label,
+    required this.value,
+    required this.icon,
+    this.fullWidth = false,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final bool fullWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      width: fullWidth ? double.infinity : null,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colors.surfaceVariant.withValues(
+          alpha: Theme.of(context).brightness == Brightness.dark ? 1 : 0.7,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: colors.primary, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.secondaryText,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.onSurface,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RiskBadge extends StatelessWidget {
+  const _RiskBadge({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: 11,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
+}
+
 class _CategoryProgressSection extends StatelessWidget {
   const _CategoryProgressSection({
     required this.items,
@@ -436,14 +654,14 @@ class _CategoryProgressSection extends StatelessWidget {
                   children: [
                     Text(
                       "${share.toStringAsFixed(1)}% of spend",
-                      style:
-                          const TextStyle(color: Colors.black54, fontSize: 11),
+                      style: TextStyle(
+                          color: context.appColors.secondaryText, fontSize: 11),
                     ),
                     const Spacer(),
                     Text(
                       "${change >= 0 ? "+" : ""}${change.toStringAsFixed(1)}% vs previous",
-                      style:
-                          const TextStyle(color: Colors.black54, fontSize: 11),
+                      style: TextStyle(
+                          color: context.appColors.secondaryText, fontSize: 11),
                     ),
                   ],
                 ),
@@ -527,8 +745,8 @@ class _DailyTrendChart extends StatelessWidget {
                       reservedSize: 44,
                       getTitlesWidget: (value, meta) => Text(
                         _compactAmount(value),
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: context.appColors.secondaryText,
                           fontSize: 10,
                         ),
                       ),
@@ -550,8 +768,8 @@ class _DailyTrendChart extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 6),
                           child: Text(
                             _shortDate(item["date"]),
-                            style: const TextStyle(
-                              color: Colors.black54,
+                            style: TextStyle(
+                              color: context.appColors.secondaryText,
                               fontSize: 10,
                             ),
                           ),
@@ -681,8 +899,8 @@ class _PaymentModePie extends StatelessWidget {
                             Text(
                               "${money(amount)} | ${item["count"] ?? 0} txns | ${share.toStringAsFixed(1)}%",
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.black54,
+                              style: TextStyle(
+                                color: context.appColors.secondaryText,
                                 fontSize: 11,
                               ),
                             ),
@@ -771,8 +989,8 @@ class _BalanceTrendChart extends StatelessWidget {
                       reservedSize: 44,
                       getTitlesWidget: (value, meta) => Text(
                         _compactAmount(value),
-                        style: const TextStyle(
-                          color: Colors.black54,
+                        style: TextStyle(
+                          color: context.appColors.secondaryText,
                           fontSize: 10,
                         ),
                       ),
@@ -794,8 +1012,8 @@ class _BalanceTrendChart extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 6),
                           child: Text(
                             _shortDate(item["date"]),
-                            style: const TextStyle(
-                              color: Colors.black54,
+                            style: TextStyle(
+                              color: context.appColors.secondaryText,
                               fontSize: 10,
                             ),
                           ),
@@ -973,7 +1191,7 @@ class _TimePatternSection extends StatelessWidget {
 //                   _listSubtitle(map),
 //                   maxLines: 1,
 //                   overflow: TextOverflow.ellipsis,
-//                   style: const TextStyle(color: Colors.black54, fontSize: 11),
+//                   style: const TextStyle(color: context.appColors.secondaryText, fontSize: 11),
 //                 ),
 //               ],
 //             ),
@@ -1418,7 +1636,8 @@ class _ActionRow extends StatelessWidget {
                 ),
                 Text(
                   helper,
-                  style: const TextStyle(color: Colors.black54, fontSize: 11),
+                  style: TextStyle(
+                      color: context.appColors.secondaryText, fontSize: 11),
                 ),
               ],
             ),
@@ -1452,9 +1671,10 @@ class _NoDataText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
+    return Text(
       "No data available for this insight.",
-      style: TextStyle(color: Colors.black54),
+      style: TextStyle(
+          color: context.appColors.secondaryText, fontStyle: FontStyle.italic),
     );
   }
 }
@@ -1586,6 +1806,21 @@ String _modeLabel(dynamic value) {
       .map((part) =>
           part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase())
       .join(" ");
+}
+
+String _velocityAdvice(
+  String risk,
+  double dailySpend,
+  double safeDailySpend,
+  String Function(dynamic) money,
+) {
+  if (risk == "HIGH") {
+    return "You are running hot. Try keeping daily debits near ${money(safeDailySpend)} for the rest of the month.";
+  }
+  if (risk == "MEDIUM") {
+    return "Spend is slightly above normal. A daily target of ${money(safeDailySpend)} keeps the month under control.";
+  }
+  return "Your pace is healthy. Current daily spend is around ${money(dailySpend)}.";
 }
 
 String _listSubtitle(Map<String, dynamic> map) {
