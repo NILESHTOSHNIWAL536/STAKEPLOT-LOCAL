@@ -1,5 +1,6 @@
 import { PipelineStage, Types } from 'mongoose';
 import { RecurringPayment, Transaction } from '@/models';
+import { extractImportantInfo } from '@/helpers/enrich-bank.helper';
 
 const TIMEZONE = 'Asia/Kolkata';
 const DEFAULT_DAYS = 30;
@@ -81,8 +82,8 @@ const insightCatalog = [
   },
   {
     key: 'bill_and_autopay',
-    title: 'Bills and autopay',
-    description: 'Bills, autopay debits, and expected upcoming money outflow.',
+    title: 'Upcoming expense prediction',
+    description: 'Predicted bills, autopay debits, and expected upcoming money outflow.',
   },
   {
     key: 'anomalies',
@@ -193,6 +194,21 @@ const txNameExpression = {
   ],
 };
 
+const readableTransactionTitle = (txn: Record<string, any>) => {
+  const rawTitle = txn?.merchant || txn?.name || txn?.narration || txn?.category;
+  return extractImportantInfo(rawTitle) || txn?.category || 'Unknown Transaction';
+};
+
+const withReadableTitle = <T extends Record<string, any>>(txn: T) => {
+  const title = readableTransactionTitle(txn);
+  return {
+    ...txn,
+    title,
+    merchant: txn.merchant || title,
+    name: txn.name || title,
+  };
+};
+
 const getTotals = async (userId: string | Types.ObjectId, range: DateRange) => {
   const [totals] = await Transaction.aggregate([
     { $match: baseMatch(userId, range) },
@@ -259,6 +275,13 @@ export const getSummaryInsights = async (userId: string | Types.ObjectId, query:
     ]),
   ]);
 
+  const frequentPayment = mostFrequentPayment[0]
+    ? {
+        ...mostFrequentPayment[0],
+        name: extractImportantInfo(mostFrequentPayment[0]._id) || mostFrequentPayment[0]._id,
+      }
+    : null;
+
   return {
     range,
     current,
@@ -270,7 +293,7 @@ export const getSummaryInsights = async (userId: string | Types.ObjectId, query:
     },
     highlights: {
       highestPaymentDate: highestPaymentDate[0] || null,
-      mostFrequentPayment: mostFrequentPayment[0] || null,
+      mostFrequentPayment: frequentPayment,
       topCategory: topCategory[0] || null,
     },
   };
@@ -314,7 +337,7 @@ export const getMerchantInsights = async (userId: string | Types.ObjectId, query
   const limit = parseNumber(query.limit, DEFAULT_LIMIT);
   const type = query.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
 
-  return Transaction.aggregate([
+  const merchants = await Transaction.aggregate([
     { $match: baseMatch(userId, range, { type }) },
     {
       $group: {
@@ -339,6 +362,11 @@ export const getMerchantInsights = async (userId: string | Types.ObjectId, query
       },
     },
   ]);
+
+  return merchants.map((item) => ({
+    ...item,
+    name: extractImportantInfo(item.name) || item.name,
+  }));
 };
 
 export const getTimePatternInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
@@ -442,20 +470,26 @@ export const getCashVsBankInsights = async (userId: string | Types.ObjectId, que
 export const getRecurringInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
   const limit = parseNumber(query.limit, DEFAULT_LIMIT);
 
-  return RecurringPayment.find({
+  const recurring = await RecurringPayment.find({
     userId: new Types.ObjectId(userId),
     isActive: true,
   })
     .sort({ nextReminderAt: 1 })
     .limit(limit)
     .lean();
+
+  return recurring.map((item) => ({
+    ...item,
+    title: extractImportantInfo(item.merchant || item.narration) || item.merchant,
+    merchant: extractImportantInfo(item.merchant || item.narration) || item.merchant,
+  }));
 };
 
 export const getAnomalyInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
   const range = getDateRange({ days: query.days || 90, endDate: query.endDate });
   const limit = parseNumber(query.limit, DEFAULT_LIMIT);
 
-  return Transaction.aggregate([
+  const anomalies = await Transaction.aggregate([
     { $match: baseMatch(userId, range, { type: 'DEBIT' }) },
     {
       $setWindowFields: {
@@ -497,6 +531,8 @@ export const getAnomalyInsights = async (userId: string | Types.ObjectId, query:
       },
     },
   ]);
+
+  return anomalies.map(withReadableTitle);
 };
 
 export const getActionItemInsights = async (userId: string | Types.ObjectId) => {
@@ -547,11 +583,13 @@ export const getLargestTransactionInsights = async (userId: string | Types.Objec
   const limit = parseNumber(query.limit, DEFAULT_LIMIT);
   const type = query.type === 'CREDIT' ? 'CREDIT' : 'DEBIT';
 
-  return Transaction.find(baseMatch(userId, range, { type }))
+  const transactions = await Transaction.find(baseMatch(userId, range, { type }))
     .select('type mode name merchant amount category subcategory narration transactionTimestamp manualTransaction transactionalBalance')
     .sort({ amount: -1 })
     .limit(limit)
     .lean();
+
+  return transactions.map(withReadableTitle);
 };
 
 export const getBalanceTrendInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
@@ -635,4 +673,41 @@ export const getCategoryHealthInsights = async (userId: string | Types.ObjectId,
 
 export const getIncomeSourceInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
   return getMerchantInsights(userId, { ...query, type: 'CREDIT' });
+};
+
+export const getUpcomingExpensePredictionInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
+  const days = parseNumber(query.days, DEFAULT_DAYS);
+  const limit = parseNumber(query.limit, DEFAULT_LIMIT);
+  const now = new Date();
+  const horizon = new Date(now);
+  horizon.setDate(now.getDate() + days);
+  horizon.setHours(23, 59, 59, 999);
+
+  const upcoming = await RecurringPayment.find({
+    userId: new Types.ObjectId(userId),
+    isActive: true,
+    nextReminderAt: { $gte: now, $lte: horizon },
+  })
+    .sort({ nextReminderAt: 1, amount: -1 })
+    .limit(limit)
+    .lean();
+
+  const items = upcoming.map((item) => {
+    const title = extractImportantInfo(item.merchant || item.narration) || item.merchant || 'Upcoming expense';
+    const dueInDays = Math.max(0, Math.ceil((new Date(item.nextReminderAt).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+
+    return {
+      ...item,
+      title,
+      merchant: title,
+      dueInDays,
+    };
+  });
+
+  return {
+    days,
+    predictedCount: items.length,
+    totalPredictedAmount: Number(items.reduce((sum, item) => sum + (item.amount || 0), 0).toFixed(2)),
+    items,
+  };
 };

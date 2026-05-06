@@ -21,5 +21,6 @@ router.get('/balance-trend', AuthMiddlewares.protect, InsightController.getBalan
 router.get('/spend-velocity', AuthMiddlewares.protect, InsightController.getSpendVelocity);
 router.get('/category-health', AuthMiddlewares.protect, InsightController.getCategoryHealth);
 router.get('/income-sources', AuthMiddlewares.protect, InsightController.getIncomeSources);
+router.get('/upcoming-expense-prediction', AuthMiddlewares.protect, InsightController.getUpcomingExpensePrediction);
 
 export default router;

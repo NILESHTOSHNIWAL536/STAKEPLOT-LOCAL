@@ -100,3 +100,8 @@ export const getIncomeSources = async (req: Request, res: Response) => {
   const userId = req.user!._id;
   return handleInsightRequest(req, res, () => InsightService.getIncomeSourceInsights(userId, req.query));
 };
+
+export const getUpcomingExpensePrediction = async (req: Request, res: Response) => {
+  const userId = req.user!._id;
+  return handleInsightRequest(req, res, () => InsightService.getUpcomingExpensePredictionInsights(userId, req.query));
+};
