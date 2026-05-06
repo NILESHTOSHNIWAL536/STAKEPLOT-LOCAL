@@ -184,8 +184,7 @@ class _DummyInsightApiScreenState extends State<DummyInsightApiScreen> {
               const SizedBox(height: 12),
               _SimpleListSection(
                 title: "Income sources",
-                description:
-                    "Frequent or high-value credit sources found in bank data.",
+                description:"Frequent or high-value credit sources found in bank data.",
                 items: controller.list("incomeSources"),
                 titleKey: "name",
                 amountKey: "amount",
@@ -463,15 +462,17 @@ class _DailyTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final last = items.length > 7? items.sublist(items.length - 7) : items;
+    final last = items.length > 7 ? items.sublist(items.length - 7) : items;
     if (last.isEmpty) {
       return const _InfoCard(title: "Daily spend trend", child: _NoDataText());
     }
 
-    final maxY = max(1.0, last.fold<double>(0, (m, e) {
-      final map = Map<String, dynamic>.from(e as Map);
-      return max(m, max(numValue(map["debit"]), numValue(map["credit"])));
-    }));
+    final maxY = max(
+        1.0,
+        last.fold<double>(0, (m, e) {
+          final map = Map<String, dynamic>.from(e as Map);
+          return max(m, max(numValue(map["debit"]), numValue(map["credit"])));
+        }));
     final totalDebit = last.fold<double>(
       0,
       (sum, e) => sum + numValue((e as Map)["debit"]),
@@ -903,6 +904,79 @@ class _TimePatternSection extends StatelessWidget {
   }
 }
 
+// class _SimpleListSection extends StatelessWidget {
+//   const _SimpleListSection({
+//     required this.title,
+//     this.description,
+//     required this.items,
+//     required this.titleKey,
+//     required this.amountKey,
+//     required this.money,
+//     this.fallbackTitleKey,
+//   });
+
+//   final String title;
+//   final String? description;
+//   final List<dynamic> items;
+//   final String titleKey;
+//   final String? fallbackTitleKey;
+//   final String amountKey;
+//   final String Function(dynamic) money;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (items.isEmpty) {
+//       return _InfoCard(title: title, child: const _NoDataText());
+//     }
+
+//     return _InfoCard(
+//       title: title,
+//       description: description,
+//       child: Column(
+//         children: items.take(5).map((item) {
+//           final map = Map<String, dynamic>.from(item as Map);
+//           final name = map[titleKey]?.toString().isNotEmpty == true
+//               ? map[titleKey].toString()
+//               : map[fallbackTitleKey]?.toString() ??
+//                   map["narration"]?.toString() ??
+//                   "Unknown";
+//           return Padding(
+//             padding: const EdgeInsets.only(bottom: 12),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Row(
+//                   children: [
+//                     Expanded(
+//                       child: Text(
+//                         name,
+//                         maxLines: 1,
+//                         overflow: TextOverflow.ellipsis,
+//                         style: const TextStyle(fontWeight: FontWeight.w800),
+//                       ),
+//                     ),
+//                     Text(
+//                       money(map[amountKey]),
+//                       style: const TextStyle(fontWeight: FontWeight.w900),
+//                     ),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 3),
+//                 Text(
+//                   _listSubtitle(map),
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                   style: const TextStyle(color: Colors.black54, fontSize: 11),
+//                 ),
+//               ],
+//             ),
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }
+
 class _SimpleListSection extends StatelessWidget {
   const _SimpleListSection({
     required this.title,
@@ -925,47 +999,125 @@ class _SimpleListSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return _InfoCard(title: title, child: const _NoDataText());
+      return _InfoCard(
+        title: title,
+        child: const _NoDataText(),
+      );
     }
 
     return _InfoCard(
       title: title,
       description: description,
       child: Column(
-        children: items.take(5).map((item) {
+        children: items.take(5).toList().asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
+
           final map = Map<String, dynamic>.from(item as Map);
+
           final name = map[titleKey]?.toString().isNotEmpty == true
               ? map[titleKey].toString()
               : map[fallbackTitleKey]?.toString() ??
                   map["narration"]?.toString() ??
                   "Unknown";
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+
+          return Container(
+            margin: EdgeInsets.only(
+              bottom: index == items.take(5).length - 1 ? 0 : 14,
+            ),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: Colors.black.withOpacity(.05),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
+                // Container(
+                //   height: 46,
+                //   width: 46,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(14),
+                //     color: Colors.black.withOpacity(.05),
+                //   ),
+                //   child: Center(
+                //     child: Text(
+                //       name.isNotEmpty ? name[0].toUpperCase() : "?",
+                //       style: const TextStyle(
+                //         fontWeight: FontWeight.w900,
+                //         fontSize: 18,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w800),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14.5,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 5),
+                      Text(
+                        _listSubtitle(map),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(.55),
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
                     Text(
                       money(map[amountKey]),
-                      style: const TextStyle(fontWeight: FontWeight.w900),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.green.withOpacity(.08),
+                      ),
+                      child: const Text(
+                        "Insight",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.green,
+                        ),
+                      ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  _listSubtitle(map),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.black54, fontSize: 11),
                 ),
               ],
             ),
