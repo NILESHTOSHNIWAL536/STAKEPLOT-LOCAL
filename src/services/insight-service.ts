@@ -118,7 +118,7 @@ const insightCatalog = [
   {
     key: 'spend_velocity',
     title: 'Spend velocity',
-    description: 'Current daily spend pace, projected period spend, and remaining safe daily spend.',
+    description: 'Current-month debit pace, projected month-end spend, and risk versus normal spend.',
   },
   {
     key: 'category_health',
@@ -627,30 +627,55 @@ export const getBalanceTrendInsights = async (userId: string | Types.ObjectId, q
 };
 
 export const getSpendVelocityInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
-  const range = getDateRange(query);
-  const previousRange = getPreviousRange(range);
-  const [current, previous] = await Promise.all([getTotals(userId, range), getTotals(userId, previousRange)]);
+  const today = query.endDate ? new Date(query.endDate) : new Date();
+  if (Number.isNaN(today.getTime())) {
+    throw new Error('Invalid date range');
+  }
 
-  const totalDays = Math.max(1, Math.ceil((range.endDate.getTime() - range.startDate.getTime()) / (1000 * 60 * 60 * 24)));
-  const elapsedDays = Math.min(totalDays, Math.max(1, Math.ceil((Date.now() - range.startDate.getTime()) / (1000 * 60 * 60 * 24))));
-  const dailyAverageSpend = Number((current.totalDebit / elapsedDays).toFixed(2));
-  const projectedSpend = Number((dailyAverageSpend * totalDays).toFixed(2));
-  const previousDailyAverageSpend = Number((previous.totalDebit / totalDays).toFixed(2));
-  const suggestedDailySpend = previous.totalDebit ? Number((previous.totalDebit / totalDays).toFixed(2)) : dailyAverageSpend;
-  const remainingDays = Math.max(0, totalDays - elapsedDays);
-  const remainingSpendToMatchPrevious = Math.max(0, previous.totalDebit - current.totalDebit);
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+  const todayEnd = new Date(today);
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const totalDaysInMonth = monthEnd.getDate();
+  const daysPassed = Math.min(today.getDate(), totalDaysInMonth);
+  const remainingDays = Math.max(0, totalDaysInMonth - daysPassed);
+
+  const normalSpendStart = new Date(today.getFullYear(), today.getMonth() - 3, 1);
+  const normalSpendEnd = new Date(today.getFullYear(), today.getMonth(), 0, 23, 59, 59, 999);
+
+  const [currentTotals, normalMonths] = await Promise.all([
+    getTotals(userId, { startDate: monthStart, endDate: todayEnd }),
+    Transaction.aggregate([
+      { $match: baseMatch(userId, { startDate: normalSpendStart, endDate: normalSpendEnd }, { type: 'DEBIT' }) },
+      {
+        $group: {
+          _id: { year: { $year: '$transactionTimestamp' }, month: { $month: '$transactionTimestamp' } },
+          amount: { $sum: '$amount' },
+        },
+      },
+    ]),
+  ]);
+
+  const currentSpend = Number((currentTotals.totalDebit || 0).toFixed(2));
+  const dailySpendVelocity = Number((currentSpend / Math.max(1, daysPassed)).toFixed(2));
+  const projectedSpend = Number((dailySpendVelocity * totalDaysInMonth).toFixed(2));
+  const normalSpend = normalMonths.length
+    ? Number((normalMonths.reduce((sum, item) => sum + (item.amount || 0), 0) / normalMonths.length).toFixed(2))
+    : projectedSpend;
+  const remainingNormalBudget = Math.max(0, normalSpend - currentSpend);
+  const safeDailySpendForRemainingDays = remainingDays ? Number((remainingNormalBudget / remainingDays).toFixed(2)) : 0;
+  const projectedRatio = normalSpend > 0 ? projectedSpend / normalSpend : 1;
+  const riskLevel = projectedRatio >= 1.2 ? 'HIGH' : projectedRatio >= 1.1 ? 'MEDIUM' : 'LOW';
 
   return {
-    range,
-    totalDays,
-    elapsedDays,
-    remainingDays,
-    dailyAverageSpend,
-    previousDailyAverageSpend,
+    currentSpend,
+    daysPassed,
+    dailySpendVelocity,
     projectedSpend,
-    previousPeriodSpend: previous.totalDebit,
-    spendPaceChangePercentage: percentageChange(dailyAverageSpend, previousDailyAverageSpend),
-    safeDailySpendForRemainingDays: remainingDays ? Number((remainingSpendToMatchPrevious / remainingDays).toFixed(2)) : 0,
+    safeDailySpendForRemainingDays,
+    remainingDays,
+    riskLevel,
   };
 };
 

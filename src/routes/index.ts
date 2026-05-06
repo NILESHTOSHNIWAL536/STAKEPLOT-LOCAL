@@ -25,5 +25,6 @@ router.use('/collections', collectionRoutes);
 router.use('/reserve', reserveRoutes);
 router.use('/referral', referralRoutes);
 router.use('/insight', insightRoutes);
+router.use('/insights', insightRoutes);
 
 export default router;

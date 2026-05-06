@@ -88,7 +88,15 @@ export const getBalanceTrend = async (req: Request, res: Response) => {
 
 export const getSpendVelocity = async (req: Request, res: Response) => {
   const userId = req.user!._id;
-  return handleInsightRequest(req, res, () => InsightService.getSpendVelocityInsights(userId, req.query));
+  try {
+    const data = await InsightService.getSpendVelocityInsights(userId, req.query);
+    return res.status(StatusCodes.OK).json(data);
+  } catch (error: any) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: error?.message || 'Unable to fetch spend velocity',
+      error,
+    });
+  }
 };
 
 export const getCategoryHealth = async (req: Request, res: Response) => {
