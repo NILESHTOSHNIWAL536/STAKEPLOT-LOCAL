@@ -349,6 +349,149 @@ class _MetricCard extends StatelessWidget {
   }
 }
 
+// class _SpendVelocityCard extends StatelessWidget {
+//   const _SpendVelocityCard({
+//     required this.data,
+//     required this.money,
+//     required this.numValue,
+//   });
+
+//   final Map<String, dynamic> data;
+//   final String Function(dynamic) money;
+//   final double Function(dynamic) numValue;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final colors = context.appColors;
+//     final risk = (data["riskLevel"] ?? "LOW").toString().toUpperCase();
+//     final riskColor = risk == "HIGH"
+//         ? colors.error
+//         : risk == "MEDIUM"
+//             ? const Color(0xFFF59E0B)
+//             : colors.credit;
+//     final dailySpend = numValue(data["dailySpendVelocity"]);
+//     final safeDailySpend = numValue(data["safeDailySpendForRemainingDays"]);
+//     final remainingDays = numValue(data["remainingDays"]).round();
+//     final progress = safeDailySpend <= 0
+//         ? 1.0
+//         : (dailySpend / safeDailySpend).clamp(0.0, 1.0);
+
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         color: colors.surface,
+//         borderRadius: BorderRadius.circular(8),
+//         border: Border.all(color: colors.border),
+//         boxShadow: [
+//           BoxShadow(
+//             color: colors.onBackground.withValues(alpha: 0.04),
+//             blurRadius: 16,
+//             offset: const Offset(0, 8),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Container(
+//                 height: 42,
+//                 width: 42,
+//                 decoration: BoxDecoration(
+//                   color: colors.primary.withValues(alpha: 0.10),
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 child: Icon(
+//                   Icons.speed_outlined,
+//                   color: colors.primary,
+//                   size: 22,
+//                 ),
+//               ),
+//               const SizedBox(width: 12),
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       "Spend Velocity",
+//                       style: TextStyle(
+//                         color: colors.onSurface,
+//                         fontSize: 16,
+//                         fontWeight: FontWeight.w900,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 3),
+//                     Text(
+//                       remainingDays > 0
+//                           ? "$remainingDays days left to adjust this month's pace."
+//                           : "Month-end pace is locked for this period.",
+//                       style: TextStyle(
+//                         color: colors.secondaryText,
+//                         fontSize: 12,
+//                         fontWeight: FontWeight.w600,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               _RiskBadge(label: risk, color: riskColor),
+//             ],
+//           ),
+//           const SizedBox(height: 18),
+//           Row(
+//             children: [
+//               Expanded(
+//                 child: _VelocityMetric(
+//                   label: "Daily spend",
+//                   value: money(dailySpend),
+//                   icon: Icons.bolt_outlined,
+//                 ),
+//               ),
+//               const SizedBox(width: 10),
+//               Expanded(
+//                 child: _VelocityMetric(
+//                   label: "Safe/day",
+//                   value: money(safeDailySpend),
+//                   icon: Icons.shield_outlined,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           const SizedBox(height: 10),
+//           _VelocityMetric(
+//             label: "Projected month spend",
+//             value: money(data["projectedSpend"]),
+//             icon: Icons.trending_up,
+//             fullWidth: true,
+//           ),
+//           const SizedBox(height: 14),
+//           ClipRRect(
+//             borderRadius: BorderRadius.circular(8),
+//             child: LinearProgressIndicator(
+//               value: progress,
+//               minHeight: 8,
+//               backgroundColor: colors.surfaceVariant,
+//               color: riskColor,
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             _velocityAdvice(risk, dailySpend, safeDailySpend, money),
+//             style: TextStyle(
+//               color: colors.secondaryText,
+//               fontSize: 12,
+//               fontWeight: FontWeight.w600,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 class _SpendVelocityCard extends StatelessWidget {
   const _SpendVelocityCard({
     required this.data,
@@ -363,30 +506,50 @@ class _SpendVelocityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+
     final risk = (data["riskLevel"] ?? "LOW").toString().toUpperCase();
+
     final riskColor = risk == "HIGH"
         ? colors.error
         : risk == "MEDIUM"
             ? const Color(0xFFF59E0B)
             : colors.credit;
+
     final dailySpend = numValue(data["dailySpendVelocity"]);
     final safeDailySpend = numValue(data["safeDailySpendForRemainingDays"]);
+
+    final projectedSpend = numValue(data["projectedSpend"]);
+
+    final currentSpend = numValue(data["currentSpend"]);
+
+    final currentBalance = numValue(data["currentBalance"]);
+
+    final budget = numValue(data["monthlyBudget"]);
+
     final remainingDays = numValue(data["remainingDays"]).round();
-    final progress = safeDailySpend <= 0
-        ? 1.0
-        : (dailySpend / safeDailySpend).clamp(0.0, 1.0);
+
+    final percentageChange = numValue(data["percentageChangeVsPreviousMonth"]);
+
+    final burnRate = (data["burnRate"] ?? "NORMAL").toString();
+
+    final balanceDays = numValue(data["daysUntilBalanceExhausted"]).round();
+
+    final progress =
+        budget <= 0 ? 0.0 : (currentSpend / budget).clamp(0.0, 1.0);
+
+    final weekendPlan = Map<String, dynamic>.from(data["weekendPlan"] ?? {});
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
             color: colors.onBackground.withValues(alpha: 0.04),
-            blurRadius: 16,
+            blurRadius: 18,
             offset: const Offset(0, 8),
           ),
         ],
@@ -395,19 +558,17 @@ class _SpendVelocityCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 42,
-                width: 42,
+                height: 48,
+                width: 48,
                 decoration: BoxDecoration(
-                  color: colors.primary.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
+                  color: riskColor.withValues(alpha: 0.12),
                 ),
                 child: Icon(
-                  Icons.speed_outlined,
-                  color: colors.primary,
-                  size: 22,
+                  Icons.speed_rounded,
+                  color: riskColor,
                 ),
               ),
               const SizedBox(width: 12),
@@ -419,15 +580,15 @@ class _SpendVelocityCard extends StatelessWidget {
                       "Spend Velocity",
                       style: TextStyle(
                         color: colors.onSurface,
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       remainingDays > 0
-                          ? "$remainingDays days left to adjust this month's pace."
-                          : "Month-end pace is locked for this period.",
+                          ? "$remainingDays days left this month"
+                          : "Month completed",
                       style: TextStyle(
                         color: colors.secondaryText,
                         fontSize: 12,
@@ -437,7 +598,10 @@ class _SpendVelocityCard extends StatelessWidget {
                   ],
                 ),
               ),
-              _RiskBadge(label: risk, color: riskColor),
+              _RiskBadge(
+                label: risk,
+                color: riskColor,
+              ),
             ],
           ),
           const SizedBox(height: 18),
@@ -461,32 +625,219 @@ class _SpendVelocityCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          _VelocityMetric(
-            label: "Projected month spend",
-            value: money(data["projectedSpend"]),
-            icon: Icons.trending_up,
-            fullWidth: true,
+          Row(
+            children: [
+              Expanded(
+                child: _VelocityMetric(
+                  label: "Projected",
+                  value: money(projectedSpend),
+                  icon: Icons.trending_up,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _VelocityMetric(
+                  label: "Balance left",
+                  value: money(currentBalance),
+                  icon: Icons.account_balance_wallet_outlined,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 14),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 8,
-              backgroundColor: colors.surfaceVariant,
-              color: riskColor,
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: colors.surfaceVariant.withValues(alpha: .55),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Budget used",
+                        style: TextStyle(
+                          color: colors.secondaryText,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "${progress * 100 > 100 ? 100 : (progress * 100).toStringAsFixed(0)}%",
+                      style: TextStyle(
+                        color: colors.onSurface,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 9,
+                    backgroundColor:
+                        colors.surfaceVariant.withValues(alpha: .9),
+                    color: riskColor,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Spent ${money(currentSpend)}",
+                        style: TextStyle(
+                          color: colors.secondaryText,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "Budget ${money(budget)}",
+                      style: TextStyle(
+                        color: colors.secondaryText,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            _velocityAdvice(risk, dailySpend, safeDailySpend, money),
-            style: TextStyle(
-              color: colors.secondaryText,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: riskColor.withValues(alpha: 0.08),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.insights_rounded,
+                  color: riskColor,
+                  size: 20,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    _velocityAdvice(
+                      risk,
+                      dailySpend,
+                      safeDailySpend,
+                      money,
+                    ),
+                    style: TextStyle(
+                      color: colors.onSurface,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              _InsightChip(
+                label:
+                    "${percentageChange >= 0 ? '+' : ''}${percentageChange.toStringAsFixed(1)}% vs last month",
+                color: percentageChange >= 0 ? colors.error : colors.credit,
+              ),
+              _InsightChip(
+                label: "Burn rate: $burnRate",
+                color: burnRate == "FAST"
+                    ? colors.error
+                    : burnRate == "NORMAL"
+                        ? const Color(0xFFF59E0B)
+                        : colors.credit,
+              ),
+              _InsightChip(
+                label:
+                    "Balance survives ~$balanceDays day${balanceDays == 1 ? '' : 's'}",
+                color:
+                    balanceDays <= 3 ? colors.error : const Color(0xFFF59E0B),
+              ),
+            ],
+          ),
+          if (weekendPlan.isNotEmpty) ...[
+            const SizedBox(height: 18),
+            Text(
+              "Weekend spending plan",
+              style: TextStyle(
+                color: colors.onSurface,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: _VelocityMetric(
+                    label: "Weekday safe/day",
+                    value: money(
+                      weekendPlan["weekdaySafeDailySpend"],
+                    ),
+                    icon: Icons.calendar_view_week_outlined,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _VelocityMetric(
+                    label: "Weekend safe/day",
+                    value: money(
+                      weekendPlan["weekendSafeDailySpend"],
+                    ),
+                    icon: Icons.weekend_outlined,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
+      ),
+    );
+  }
+}
+
+class _InsightChip extends StatelessWidget {
+  const _InsightChip({
+    required this.label,
+    required this.color,
+  });
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 7,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: color.withValues(alpha: 0.10),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
@@ -1128,79 +1479,6 @@ class _TimePatternSection extends StatelessWidget {
     );
   }
 }
-
-// class _SimpleListSection extends StatelessWidget {
-//   const _SimpleListSection({
-//     required this.title,
-//     this.description,
-//     required this.items,
-//     required this.titleKey,
-//     required this.amountKey,
-//     required this.money,
-//     this.fallbackTitleKey,
-//   });
-
-//   final String title;
-//   final String? description;
-//   final List<dynamic> items;
-//   final String titleKey;
-//   final String? fallbackTitleKey;
-//   final String amountKey;
-//   final String Function(dynamic) money;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (items.isEmpty) {
-//       return _InfoCard(title: title, child: const _NoDataText());
-//     }
-
-//     return _InfoCard(
-//       title: title,
-//       description: description,
-//       child: Column(
-//         children: items.take(5).map((item) {
-//           final map = Map<String, dynamic>.from(item as Map);
-//           final name = map[titleKey]?.toString().isNotEmpty == true
-//               ? map[titleKey].toString()
-//               : map[fallbackTitleKey]?.toString() ??
-//                   map["narration"]?.toString() ??
-//                   "Unknown";
-//           return Padding(
-//             padding: const EdgeInsets.only(bottom: 12),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Row(
-//                   children: [
-//                     Expanded(
-//                       child: Text(
-//                         name,
-//                         maxLines: 1,
-//                         overflow: TextOverflow.ellipsis,
-//                         style: const TextStyle(fontWeight: FontWeight.w800),
-//                       ),
-//                     ),
-//                     Text(
-//                       money(map[amountKey]),
-//                       style: const TextStyle(fontWeight: FontWeight.w900),
-//                     ),
-//                   ],
-//                 ),
-//                 const SizedBox(height: 3),
-//                 Text(
-//                   _listSubtitle(map),
-//                   maxLines: 1,
-//                   overflow: TextOverflow.ellipsis,
-//                   style: const TextStyle(color: context.appColors.secondaryText, fontSize: 11),
-//                 ),
-//               ],
-//             ),
-//           );
-//         }).toList(),
-//       ),
-//     );
-//   }
-// }
 
 class _SimpleListSection extends StatelessWidget {
   const _SimpleListSection({

@@ -37,7 +37,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
-      TextEditingController(text: "testuserc@gmail.com");
+      TextEditingController(text: "testusernilesh@gmail.com");
   final AuthService authService = AuthService();
   RxString isLoggedIn = "".obs;
 
