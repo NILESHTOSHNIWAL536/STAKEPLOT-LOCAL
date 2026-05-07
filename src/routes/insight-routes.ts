@@ -18,7 +18,7 @@ router.get('/action-items', AuthMiddlewares.protect, InsightController.getAction
 router.get('/daily-trend', AuthMiddlewares.protect, InsightController.getDailyTrend);
 router.get('/largest-transactions', AuthMiddlewares.protect, InsightController.getLargestTransactions);
 router.get('/balance-trend', AuthMiddlewares.protect, InsightController.getBalanceTrend);
-router.get('/spend-velocity', AuthMiddlewares.protect, InsightController.getSpendVelocity);
+router.get('/spend-velocity', AuthMiddlewares.protect, InsightController.getSpendVelocityInsight);
 router.get('/category-health', AuthMiddlewares.protect, InsightController.getCategoryHealth);
 router.get('/income-sources', AuthMiddlewares.protect, InsightController.getIncomeSources);
 router.get('/upcoming-expense-prediction', AuthMiddlewares.protect, InsightController.getUpcomingExpensePrediction);

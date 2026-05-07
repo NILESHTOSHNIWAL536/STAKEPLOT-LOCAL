@@ -17,6 +17,11 @@ type InsightQuery = {
   days?: string | number;
   limit?: string | number;
   type?: string;
+  period?: string;
+  window?: string;
+  timeWindow?: string;
+  budget?: string | number;
+  monthlyBudget?: string | number;
 };
 
 const insightCatalog = [
@@ -161,6 +166,87 @@ const percentageChange = (current = 0, previous = 0) => {
   if (!previous && !current) return 0;
   if (!previous) return 100;
   return Number((((current - previous) / previous) * 100).toFixed(2));
+};
+
+const roundMoney = (value = 0) => Number((Number.isFinite(value) ? value : 0).toFixed(2));
+
+const startOfDay = (date: Date) => {
+  const value = new Date(date);
+  value.setHours(0, 0, 0, 0);
+  return value;
+};
+
+const endOfDay = (date: Date) => {
+  const value = new Date(date);
+  value.setHours(23, 59, 59, 999);
+  return value;
+};
+
+const addDays = (date: Date, days: number) => {
+  const value = new Date(date);
+  value.setDate(value.getDate() + days);
+  return value;
+};
+
+const countInclusiveDays = (startDate: Date, endDate: Date) => {
+  const start = startOfDay(startDate).getTime();
+  const end = startOfDay(endDate).getTime();
+  if (end < start) return 0;
+  return Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+};
+
+const isWeekend = (date: Date) => {
+  const day = date.getDay();
+  return day === 0 || day === 6;
+};
+
+const countWeekendDays = (startDate: Date, endDate: Date) => {
+  const days = countInclusiveDays(startDate, endDate);
+  let weekends = 0;
+
+  for (let index = 0; index < days; index += 1) {
+    if (isWeekend(addDays(startDate, index))) weekends += 1;
+  }
+
+  return weekends;
+};
+
+const getSpendVelocityWindow = (query: InsightQuery = {}) => {
+  const anchorDate = query.endDate ? new Date(query.endDate) : new Date();
+  if (Number.isNaN(anchorDate.getTime())) {
+    throw new Error('Invalid date range');
+  }
+
+  const window = String(query.period || query.window || query.timeWindow || (query.startDate ? 'custom' : 'monthly')).toLowerCase();
+  let startDate: Date;
+  let endDate: Date;
+
+  if (window === 'weekly') {
+    const day = anchorDate.getDay();
+    const daysFromMonday = day === 0 ? 6 : day - 1;
+    startDate = startOfDay(addDays(anchorDate, -daysFromMonday));
+    endDate = endOfDay(addDays(startDate, 6));
+  } else if (window === 'custom') {
+    startDate = query.startDate ? startOfDay(new Date(query.startDate)) : startOfDay(anchorDate);
+    endDate = query.endDate ? endOfDay(new Date(query.endDate)) : endOfDay(anchorDate);
+  } else {
+    startDate = startOfDay(new Date(anchorDate.getFullYear(), anchorDate.getMonth(), 1));
+    endDate = endOfDay(new Date(anchorDate.getFullYear(), anchorDate.getMonth() + 1, 0));
+  }
+
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || startDate > endDate) {
+    throw new Error('Invalid date range');
+  }
+
+  const todayEnd = endOfDay(anchorDate);
+  const currentEndDate = todayEnd < endDate ? todayEnd : endDate;
+
+  return {
+    window: window === 'weekly' || window === 'custom' ? window : 'monthly',
+    startDate,
+    endDate,
+    currentEndDate,
+  };
 };
 
 const baseMatch = (userId: string | Types.ObjectId, range?: DateRange, extra: Record<string, unknown> = {}) => {
@@ -627,55 +713,125 @@ export const getBalanceTrendInsights = async (userId: string | Types.ObjectId, q
 };
 
 export const getSpendVelocityInsights = async (userId: string | Types.ObjectId, query: InsightQuery = {}) => {
-  const today = query.endDate ? new Date(query.endDate) : new Date();
-  if (Number.isNaN(today.getTime())) {
-    throw new Error('Invalid date range');
-  }
+  const spendWindow = getSpendVelocityWindow(query);
+  const totalDaysInWindow = countInclusiveDays(spendWindow.startDate, spendWindow.endDate);
+  const daysPassed = Math.max(1, countInclusiveDays(spendWindow.startDate, spendWindow.currentEndDate));
+  const remainingDays = Math.max(0, countInclusiveDays(addDays(spendWindow.currentEndDate, 1), spendWindow.endDate));
 
-  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-  const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
-  const todayEnd = new Date(today);
-  todayEnd.setHours(23, 59, 59, 999);
+  const normalSpendStart = new Date(spendWindow.startDate.getFullYear(), spendWindow.startDate.getMonth() - 3, 1);
+  const normalSpendEnd = endOfDay(new Date(spendWindow.startDate.getFullYear(), spendWindow.startDate.getMonth(), 0));
+  const previousMonthStart = startOfDay(new Date(spendWindow.startDate.getFullYear(), spendWindow.startDate.getMonth() - 1, 1));
+  const previousMonthEnd = endOfDay(new Date(spendWindow.startDate.getFullYear(), spendWindow.startDate.getMonth(), 0));
+  const previousComparableEnd = endOfDay(
+    addDays(previousMonthStart, Math.min(daysPassed, countInclusiveDays(previousMonthStart, previousMonthEnd)) - 1)
+  );
 
-  const totalDaysInMonth = monthEnd.getDate();
-  const daysPassed = Math.min(today.getDate(), totalDaysInMonth);
-  const remainingDays = Math.max(0, totalDaysInMonth - daysPassed);
-
-  const normalSpendStart = new Date(today.getFullYear(), today.getMonth() - 3, 1);
-  const normalSpendEnd = new Date(today.getFullYear(), today.getMonth(), 0, 23, 59, 59, 999);
-
-  const [currentTotals, normalMonths] = await Promise.all([
-    getTotals(userId, { startDate: monthStart, endDate: todayEnd }),
+  const [currentTotals, normalMonths, previousComparableTotals, latestBalanceTransaction, historicalDayTypeSpend] = await Promise.all([
+    getTotals(userId, { startDate: spendWindow.startDate, endDate: spendWindow.currentEndDate }),
     Transaction.aggregate([
       { $match: baseMatch(userId, { startDate: normalSpendStart, endDate: normalSpendEnd }, { type: 'DEBIT' }) },
       {
         $group: {
-          _id: { year: { $year: '$transactionTimestamp' }, month: { $month: '$transactionTimestamp' } },
+          _id: {
+            year: { $year: { date: '$transactionTimestamp', timezone: TIMEZONE } },
+            month: { $month: { date: '$transactionTimestamp', timezone: TIMEZONE } },
+          },
           amount: { $sum: '$amount' },
+        },
+      },
+    ]),
+    getTotals(userId, { startDate: previousMonthStart, endDate: previousComparableEnd }),
+    Transaction.findOne(
+      baseMatch(userId, { startDate: spendWindow.startDate, endDate: spendWindow.currentEndDate }, { manualTransaction: { $ne: true } })
+    )
+      .select('transactionalBalance currentBalance transactionTimestamp')
+      .sort({ transactionTimestamp: -1 })
+      .lean(),
+    Transaction.aggregate([
+      { $match: baseMatch(userId, { startDate: normalSpendStart, endDate: normalSpendEnd }, { type: 'DEBIT' }) },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: '%Y-%m-%d', date: '$transactionTimestamp', timezone: TIMEZONE } },
+            dayOfWeek: { $dayOfWeek: { date: '$transactionTimestamp', timezone: TIMEZONE } },
+          },
+          amount: { $sum: '$amount' },
+        },
+      },
+      {
+        $group: {
+          _id: { $cond: [{ $in: ['$_id.dayOfWeek', [1, 7]] }, 'weekend', 'weekday'] },
+          totalAmount: { $sum: '$amount' },
+          days: { $sum: 1 },
         },
       },
     ]),
   ]);
 
-  const currentSpend = Number((currentTotals.totalDebit || 0).toFixed(2));
-  const dailySpendVelocity = Number((currentSpend / Math.max(1, daysPassed)).toFixed(2));
-  const projectedSpend = Number((dailySpendVelocity * totalDaysInMonth).toFixed(2));
-  const normalSpend = normalMonths.length
-    ? Number((normalMonths.reduce((sum, item) => sum + (item.amount || 0), 0) / normalMonths.length).toFixed(2))
+  const currentSpend = roundMoney(currentTotals.totalDebit || 0);
+  const dailySpendVelocity = roundMoney(currentSpend / daysPassed);
+  const projectedSpend = roundMoney(dailySpendVelocity * totalDaysInWindow);
+  const historicalNormalSpend = normalMonths.length
+    ? roundMoney(normalMonths.reduce((sum, item) => sum + (item.amount || 0), 0) / normalMonths.length)
     : projectedSpend;
+  const requestedBudget = Number(query.monthlyBudget || query.budget);
+  const normalSpend = Number.isFinite(requestedBudget) && requestedBudget > 0 ? roundMoney(requestedBudget) : historicalNormalSpend;
   const remainingNormalBudget = Math.max(0, normalSpend - currentSpend);
-  const safeDailySpendForRemainingDays = remainingDays ? Number((remainingNormalBudget / remainingDays).toFixed(2)) : 0;
+  const safeDailySpendForRemainingDays = remainingDays ? roundMoney(remainingNormalBudget / remainingDays) : 0;
   const projectedRatio = normalSpend > 0 ? projectedSpend / normalSpend : 1;
   const riskLevel = projectedRatio >= 1.2 ? 'HIGH' : projectedRatio >= 1.1 ? 'MEDIUM' : 'LOW';
+  const previousMonthSpend = roundMoney(previousComparableTotals.totalDebit || 0);
+  const previousMonthDailyVelocity = roundMoney(previousMonthSpend / daysPassed);
+  const percentageChangeVsPreviousMonth = percentageChange(dailySpendVelocity, previousMonthDailyVelocity);
+  const burnRate = percentageChangeVsPreviousMonth >= 20 ? 'FAST' : percentageChangeVsPreviousMonth <= -10 ? 'SLOW' : 'NORMAL';
+  const balanceRaw = Number((latestBalanceTransaction as any)?.currentBalance ?? latestBalanceTransaction?.transactionalBalance ?? 0);
+  const currentBalance = Number.isFinite(balanceRaw) ? roundMoney(balanceRaw) : 0;
+  const daysUntilBalanceExhausted = currentBalance > 0 && dailySpendVelocity > 0 ? Math.floor(currentBalance / dailySpendVelocity) : null;
+  const estimatedBalanceExhaustDate =
+    daysUntilBalanceExhausted !== null ? startOfDay(addDays(spendWindow.currentEndDate, daysUntilBalanceExhausted)).toISOString() : null;
+
+  const remainingStartDate = addDays(spendWindow.currentEndDate, 1);
+  const upcomingWeekendDays = remainingDays ? countWeekendDays(remainingStartDate, spendWindow.endDate) : 0;
+  const upcomingWeekdayDays = Math.max(0, remainingDays - upcomingWeekendDays);
+  const weekendStats = historicalDayTypeSpend.find((item) => item._id === 'weekend');
+  const weekdayStats = historicalDayTypeSpend.find((item) => item._id === 'weekday');
+  const weekendAverage = weekendStats?.days ? weekendStats.totalAmount / weekendStats.days : 0;
+  const weekdayAverage = weekdayStats?.days ? weekdayStats.totalAmount / weekdayStats.days : 0;
+  const observedWeekendMultiplier = weekdayAverage > 0 ? weekendAverage / weekdayAverage : 1.25;
+  const weekendMultiplier = Math.min(1.5, Math.max(1.1, observedWeekendMultiplier || 1.25));
+  const weightedRemainingDays = upcomingWeekdayDays + upcomingWeekendDays * weekendMultiplier;
+  const weekdaySafeDailySpend = weightedRemainingDays ? roundMoney(remainingNormalBudget / weightedRemainingDays) : 0;
+  const weekendSafeDailySpend = roundMoney(weekdaySafeDailySpend * weekendMultiplier);
 
   return {
+    window: spendWindow.window,
+    range: {
+      startDate: spendWindow.startDate,
+      endDate: spendWindow.endDate,
+      currentEndDate: spendWindow.currentEndDate,
+    },
     currentSpend,
+    monthlyBudget: normalSpend,
+    budgetSource: Number.isFinite(requestedBudget) && requestedBudget > 0 ? 'USER_PROVIDED' : 'HISTORICAL_AVERAGE',
     daysPassed,
+    totalDaysInMonth: totalDaysInWindow,
     dailySpendVelocity,
     projectedSpend,
     safeDailySpendForRemainingDays,
     remainingDays,
     riskLevel,
+    percentageChangeVsPreviousMonth,
+    burnRate,
+    currentBalance,
+    daysUntilBalanceExhausted,
+    estimatedBalanceExhaustDate,
+    weekendPlan: {
+      upcomingWeekendDays,
+      upcomingWeekdayDays,
+      weekendMultiplier: roundMoney(weekendMultiplier),
+      weekdaySafeDailySpend,
+      weekendSafeDailySpend,
+    },
   };
 };
 

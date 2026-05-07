@@ -86,7 +86,7 @@ export const getBalanceTrend = async (req: Request, res: Response) => {
   return handleInsightRequest(req, res, () => InsightService.getBalanceTrendInsights(userId, req.query));
 };
 
-export const getSpendVelocity = async (req: Request, res: Response) => {
+export const getSpendVelocityInsight = async (req: Request, res: Response) => {
   const userId = req.user!._id;
   try {
     const data = await InsightService.getSpendVelocityInsights(userId, req.query);
@@ -98,6 +98,8 @@ export const getSpendVelocity = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getSpendVelocity = getSpendVelocityInsight;
 
 export const getCategoryHealth = async (req: Request, res: Response) => {
   const userId = req.user!._id;
