@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_strides.dart';
 import 'package:share_plus/share_plus.dart';
@@ -52,6 +52,7 @@ class _StridesScreenState extends State<StridesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final total = (data["total"] ?? 0) as int;
     final nextMilestone = (data["nextMilestone"] ?? 10) as int;
     final progress =
@@ -62,11 +63,12 @@ class _StridesScreenState extends State<StridesScreen> {
         : 0;
 
     return Scaffold(
-      backgroundColor: AppColors.newbg,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: loading
-            ? const Center(
-                child: CircularProgressIndicator(color: AppColors.primaryColor))
+            ? Center(
+                child: CircularProgressIndicator(color: colors.primary),
+              )
             : SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(22, 18, 22, 28),
                 child: Column(
@@ -90,7 +92,12 @@ class _StridesScreenState extends State<StridesScreen> {
                     SizedBox(
                       height: 210,
                       width: double.infinity,
-                      child: CustomPaint(painter: _MountainPainter()),
+                      child: CustomPaint(
+                        painter: _MountainPainter(
+                          mountainColor: colors.primary,
+                          cutColor: colors.background,
+                        ),
+                      ),
                     ),
                     Center(
                       child: Row(
@@ -102,7 +109,7 @@ class _StridesScreenState extends State<StridesScreen> {
                               context,
                               fontSize: 43,
                               lWeight: FontWeight.w700,
-                              color: AppColors.primaryColor,
+                              color: colors.primary,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -120,7 +127,7 @@ class _StridesScreenState extends State<StridesScreen> {
                           context,
                           fontSize: 22,
                           lWeight: FontWeight.w700,
-                          color: const Color(0xFFAAA8B8),
+                          color: colors.secondaryText,
                         ),
                       ),
                     ),
@@ -140,7 +147,7 @@ class _StridesScreenState extends State<StridesScreen> {
                         context,
                         fontSize: 19,
                         lWeight: FontWeight.w700,
-                        color: const Color(0xFF202638),
+                        color: colors.onBackground,
                       ),
                     ),
                     const SizedBox(height: 18),
@@ -163,31 +170,52 @@ class _StridesScreenState extends State<StridesScreen> {
   }
 
   Widget _circleButton(IconData icon, VoidCallback onTap) {
+    final colors = context.appColors;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(22),
       child: Container(
         width: 46,
         height: 46,
-        decoration:
-            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: Icon(icon, color: AppColors.primaryColor, size: 22),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          shape: BoxShape.circle,
+          border: Border.all(color: colors.border),
+          boxShadow: context.isDarkMode
+              ? []
+              : const [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.08),
+                    blurRadius: 12,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+        ),
+        child: Icon(icon, color: colors.primary, size: 22),
       ),
     );
   }
 
   Widget _gainPill(String text) {
+    final colors = context.appColors;
+    final gainColor = colors.credit;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF18A64A)),
+        color: gainColor.withOpacity(context.isDarkMode ? 0.14 : 0.08),
+        border: Border.all(color: gainColor),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(text,
-          style: const TextStyle(
-              color: Color(0xFF18A64A),
-              fontSize: 12,
-              fontWeight: FontWeight.w700)),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: gainColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 
@@ -195,30 +223,43 @@ class _StridesScreenState extends State<StridesScreen> {
       {required IconData icon,
       required String title,
       required String subtitle}) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
       decoration: BoxDecoration(
+        color: colors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF8F8E96)),
+        border: Border.all(color: colors.border),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 34, color: AppColors.primaryColor),
+          Icon(icon, size: 34, color: colors.primary),
           const SizedBox(width: 22),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title,
-                  style: const TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.primaryColor)),
-              const SizedBox(height: 6),
-              Text(subtitle,
-                  style:
-                      const TextStyle(fontSize: 13, color: Color(0xFF9E9CAF))),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w800,
+                    color: colors.primary,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 13, color: colors.secondaryText),
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -227,12 +268,15 @@ class _StridesScreenState extends State<StridesScreen> {
 
   Widget _milestoneCard(
       int nextMilestone, int current, double progress, int remaining) {
+    final colors = context.appColors;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: colors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF8F8E96)),
+        border: Border.all(color: colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +287,7 @@ class _StridesScreenState extends State<StridesScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: colors.primary,
                     borderRadius: BorderRadius.circular(9)),
                 child: const Icon(Icons.track_changes, color: Colors.white),
               ),
@@ -252,24 +296,35 @@ class _StridesScreenState extends State<StridesScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Next Milestone",
-                        style: TextStyle(
-                            color: Color(0xFF9E9CAF),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700)),
-                    Text("$nextMilestone Strides",
-                        style: const TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800)),
+                    Text(
+                      "Next Milestone",
+                      style: TextStyle(
+                        color: colors.secondaryText,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      "$nextMilestone Strides",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: colors.primary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Text("$current/$nextMilestone",
-                  style: const TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800)),
+              Text(
+                "$current/$nextMilestone",
+                style: TextStyle(
+                  color: colors.primary,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 14),
@@ -278,13 +333,15 @@ class _StridesScreenState extends State<StridesScreen> {
             child: LinearProgressIndicator(
               value: progress.clamp(0, 1),
               minHeight: 8,
-              backgroundColor: const Color(0xFFF2F1EE),
-              valueColor: const AlwaysStoppedAnimation(AppColors.primaryColor),
+              backgroundColor: colors.surfaceVariant,
+              valueColor: AlwaysStoppedAnimation(colors.primary),
             ),
           ),
           const SizedBox(height: 12),
-          Text("$remaining more to unlock achievement badge",
-              style: const TextStyle(color: Color(0xFF9E9CAF), fontSize: 12)),
+          Text(
+            "$remaining more to unlock achievement badge",
+            style: TextStyle(color: colors.secondaryText, fontSize: 12),
+          ),
         ],
       ),
     );
@@ -292,9 +349,17 @@ class _StridesScreenState extends State<StridesScreen> {
 }
 
 class _MountainPainter extends CustomPainter {
+  final Color mountainColor;
+  final Color cutColor;
+
+  const _MountainPainter({
+    required this.mountainColor,
+    required this.cutColor,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = AppColors.primaryColor;
+    final paint = Paint()..color = mountainColor;
     final path = Path()
       ..moveTo(0, size.height * .92)
       ..lineTo(size.width * .14, size.height * .68)
@@ -308,7 +373,7 @@ class _MountainPainter extends CustomPainter {
       ..close();
     canvas.drawPath(path, paint);
 
-    final snow = Paint()..color = AppColors.newbg;
+    final snow = Paint()..color = cutColor;
     final snowPath = Path()
       ..moveTo(size.width * .47, size.height * .05)
       ..lineTo(size.width * .39, size.height * .38)
@@ -323,12 +388,15 @@ class _MountainPainter extends CustomPainter {
         Offset(size.width * x, size.height * .78),
         Offset(size.width * (x + .1), size.height * .55),
         Paint()
-          ..color = AppColors.newbg
+          ..color = cutColor
           ..strokeWidth = 3,
       );
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _MountainPainter oldDelegate) {
+    return oldDelegate.mountainColor != mountainColor ||
+        oldDelegate.cutColor != cutColor;
+  }
 }
