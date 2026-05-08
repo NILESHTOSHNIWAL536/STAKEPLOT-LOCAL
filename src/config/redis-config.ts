@@ -10,7 +10,6 @@ const redisClient: RedisClientType = createClient({
     port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
     reconnectStrategy: (retries: number) => Math.min(retries * 50, 2000),
   },
-  password: process.env.REDIS_PASSWORD,
 });
 
 // Handle Redis connection errors

@@ -8,6 +8,7 @@ import wealthscapeRoutes from './wealthscape-routes';
 import collectionRoutes from './collection-routes';
 import reserveRoutes from './reserve-routes';
 import referralRoutes from './referral-routes';
+import insightRoutes from './insight-routes';
 import webHook from '@/utils/webHook';
 import finvuQueueTestRoutes from './finvu-queue-test-routes'; // staging test only
 
@@ -25,5 +26,6 @@ router.use('/collections', collectionRoutes);
 router.use('/reserve', reserveRoutes);
 router.use('/referral', referralRoutes);
 router.use('/finvu-queue', finvuQueueTestRoutes); // staging test only
+router.use('/insights', insightRoutes);
 
 export default router;
