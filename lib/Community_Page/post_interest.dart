@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:get/get.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
@@ -22,6 +23,7 @@ void showTagListOfInterestModal({
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (context) {
+      final colors = context.appColors;
       return SafeArea(
         child: AnimatedContainer(
           duration: Duration(milliseconds: 100),
@@ -32,8 +34,8 @@ void showTagListOfInterestModal({
             vertical: AppSizes.p16,
           ),
           decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            color: colors.dialogBackground,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -44,7 +46,7 @@ void showTagListOfInterestModal({
                 height: 4,
                 margin: EdgeInsets.symmetric(vertical: AppSizes.p8),
                 decoration: BoxDecoration(
-                  color: AppColors.grey,
+                  color: colors.divider,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -57,7 +59,7 @@ void showTagListOfInterestModal({
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: screenSize.width < 360 ? 18 : 20,
-                    color: AppColors.finSpaceColor,
+                    color: colors.primary,
                   ),
                 ),
               ),
@@ -115,10 +117,10 @@ class InterestSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
+    final colors = context.appColors;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: colors.background,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -129,7 +131,8 @@ class InterestSelectionPage extends StatelessWidget {
 
           /// Interest list
           ///
-          Padding(
+          Expanded(
+            child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +146,7 @@ class InterestSelectionPage extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w700,
                       fontSize: 24,
-                      color: AppColors.accentColor,
+                      color: colors.onBackground,
                     ),
                   ),
                 ),
@@ -156,14 +159,13 @@ class InterestSelectionPage extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.primaryColor,
+                      color: colors.primary,
                     ),
                   ),
                 ),
                 SizedBox(height: AppSizes.h16),
 
-                Container(
-                  height: MediaQuery.sizeOf(context).height / 1.6,
+                Expanded(
                   child: GetListOfInterest(
                     height: 0,
                     limitTagbool: true,
@@ -207,6 +209,7 @@ class InterestSelectionPage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
             ),
           ),
         ],
@@ -255,17 +258,23 @@ class PollStepHeader extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
               ),
               const Spacer(),
-              Text(
-                title,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 20,
-                  lineHeight: 28 / fontSize,
-                  color: AppColors.backgroundColor,
+              Expanded(
+                flex: 5,
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 20,
+                    lineHeight: 28 / fontSize,
+                    color: AppColors.backgroundColor,
+                  ),
                 ),
               ),
-              const Spacer(flex: 2),
+              const Spacer(),
             ],
           ),
 
@@ -276,8 +285,7 @@ class PollStepHeader extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: Row(
               children: [
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width / 1.56,
+                Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
@@ -357,9 +365,11 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
       snackBarCalledfail(context, "At least 2 options are required");
       return;
     }
+    final controller = optionCtrls[index];
     setState(() {
       optionCtrls.removeAt(index);
     });
+    controller.dispose();
   }
 
   /// ✅ RETURN FINAL DATA
@@ -382,9 +392,20 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
   }
 
   @override
+  void dispose() {
+    questionCtrl.dispose();
+    for (final controller in optionCtrls) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
-      backgroundColor: AppColors.border,
+      backgroundColor: colors.background,
       body: Column(
         children: [
           PollStepHeader(
@@ -408,6 +429,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                       context,
                       lWeight: FontWeight.w600,
                       fontSize: 14,
+                      color: colors.onBackground,
                     ),
                   ),
                   SizedBox(height: AppSizes.h8),
@@ -428,11 +450,11 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                                 fontSize: 14,
                               ),
                             ),
-                            backgroundColor: AppColors.backgroundColor,
+                            backgroundColor: colors.surface,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
                               side: BorderSide(
-                                color: AppColors.backgroundColor,
+                                color: colors.border,
                                 width: 1,
                               ),
                             ),
@@ -453,6 +475,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                       context,
                       lWeight: FontWeight.w600,
                       fontSize: 14,
+                      color: colors.onBackground,
                     ),
                   ),
                   SizedBox(height: AppSizes.h8),
@@ -462,8 +485,14 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                     TextField(
                       controller: questionCtrl,
                       maxLines: 3,
-                      decoration: const InputDecoration(
+                      style: FontManager().getTextStyle(
+                        context,
+                        color: colors.onSurface,
+                        fontSize: 14,
+                      ),
+                      decoration: InputDecoration(
                         border: InputBorder.none,
+                        hintStyle: TextStyle(color: colors.hintText),
                       ),
                     ),
                   ),
@@ -480,6 +509,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                           context,
                           lWeight: FontWeight.w600,
                           fontSize: 14,
+                          color: colors.onBackground,
                         ),
                       ),
                     ],
@@ -497,48 +527,57 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          /// OPTION CONTAINER
-                          Container(
-                            width: MediaQuery.sizeOf(context).width / 1.3,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSizes.p12,
-                                vertical: AppSizes.p10),
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: AppColors.border,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 14,
-                                  backgroundColor: AppColors.border,
-                                  child: Text(
-                                    "${index + 1}",
-                                    style: FontManager()
-                                        .getTextStyle(context, fontSize: 12),
-                                  ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSizes.p12,
+                                  vertical: AppSizes.p10),
+                              decoration: BoxDecoration(
+                                color: colors.surface,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: colors.border,
                                 ),
-                                SizedBox(width: AppSizes.w12),
-                                Expanded(
-                                  child: TextField(
-                                    controller: ctrl,
-                                    decoration: const InputDecoration(
-                                      hintText: "",
-                                      border: InputBorder.none,
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.zero,
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 14,
+                                    backgroundColor: colors.iconBackground,
+                                    child: Text(
+                                      "${index + 1}",
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        fontSize: 12,
+                                        color: colors.primary,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: AppSizes.w12),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: ctrl,
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        color: colors.onSurface,
+                                        fontSize: 14,
+                                      ),
+                                      decoration: const InputDecoration(
+                                        hintText: "",
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
 
                           /// DELETE ICON (OUTSIDE CONTAINER)
-                          if (optionCtrls.length > 2)
+                          if (optionCtrls.length > 2) ...[
+                            const SizedBox(width: AppSizes.w10),
                             InkWell(
                               onTap: () => removeOption(index),
                               borderRadius: BorderRadius.circular(20),
@@ -548,6 +587,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                                 color: AppColors.redColor,
                               ),
                             ),
+                          ],
                         ],
                       ),
                     );
@@ -568,7 +608,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                                 context,
                                 lWeight: FontWeight.normal,
                                 fontSize: 14,
-                                color: AppColors.bg1,
+                                color: colors.onBackground,
                               ),
                             )
                           ],
@@ -598,8 +638,9 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSizes.p14),
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.appColors.border),
       ),
       child: child,
     );

@@ -54,14 +54,19 @@ class _StridesScreenState extends State<StridesScreen> {
   Widget build(BuildContext context) {
     final total = (data["total"] ?? 0) as int;
     final nextMilestone = (data["nextMilestone"] ?? 10) as int;
-    final progress = nextMilestone == 0 ? 0.0 : (total % nextMilestone) / nextMilestone;
+    final progress =
+        nextMilestone == 0 ? 0.0 : (total % nextMilestone) / nextMilestone;
     final remaining = math.max(0, nextMilestone - (total % nextMilestone));
+    final points = (data["recentEvents"] as List?)?.isNotEmpty == true
+        ? (data["recentEvents"][0]["points"] ?? 0)
+        : 0;
 
     return Scaffold(
       backgroundColor: AppColors.newbg,
       body: SafeArea(
         child: loading
-            ? const Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+            ? const Center(
+                child: CircularProgressIndicator(color: AppColors.primaryColor))
             : SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(22, 18, 22, 28),
                 child: Column(
@@ -70,11 +75,13 @@ class _StridesScreenState extends State<StridesScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _circleButton(Icons.arrow_back, () => Navigator.pop(context)),
+                        _circleButton(
+                            Icons.arrow_back, () => Navigator.pop(context)),
                         _circleButton(
                           Icons.share,
                           () => SharePlus.instance.share(
-                            ShareParams(text: "I have $total Strides on Stakeplot."),
+                            ShareParams(
+                                text: "I have $total Strides on Stakeplot."),
                           ),
                         ),
                       ],
@@ -99,7 +106,10 @@ class _StridesScreenState extends State<StridesScreen> {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          _gainPill("+${(data["recentEvents"] as List?)?.isNotEmpty == true ? (data["recentEvents"][0]["points"] ?? 0) : 0}"),
+                          _gainPill(
+                            "${points >= 0 ? '+' : '-'}${points.abs()}",
+                          ),
+                          // _gainPill("${(data["recentEvents"] as List?)?.isNotEmpty == true ? (data["recentEvents"][0]["points"] ?? 0) : 0}"),
                         ],
                       ),
                     ),
@@ -121,7 +131,8 @@ class _StridesScreenState extends State<StridesScreen> {
                       subtitle: "Among your friends",
                     ),
                     const SizedBox(height: 10),
-                    _milestoneCard(nextMilestone, total % nextMilestone, progress, remaining),
+                    _milestoneCard(nextMilestone, total % nextMilestone,
+                        progress, remaining),
                     const SizedBox(height: 24),
                     Text(
                       "Progress",
@@ -158,7 +169,8 @@ class _StridesScreenState extends State<StridesScreen> {
       child: Container(
         width: 46,
         height: 46,
-        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        decoration:
+            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
         child: Icon(icon, color: AppColors.primaryColor, size: 22),
       ),
     );
@@ -171,11 +183,18 @@ class _StridesScreenState extends State<StridesScreen> {
         border: Border.all(color: const Color(0xFF18A64A)),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(text, style: const TextStyle(color: Color(0xFF18A64A), fontSize: 12, fontWeight: FontWeight.w700)),
+      child: Text(text,
+          style: const TextStyle(
+              color: Color(0xFF18A64A),
+              fontSize: 12,
+              fontWeight: FontWeight.w700)),
     );
   }
 
-  Widget _infoCard({required IconData icon, required String title, required String subtitle}) {
+  Widget _infoCard(
+      {required IconData icon,
+      required String title,
+      required String subtitle}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
@@ -190,9 +209,15 @@ class _StridesScreenState extends State<StridesScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: AppColors.primaryColor)),
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primaryColor)),
               const SizedBox(height: 6),
-              Text(subtitle, style: const TextStyle(fontSize: 13, color: Color(0xFF9E9CAF))),
+              Text(subtitle,
+                  style:
+                      const TextStyle(fontSize: 13, color: Color(0xFF9E9CAF))),
             ],
           )
         ],
@@ -200,7 +225,8 @@ class _StridesScreenState extends State<StridesScreen> {
     );
   }
 
-  Widget _milestoneCard(int nextMilestone, int current, double progress, int remaining) {
+  Widget _milestoneCard(
+      int nextMilestone, int current, double progress, int remaining) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -216,7 +242,9 @@ class _StridesScreenState extends State<StridesScreen> {
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.circular(9)),
+                decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(9)),
                 child: const Icon(Icons.track_changes, color: Colors.white),
               ),
               const SizedBox(width: 12),
@@ -224,12 +252,24 @@ class _StridesScreenState extends State<StridesScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Next Milestone", style: TextStyle(color: Color(0xFF9E9CAF), fontSize: 12, fontWeight: FontWeight.w700)),
-                    Text("$nextMilestone Strides", style: const TextStyle(color: AppColors.primaryColor, fontSize: 18, fontWeight: FontWeight.w800)),
+                    const Text("Next Milestone",
+                        style: TextStyle(
+                            color: Color(0xFF9E9CAF),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700)),
+                    Text("$nextMilestone Strides",
+                        style: const TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800)),
                   ],
                 ),
               ),
-              Text("$current/$nextMilestone", style: const TextStyle(color: AppColors.primaryColor, fontSize: 24, fontWeight: FontWeight.w800)),
+              Text("$current/$nextMilestone",
+                  style: const TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 14),
@@ -243,7 +283,8 @@ class _StridesScreenState extends State<StridesScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Text("$remaining more to unlock achievement badge", style: const TextStyle(color: Color(0xFF9E9CAF), fontSize: 12)),
+          Text("$remaining more to unlock achievement badge",
+              style: const TextStyle(color: Color(0xFF9E9CAF), fontSize: 12)),
         ],
       ),
     );

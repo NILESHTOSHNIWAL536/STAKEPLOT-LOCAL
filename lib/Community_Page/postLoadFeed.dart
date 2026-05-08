@@ -121,11 +121,13 @@ class LazyLoadingList extends StatelessWidget {
             /// ✅ NORMAL POST
             final post = posts[index];
 
-            return PostCard(
-              key: ValueKey(post.id), // ⭐ prevents wrong rebuilds
-              data: post,
-              index: index,
-            );
+            return Text('Post ${post.id}'); // Placeholder for PostCard
+
+            // return PostCard(
+            //   key: ValueKey(post.id), // ⭐ prevents wrong rebuilds
+            //   data: post,
+            //   index: index,
+            // );
           },
         );
       }),

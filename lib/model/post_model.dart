@@ -36,7 +36,6 @@ enum PostType {
   }
 }
 
-
 class PollOptionModel {
   final String option;
   final List<String> votes;
@@ -143,6 +142,10 @@ class PostModel {
   final String path;
   final int reportCount;
   final int hideCount;
+  final bool isHidden;
+  final String visibilityStatus;
+  final String visibilityLabel;
+  final String hiddenReason;
   final List<String> tag;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -172,6 +175,10 @@ class PostModel {
     required this.path,
     required this.reportCount,
     required this.hideCount,
+    this.isHidden = false,
+    this.visibilityStatus = '',
+    this.visibilityLabel = '',
+    this.hiddenReason = '',
     required this.tag,
     required this.createdAt,
     required this.updatedAt,
@@ -197,7 +204,9 @@ class PostModel {
       isItenary: json['isItenary'] ?? false,
       isPoll: json['isPoll'] ?? false,
       isSquareImage: json['isSquareImage'] ?? false,
-      pollData: json['pollData'] != null ? PollModel.fromJson(json['pollData']) : null,
+      pollData: json['pollData'] != null
+          ? PollModel.fromJson(json['pollData'])
+          : null,
       chartType: json['chartType'] ?? 'none',
       comments: json['comments'] ?? 0,
       upvotes: json['upvotes'] ?? 0,
@@ -205,10 +214,14 @@ class PostModel {
       path: json['path'] ?? '',
       reportCount: json['reportCount'] ?? 0,
       hideCount: json['hideCount'] ?? 0,
+      isHidden: json['isHidden'] ?? json['visibilityStatus'] == 'hidden',
+      visibilityStatus: json['visibilityStatus'] ?? '',
+      visibilityLabel: json['visibilityLabel'] ?? '',
+      hiddenReason: json['hiddenReason'] ?? '',
       tag: List<String>.from(json['tags'] ?? []),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-       location: json['location'] ?? '',
+      location: json['location'] ?? '',
       budget: (json['budget'] as List<dynamic>?)
               ?.map((e) => BudgetModel.fromJson(e))
               .toList() ??
@@ -239,6 +252,10 @@ class PostModel {
       'path': path,
       'reportCount': reportCount,
       'hideCount': hideCount,
+      'isHidden': isHidden,
+      'visibilityStatus': visibilityStatus,
+      'visibilityLabel': visibilityLabel,
+      'hiddenReason': hiddenReason,
       'tag': tag,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -250,10 +267,9 @@ class PostModel {
     };
   }
 
-
-static List<PostModel> listFromJson(List<dynamic> jsonList) {
-  return jsonList.map((e) => PostModel.fromJson(e)).toList();
-}
+  static List<PostModel> listFromJson(List<dynamic> jsonList) {
+    return jsonList.map((e) => PostModel.fromJson(e)).toList();
+  }
 
 // static List<PostModel> filterPollPosts(List<PostModel> allPosts) {
 //   return allPosts.where((post) => post.postType == PostType.poll).toList();
@@ -269,7 +285,6 @@ String parseId(dynamic idField) {
   return '';
 }
 
-
 class BudgetModel {
   final String id;
   final String category;
@@ -283,7 +298,7 @@ class BudgetModel {
 
   factory BudgetModel.fromJson(Map<String, dynamic> json) {
     return BudgetModel(
-      id: parseId(json['_id']), 
+      id: parseId(json['_id']),
       category: json['category'] ?? '',
       amount: json['amount'] ?? 0,
     );
