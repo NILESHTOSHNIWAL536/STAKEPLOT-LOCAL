@@ -24,6 +24,7 @@ import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
 import BankTransaction from '@/models/transactions-automation/transaction';
 import UserDailyMetrics from '@/models/transactions-automation/user-daily-metrics';
 import { updateDailyMetrics } from '@/services/daily-metrics.service';
+import StridesService from '@/services/strides-service';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
@@ -77,6 +78,7 @@ export async function createBankDetails(data: any, consentHandleId: string, user
 
       const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob);
       const accountId = account._id;
+      await StridesService.add(userId, 2, 'BANK_ACCOUNT_ADDED', accountId.toString());
 
       if (fiObject.Profile) {
         await new ProfileRepository().createProfile(
@@ -832,8 +834,11 @@ export async function updateTransaction(updateData: any, userId: UserIdLike, tra
     }
 
     const ObjectId = new mongoose.Types.ObjectId(transactionId);
-    const existing = await Transaction.findOne({ _id: ObjectId, userId }).select('transactionTimestamp manualTransaction bankId accountId').lean();
+    const existing = await Transaction.findOne({ _id: ObjectId, userId }).select('transactionTimestamp manualTransaction bankId accountId category').lean();
     const response = await new AutoTransactionRepository().updateTransaction(userId, ObjectId, updateData);
+    if (response?.data) {
+      (response.data as any).wasTaggedFromUntagged = existing?.category === 'Untagged' && response.data.category && response.data.category !== 'Untagged';
+    }
     if (response?.data) {
       const metricsTxs: any[] = [response.data];
       const oldTimestamp = existing?.transactionTimestamp ? new Date(existing.transactionTimestamp) : null;

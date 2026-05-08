@@ -4,12 +4,18 @@ import { SuccessResponse } from '../utils/common';
 import CollectionService from '../services/collection-service';
 import CollectionInvitationService from '../services/collection-invitation-service';
 import { publishSocketEvent } from '@/utils/webHook';
+import StridesService from '@/services/strides-service';
 
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
     const { friends = [], ...collectionData } = req.body;
     const collection = await CollectionService.createCollection(userId, collectionData, friends);
+    if (collectionData.type === 'PERSONAL') {
+      await StridesService.addOnce(userId, 2, 'PERSONAL_COLLECTION_CREATED', `collection-personal:${userId}`, collection?._id?.toString());
+    } else if (collectionData.type === 'SHARED') {
+      await StridesService.addOnce(userId, 3, 'SHARED_COLLECTION_CREATED', `collection-shared:${userId}`, collection?._id?.toString());
+    }
     SuccessResponse.data = collection;
     SuccessResponse.message = 'Collection created successfully';
     res.status(StatusCodes.CREATED).json(SuccessResponse);

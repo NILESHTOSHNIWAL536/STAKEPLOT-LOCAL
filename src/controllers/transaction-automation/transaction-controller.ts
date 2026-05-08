@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as Common from '@/utils/common';
 import { toISTArray } from '@/utils/time/formatResponse';
 import * as BankService from '../../services/bank-service';
+import StridesService from '@/services/strides-service';
 import monthNames from '@/config/monthNames';
 import { Transaction } from '@/models';
 import { Types as MongooseTypes, ObjectId as MongooseObjectId, Types } from 'mongoose';
@@ -11,6 +12,7 @@ import { AccountRepository, FipRepository } from '@/repositories';
 import logger from '@/utils/common/logger';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { detectAutoPays } from '@/services/auto-service';
 
 /**
  * NOTE:
@@ -62,11 +64,25 @@ export const updateBankDetails = async (details: any[], consentHandleId: string,
    Controllers
    --------------------------- */
 
+export const getAutoPays = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const userId = req.user!._id;
+    // AccountRepository typing left as any
+    const response =await detectAutoPays(userId);
+    console.log('response from getAutoPays controller:', response);
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);  } catch (error: any) {
+    ErrorResponse.error = error;
+    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
 export const getMap = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
     // AccountRepository typing left as any
-    const response = await new (AccountRepository as any)().getMap(userId);
+     const response = await BankService.getUserDetails(userId);
     return res.status(StatusCodes.OK).json(response);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -335,6 +351,9 @@ export const updateTransaction = async (req: Request, res: Response): Promise<Re
     const { transactionId } = req.params;
     const updateData = req.body;
     const response = await BankService.updateTransaction(updateData, userId, transactionId);
+    if (response?.data?.wasTaggedFromUntagged) {
+      await StridesService.recordTaggedTransaction(userId, transactionId);
+    }
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -723,6 +742,7 @@ export const deleteBankAccount = async (req: Request, res: Response): Promise<Re
 
     // delete bank account
     await BankService.deleteBankAccount(userId, bankId, accountId);
+    await StridesService.add(userId, -2, 'BANK_ACCOUNT_REMOVED', accountId);
 
     SuccessResponse.data = 'Bank data deleted successfully';
     return res.status(StatusCodes.OK).json(SuccessResponse);

@@ -6,6 +6,7 @@ import { ReserveService } from '../services/reserve-service';
 import reserveEngine from '../services/reserve-engine';
 import { scheduleReserveReminder, removeReserveReminder } from '../services/bull-queue-service/reserve-reminder-queue';
 import { getStartOfDay, getEndOfDay } from '../utils/time';
+import StridesService from '../services/strides-service';
 const categoryMapping: Record<string, string> = {
   Transport: 'travel',
   'Dining out': 'food',
@@ -127,6 +128,9 @@ export class ReserveController {
       if (reserve) {
         await reserveEngine.evaluateReserve(reserve as any);
         await reserve.save();
+        if ((reserve as any).achieved) {
+          await StridesService.addOnce(req.user!._id, 5, 'RESERVE_FOLLOWED', `reserve-followed:${req.params.rid}`, req.params.rid);
+        }
       }
 
       return res.status(StatusCodes.OK).json({
