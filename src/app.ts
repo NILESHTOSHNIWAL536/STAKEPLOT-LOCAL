@@ -27,6 +27,7 @@
 
 // module.exports = app;
 import express, { Application, Request, Response } from 'express';
+import * as Sentry from '@sentry/node';
 import { securityMiddleware } from './middlewares/security/security';
 import { corsMiddleware } from './middlewares/security/cors';
 import { notFoundHandler, globalErrorHandler } from './middlewares/security/errorHandlers';
@@ -49,7 +50,8 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ status: 'healthy', message: 'Server is running' });
 });
 
-// ✅ 404 & Error handlers
+// ✅ 404 & Error handlers — Sentry must come before custom handlers
+Sentry.setupExpressErrorHandler(app);
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
 

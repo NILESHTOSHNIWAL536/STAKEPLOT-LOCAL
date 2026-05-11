@@ -38,14 +38,13 @@ export async function generateAccessToken(userId: string, authCode: string, bank
     existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
   }
 
-  if (!existing){
+  if (!existing) {
     //  throw new Error('Reconnect required');
-      throw new AppError('Reconnect required', StatusCodes.BAD_REQUEST);
+    throw new AppError('Reconnect required', StatusCodes.BAD_REQUEST);
   }
 
   // 🔥 USER BANK MAP
   let map = await UserBankMap.findOne({ userId });
-  console.log("Existing map:", map);
   if (!map) {
     await UserBankMap.create({
       userId,
@@ -55,7 +54,6 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   }
 
   const group = map.mappings.find((m) => m.email === email);
-  console.log("Existing group for email:", group);
   if (group) {
     if (group.creditCardIds.includes(bankId)) {
       throw new AppError('Bank already connected', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -64,7 +62,7 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   } else {
     map.mappings.push({ email, creditCardIds: [bankId] });
   }
-  console.log("Updated mapping:", map);
+  console.log('Updated mapping:', map);
   await map.save();
 }
 
@@ -125,8 +123,6 @@ export async function scrapeEmailsByBankId(userId: string, bankIds: string[], em
 
   // 🔥 2. Decrypt refresh token
   const decryptedRefreshToken = await decryptToken(googleAuth.refreshToken.encryptedData, googleAuth.refreshToken.iv, googleAuth.refreshToken.authTag);
-  console.log("decryptedRefreshToken")
-  console.log(decryptedRefreshToken)
   const creditCard = (creditCards as any[]).filter((card) => bankIds.includes(card.bankId));
 
   if (creditCard.length === 0) {

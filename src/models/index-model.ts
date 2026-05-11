@@ -1,5 +1,5 @@
 import { Connection, Model } from 'mongoose';
-import {  googleAuthSchema, IGoogleAuth } from './google-auth';
+import { googleAuthSchema, IGoogleAuth } from './google-auth';
 import { scrapeResultSchema, IScrapeResult } from './scrape-result';
 import { IUserBankMap, userBankMapSchema } from './user-bankmap';
 
@@ -17,20 +17,12 @@ export async function getModels(): Promise<IModels> {
     throw new Error('Database not connected yet!');
   }
 
-  // 🔥 Prevent OverwriteModelError
-  const GoogleAuthModel =
-    emailDB.models.googleAuth ||
-    emailDB.model<IGoogleAuth>('googleAuth', googleAuthSchema);
+  // Prevent OverwriteModelError
+  const GoogleAuthModel = emailDB.models.googleAuth || emailDB.model<IGoogleAuth>('googleAuth', googleAuthSchema);
 
-  const ScrapedEmailModel =
-    emailDB.models.scrapeResult ||
-    emailDB.model<IScrapeResult>('scrapeResult', scrapeResultSchema);
-  
-  const UserBankMap =
-    emailDB.models.userBankMap ||
-    emailDB.model<IUserBankMap>('userBankMap', userBankMapSchema);
+  const ScrapedEmailModel = emailDB.models.scrapeResult || emailDB.model<IScrapeResult>('scrapeResult', scrapeResultSchema);
 
-
+  const UserBankMap = emailDB.models.userBankMap || emailDB.model<IUserBankMap>('userBankMap', userBankMapSchema);
 
   return {
     GoogleAuth: GoogleAuthModel,
