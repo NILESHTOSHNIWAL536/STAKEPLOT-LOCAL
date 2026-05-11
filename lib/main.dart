@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:app_links/app_links.dart';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
 import 'Constants/core/app_component_sizes.dart';
 import 'app_init/AppTheme.dart';
 import 'components/shared_utils.dart';
@@ -37,16 +35,15 @@ void main() async {
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
   if (!kIsWeb) {
-  await Firebase.initializeApp();
-  FlutterError.onError =
-      FirebaseCrashlytics.instance.recordFlutterFatalError;
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-     await AppsflyerService.init();
-   }
-  await main_apis_call_init();  
+    await Firebase.initializeApp();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+    await AppsflyerService.init();
+  }
+  await main_apis_call_init();
 }
 
 class MyApp extends StatefulWidget {

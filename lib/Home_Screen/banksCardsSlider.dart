@@ -27,12 +27,12 @@ RxInt firstDigit = 0.obs;
 RxInt secondDigit = 0.obs;
 RxBool digitLoad = false.obs;
 
-class NumberPickerScreen extends StatefulWidget {
+class Bankscardsslider extends StatefulWidget {
   @override
-  State<NumberPickerScreen> createState() => _NumberPickerScreenState();
+  State<Bankscardsslider> createState() => _BankscardssliderState();
 }
 
-class _NumberPickerScreenState extends State<NumberPickerScreen> {
+class _BankscardssliderState extends State<Bankscardsslider> {
   final FixedExtentScrollController firstDigitController =
       FixedExtentScrollController(initialItem: 0);
   final FixedExtentScrollController secondDigitController =
@@ -370,10 +370,20 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   /// QUICK CHECK
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => BalanceScreen()),
-                      );
+                      final String pin = userController.cupertinoPin.value;
+                      final bool hide = hideBackAccountPassword.value;
+                      final bool showBalance =
+                          (pin == "0" || pin == "00" || hide);
+
+                      if (showBalance) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => BalanceScreen()),
+                        );
+                      } else {
+                        snackBarCalledfail(
+                            context, "Please enter your PIN to view balance");
+                      }
                     },
                     child: Row(
                       children: [

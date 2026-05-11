@@ -182,7 +182,7 @@ class IndexScreen extends StatelessWidget {
 //   );
 // }
 Widget buildTopSection(BuildContext context) {
-  final height = MediaQuery.of(context).size.height;
+  
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
     // width: MediaQuery.of(context).size.width,
@@ -190,7 +190,7 @@ Widget buildTopSection(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const TopRightIconsWidget(),
-        NumberPickerScreen(),
+        Bankscardsslider(),
       ],
     ),
   );

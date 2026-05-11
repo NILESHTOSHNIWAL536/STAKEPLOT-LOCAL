@@ -187,6 +187,7 @@ class InvitationsList extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
+      useRootNavigator: false,
       builder: (_context) {
         bool isLoading = false;
 
@@ -296,6 +297,7 @@ class InvitationsList extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
+      useRootNavigator: false,
       builder: (_context) {
         return Dialog(
           shape: RoundedRectangleBorder(

@@ -106,7 +106,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
         hasGetNewNotifications.value = !hasGetNewNotifications.value;
         hasGetNewNotifications.value = !hasGetNewNotifications.value;
         myNotificationBool.value = !myNotificationBool.value;
-        getNotifications(context, );
+        getNotifications(context,);
       } else if (type == "reactOnPost") {
         onPostReactLikeAndCommentWebSocket(data['data'], context);
       } else if (type == "NewPost") {
