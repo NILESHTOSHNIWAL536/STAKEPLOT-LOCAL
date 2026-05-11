@@ -22,13 +22,8 @@ cron.schedule('0 40 17 * * *', async () => {
 
       const emailBankMap: { email: string; bankIds: string[] }[] = [];
 
-      console.log('👉 Processing user:', userId);
-
       for (const mapping of user.mappings || []) {
         if (!mapping.email) continue;
-
-        console.log(`   📧 ${mapping.email}`, mapping.creditCardIds);
-
         emailBankMap.push({
           email: mapping.email,
           bankIds: mapping.creditCardIds || [],
@@ -37,13 +32,8 @@ cron.schedule('0 40 17 * * *', async () => {
 
       if (emailBankMap.length === 0) continue;
 
-      console.log(`🚀 Adding job for user ${userId}`);
-      console.log('Email-Bank Map:', emailBankMap);
-
       for (const item of emailBankMap) {
             const { email, bankIds } = item;
-
-            console.log(`📩 Scraping ${email}`, bankIds);
 
             await EmailScrapingService.scrapeEmailsByBankId(
               userId.toString(),
@@ -66,11 +56,7 @@ cron.schedule('0 40 17 * * *', async () => {
 
     }
 
-    console.log('✅ Cron executed\n');
-    console.log('-----------------------------------');
-
   } catch (error) {
-    console.error('❌ Cron job error:', error);
   }
 });
 

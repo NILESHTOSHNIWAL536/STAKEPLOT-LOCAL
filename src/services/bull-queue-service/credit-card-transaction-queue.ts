@@ -85,12 +85,8 @@ CreditCardQueue.process(async (job) => {
   try {
     for (const item of emailBankMap) {
       const { email, bankIds } = item;
-      console.log(`📩 Scraping ${email}`, bankIds, userId);
     }
-
-    console.log(`✅ Done for user ${userId}`);
   } catch (error) {
-    console.error(`❌ Error processing user ${userId}:`, error);
     throw error;
   }
 });
