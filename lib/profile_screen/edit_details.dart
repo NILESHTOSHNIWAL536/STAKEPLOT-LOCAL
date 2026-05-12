@@ -110,7 +110,7 @@ class _EditDetailsState extends State<EditDetails> {
               );
             },
           ),
-          !CreditCardScreenStrings().showRevokeScreen.value
+          CreditCardScreenStrings().showRevokeScreen.value
               ? SizedBox.shrink()
               : IconButton(
                   icon: Icon(Icons.remember_me_outlined,
