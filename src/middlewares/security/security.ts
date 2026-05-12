@@ -101,6 +101,7 @@ export function securityMiddleware(app: Application): void {
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'same-origin' },
+      strictTransportSecurity: false,
     })
   );
   app.use(helmet.noSniff());
@@ -169,6 +170,9 @@ export function securityMiddleware(app: Application): void {
   // ✅ Baseline header
   app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     next();
   });
 }

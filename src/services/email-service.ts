@@ -16,8 +16,25 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET || '';
 const REDIRECT_URI = '';
 
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+const allowedBankIds = new Set((creditCards as any[]).map((card) => card.bankId));
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function assertAllowedBankId(bankId: string) {
+  if (!allowedBankIds.has(bankId)) {
+    throw new AppError('Invalid bank ID', StatusCodes.BAD_REQUEST);
+  }
+}
+
+function normalizeEmail(email: string): string {
+  const normalized = String(email || '').trim().toLowerCase();
+  if (!emailPattern.test(normalized)) {
+    throw new AppError('Invalid email', StatusCodes.BAD_REQUEST);
+  }
+  return normalized;
+}
 
 export async function generateAccessToken(userId: string, authCode: string, bankId: string) {
+  assertAllowedBankId(bankId);
   const { GoogleAuth, UserBankMap } = await getModels();
 
   const { tokens } = await oauth2Client.getToken(authCode);
@@ -34,7 +51,6 @@ export async function generateAccessToken(userId: string, authCode: string, bank
 
   if (tokens.refresh_token) {
     const encrypted = await encryptToken(tokens.refresh_token);
-
     existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
   }
 
@@ -62,7 +78,6 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   } else {
     map.mappings.push({ email, creditCardIds: [bankId] });
   }
-  console.log('Updated mapping:', map);
   await map.save();
 }
 
@@ -109,16 +124,21 @@ export async function generateAccessToken(userId: string, authCode: string, bank
 //   );
 
 export async function scrapeEmailsByBankId(userId: string, bankIds: string[], email: string): Promise<any> {
+  const normalizedEmail = normalizeEmail(email);
+  if (!Array.isArray(bankIds) || bankIds.some((bankId) => !allowedBankIds.has(bankId))) {
+    throw new AppError('Invalid bank ID', StatusCodes.BAD_REQUEST);
+  }
+
   // 🔥 1. Get token by EMAIL (not userId)
   const emailDB = (global as any).emailDB;
 
   // ✅ Get model safely (no overwrite error)
   const GoogleAuth = emailDB.models.googleAuth || emailDB.model('googleAuth', googleAuthSchema);
 
-  const googleAuth = await GoogleAuth.findOne({ email });
+  const googleAuth = await GoogleAuth.findOne({ email: normalizedEmail });
 
   if (!googleAuth) {
-    throw new Error(`No refresh token found for ${email}`);
+    throw new AppError('Unauthorized', StatusCodes.UNAUTHORIZED);
   }
 
   // 🔥 2. Decrypt refresh token
@@ -149,19 +169,31 @@ export async function getUnlinkedCreditCards(userId: string): Promise<any> {
   return cards;
 }
 
-export async function removeAccessToken(userId: string): Promise<{ message: string }> {
-  const cacheKey = `google_access_token_${userId}`;
-  await RedisClient.del(cacheKey);
+export async function removeAccessToken(userId: string, email?: string): Promise<{ message: string }> {
+  const emailToRemove = email || await EmailRepository.getUserEmailById(userId);
+  const normalizedEmail = normalizeEmail(emailToRemove);
+  
+  try {
+    const cacheKey = `google_access_token_${normalizedEmail}`;
+    await RedisClient.del(cacheKey);
+  } catch (error) {}
 
-  const token = await EmailRepository.getDecryptedRefreshToken(userId);
+  try {
+    const token = await EmailRepository.getDecryptedRefreshToken(normalizedEmail);
 
-  await axios.post(ServerConfig.REVOKE_URI, new URLSearchParams({ token }), {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
+    await axios.post(ServerConfig.REVOKE_URI, new URLSearchParams({ token }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  } catch (error: any) {
+    if (error?.statusCode !== StatusCodes.NOT_FOUND) {
+      throw error;
+    }
+  }
 
-  await EmailRepository.deleteGoogleTokenByUserId(userId);
+  await EmailRepository.deleteGoogleTokenByEmail(normalizedEmail);
+  await EmailRepository.removeUserBankMapEmailMapping(userId, normalizedEmail);
 
   return { message: 'Access token removed successfully' };
 }

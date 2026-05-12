@@ -27,6 +27,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import * as Sentry from '@sentry/node';
+import crypto from 'crypto';
 
 export function notFoundHandler(req: Request, res: Response): Response {
   return res.status(404).json({
@@ -43,16 +44,18 @@ export function globalErrorHandler(
 ): Response {
   res.setHeader('X-Content-Type-Options', 'nosniff');
 
-  const statusCode = err.statusCode || 500;
+  const statusCode = err.statusCode || err.status || err.response?.status || 500;
+  const errorReference = crypto.randomUUID();
 
   // Only report unexpected server errors to Sentry — skip known client errors
   if (statusCode >= 500) {
     Sentry.captureException(err, {
-      extra: { path: req.path, method: req.method },
+      extra: { path: req.path, method: req.method, errorReference },
     });
   }
 
   console.error('[ERROR]', {
+    errorReference,
     message: err.message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
     path: req.path,
@@ -61,7 +64,8 @@ export function globalErrorHandler(
   });
 
   return res.status(statusCode).json({
-    error: statusCode === 500 ? 'Internal Server Error' : err.message,
+    error: statusCode >= 500 ? 'Internal Server Error' : err.message,
+    errorReference,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 }

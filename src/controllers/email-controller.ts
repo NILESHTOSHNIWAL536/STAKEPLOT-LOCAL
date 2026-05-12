@@ -1,91 +1,8 @@
-// const { StatusCodes } = require('http-status-codes');
-// const { SuccessResponse, ErrorResponse } = require('../utils/api-response');
-// const EmailScrapingService = require('../services/email-service');
-
-// // Google authentication
-// async function generateAccessToken(req, res) {
-//   try {
-//     const userId = req.user._id;
-//     const { idToken } = req.body;
-//     const result = await EmailScrapingService.generateAccessToken(userId, idToken);
-//     SuccessResponse.data = result;
-//     return res.status(StatusCodes.OK).json(SuccessResponse);
-//   } catch (error) {
-//     ErrorResponse.error = error.response.data.error || error;
-//     return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
-//   }
-// }
-
-// // Scrape emails based on bank id
-// async function scrapeEmailsByBankId(req, res) {
-//   try {
-//     const userId =req.user._id;
-//     const { bankIds } = req.body;
-//     const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds);
-//     SuccessResponse.data = response;
-//     return res.status(StatusCodes.CREATED).json(SuccessResponse);
-//   } catch (error) {
-//     ErrorResponse.error = error;
-//     return res.status(error.statusCode).json(ErrorResponse);
-//   }
-// }
-
-// // Fetch all records for a user
-// const getScrapedEmails = async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-
-//     const response = await EmailScrapingService.getScrapedEmails(userId);
-
-//     SuccessResponse.data = response;
-//     return res.status(StatusCodes.CREATED).json(SuccessResponse);
-//   } catch (error) {
-//     ErrorResponse.error = error;
-//     return res.status(error.statusCode).json(ErrorResponse);
-//   }
-// };
-
-// const getUnlinkedCreditCards = async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-//     const response = await EmailScrapingService.getUnlinkedCreditCards(userId);
-//     SuccessResponse.data = response;
-//     return res.status(StatusCodes.OK).json(SuccessResponse);
-//   } catch (error) {
-//     ErrorResponse.error = error;
-//     return res.status(error.statusCode).json(ErrorResponse);
-//   }
-// };
-
-// // Revoke Google access token
-// const removeAccessToken = async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-
-//     const response = await EmailScrapingService.removeAccessToken(userId);
-
-//     SuccessResponse.data = response;
-//     return res.status(StatusCodes.OK).json(SuccessResponse);
-//   } catch (error) {
-//     ErrorResponse.error = error;
-//     const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-//     return res.status(statusCode).json(ErrorResponse);
-//   }
-// };
-
-// module.exports = {
-//   generateAccessToken,
-//   scrapeEmailsByBankId,
-//   getScrapedEmails,
-//   getUnlinkedCreditCards,
-//   removeAccessToken,
-// };
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { SuccessResponse, ErrorResponse } from '../utils/api-response';
+import { SuccessResponse } from '../utils/api-response';
 import EmailScrapingService from '../services/email-service';
 
-// Local type just for casting inside functions
 interface AuthenticatedRequest extends Request {
   user: {
     _id: string;
@@ -94,11 +11,6 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-/**
- * Implementation helpers (async) – they do the real work
- * and can use AuthenticatedRequest for typing.
- */
-
 const generateAccessTokenImpl = async (
   req: Request,
   res: Response,
@@ -106,24 +18,12 @@ const generateAccessTokenImpl = async (
 ): Promise<void> => {
   try {
     const { user } = req as AuthenticatedRequest;
-    const userId = user._id;
-    const { idToken,bankId } = req.body as { idToken: string, bankId: string };
-    const result = await EmailScrapingService.generateAccessToken(userId, idToken,bankId);
+    const { idToken, bankId } = req.body as { idToken: string; bankId: string };
+    const result = await EmailScrapingService.generateAccessToken(user._id, idToken, bankId);
 
-    const responseBody = { ...SuccessResponse, data: result };
-    res.status(StatusCodes.OK).json(responseBody);
-  } catch (error: any) {
-    const errMessage =error?.response?.data?.error || error?.message || 'Unauthorized';
-    const responseBody = { ...ErrorResponse, error: errMessage };
-     const statusCode =
-    error?.statusCode ||  // 🔥 for AppError
-    error?.response?.status || // 🔥 for axios
-    StatusCodes.INTERNAL_SERVER_ERROR;
-    
-    console.error('Error in generateAccessTokenImpl:', error);
-    console.error('Error message:', errMessage);
-    console.error('Status code:', statusCode);
-    res.status(statusCode).json(responseBody);
+    res.status(StatusCodes.OK).json({ ...SuccessResponse, data: result });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -134,17 +34,12 @@ const scrapeEmailsByBankIdImpl = async (
 ): Promise<void> => {
   try {
     const { user } = req as AuthenticatedRequest;
-    const userId = user._id;
-    const { bankIds,email } = req.body as { bankIds: string[], email: string };
+    const { bankIds, email } = req.body as { bankIds: string[]; email: string };
+    const response = await EmailScrapingService.scrapeEmailsByBankId(user._id, bankIds, email);
 
-    const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds, email);
-
-    const responseBody = { ...SuccessResponse, data: response };
-    res.status(StatusCodes.CREATED).json(responseBody);
-  } catch (error: any) {
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    const responseBody = { ...ErrorResponse, error };
-    res.status(statusCode).json(responseBody);
+    res.status(StatusCodes.CREATED).json({ ...SuccessResponse, data: response });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -155,16 +50,11 @@ const getScrapedEmailsImpl = async (
 ): Promise<void> => {
   try {
     const { user } = req as AuthenticatedRequest;
-    const userId = user._id;
+    const response = await EmailScrapingService.getScrapedEmails(user._id);
 
-    const response = await EmailScrapingService.getScrapedEmails(userId);
-
-    const responseBody = { ...SuccessResponse, data: response };
-    res.status(StatusCodes.CREATED).json(responseBody);
-  } catch (error: any) {
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    const responseBody = { ...ErrorResponse, error };
-    res.status(statusCode).json(responseBody);
+    res.status(StatusCodes.CREATED).json({ ...SuccessResponse, data: response });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -175,16 +65,11 @@ const getUnlinkedCreditCardsImpl = async (
 ): Promise<void> => {
   try {
     const { user } = req as AuthenticatedRequest;
-    const userId = user._id;
+    const response = await EmailScrapingService.getUnlinkedCreditCards(user._id);
 
-    const response = await EmailScrapingService.getUnlinkedCreditCards(userId);
-
-    const responseBody = { ...SuccessResponse, data: response };
-    res.status(StatusCodes.OK).json(responseBody);
-  } catch (error: any) {
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    const responseBody = { ...ErrorResponse, error };
-    res.status(statusCode).json(responseBody);
+    res.status(StatusCodes.OK).json({ ...SuccessResponse, data: response });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -195,23 +80,14 @@ const removeAccessTokenImpl = async (
 ): Promise<void> => {
   try {
     const { user } = req as AuthenticatedRequest;
-    const userId = user._id;
+    const { email } = (req.body || {}) as { email?: string };
+    const response = await EmailScrapingService.removeAccessToken(user._id, email);
 
-    const response = await EmailScrapingService.removeAccessToken(userId);
-
-    const responseBody = { ...SuccessResponse, data: response };
-    res.status(StatusCodes.OK).json(responseBody);
-  } catch (error: any) {
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    const responseBody = { ...ErrorResponse, error };
-    res.status(statusCode).json(responseBody);
+    res.status(StatusCodes.OK).json({ ...SuccessResponse, data: response });
+  } catch (error) {
+    next(error);
   }
 };
-
-/**
- * Exported handlers – these are the ones you pass to router.get/post.
- * They are explicitly typed as RequestHandler so Express types are happy.
- */
 
 export const generateAccessToken: RequestHandler = (req, res, next) => {
   void generateAccessTokenImpl(req, res, next);

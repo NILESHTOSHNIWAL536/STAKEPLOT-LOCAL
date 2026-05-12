@@ -110,6 +110,8 @@ import AppError from '../utils/app-error';
 import { StatusCodes } from 'http-status-codes';
 import { ServerConfig } from '../config';
 import jwt from 'jsonwebtoken';
+import { googleAuthSchema } from '../models/google-auth';
+import { getModels } from '../models/index-model';
 
 // If you want, you can define a type for creditCards
 type CreditCardConfig = {
@@ -200,6 +202,22 @@ export async function getScrapedEmailsByUserId(userId: string) {
     .sort({ createdAt: -1 });
 }
 
+export async function getUserEmailById(userId: string): Promise<string> {
+  const mainDB = (global as any).mainDB;
+  const user = await mainDB
+    .collection('users')
+    .findOne(
+      { _id: new mongoose.Types.ObjectId(userId) },
+      { projection: { email: 1 } }
+    );
+
+  if (!user?.email) {
+    throw new AppError('User email not found', StatusCodes.BAD_REQUEST);
+  }
+
+  return user.email;
+}
+
 // export async function getUnlinkedCreditCards(userId: string) {
 //   throw new AppError('This endpoint is handled by mobile-backend (gateway).', StatusCodes.BAD_REQUEST);
 // }
@@ -224,33 +242,42 @@ async function getUnlinkedCreditCards(userId: string) {
   }
 }
 
-export async function deleteGoogleTokenByUserId(userId: string) {
+export async function deleteGoogleTokenByEmail(email: string) {
   const emailDB = (global as any).emailDB;
-
-  return await emailDB.model('googleAuth').deleteOne({ userId: { $eq: new mongoose.Types.ObjectId(userId) } });
+  return await emailDB.model('googleAuth').deleteOne({ email });
 }
 
-export async function getDecryptedRefreshToken(userId: string) {
+export async function removeUserBankMapEmailMapping(userId: string, email: string) {
+  const { UserBankMap } = await getModels();
+
+  return await UserBankMap.updateOne(
+    { userId: new mongoose.Types.ObjectId(userId) },
+    { $pull: { mappings: { email } } }
+  );
+}
+
+export async function getDecryptedRefreshToken(email: string) {
   const emailDB = (global as any).emailDB;
 
-  const user = await emailDB.model('googleAuth').findOne({
-    userId: userId,
-    'refreshToken.encryptedData': { $exists: true, $ne: '' },
-  });
-
-  if (!user || !user.refreshToken?.encryptedData) {
-    throw new Error('No refresh token found');
+    // ✅ Get model safely (no overwrite error)
+  const GoogleAuth = emailDB.models.googleAuth || emailDB.model('googleAuth', googleAuthSchema);
+  
+  const googleAuth = await GoogleAuth.findOne({ email });
+  if (!googleAuth?.refreshToken?.encryptedData) {
+    throw new AppError('No refresh token found', StatusCodes.NOT_FOUND);
   }
 
-  return decryptToken(user.refreshToken.encryptedData, user.refreshToken.iv, user.refreshToken.authTag);
+  return decryptToken(googleAuth.refreshToken.encryptedData, googleAuth.refreshToken.iv, googleAuth.refreshToken.authTag);
 }
 
 export default {
   getGoogleTokenByUserId,
   upsertGoogleToken,
   getScrapedEmailsByUserId,
+  getUserEmailById,
   getUnlinkedCreditCards,
-  deleteGoogleTokenByUserId,
+  deleteGoogleTokenByEmail,
+  removeUserBankMapEmailMapping,
   scrapeEmailsByBankId,
   getDecryptedRefreshToken,
 };

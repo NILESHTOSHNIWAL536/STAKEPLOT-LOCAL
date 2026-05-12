@@ -25,6 +25,12 @@
 import express, { Router } from 'express';
 import { protect } from '../middlewares/auth';
 import * as EmailController from '../controllers/email-controller';
+import {
+  validateGenerateToken,
+  validateNoQuery,
+  validateRemoveAccess,
+  validateScrape,
+} from '../validators/email-validators';
 
 const router: Router = express.Router();
 
@@ -34,18 +40,18 @@ router.use(express.json());
 router.use(protect);
 
 // generate access token and store it in the googleToken document
-router.post('/generate-token', EmailController.generateAccessToken);
+router.post('/generate-token', validateGenerateToken, EmailController.generateAccessToken);
 
 // read emails from user's gmail account based on the bank id provided
-router.post('/scrape', EmailController.scrapeEmailsByBankId);
+router.post('/scrape', validateScrape, EmailController.scrapeEmailsByBankId);
 
-router.get('/unLinked-cards', EmailController.getUnlinkedCreditCards);
+router.get('/unLinked-cards', validateNoQuery, EmailController.getUnlinkedCreditCards);
 // get all the scraped emails from the emailScrape collection
-router.get('/', EmailController.getScrapedEmails);
+router.get('/', validateNoQuery, EmailController.getScrapedEmails);
 
 // get all the unlinked credit cards from the user's creditCard collection
 
 // remove the access token from the googleToken document
-router.delete('/remove-access', EmailController.removeAccessToken);
+router.delete('/remove-access', validateRemoveAccess, EmailController.removeAccessToken);
 
 export default router;
