@@ -20,7 +20,7 @@ export const buildSearchFilter = (searchText: string): SearchFilter[] => {
   const searchFilter: SearchFilter[] = [];
 
   if (trimmedText) {
-    const regex = new RegExp(trimmedText, 'i');
+    const regex = new RegExp(escapeRegex(trimmedText), 'i');
 
     if (!isNaN(Number(trimmedText))) {
       searchFilter.push({ amount: Number(trimmedText) });

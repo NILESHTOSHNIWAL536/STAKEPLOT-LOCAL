@@ -77,7 +77,7 @@ export function securityMiddleware(app: Application): void {
     legacyHeaders: false,
   });
 
-  // app.use(limiter);
+  app.use(limiter);
 
   // ✅ CSP nonce
   app.use((req: Request, res: Response, next: NextFunction) => {
@@ -86,23 +86,23 @@ export function securityMiddleware(app: Application): void {
   });
 
   // ✅ Strict CSP
-  // app.use(
-  //   helmet.contentSecurityPolicy({
-  //     useDefaults: false,
-  //     directives: {
-  //       'default-src': ["'self'"],
-  //       'script-src': ["'self'"],
-  //       'style-src': ["'self'", (_req, res) => `'nonce-${res.locals.cspNonce}'`],
-  //       'img-src': ["'self'", 'data:'],
-  //       'font-src': ["'self'"],
-  //       'object-src': ["'none'"],
-  //       'base-uri': ["'self'"],
-  //       'form-action': ["'self'"],
-  //       'frame-ancestors': ["'none'"],
-  //       'upgrade-insecure-requests': [],
-  //     },
-  //   })
-  // );
+  app.use(
+    helmet.contentSecurityPolicy({
+      useDefaults: false,
+      directives: {
+        'default-src': ["'self'"],
+        'script-src': ["'self'"],
+        'style-src': ["'self'", (_req, res) => `'nonce-${(res as Response).locals.cspNonce}'`],
+        'img-src': ["'self'", 'data:'],
+        'font-src': ["'self'"],
+        'object-src': ["'none'"],
+        'base-uri': ["'self'"],
+        'form-action': ["'self'"],
+        'frame-ancestors': ["'none'"],
+        'upgrade-insecure-requests': [],
+      },
+    })
+  );
 
   // ✅ Baseline header
   app.use((req: Request, res: Response, next: NextFunction) => {

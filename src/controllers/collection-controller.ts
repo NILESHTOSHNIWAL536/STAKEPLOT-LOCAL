@@ -256,7 +256,6 @@ export const exitCollection = async (req: Request, res: Response, next: NextFunc
     SuccessResponse.message = 'Successfully exited the collection';
     res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    console.log("error: ", error);
     next(error);
   }
 };

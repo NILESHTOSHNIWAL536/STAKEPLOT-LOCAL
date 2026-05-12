@@ -22,7 +22,6 @@ const handleInsightRequest = async (req: Request, res: Response, handler: () => 
 };
 
 export const getCatalog = async (_req: Request, res: Response) => {
-  console.log("Fetching insight catalog");
   return handleInsightRequest(_req, res, () => InsightService.getInsightCatalog());
 };
 
