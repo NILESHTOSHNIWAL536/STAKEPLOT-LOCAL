@@ -224,17 +224,14 @@ export async function getUserEmailById(userId: string): Promise<string> {
 
 async function getUnlinkedCreditCards(userId: string) {
   try {
-    console.log('Fetching unlinked credit cards for userId:', userId);
     const mainDB = (global as any).mainDB;
     const user = await mainDB.collection('User').findOne({ _id: new mongoose.Types.ObjectId(userId) });
     if (!user) {
       throw new Error('User not found');
     }
     const linkedBankIds = user.CreditCardLinkedBanks || [];
-    console.log('Linked Bank IDs for user:', linkedBankIds);
     // Filter out cards whose bankId is not in linkedBankIds
     const unlinkedCards = creditCards.filter((card) => !linkedBankIds.includes(card.bankId));
-    console.log('Unlinked Credit Cards:', unlinkedCards);
     return unlinkedCards;
   } catch (error) {
     console.error('Error fetching unlinked credit cards:', error);

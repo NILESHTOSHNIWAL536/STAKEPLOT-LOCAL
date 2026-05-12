@@ -81,47 +81,7 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   await map.save();
 }
 
-// export async function generateAccessToken(
-//   userId: string,
-//   idToken: string
-// ): Promise<{ message: string }> {
-//   const { tokens } = await oauth2Client.getToken(idToken);
-//   oauth2Client.setCredentials(tokens);
 
-//   const oauth2 = google.oauth2({ auth: oauth2Client, version: 'v2' });
-//   const { data } = await oauth2.userinfo.get();
-//   const email = data.email || '';
-
-//   console.log('Generated Access Token:', tokens);
-//   console.log('Generated Refresh Token:', email);
-
-//   if (tokens.refresh_token) {
-//     const { encryptedData, iv, authTag } = await encryptToken(
-//       tokens.refresh_token
-//     );
-//     await EmailRepository.upsertGoogleToken(
-//       userId,
-//       email,
-//       encryptedData,
-//       iv,
-//       authTag
-//     );
-//   }
-
-//   return { message: 'Access token generated and stored successfully' };
-// }
-
-// export async function scrapeEmailsByBankId(
-//   userId: string,
-//   bankIds: string[]
-// ): Promise<any> {
-//   const response = await EmailRepository.getGoogleTokenByUserId(userId);
-//   const encryptedRefreshToken = response.refreshToken;
-//   const decryptedRefreshToken = await decryptToken(
-//     encryptedRefreshToken.encryptedData,
-//     encryptedRefreshToken.iv,
-//     encryptedRefreshToken.authTag
-//   );
 
 export async function scrapeEmailsByBankId(userId: string, bankIds: string[], email: string): Promise<any> {
   const normalizedEmail = normalizeEmail(email);

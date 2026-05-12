@@ -1,6 +1,5 @@
 import CreditCardQueue from './queue';
 import EmailScrapingService from '../../services/email-service';
-console.log(' Worker started (bull queue)');
 
 CreditCardQueue.process(async (job) => {
   const { userId, emailBankMap } = job.data;
