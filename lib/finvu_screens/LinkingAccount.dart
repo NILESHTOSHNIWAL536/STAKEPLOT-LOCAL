@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/theme_helper.dart';
 
 // Reactive variables (unchanged)
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
@@ -145,7 +146,7 @@ class _LinkingAccountState extends State<LinkingAccount>
     count.value = 0;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F3EE),
+      backgroundColor: context.appColors.background,
       bottomNavigationBar: SafeArea(child: BottomBar()),
       appBar: _buildModernAppBar(context),
       body: SafeArea(
@@ -185,14 +186,14 @@ class _LinkingAccountState extends State<LinkingAccount>
 
   PreferredSizeWidget _buildModernAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFFF5F3EE),
+      backgroundColor: context.appColors.appBarBackground,
       elevation: 0,
       leading: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Container(
           margin: EdgeInsets.all(10 * textScale),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.appColors.surface,
             borderRadius: BorderRadius.circular(12 * textScale),
             boxShadow: [
               BoxShadow(
@@ -203,7 +204,7 @@ class _LinkingAccountState extends State<LinkingAccount>
             ],
           ),
           child: Icon(Icons.arrow_back_ios_new_rounded,
-              size: 16 * textScale, color: const Color(0xFF1A1A2E)),
+              size: 16 * textScale, color: context.appColors.onSurface),
         ),
       ),
       title: Text(
@@ -211,7 +212,7 @@ class _LinkingAccountState extends State<LinkingAccount>
         style: FontManager().getTextStyle(context,
             fontSize: 17 * textScale,
             lWeight: FontWeight.w700,
-            color: const Color(0xFF1A1A2E),
+            color: context.appColors.onBackground,
             letterSpacing: -0.3),
       ),
       centerTitle: true,
@@ -221,7 +222,7 @@ class _LinkingAccountState extends State<LinkingAccount>
           width: 36 * textScale,
           height: 36 * textScale,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.appColors.surface,
             borderRadius: BorderRadius.circular(12 * textScale),
             boxShadow: [
               BoxShadow(
@@ -232,7 +233,7 @@ class _LinkingAccountState extends State<LinkingAccount>
             ],
           ),
           child: Icon(Icons.help_outline_rounded,
-              size: 18 * textScale, color: const Color(0xFF8A8A9A)),
+              size: 18 * textScale, color: context.appColors.secondaryText),
         ),
       ],
     );
@@ -290,7 +291,7 @@ class _LinkingAccountState extends State<LinkingAccount>
       padding: EdgeInsets.symmetric(
           horizontal: 16 * textScale, vertical: 14 * textScale),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(16 * textScale),
         boxShadow: [
           BoxShadow(
@@ -303,18 +304,18 @@ class _LinkingAccountState extends State<LinkingAccount>
       child: Row(
         children: [
           Icon(Icons.visibility_outlined,
-              color: const Color(0xFF8A8A9A), size: 18 * textScale),
+              color: context.appColors.secondaryText, size: 18 * textScale),
           SizedBox(width: 10 * textScale),
           Text(
             'See what you will share',
             style: FontManager().getTextStyle(context,
                 fontSize: 14 * textScale,
-                color: const Color(0xFF8A8A9A),
+                color: context.appColors.secondaryText,
                 lWeight: FontWeight.w500),
           ),
           const Spacer(),
           Icon(Icons.keyboard_arrow_down_rounded,
-              color: const Color(0xFF8A8A9A), size: 20 * textScale),
+              color: context.appColors.secondaryText, size: 20 * textScale),
         ],
       ),
     );
@@ -328,7 +329,7 @@ class _LinkingAccountState extends State<LinkingAccount>
           'Missing any accounts?',
           style: FontManager().getTextStyle(context,
               fontSize: 13 * textScale,
-              color: const Color(0xFF8A8A9A),
+              color: context.appColors.secondaryText,
               lWeight: FontWeight.w500),
         ),
         GestureDetector(
@@ -349,9 +350,9 @@ class _LinkingAccountState extends State<LinkingAccount>
       padding: EdgeInsets.fromLTRB(
           18 * textScale, 12 * textScale, 18 * textScale, 16 * textScale),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F3EE),
+        color: context.appColors.background,
         border: Border(
-          top: BorderSide(color: Colors.black.withOpacity(0.06), width: 1),
+          top: BorderSide(color: context.appColors.divider, width: 1),
         ),
       ),
       child: Column(
@@ -361,13 +362,14 @@ class _LinkingAccountState extends State<LinkingAccount>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.lock_outline_rounded,
-                  size: 13 * textScale, color: const Color(0xFF8A8A9A)),
+                  size: 13 * textScale,
+                  color: context.appColors.secondaryText),
               SizedBox(width: 4 * textScale),
               Text(
                 'Double check your selection before authorising',
                 style: FontManager().getTextStyle(context,
                     fontSize: 11 * textScale,
-                    color: const Color(0xFF8A8A9A),
+                    color: context.appColors.secondaryText,
                     lWeight: FontWeight.w500),
               ),
             ],
@@ -423,7 +425,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                 end: Alignment.centerRight,
               )
             : null,
-        color: enabled ? null : const Color(0xFFCBCBD4),
+        color: enabled ? null : context.appColors.unselectedChip,
         borderRadius: BorderRadius.circular(16 * textScale),
         boxShadow: enabled
             ? [
@@ -452,7 +454,7 @@ class _LinkingAccountState extends State<LinkingAccount>
     return Container(
       margin: EdgeInsets.all(16 * textScale),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.appColors.dialogBackground,
         borderRadius: BorderRadius.circular(24 * textScale),
       ),
       padding: EdgeInsets.all(20 * textScale),
@@ -482,7 +484,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                       style: FontManager().getTextStyle(context,
                           fontSize: 16 * textScale,
                           lWeight: FontWeight.w700,
-                          color: const Color(0xFF1A1A2E)),
+                          color: context.appColors.onSurface),
                     ),
                     SizedBox(height: 20 * textScale),
                     GestureDetector(
@@ -501,7 +503,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                       FinvuStrings().fetchAccountTransactions,
                       style: FontManager().getTextStyle(context,
                           fontSize: 11 * textScale,
-                          color: const Color(0xFF8A8A9A)),
+                          color: context.appColors.secondaryText),
                     ),
                   ],
                 ),
@@ -529,7 +531,7 @@ class _LinkingAccountState extends State<LinkingAccount>
             style: FontManager().getTextStyle(context,
                 fontSize: 15 * textScale,
                 lWeight: FontWeight.w700,
-                color: const Color(0xFF1A1A2E))),
+                color: context.appColors.onBackground)),
         SizedBox(height: 8 * textScale),
         Text(
           des,
@@ -568,7 +570,7 @@ class _LinkingAccountState extends State<LinkingAccount>
             FinvuStrings().selectAtLeastOneAccount,
             style: FontManager().getTextStyle(context,
                 fontSize: 13 * textScale,
-                color: const Color(0xFF6B6B80),
+                color: context.appColors.secondaryText,
                 lWeight: FontWeight.w400),
           ),
         ],
@@ -662,7 +664,7 @@ class _LinkingAccountState extends State<LinkingAccount>
         margin: EdgeInsets.fromLTRB(
             12 * textScale, 0, 12 * textScale, 12 * textScale),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.appColors.dialogBackground,
           borderRadius: BorderRadius.circular(24 * textScale),
         ),
         padding: EdgeInsets.all(20 * textScale),
@@ -675,7 +677,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                 width: 40 * textScale,
                 height: 4 * textScale,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE0E0E0),
+                  color: context.appColors.divider,
                   borderRadius: BorderRadius.circular(2 * textScale),
                 ),
               ),
@@ -687,7 +689,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                 style: FontManager().getTextStyle(context,
                     fontSize: 15 * textScale,
                     lWeight: FontWeight.w700,
-                    color: const Color(0xFF1A1A2E)),
+                    color: context.appColors.onSurface),
               ),
             ),
             SizedBox(height: 16 * textScale),
@@ -698,7 +700,7 @@ class _LinkingAccountState extends State<LinkingAccount>
               style: FontManager().getTextStyle(context,
                   fontSize: 20 * textScale,
                   lWeight: FontWeight.w800,
-                  color: const Color(0xFF1A1A2E),
+                  color: context.appColors.onSurface,
                   letterSpacing: -0.5),
             ),
             SizedBox(height: 6 * textScale),
@@ -706,7 +708,7 @@ class _LinkingAccountState extends State<LinkingAccount>
               "${FinvuStrings().enterOtpSentTo} ${number.value}",
               style: FontManager().getTextStyle(context,
                   fontSize: 13 * textScale,
-                  color: const Color(0xFF6B6B80),
+                  color: context.appColors.secondaryText,
                   lWeight: FontWeight.w400),
             ),
             SizedBox(height: 16 * textScale),
@@ -719,15 +721,16 @@ class _LinkingAccountState extends State<LinkingAccount>
                   style: TextStyle(
                       fontSize: 16 * textScale,
                       fontWeight: FontWeight.w600,
+                      color: context.appColors.onSurface,
                       letterSpacing: 4.0),
                   decoration: InputDecoration(
                     hintText: FinvuStrings().enterOtp,
                     hintStyle: TextStyle(
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w400,
-                        color: const Color(0xFFBBBBC8)),
+                        color: context.appColors.hintText),
                     filled: true,
-                    fillColor: const Color(0xFFF8F8FC),
+                    fillColor: context.appColors.inputBackground,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14 * textScale),
                       borderSide: BorderSide.none,
@@ -737,7 +740,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                       borderSide: BorderSide(
                         color: isOtpWrong.value
                             ? AppColors.redColor.withOpacity(0.4)
-                            : const Color(0xFFEEEEF5),
+                            : context.appColors.border,
                         width: 1.5,
                       ),
                     ),
@@ -784,7 +787,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                   FinvuStrings().didntReceiveOtp,
                   style: FontManager().getTextStyle(context,
                       fontSize: 13 * textScale,
-                      color: const Color(0xFF8A8A9A),
+                      color: context.appColors.secondaryText,
                       lWeight: FontWeight.w400),
                 ),
                 SizedBox(width: 4 * textScale),
@@ -801,7 +804,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                             lWeight: FontWeight.w700,
                             color: canResendOtp.value
                                 ? AppColors.primaryColor
-                                : const Color(0xFFBBBBC8)),
+                                : context.appColors.hintText),
                       ),
                     )),
               ],
@@ -839,7 +842,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                 end: Alignment.centerRight,
               )
             : null,
-        color: _isOtpValid.value ? null : const Color(0xFFCBCBD4),
+        color: _isOtpValid.value ? null : context.appColors.unselectedChip,
         borderRadius: BorderRadius.circular(16 * textScale),
         boxShadow: _isOtpValid.value
             ? [
@@ -949,7 +952,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                     padding: EdgeInsets.symmetric(
                         horizontal: 14 * textScale, vertical: 14 * textScale),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.appColors.surface,
                       borderRadius: BorderRadius.circular(16 * textScale),
                       boxShadow: [
                         BoxShadow(
@@ -996,13 +999,13 @@ class _LinkingAccountState extends State<LinkingAccount>
                                 'Swipe',
                                 style: FontManager().getTextStyle(context,
                                     fontSize: 10 * textScale,
-                                    color: const Color(0xFFBBBBC8),
+                                    color: context.appColors.hintText,
                                     lWeight: FontWeight.w500),
                               ),
                               SizedBox(width: 3 * textScale),
                               Icon(Icons.arrow_forward_ios_rounded,
                                   size: 10 * textScale,
-                                  color: const Color(0xFFBBBBC8)),
+                                  color: context.appColors.hintText),
                             ],
                           ),
                       ],
@@ -1071,7 +1074,7 @@ class _LinkingAccountState extends State<LinkingAccount>
           style: FontManager().getTextStyle(context,
               fontSize: 14 * textScale,
               lWeight: FontWeight.w700,
-              color: const Color(0xFF1A1A2E)),
+              color: context.appColors.onSurface),
         ),
         SizedBox(height: 2 * textScale),
         Text(
@@ -1080,7 +1083,7 @@ class _LinkingAccountState extends State<LinkingAccount>
           style: FontManager().getTextStyle(context,
               fontSize: 12 * textScale,
               lWeight: FontWeight.w500,
-              color: const Color(0xFF8A8A9A),
+              color: context.appColors.secondaryText,
               letterSpacing: 1.0),
         ),
       ],
@@ -1130,11 +1133,11 @@ class _LinkingAccountState extends State<LinkingAccount>
           width: 28 * textScale,
           height: 28 * textScale,
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryColor : Colors.white,
+            color: isSelected ? AppColors.primaryColor : context.appColors.surface,
             borderRadius: BorderRadius.circular(8 * textScale),
             border: Border.all(
               color:
-                  isSelected ? AppColors.primaryColor : const Color(0xFFDDDDE8),
+                  isSelected ? AppColors.primaryColor : context.appColors.border,
               width: 2,
             ),
             boxShadow: isSelected
@@ -1219,7 +1222,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                 height: 36 * textScale,
                 padding: EdgeInsets.all(4 * textScale),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.appColors.surface,
                   borderRadius: BorderRadius.circular(10 * textScale),
                   boxShadow: [
                     BoxShadow(
@@ -1238,7 +1241,7 @@ class _LinkingAccountState extends State<LinkingAccount>
                 style: FontManager().getTextStyle(context,
                     fontSize: 15 * textScale,
                     lWeight: FontWeight.w700,
-                    color: const Color(0xFF1A1A2E)),
+                    color: context.appColors.onSurface),
               ),
             ],
           ),
@@ -1357,9 +1360,9 @@ class _LinkingAccountState extends State<LinkingAccount>
       margin: EdgeInsets.symmetric(vertical: 8 * textScale),
       padding: EdgeInsets.all(16 * textScale),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(16 * textScale),
-        border: Border.all(color: const Color(0xFFEEEEF5), width: 1),
+        border: Border.all(color: context.appColors.border, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1367,13 +1370,14 @@ class _LinkingAccountState extends State<LinkingAccount>
           Row(
             children: [
               Icon(Icons.info_outline_rounded,
-                  size: 18 * textScale, color: const Color(0xFF8A8A9A)),
+                  size: 18 * textScale,
+                  color: context.appColors.secondaryText),
               SizedBox(width: 8 * textScale),
               Text(BankText.text1,
                   style: FontManager().getTextStyle(context,
                       fontSize: 14 * textScale,
                       lWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A2E))),
+                      color: context.appColors.onSurface)),
             ],
           ),
           SizedBox(height: 8 * textScale),
@@ -1386,12 +1390,12 @@ class _LinkingAccountState extends State<LinkingAccount>
                         Text('• ',
                             style: FontManager().getTextStyle(context,
                                 fontSize: 13 * textScale,
-                                color: const Color(0xFF8A8A9A))),
+                                color: context.appColors.secondaryText)),
                         Expanded(
                           child: Text(t,
                               style: FontManager().getTextStyle(context,
                                   fontSize: 13 * textScale,
-                                  color: const Color(0xFF6B6B80),
+                                  color: context.appColors.secondaryText,
                                   lWeight: FontWeight.w400)),
                         ),
                       ],

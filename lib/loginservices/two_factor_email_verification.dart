@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/theme_helper.dart';
 import '../image_service/avatarProfile.dart';
 import '../repository/auth_service/otp_service.dart';
 
@@ -72,12 +73,12 @@ class _TwoFactorEmailVerificationState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: context.appColors.background,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(color: AppColors.newbg),
+          decoration: BoxDecoration(color: context.appColors.background),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,7 +129,7 @@ class _TwoFactorEmailVerificationState
             text: 'OTP sent to your email',
             fontWeight: FontWeight.w300,
             fontsize: 18,
-            c: AppColors.accentColor),
+            c: context.appColors.onBackground),
       ],
     );
   }
@@ -158,7 +159,7 @@ class _TwoFactorEmailVerificationState
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: AppColors.backgroundColor,
+                        color: Colors.white,
                       ),
                     ),
             ),
@@ -198,8 +199,8 @@ class _TwoFactorEmailVerificationState
                   lWeight: FontWeight.bold,
                   fontSize: 12,
                   color: canResendOtp2.value
-                      ? AppColors.accentColor
-                      : AppColors.accentColor,
+                      ? context.appColors.onBackground
+                      : context.appColors.onBackground,
                 ),
               ),
             ),
@@ -227,8 +228,8 @@ class _TwoFactorEmailVerificationState
                   lWeight: FontWeight.bold,
                   fontSize: 12,
                   color: canResendOtp2.value
-                      ? AppColors.accentColor
-                      : AppColors.greyCard,
+                      ? context.appColors.primary
+                      : context.appColors.hintText,
                 ),
               ),
             ),
@@ -256,9 +257,9 @@ class _TwoFactorEmailVerificationState
           fieldWidth: MediaQuery.of(context).size.width * 0.13,
 
           // underline colors
-          inactiveColor: Colors.grey.shade400,
-          selectedColor: AppColors.finSpaceColor,
-          activeColor: AppColors.finSpaceColor,
+          inactiveColor: context.appColors.border,
+          selectedColor: context.appColors.primary,
+          activeColor: context.appColors.primary,
 
           // these must be transparent for underline style
           inactiveFillColor: Colors.transparent,
@@ -267,9 +268,9 @@ class _TwoFactorEmailVerificationState
         ),
 
         enableActiveFill: false, // 🔴 IMPORTANT for underline
-        textStyle: const TextStyle(
+        textStyle: TextStyle(
           fontSize: 20,
-          color: AppColors.accentColor,
+          color: context.appColors.onBackground,
           fontWeight: FontWeight.w600,
         ),
 
