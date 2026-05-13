@@ -1,9 +1,5 @@
 import 'dart:io';
-
-import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import '../apis_connect.dart';
 import 'credentials.dart';
 
 class GoogleAuthToken {
@@ -33,22 +29,4 @@ class GoogleAuthToken {
       scopes: isEmail ? GoogleAuthToken.scopesEmails : GoogleAuthToken.scopes,
     );
   }
-  // static GoogleSignIn createGoogleSignIn({required bool isEmail}) {
-  //   return GoogleSignIn(
-  //     clientId:
-  //         Platform.isAndroid ? GoogleAuthToken.Android : GoogleAuthToken.ios,
-  //     serverClientId:
-  //         GoogleAuthToken.serverClientId, // For iOS, optional for Android
-  //     scopes: isEmail ? GoogleAuthToken.scopesEmails : GoogleAuthToken.scopes,
-  //   );
-  // }
 }
-
-
-
-//  "https://www.googleapis.com/auth/userinfo.email"
-  // static GoogleSignIn googleToken=  GoogleSignIn(
-  //   clientId: Platform.isAndroid ?GoogleAuthToken.Android : GoogleAuthToken.ios,
-  //   serverClientId:GoogleAuthToken.serverClientId, // For iOS, optional for Android
-  //   scopes: GoogleAuthToken.scopes,
-  // );

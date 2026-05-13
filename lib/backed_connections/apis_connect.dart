@@ -23,21 +23,12 @@ import '../model/device_model.dart';
 import 'googlesignin/credentials.dart';
 part '../Constants/snackBars.dart';
 
-// bool apis_flag = true;
-// String urlWithLocallHost = apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST; // main backend api
-// String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2; // email sync api
-// String urlWithLocallHost3 = apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST; // bank api
-// String url = "${urlWithLocallHost}api/v1";
-// String EmailUrl = "${urlWithLocallHost2}api";
-// String BankApiUrl = "${urlWithLocallHost3}api";
 
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
 CardDueController get cardController => Get.find<CardDueController>();
 CollectionsController get collectionsController =>Get.find<CollectionsController>();
-// CardDueController cardController = Get.find<CardDueController>();
 
-// RxMap deviceData = {}.obs;
 Rx<DeviceModel> deviceData = DeviceModel(
   deviceId: "",
   brand: "",
@@ -51,28 +42,19 @@ RxInt scrollBankPage = 0.obs;
 
 RxList notificationList = [].obs;
 RxList<String> listofLinkedAccount = <String>[].obs;
-
-// RxList finoraTransactionData = [].obs;
-
 RxList trasactionsHideData = [].obs; // hidden tnx
-
 RxBool getHistory = false.obs;
-
 RxList lendAmountRemainders = [].obs;
 RxBool getlendUsers = false.obs;
-
 RxBool isFromEditDeatils = false.obs;
 RxString range = ''.obs;
-
 RxString defaultBackGround = "#68B2A0".obs;
-
 RxList friendRequestList = [].obs;
 RxList messages = [].obs;
 RxList messagesTemp = [].obs;
 RxList userPostList = [].obs;
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;
-
 RxList customCategoryList = [].obs;
 RxList customCategoryUnUsedList = [].obs;
 RxMap friendsListDetails = {}.obs;
@@ -82,26 +64,11 @@ List<Map<String, dynamic>> custom = [];
 RxBool hideTransactionReload = false.obs;
 RxBool aboutMe = false.obs;
 RxBool myNotificationBool = false.obs;
-
 RxBool hideBackAccountPassword = false.obs;
 bool sizeRoom = false;
 double fontSize = 20;
 RxInt budgetLength = 0.obs;
-
 RxString splitID = "".obs;
-
-// RxList categoriesList = [].obs;
-// RxList moreDrasticChange = [].obs;
-// RxList frequentPayments = [].obs;
-// RxDouble totalDebitThisMonth = 0.0.obs;
-// RxDouble totalDebitThisWeek = 0.0.obs;
-// RxList categoriesListWeek = [].obs;
-// RxList moreDrasticChangeWeek = [].obs;
-// RxList frequentPaymentsWeek = [].obs;
-// RxList mostSpentCategoryInMonth = [].obs;
-// RxList mostSpentDayInMonth = [].obs;
-// RxList weeklyTrend = [].obs;
-
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
 RxBool canMessageUser = false.obs;
@@ -130,14 +97,10 @@ bool limitTagbool = false;
 int currentPage = 1;
 RxBool havingMoreData = true.obs;
 RxBool isLoadingMore = false.obs;
-
 bool hasMoreData = true;
 int m = DateTime.now().month;
-
 List arr = [];
-
 RxBool reRender = false.obs;
-
 RxBool setDonectChat = false.obs;
 List room = [];
 List<String> account = [];
@@ -145,7 +108,6 @@ RxBool acceptReset = false.obs;
 RxBool LoadTag = false.obs;
 RxList budgetList = [].obs;
 final RxList<Debt> debts = <Debt>[].obs;
-
 RxList historyListData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData = false.obs;
@@ -237,38 +199,8 @@ final RxList<Map<String, dynamic>> inflationPredictions =
 var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
-
-// RxDouble quickCheckCurrentBalance = 0.0.obs;
-// RxDouble quickCheckCredit = 0.0.obs;
-// RxDouble quickCheckDebit = 0.0.obs;
-// RxDouble quickCheckOutstanding = 0.0.obs;
-// RxDouble quickCheckCreditPercent = 0.0.obs;
-// RxDouble quickCheckDebitPercent = 0.0.obs;
-// RxDouble quickCheckOutstandingPercent = 0.0.obs;
-// RxList<Map<String, dynamic>> quickCheckBanks = <Map<String, dynamic>>[].obs;
 final RxList<Map<String, dynamic>> yearlyMonths = <Map<String, dynamic>>[].obs;
-// final RxDouble annualCredited = 0.0.obs;
-// final RxDouble annualDebited = 0.0.obs;
-// final RxDouble annualOutstanding = 0.0.obs;
-  //  List<BudgetChartDataPoint> budgetChartData = [];
-  //  String selectedBudgetPeriod = 'monthly';
-  //  List<dynamic> budgetTransactions = []; // Store raw transactions from API
-  
-  //  List<String>? budgetInsights;
-  //  List<Map<String, dynamic>> categorySpendings = [];
-  //  List<Map<String, dynamic>> pieGraphData = [];
-  //  bool isBudgetDeleting = false;
 
-  // /// Renamed from _ChartData to BudgetChartDataPoint and made it a static inner class
-  //  class BudgetChartDataPoint {
-  //   BudgetChartDataPoint({required this.x, required this.y, required this.xString});
-  //   final int x;
-  //   final double y;
-  //   final String xString;
-
-  //   @override
-  //   String toString() => '($x, $y, $xString)';
-  // }
 
 
  
