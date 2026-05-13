@@ -90,12 +90,16 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
+import hpp from 'hpp';
 
 export function securityMiddleware(app: Application): void {
   // ✅ Body parsers
   app.use(express.json({ limit: '5mb' }));
   app.use(bodyParser.json({ limit: '5mb' }));
   app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+
+  // ✅ HTTP Parameter Pollution protection
+  app.use(hpp());
 
   // ✅ Helmet (security headers)
   app.use(
@@ -107,15 +111,6 @@ export function securityMiddleware(app: Application): void {
   app.use(helmet.noSniff());
   app.use(helmet.hidePoweredBy());
 
-  if (process.env.NODE_ENV === 'production') {
-    app.use(
-      helmet.hsts({
-        maxAge: 31536000,
-        includeSubDomains: true,
-        preload: true,
-      })
-    );
-  }
 
   // ✅ NoSQL injection prevention
   app.use(
