@@ -1,6 +1,3 @@
-
-
- import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -8,10 +5,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Profile/Saved.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 
-
-
 // Widget buildWelcomeRow(context) {
-    
+
 //       final CommunityScreenStrings strings = CommunityScreenStrings();
 
 //     return Column(
@@ -59,7 +54,7 @@ import '../../Constants/core/app_padding_sizes.dart';
 //                       ),
 //                     ),
 //                     Container(
-                     
+
 //                       child: GestureDetector(
 //                         onTap: () async {
 //                           navigatorToMyOwnPage(context);
@@ -116,24 +111,24 @@ import '../../Constants/core/app_padding_sizes.dart';
 //                 ),
 //               ),
 //             ),
-          
+
 //           ),
 //         ),
-       
-       
+
 //       ],
 //     );
 //   }
 
-
 class ArenaHeader extends StatefulWidget {
   final int initialTab; // 0 = Comic, 1 = Polls
   final ValueChanged<int>? onTabChanged;
+  final VoidCallback? onCreatePressed;
 
   const ArenaHeader({
     Key? key,
     this.initialTab = 1,
     this.onTabChanged,
+    this.onCreatePressed,
   }) : super(key: key);
 
   @override
@@ -189,8 +184,6 @@ class _ArenaHeaderState extends State<ArenaHeader> {
           ),
         ),
         const Spacer(),
-
-       
       ],
     );
   }
@@ -216,48 +209,47 @@ class _ArenaHeaderState extends State<ArenaHeader> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          width: MediaQuery.sizeOf(context).width/1.8,
-          padding: const EdgeInsets.all(AppSizes.p4),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundColor.withOpacity(0.25),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              _tabItem(context, title: "Comic", index: 0),
-              _tabItem(context, title: "Polls", index: 1),
-              
-            ],
+        Expanded(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 260),
+            padding: const EdgeInsets.all(AppSizes.p4),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              children: [
+                Expanded(child: _tabItem(context, title: "Comic", index: 0)),
+                Expanded(child: _tabItem(context, title: "Polls", index: 1)),
+              ],
+            ),
           ),
         ),
-         Row(
-           children: [
-            selectedTabIndex==1?
-             _circleIcon(Icons.add, () {
-              // add action
-              Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PollScreen()
-            ),
-          );
-                     })
-                     :const SizedBox.shrink(),
-                     SizedBox(width: AppSizes.w16),
-                     _circleIcon(Icons.bookmark, () {
+        const SizedBox(width: AppSizes.w12),
+        Row(
+          children: [
+            selectedTabIndex == 1
+                ? _circleIcon(Icons.add, () {
+                    if (widget.onCreatePressed != null) {
+                      widget.onCreatePressed!();
+                      return;
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PollScreen()),
+                    );
+                  })
+                : const SizedBox.shrink(),
+            SizedBox(width: AppSizes.w16),
+            _circleIcon(Icons.bookmark, () {
               // bookmark action
-                Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Saved()
-            ),
-          );
-                     }),
-           ],
-         ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Saved()),
+              );
+            }),
+          ],
+        ),
       ],
     );
   }
@@ -278,14 +270,18 @@ class _ArenaHeaderState extends State<ArenaHeader> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p12),
-        
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.backgroundColor : AppColors.transparentColor,
+          color: isSelected
+              ? AppColors.backgroundColor
+              : AppColors.transparentColor,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: FontManager().getTextStyle(
             context,
             fontSize: 16,
@@ -299,8 +295,6 @@ class _ArenaHeaderState extends State<ArenaHeader> {
     );
   }
 }
-
-
 
 class ArenaHeaderForSaved extends StatefulWidget {
   final int initialTab; // 0 = Comic, 1 = Polls
@@ -355,32 +349,35 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
   Widget _buildTopRow(BuildContext context) {
     return Row(
       children: [
-        GestureDetector(
-          onTap: (){
-            Navigator.pop(context);
-          },
-          
-          child: Icon(Icons.arrow_back, 
-          color: AppColors.backgroundColor,
-          size: 24,
-          )),
-          SizedBox(width: MediaQuery.sizeOf(context).width/4,),
-        Text(
-          "Saved",
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w700,
-            fontSize: 28,
-            color: AppColors.backgroundColor,
+        SizedBox(
+          width: 48,
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: AppColors.backgroundColor,
+              size: 24,
+            ),
           ),
         ),
-        const Spacer(),
-
-       
+        Expanded(
+          child: Text(
+            "Saved",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w700,
+              fontSize: 28,
+              color: AppColors.backgroundColor,
+            ),
+          ),
+        ),
+        const SizedBox(width: 48),
       ],
     );
   }
-
 
   // ================= TABS =================
 
@@ -388,24 +385,22 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: MediaQuery.sizeOf(context).width/1.8,
-          padding: const EdgeInsets.all(AppSizes.p4),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundColor.withOpacity(0.25),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              _tabItem(context, title: "Comic", index: 0),
-              _tabItem(context, title: "Polls", index: 1),
-              
-            ],
+        Flexible(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 260),
+            padding: const EdgeInsets.all(AppSizes.p4),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Row(
+              children: [
+                Expanded(child: _tabItem(context, title: "Comic", index: 0)),
+                Expanded(child: _tabItem(context, title: "Polls", index: 1)),
+              ],
+            ),
           ),
         ),
-        
       ],
     );
   }
@@ -426,14 +421,18 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p12),
-        
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.backgroundColor : AppColors.transparentColor,
+          color: isSelected
+              ? AppColors.backgroundColor
+              : AppColors.transparentColor,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: FontManager().getTextStyle(
             context,
             fontSize: 16,
@@ -441,7 +440,6 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
             color: isSelected
                 ? AppColors.primaryColor
                 : AppColors.backgroundColor.withOpacity(0.7),
-              
           ),
         ),
       ),

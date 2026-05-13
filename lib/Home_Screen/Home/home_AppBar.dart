@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/components/notification_icon.dart';
-import 'package:lottie/lottie.dart';
 import '../../Constants/app_styles.dart';
 import '../../Constants/core/app_padding_sizes.dart';
-import '../../components/shared_utils.dart';
-import '../history/recent_transactions.dart';
-import '../../app_init/insights_carousel_screen.dart';
+import '../strides/strides_screen.dart';
 
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;
@@ -55,7 +52,7 @@ class TopRightIconsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -66,14 +63,14 @@ class TopRightIconsWidget extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InsightsCarouselScreen()),
+                    builder: (context) => const StridesScreen()),
               );
             },
             child: Container(
               padding: const EdgeInsets.all(1),
               margin: const EdgeInsets.only(left: AppSizes.p4),
               decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: context.appColors.border,
                   borderRadius: BorderRadius.circular(12)),
               child: AvatarProfileImageZero(
                 url: Strides.stride,
@@ -83,7 +80,7 @@ class TopRightIconsWidget extends StatelessWidget {
             ),
           ),
 
-          SizedBox(width: AppSizes.w16),
+          const SizedBox(width: AppSizes.w16),
 
           /// NOTIFICATION BUTTON
           NotificationsBudget(
@@ -200,7 +197,7 @@ class _AutoHintIconState extends State<AutoHintIcon> {
     return Row(
       children: [
         _showText
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : SizedBox(width: MediaQuery.of(context).size.width * 0.17),
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
@@ -209,7 +206,7 @@ class _AutoHintIconState extends State<AutoHintIcon> {
             padding: EdgeInsets.symmetric(
                 horizontal: _showText ? 8 : 2, vertical: _showText ? 4 : 2),
             decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
+              color: context.appColors.background,
               borderRadius: _showText
                   ? BorderRadius.circular(30)
                   : BorderRadius.circular(12),
@@ -217,9 +214,6 @@ class _AutoHintIconState extends State<AutoHintIcon> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Icon (always visible)
-
-                // Space + text only when visible
                 if (_showText) ...[
                   Text(
                     widget.text,
@@ -227,7 +221,7 @@ class _AutoHintIconState extends State<AutoHintIcon> {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 11,
-                      color: AppColors.primaryColor,
+                      color: context.appColors.primary,
                     ),
                   ),
                 ],

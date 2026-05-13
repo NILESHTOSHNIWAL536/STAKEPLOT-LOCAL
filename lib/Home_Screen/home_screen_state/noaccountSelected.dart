@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/cashTransaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
@@ -35,8 +36,8 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return RefreshIndicator(
-      color: AppColors.primaryColor,
-      backgroundColor: AppColors.backgroundColor,
+      color: context.appColors.primary,
+      backgroundColor: context.appColors.background,
       strokeWidth: 2.5,
 
       // WORKING REFRESH
@@ -64,6 +65,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   // HEADER UI
   // ---------------------------------------------------
   Widget _buildHeader(double screenHeight) {
+    final colors = context.appColors;
     return Column(
       children: [
         AvatarProfileImage(
@@ -78,7 +80,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
             context,
             lWeight: FontWeight.w700,
             fontSize: 18,
-            color: AppColors.accentColor,
+            color: colors.onBackground,
           ),
         ),
         SizedBox(height: AppSizes.h8),
@@ -90,7 +92,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
               context,
               lWeight: FontWeight.w500,
               fontSize: 14,
-              color: Colors.black54,
+              color: colors.secondaryText,
             ),
             textAlign: TextAlign.center,
           ),
@@ -107,8 +109,8 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.finSpaceColor,
-              foregroundColor: AppColors.backgroundColor,
+              backgroundColor: colors.primary,
+              foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -120,7 +122,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
                 context,
                 lWeight: FontWeight.w600,
                 fontSize: 14,
-                color: AppColors.backgroundColor,
+                color: Colors.white,
               ),
             ),
           ),
@@ -133,16 +135,17 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   // BOTTOM NAV
   // ---------------------------------------------------
   Widget _buildBottomNavigation(double screenWidth) {
+    final colors = context.appColors;
     return Padding(
       padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.p12, vertical: AppSizes.p20),
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: colors.background,
           boxShadow: [
             BoxShadow(
-              color: AppColors.accentColor.withOpacity(0.05),
+              color: colors.onBackground.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),

@@ -27,6 +27,7 @@ class HiveStorage {
   static const String savedPostName = 'savedPost';
   static const String insightsBoxName = 'insightsBox';
   static const String autoPayBoxName = 'cardsBox';
+  static const String collectionsBoxName = 'collectionsBox';
 
   /// ------------------ BOX GETTERS ------------------
 
@@ -57,6 +58,8 @@ class HiveStorage {
   static Box<PostModels> get savedPost => Hive.box<PostModels>(savedPostName);
   static Box<PostModels> get userPost => Hive.box<PostModels>(userPostName);
   static Box<CardsData> get autoPays => Hive.box<CardsData>(autoPayBoxName);
+  static Box<String> get collectionsBox =>
+      Hive.box<String>(collectionsBoxName);
 
   /// ------------------ COMMON HELPERS ------------------
 

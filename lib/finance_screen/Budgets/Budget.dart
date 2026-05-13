@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -443,7 +444,7 @@ Widget textStyle({
   required BuildContext context,
   text,
   double fontsize = 12,
-  Color c = AppColors.bg1,
+  Color? c,
   FontWeight fontWeight = FontWeight.w500,
   bool iswrap = false,
   double lineHeight = 1.0,
@@ -458,7 +459,7 @@ Widget textStyle({
         style: FontManager().getTextStyle(context,
             lWeight: fontWeight,
             fontSize: fontsize,
-            color: c,
+            color: c ?? context.appColors.onBackground,
             lineHeight: lineHeight),
         overflow: iswrap ? TextOverflow.visible : TextOverflow.ellipsis,
       ),
@@ -470,7 +471,7 @@ Widget textStyleImage({
   required BuildContext context,
   text,
   double fontsize = 12,
-  Color c = AppColors.bg1,
+  Color? c,
   FontWeight fontWeight = FontWeight.w500,
   bool iswrap = false,
   bool isCenter = false,
@@ -481,7 +482,7 @@ Widget textStyleImage({
     style: FontManager().getTextStyle(context,
         lWeight: fontWeight,
         fontSize: fontsize,
-        color: c,
+        color: c ?? context.appColors.onBackground,
         lineHeight: lineHeight,
         textAlign: isCenter ? TextAlign.center : TextAlign.start),
     overflow: iswrap ? TextOverflow.visible : TextOverflow.ellipsis,
@@ -492,7 +493,7 @@ Widget textStyleAnimated({
   required BuildContext context,
   text,
   double fontsize = 12,
-  Color c = AppColors.bg1,
+  Color? c,
   FontWeight fontWeight = FontWeight.w500,
 }) {
   return Column(
@@ -503,7 +504,9 @@ Widget textStyleAnimated({
       Text(
         text.toString(),
         style: FontManager().getTextStyle(context,
-            lWeight: fontWeight, fontSize: fontsize, color: c),
+            lWeight: fontWeight,
+            fontSize: fontsize,
+            color: c ?? context.appColors.onBackground),
         overflow: TextOverflow.ellipsis,
       ),
     ],
@@ -514,13 +517,15 @@ Widget textStyleOnly({
   required BuildContext context,
   text,
   double fontsize = 12,
-  Color c = AppColors.bg1,
+  Color? c,
   FontWeight fontWeight = FontWeight.w500,
 }) {
   return Text(
     text.toString(),
     style: FontManager().getTextStyle(context,
-        lWeight: fontWeight, fontSize: fontsize, color: c),
+        lWeight: fontWeight,
+        fontSize: fontsize,
+        color: c ?? context.appColors.onBackground),
     overflow: TextOverflow.ellipsis,
   );
 }

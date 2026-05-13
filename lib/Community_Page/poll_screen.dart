@@ -1,487 +1,390 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:get/get.dart';
+
 import '../Constants/core/app_padding_sizes.dart';
 
-import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-
 class PollScreen extends StatefulWidget {
-  PollScreen();
+  const PollScreen({Key? key}) : super(key: key);
 
   @override
-  _PollScreenState createState() => _PollScreenState();
+  State<PollScreen> createState() => _PollScreenState();
 }
 
 class _PollScreenState extends State<PollScreen> {
   final TextEditingController _questionController = TextEditingController();
-  List<TextEditingController> _optionControllers = [
+  final List<TextEditingController> _optionControllers = [
     TextEditingController(),
     TextEditingController(),
   ];
-  double modalHeight = 300;
-  String? question;
-  bool pollSubmitted = false;
-  List<String>? options;
-  Map<String, int>? votes;
-  List<bool> _showCross = [];
   final CommunityScreenStrings strings = CommunityScreenStrings();
+
+  bool get _isFormValid =>
+      _questionController.text.trim().isNotEmpty &&
+      _optionControllers.every((controller) => controller.text.trim().isNotEmpty);
+
   @override
   void initState() {
     super.initState();
-    // Initialize with two default controllers
-    _optionControllers = [TextEditingController(), TextEditingController()];
-    _showCross = [false, false]; // Match the number of initial controllers
+    _questionController.addListener(_refreshForm);
+    for (final controller in _optionControllers) {
+      controller.addListener(_refreshForm);
+    }
+  }
+
+  @override
+  void dispose() {
+    _questionController
+      ..removeListener(_refreshForm)
+      ..dispose();
+    for (final controller in _optionControllers) {
+      controller
+        ..removeListener(_refreshForm)
+        ..dispose();
+    }
+    super.dispose();
+  }
+
+  void _refreshForm() {
+    if (mounted) setState(() {});
   }
 
   void _addOptionController() {
+    if (_optionControllers.length >= 6) return;
     setState(() {
-      if (_optionControllers.length < 4) {
-        // Limit to 4 options
-        _optionControllers.add(TextEditingController());
-        _showCross.add(false); // Default to not showing the cross button
-      }
+      _optionControllers.add(TextEditingController()..addListener(_refreshForm));
     });
   }
 
   void _removeOption(int index) {
-    setState(() {
-      _optionControllers.removeAt(index);
-      _showCross.removeAt(index);
-    });
+    if (_optionControllers.length <= 2) return;
+    final controller = _optionControllers.removeAt(index);
+    controller
+      ..removeListener(_refreshForm)
+      ..dispose();
+    setState(() {});
   }
 
-  void createPoll(String finalQuestion, List finalOptions) {
-    {
-      // if (_questionController.text.isNotEmpty &&
-      //     _optionControllers.every((controller) => controller.text.isNotEmpty)) {
-      //   question = _questionController.text;
-      //   // List<String>  options = _optionControllers.map((controller) => controller.text).toList();
-      //   List options = [];
+  void _createPoll(String finalQuestion, List<Map<String, dynamic>> finalOptions) {
+    if (postController.posting.value) return;
+    postController.posting.value = true;
 
-      //   _optionControllers.map((controller) {
-      //     String op = controller.text;
-      //     options.add({
-      //       "option": op,
-      //     });
-      //   }).toList();
+    createPollOfCommunityPost(
+      context,
+      finalQuestion,
+      finalOptions,
+      {},
+      [],
+      "casual",
+    );
+  }
 
-      //   if (postController.posting.value) return;
-      //  postController.posting.value = true;
-      //   // clearInterest();
-      //   createPollOfCommunityPost(context, question.toString(), options, {}, [], "casual");
-      // } else {
-      //   snackBarCalledfail(context, 'Please fill in all fields before posting the poll.');
+  void _continueToInterests() {
+    final filledOptions =
+        _optionControllers.where((e) => e.text.trim().isNotEmpty).length;
 
-      // }
-      if (postController.posting.value) return;
-      postController.posting.value = true;
-
-      createPollOfCommunityPost(
-        context,
-        finalQuestion,
-        finalOptions,
-        {},
-        [],
-        "casual",
-      );
+    if (filledOptions < 2) {
+      snackBarCalledfail(context, "Atleast two options must be there");
+      return;
     }
-  }
 
-  void _vote(String option) {
-    setState(() {
-      votes![option] = (votes![option] ?? 0) + 1;
-    });
-  }
+    if (!_isFormValid) {
+      snackBarCalledfail(context, "Please fill in all fields before continuing");
+      return;
+    }
 
-  double _getPercentage(String option) {
-    int totalVotes = votes!.values.fold(0, (sum, count) => sum + count);
-    if (totalVotes == 0) return 0.0;
-    return (votes![option]! / totalVotes) * 100;
+    final pollOptions = _optionControllers
+        .map((controller) => {"option": controller.text.trim()})
+        .toList();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => InterestSelectionPage(
+          question: _questionController.text.trim(),
+          options: pollOptions,
+          onConfirm: (String question, List<Map<String, dynamic>> options) {
+            Navigator.pop(context);
+            _createPoll(question, options);
+          },
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
+
     return Scaffold(
-      backgroundColor: AppColors.border,
+      backgroundColor: colors.background,
       resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          PollStepHeader(
-            title: strings.createPoll,
-            step: 1,
-          ),
-          Container(
-            height: MediaQuery.sizeOf(context).height / 1.4,
-            child: SingleChildScrollView(
-              child: Padding(
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            PollStepHeader(
+              title: strings.createPoll,
+              step: 1,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 30, vertical: AppSizes.p20),
+                  horizontal: AppSizes.p20,
+                  vertical: AppSizes.p20,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (question == null) ...[
-                      Container(
-                        width: MediaQuery.of(context).size.width / 1.1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Your Question *",
-                              style: FontManager().getTextStyle(context,
-                                  fontSize: 15,
-                                  lWeight: FontWeight.w700,
-                                  color: AppColors.accentColor),
-                            ),
-                            SizedBox(height: AppSizes.h8),
-                            TextField(
-                              controller: _questionController,
-                              maxLength: 200,
-                              maxLines: 3,
-                              buildCounter: (
-                                BuildContext context, {
-                                required int currentLength,
-                                required bool isFocused,
-                                required int? maxLength,
-                              }) {
-                                return Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "$currentLength / $maxLength characters",
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      fontSize: 12,
-                                      lWeight: FontWeight.w400,
-                                      color: AppColors.grey,
-                                    ),
-                                  ),
-                                );
-                              },
-                              decoration: InputDecoration(
-                                hintText: strings.askQuestion,
-                                filled: true,
-                                fillColor: AppColors.backgroundColor,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    _questionField(context),
+                    const SizedBox(height: AppSizes.h30),
+                    Text(
+                      "Answer Options * (2-6 options)",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 15,
+                        lWeight: FontWeight.w700,
+                        color: colors.onBackground,
                       ),
-                      SizedBox(height: AppSizes.h30),
-                      Text(
-                        "Answer Options * (2-4 options)",
-                        style: FontManager().getTextStyle(
-                          context,
-                          fontSize: 15,
-                          lWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: AppSizes.h10),
-                      ...List.generate(_optionControllers.length, (index) {
-                        return Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 18,
-                                    backgroundColor: const Color(0xFFE0E0E0),
-                                    child: Text(
-                                      "${index + 1}",
-                                      style: FontManager().getTextStyle(context,
-                                          fontSize: 15,
-                                          color: AppColors.primaryColor,
-                                          lWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  SizedBox(width: AppSizes.w12),
-                                  Container(
-                                    width:
-                                        MediaQuery.sizeOf(context).width / 1.38,
-                                    child: TextField(
-                                      controller: _optionControllers[index],
-                                      decoration: InputDecoration(
-                                        hintText: "Option ${index + 1}",
-                                        hintStyle: FontManager().getTextStyle(
-                                            context,
-                                            color: AppColors.grey,
-                                            fontSize: 14),
-                                        filled: true,
-                                        fillColor: AppColors.backgroundColor,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              //  Container(
-                              //   width: MediaQuery.of(context).size.width / 1.1,
-                              //   child: TextField(
-                              //     controller: _optionControllers[index],
-                              //     maxLines: null,
-                              //     maxLength: 150,
-
-                              //     decoration: InputDecoration(
-                              //       hintText: "${strings.optionPrefix} ${index + 1}",
-                              //       filled: true,
-                              //                               fillColor: AppColors.textBgColor,
-                              //       hintStyle: FontManager().getTextStyle(
-                              //           context,
-                              //           lWeight: FontWeight.normal,
-                              //           fontSize: 14,
-                              //           color: AppColors.bg1),
-
-                              //           focusedBorder: OutlineInputBorder(
-                              //         borderSide: BorderSide(color: AppColors.textBgColor),
-                              //         borderRadius: BorderRadius.circular(8),
-                              //       ),
-                              //       enabledBorder: OutlineInputBorder(
-                              //         borderSide: BorderSide(color: AppColors.textBgColor),
-                              //           borderRadius: BorderRadius.all(
-                              //               Radius.circular(8))),
-                              //       // fillColor: AppColors.button,
-                              //       // filled: true,
-                              //        contentPadding: const EdgeInsets.all(AppSizes.p12),
-                              //   // counterText: '',
-                              //       suffixIcon: _showCross[index]
-                              //           ? IconButton(
-                              //               onPressed: () =>
-                              //                   _removeOption(index),
-                              //                icon: Icon(Icons.delete, color:  AppColors.redColor),
-                              //             )
-                              //           : null,
-                              //     ),
-                              //     onChanged: (value) {
-                              //   setState(() {
-                              //     _showCross[index] = value.isNotEmpty;
-                              //     // Ensure cursor stays at the end
-                              //     if (value.length == 80) {
-                              //       _optionControllers[index].selection =
-                              //           TextSelection.fromPosition(
-                              //         TextPosition(offset: value.length),
-                              //       );
-                              //     }
-                              //   });
-                              // },
-                              //   ),
-                              // ),
-                            ),
-                            SizedBox(height: AppSizes.h10),
-                          ],
-                        );
-                      }),
-                      SizedBox(height: AppSizes.h12),
-                      if (_optionControllers.length < 4)
-                        GestureDetector(
-                          onTap: _addOptionController,
-                          child: DottedBorderBox(
-                            color: AppColors.primaryColor,
-                            dashWidth: 1.0,
-                            dashHeight: 1.0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.add,
-                                  color: AppColors.primaryColor,
-                                  size: 26,
-                                ),
-                                SizedBox(width: AppSizes.w10),
-                                Text(
-                                  strings.addOption,
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      SizedBox(height: AppSizes.h12),
-                    ] else ...[
-                      Card(
-                        elevation: 4,
-                        margin:
-                            const EdgeInsets.symmetric(vertical: AppSizes.p10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSizes.p16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                question!,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: AppColors.accentColor),
-                              ),
-                              SizedBox(height: AppSizes.h10),
-                              for (var option
-                                  in (options == null ? [] : options!))
-                                GestureDetector(
-                                  onTap: () => _vote(option),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        option,
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.normal,
-                                            fontSize: 18,
-                                            color: AppColors.accentColor),
-                                      ),
-                                      SizedBox(height: AppSizes.h5),
-                                      Stack(
-                                        children: [
-                                          Container(
-                                            height: 10,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 10,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8 *
-                                                (_getPercentage(option) / 100),
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: AppSizes.h5),
-                                      Text(
-                                        '${_getPercentage(option).toStringAsFixed(1)}%',
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            color: Colors.grey),
-                                      ),
-                                      SizedBox(height: AppSizes.h10),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
+                    const SizedBox(height: AppSizes.h10),
+                    ...List.generate(
+                      _optionControllers.length,
+                      (index) => _optionField(context, index),
+                    ),
+                    const SizedBox(height: AppSizes.h12),
+                    if (_optionControllers.length < 6) _addOptionButton(context),
                   ],
                 ),
               ),
             ),
+            _bottomButton(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _questionField(BuildContext context) {
+    final colors = context.appColors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Your Question *",
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 15,
+            lWeight: FontWeight.w700,
+            color: colors.onBackground,
           ),
-          Center(
-            child: GestureDetector(
-                onTap: () {
-                  int count = 0;
+        ),
+        const SizedBox(height: AppSizes.h8),
+        TextField(
+          controller: _questionController,
+          maxLength: 200,
+          maxLines: 3,
+          style: FontManager().getTextStyle(
+            context,
+            color: colors.onSurface,
+            fontSize: 14,
+          ),
+          buildCounter: (
+            BuildContext context, {
+            required int currentLength,
+            required bool isFocused,
+            required int? maxLength,
+          }) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "$currentLength / $maxLength characters",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 12,
+                  lWeight: FontWeight.w400,
+                  color: colors.secondaryText,
+                ),
+              ),
+            );
+          },
+          decoration: _inputDecoration(
+            context,
+            hintText: strings.askQuestion,
+          ),
+        ),
+      ],
+    );
+  }
 
-                  _optionControllers.forEach((e) {
-                    if (e.text.length.toString().trim().isNotEmpty) {
-                      count++;
-                    }
-                  });
+  Widget _optionField(BuildContext context, int index) {
+    final colors = context.appColors;
 
-                  if (count < 2) {
-                    snackBarCalledfail(
-                        context, "Atleast two options must be there");
-                    return;
-                  }
-                  final List<Map<String, dynamic>> pollOptions =
-                      _optionControllers.map((c) {
-                    return {"option": c.text.trim()};
-                  }).toList();
-                  _questionController.text.isNotEmpty &&
-                          _optionControllers
-                              .every((controller) => controller.text.isNotEmpty)
-                      ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => InterestSelectionPage(
-                              question: _questionController.text.trim(),
-                              options: pollOptions,
-                              onConfirm:
-                                  (String q, List<Map<String, dynamic>> opts) {
-                                Navigator.pop(context);
-                                createPoll(q, opts);
-                              },
-                            ),
-                          ),
-                        )
-
-                      // showTagListOfInterestModal(
-                      //     context: context, onConfirm: callBack)
-                      : null;
-                  //  showTagListOfInterestModal(context:  context,onConfirm: callBack);
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 1.1,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 10, vertical: AppSizes.p20),
-                  decoration: BoxDecoration(
-                      color: _questionController.text.isNotEmpty &&
-                              _optionControllers.every(
-                                  (controller) => controller.text.isNotEmpty)
-                          ? AppColors.primaryColor
-                          : AppColors.backgroundColor,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Center(
-                    child: Obx(() => postController.posting.value
-                        ? Spinner(
-                            size: 30,
-                            color: AppColors.backgroundColor,
-                          )
-                        : Text(
-                            strings.continueButton,
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: _questionController.text.isNotEmpty &&
-                                      _optionControllers.every((controller) =>
-                                          controller.text.isNotEmpty)
-                                  ? AppColors.backgroundColor
-                                  : AppColors.accentColor,
-                            ),
-                          )),
-                  ),
-                )),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSizes.p10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: colors.iconBackground,
+            child: Text(
+              "${index + 1}",
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 15,
+                color: colors.primary,
+                lWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSizes.w12),
+          Expanded(
+            child: TextField(
+              controller: _optionControllers[index],
+              maxLength: 80,
+              style: FontManager().getTextStyle(
+                context,
+                color: colors.onSurface,
+                fontSize: 14,
+              ),
+              decoration: _inputDecoration(
+                context,
+                hintText: "Option ${index + 1}",
+                suffixIcon: _optionControllers.length > 2
+                    ? IconButton(
+                        onPressed: () => _removeOption(index),
+                        icon: Icon(Icons.close, color: colors.error),
+                      )
+                    : null,
+              ).copyWith(counterText: ''),
+            ),
           ),
         ],
       ),
     );
   }
 
-  //  void callBack()async
-  // {
-  //      Navigator.pop(context);
-  //     createPoll();
-  // }
+  Widget _addOptionButton(BuildContext context) {
+    final colors = context.appColors;
+
+    return GestureDetector(
+      onTap: _addOptionController,
+      child: DottedBorderBox(
+        color: colors.primary,
+        dashWidth: 1.0,
+        dashHeight: 1.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.add, color: colors.primary, size: 26),
+            const SizedBox(width: AppSizes.w10),
+            Flexible(
+              child: Text(
+                strings.addOption,
+                overflow: TextOverflow.ellipsis,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: colors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomButton(BuildContext context) {
+    final colors = context.appColors;
+
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(
+        AppSizes.p20,
+        AppSizes.p8,
+        AppSizes.p20,
+        AppSizes.p16,
+      ),
+      child: GestureDetector(
+        onTap: _continueToInterests,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: AppSizes.p16,
+          ),
+          decoration: BoxDecoration(
+            color: _isFormValid ? colors.primary : colors.surface,
+            border: Border.all(
+              color: _isFormValid ? colors.primary : colors.border,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Obx(
+              () => postController.posting.value
+                  ? Spinner(size: 30, color: AppColors.backgroundColor)
+                  : Text(
+                      strings.continueButton,
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: _isFormValid
+                            ? AppColors.backgroundColor
+                            : colors.onSurface,
+                      ),
+                    ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(
+    BuildContext context, {
+    required String hintText,
+    Widget? suffixIcon,
+  }) {
+    final colors = context.appColors;
+
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: FontManager().getTextStyle(
+        context,
+        color: colors.hintText,
+        fontSize: 14,
+      ),
+      filled: true,
+      fillColor: colors.inputBackground,
+      suffixIcon: suffixIcon,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: colors.border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: colors.border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: colors.primary, width: 1.5),
+      ),
+    );
+  }
 }

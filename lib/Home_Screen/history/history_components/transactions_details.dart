@@ -1,10 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
@@ -16,8 +12,8 @@ import 'package:get/get.dart';
 
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/core/app_shadows.dart';
+import '../../../Constants/theme_helper.dart';
 import 'icon_split_hide.dart';
-
 
 class TransactionDetails extends StatelessWidget {
   final TransactionModel transaction;
@@ -62,104 +58,128 @@ class TransactionDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(()=> Container(
-  
-      width: MediaQuery.of(context).size.width / (showCheckBox.value ? 1.2 : 1.1),
-      padding: EdgeInsets.only(
-          top: isExcluded ? 0 : fontSizes.padding / 6,
-          bottom: isExcluded ? 0 : fontSizes.padding / 6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
-            child: Row(
-              children: [
-                isExcluded
-                    ? getIconAvtarForTagShowModal(30, category, fontSizes.scaleFactor / 2, transaction, index, context)
-                    : getIconAvtarForTagShowModal(fontSizes.avatarSize, category, fontSizes.scaleFactor, transaction, index, context),
-                SizedBox(width: fontSizes.padding),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final colors = context.appColors;
+    return Obx(() => Container(
+          width: MediaQuery.of(context).size.width /
+              (showCheckBox.value ? 1.2 : 1.1),
+          padding: EdgeInsets.only(
+              top: isExcluded ? 0 : fontSizes.padding / 6,
+              bottom: isExcluded ? 0 : fontSizes.padding / 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
+                child: Row(
+                  children: [
+                    isExcluded
+                        ? getIconAvtarForTagShowModal(
+                            30,
+                            category,
+                            fontSizes.scaleFactor / 2,
+                            transaction,
+                            index,
+                            context)
+                        : getIconAvtarForTagShowModal(
+                            fontSizes.avatarSize,
+                            category,
+                            fontSizes.scaleFactor,
+                            transaction,
+                            index,
+                            context),
+                    SizedBox(width: fontSizes.padding),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width / 3.3,
-                            child: textStyle(
-                              context: context,
-                              text: transaction.subcategory==""? nameOfUser :transaction.subcategory,
-                              c: AppColors.accentColor,
-                              fontsize: 13,
-                              fontWeight: FontWeight.w500,
-                              lineHeight: 1.5,
-                            ),
-                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              textStyle(
-                                context: context,
-                                text: formatAmount,
-                                c: AppColors.primaryColor,
-                                fontsize: 18,
-                                fontWeight: FontWeight.w500,
+                              SizedBox(
+                                width: MediaQuery.sizeOf(context).width / 3.3,
+                                child: textStyle(
+                                  context: context,
+                                  text: transaction.subcategory == ""
+                                      ? nameOfUser
+                                      : transaction.subcategory,
+                                  c: colors.onSurface,
+                                  fontsize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  lineHeight: 1.5,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  textStyle(
+                                    context: context,
+                                    text: formatAmount,
+                                    c: colors.primary,
+                                    fontsize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          textStyle(
+                            context: context,
+                            text:
+                                isManual ? formattedDateManual : formattedDate,
+                            c: colors.secondaryText,
+                            fontsize: 10,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ],
                       ),
-                      textStyle(
-                        context: context,
-                        text: isManual ? formattedDateManual : formattedDate,
-                        c: AppColors.grey,
-                        fontsize: 10,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          isExcluded ?  SizedBox(height: AppSizes.h10) : const SizedBox.shrink(),
-          isExcluded
-              ? const SizedBox.shrink()
-              : Padding(
-                  padding: const EdgeInsets.only(left:AppSizes.p4),
-                  child: IconsForHideUpdateSplit(
-                  iconSize:   fontSizes.iconSize,
-                  padding:   fontSizes.padding,
-                  category:   category,
-                 amount:    amount,
-                 logo:    logo,
-                 context:    context,
-                 index:    index,
-                 subcategory:    transaction.subcategory,
-                 transaction:    transaction,
-                  isReview:   isReview,
-                  id:   transaction.id,
-                   isManual:  isManual,
-                   hide:  hide,
-                   isSplit:  isSplit,
-                   isExcluded:  isExcluded,
-                   formatAmountBalance:  formatAmountBalance,
-                  ),
-                ),
-          (isManual || isReview)
-              ? const SizedBox(height: 0)
-              : isExcluded
+              ),
+              isExcluded
+                  ? SizedBox(height: AppSizes.h10)
+                  : const SizedBox.shrink(),
+              isExcluded
                   ? const SizedBox.shrink()
-                  : SizedBox(height: fontSizes.padding / 2),
-        ],
-      ),
-    ));
+                  : Padding(
+                      padding: const EdgeInsets.only(left: AppSizes.p4),
+                      child: IconsForHideUpdateSplit(
+                        iconSize: fontSizes.iconSize,
+                        padding: fontSizes.padding,
+                        category: category,
+                        amount: amount,
+                        logo: logo,
+                        context: context,
+                        index: index,
+                        subcategory: transaction.subcategory,
+                        transaction: transaction,
+                        isReview: isReview,
+                        id: transaction.id,
+                        isManual: isManual,
+                        hide: hide,
+                        isSplit: isSplit,
+                        isExcluded: isExcluded,
+                        formatAmountBalance: formatAmountBalance,
+                      ),
+                    ),
+              (isManual || isReview)
+                  ? const SizedBox(height: 0)
+                  : isExcluded
+                      ? const SizedBox.shrink()
+                      : SizedBox(height: fontSizes.padding / 2),
+            ],
+          ),
+        ));
   }
 }
-Widget getIconAvtarForTagShowModal(double avatarSize, String category, double scaleFactor, TransactionModel transaction, int index, BuildContext context) {
+
+Widget getIconAvtarForTagShowModal(
+    double avatarSize,
+    String category,
+    double scaleFactor,
+    TransactionModel transaction,
+    int index,
+    BuildContext context) {
   String lowerCategory = category?.toLowerCase() ?? '';
 
   final matched = custom.firstWhere(
@@ -216,7 +236,8 @@ Widget getIconAvtarForTagShowModal(double avatarSize, String category, double sc
             );
           },
           child: AvatarProfileImage(
-            key: ValueKey<String>(url), // Unique key to trigger animation on URL change
+            key: ValueKey<String>(
+                url), // Unique key to trigger animation on URL change
             url: url,
             height: avatarSize * 0.5,
             width: avatarSize * 0.5,

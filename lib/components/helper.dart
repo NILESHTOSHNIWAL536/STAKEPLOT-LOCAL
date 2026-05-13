@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/date_range_filter.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
@@ -1136,6 +1137,7 @@ String getCurrentFormattedDate() {
 }
 
 Widget manualTransactionButton(BuildContext context) {
+  final colors = context.appColors;
   return InkWell(
     onTap: () {
       Navigator.push(
@@ -1149,33 +1151,21 @@ Widget manualTransactionButton(BuildContext context) {
       height: MediaQuery.sizeOf(context).height / 21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
-        // base white fill
-        color: AppColors.backgroundColor,
-        // semi-opaque white overlay (matches your linear-gradient with same stops)
-
-        borderRadius:
-            BorderRadius.circular(10), // nice rounded corners similar to SVG
-        border: Border.all(
-          color: AppColors.primaryColor, // stroke color from SVG
-          width: 1,
-        ),
-        // subtle elevation feel — optional, remove if you don't want it
+        color: colors.background,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: colors.primary, width: 1),
         boxShadow: [AppShadows.soft],
       ),
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icon — tune width/height to fit the 38px container
-            // using AvatarProfileImage to keep your existing component
             AvatarProfileImageZero(
               url: HomePageIcons.cash,
               width: 5,
               height: 32,
             ),
             SizedBox(width: AppSizes.w8),
-
-            // Text label
             Text(
               'Cash transactions',
               style: FontManager().getTextStyle(
@@ -1183,7 +1173,7 @@ Widget manualTransactionButton(BuildContext context) {
                 lWeight: FontWeight.w500,
                 fontSize: 13,
                 lineHeight: 1.0,
-                color: AppColors.accentColor,
+                color: colors.onBackground,
               ),
             ),
           ],
@@ -1243,15 +1233,20 @@ Widget actionButtonForCashAndHistory({
 }
 
 Widget globalbackArrow() {
-  return const CustomStyledContainer(
+  return CustomStyledContainer(
     radius: 20,
-    child: Padding(
-      padding: EdgeInsets.all(AppSizes.p8),
-      child: Icon(
-        Icons.arrow_back,
-        color: AppColors.accentColor,
-        size: 24,
-      ),
+    child: Builder(
+      builder: (context) {
+        final colors = context.appColors;
+        return Padding(
+          padding: EdgeInsets.all(AppSizes.p8),
+          child: Icon(
+            Icons.arrow_back,
+            color: colors.onBackground,
+            size: 24,
+          ),
+        );
+      },
     ),
   );
 }

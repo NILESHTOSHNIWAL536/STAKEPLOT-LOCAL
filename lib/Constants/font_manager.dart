@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class FontManager {
   TextStyle getTextStyle(
     BuildContext context, {
-    Color? color = Colors.black,
+    Color? color,
     FontWeight lWeight = FontWeight.normal,
     lineHeight = 1.0,
     maxLines = 2,
@@ -12,7 +12,7 @@ class FontManager {
     textAlign = TextAlign.start,
     FontStyle lFontStyle = FontStyle.normal,
     softWrap = false,
-    Color? decorationColor = Colors.black,
+    Color? decorationColor,
     double fontSize = 18.0,
     decoration = TextDecoration.none,
     letterSpacing = 0.24,
@@ -21,12 +21,14 @@ class FontManager {
     decorationStyle = TextDecorationStyle.solid,
     String? fontFamily,
   }) {
+    // Inherit text color from the ambient theme when no explicit color is given
+    final resolvedColor = color ?? Theme.of(context).textTheme.bodyMedium?.color;
     final style = GoogleFonts.roboto(
       fontSize: fontSize.toDouble(),
       fontWeight: lWeight,
       height: lineHeight.toDouble(),
       fontStyle: lFontStyle,
-      color: color,
+      color: resolvedColor,
       letterSpacing: letterSpacing.toDouble(),
       decoration: decoration,
       decorationColor: decorationColor,
@@ -41,7 +43,7 @@ class FontManager {
 class FontManager2 {
   TextStyle getTextStyle(
     BuildContext context, {
-    Color? color = Colors.black,
+    Color? color,
     FontWeight lWeight = FontWeight.normal,
     lineHeight = 1.0,
     maxLines = 2,
@@ -49,7 +51,7 @@ class FontManager2 {
     textAlign = TextAlign.start,
     FontStyle lFontStyle = FontStyle.normal,
     softWrap = false,
-    Color? decorationColor = Colors.black,
+    Color? decorationColor,
     double fontSize = 18.0,
     decoration = TextDecoration.none,
     letterSpacing = 0.0,
@@ -58,12 +60,13 @@ class FontManager2 {
     decorationStyle = TextDecorationStyle.solid,
     String? fontFamily,
   }) {
+    final resolvedColor = color ?? Theme.of(context).textTheme.bodyMedium?.color;
     final style = GoogleFonts.roboto(
       fontSize: fontSize,
       fontWeight: lWeight,
       height: lineHeight,
       fontStyle: lFontStyle,
-      color: color,
+      color: resolvedColor,
       letterSpacing: letterSpacing,
       decoration: decoration,
       decorationColor: decorationColor,

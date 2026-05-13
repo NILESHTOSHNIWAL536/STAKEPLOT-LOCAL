@@ -1,5 +1,5 @@
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_credit_debit.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_search_list.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +40,7 @@ class TransactionHistory extends StatefulWidget {
   final bool? showIcon;
   bool expandedPage;
   bool pageTransition;
-  final bool fromAutoPay; 
+  final bool fromAutoPay;
   TransactionHistory(
       {this.isflag = false,
       this.showIcon = false,
@@ -85,8 +84,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   @override
-  void didChangeDependencies()
-  {
+  void didChangeDependencies() {
     super.didChangeDependencies();
     _stableContext ??= context;
   }
@@ -96,22 +94,19 @@ class _TransactionHistoryState extends State<TransactionHistory>
     return SingleChildScrollView(
       child: Column(
         children: [
-         
           Obx(() => getBoolForSearch()
               ? searchTextControllerBool.value
                   ? getSearchListAndCreditDebit()
                   : getSearchListAndCreditDebit()
               : const SizedBox.shrink()),
           Obx(() {
-            
             if (widget.showIcon ?? false) {
               return reloadHistory.value ? getlist() : getlist();
-            } 
-            else {
+            } else {
               return allOrGroupTransactionsName.value ==
                       StringConstant.allTransactions
                   ? (reloadHistory.value ? getlist() : getlist())
-                  :const  GroupTransactions();
+                  : const GroupTransactions();
             }
           }),
         ],
@@ -120,7 +115,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   bool getBoolForSearch() {
-    return  (searchTextController.value.trim().isNotEmpty && allOrGroupTransactionsName.value == StringConstant.allTransactions);
+    return (searchTextController.value.trim().isNotEmpty &&
+        allOrGroupTransactionsName.value == StringConstant.allTransactions);
   }
 
   void changeTheBool() {
@@ -131,10 +127,15 @@ class _TransactionHistoryState extends State<TransactionHistory>
   Widget getSearchListAndCreditDebit() {
     return Column(
       children: [
-       searchItemClicked.value? const SizedBox.shrink(): const Padding(
-          padding:  EdgeInsets.only(top:AppSizes.p12, bottom: 8,),
-          child: TransactionsSearchList(),
-        ),
+        searchItemClicked.value
+            ? const SizedBox.shrink()
+            : const Padding(
+                padding: EdgeInsets.only(
+                  top: AppSizes.p12,
+                  bottom: 8,
+                ),
+                child: TransactionsSearchList(),
+              ),
         lastWeekjson.isNotEmpty && lastmonthjson.isNotEmpty
             ? const TransactionCreditDebitCard()
             : const SizedBox.shrink(),
@@ -143,6 +144,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   Widget getlist() {
+    final colors = context.appColors;
     // Group transactions by month and year
     Map<String, List<TransactionModel>> groupedTransactions = {};
     for (var transaction in transactionsHistory) {
@@ -152,7 +154,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
         try {
           // Parse as UTC and convert to IST
           DateTime utcDate = DateTime.parse(timestamp).toUtc();
-          DateTime istDate = utcDate.subtract(const Duration(hours: 5, minutes: 30));
+          DateTime istDate =
+              utcDate.subtract(const Duration(hours: 5, minutes: 30));
           // Use only year and month for grouping to avoid day boundary issues
           String monthYearKey =
               DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
@@ -169,14 +172,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
     // Sort months by date (descending order)
     List<String> sortedMonths = groupedTransactions.keys.toList();
     sortedMonths.sort((a, b) {
-      DateTime dateA = DateFormat('MMMM yyyy')
-          .parse(a, true)
-          .toUtc()
-          .subtract(const Duration(hours: 5, minutes: 30)); // Convert UTC to IST
-      DateTime dateB = DateFormat('MMMM yyyy')
-          .parse(b, true)
-          .toUtc()
-          .subtract(const Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+      DateTime dateA = DateFormat('MMMM yyyy').parse(a, true).toUtc().subtract(
+          const Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+      DateTime dateB = DateFormat('MMMM yyyy').parse(b, true).toUtc().subtract(
+          const Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       return dateB.compareTo(dateA); // Most recent first
     });
 
@@ -184,8 +183,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     List<dynamic> displayItems = [];
     for (var monthYear in sortedMonths) {
       displayItems.add(monthYear); // Add the month header
-      displayItems
-          .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
+      displayItems.addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
     }
 
     // Add a loading indicator at the end if more data is being fetched
@@ -203,7 +201,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
         if (item is String && item != 'loader') {
           String monthYear = item;
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
+            padding: const EdgeInsets.symmetric(
+                vertical: AppSizes.p10, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -213,7 +212,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: AppColors.accentColor,
+                    color: colors.onBackground,
                   ),
                 ),
               ],
@@ -233,8 +232,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               context: context,
               hideReview: true,
               isExpanded: widget.expandedPage,
-              fromAutoPay: widget.fromAutoPay
-              );
+              fromAutoPay: widget.fromAutoPay);
         }
 
         return Obx(() => !isLoadingMore.value
@@ -272,18 +270,19 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   void showModal() {
+    final colors = context.appColors;
     getPdgLoader.value = false;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
           height: MediaQuery.of(context).size.height / 2,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             ),
-            color: AppColors.backgroundColor,
+            color: colors.dialogBackground,
           ),
           child: Column(
             children: [
@@ -303,10 +302,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: const Icon(
+                      child: Icon(
                         Icons.close_outlined,
                         size: 20,
-                        color: AppColors.accentColor,
+                        color: colors.onBackground,
                       ),
                     )
                   ],
@@ -338,7 +337,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 }
 
-Widget getIconAvtar(double avatarSize, String category, double scaleFactor, ) {
+Widget getIconAvtar(
+  double avatarSize,
+  String category,
+  double scaleFactor,
+) {
   String lowerCategory = category?.toLowerCase() ?? '';
 
   final matched = custom.firstWhere(
