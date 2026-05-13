@@ -31,6 +31,7 @@ import Collection from '@/models/collections/collection.model';
 import CollectionMember from '@/models/collections/collection-member.model';
 import Split from '@/models/collections/split.model';
 import SplitPayment from '@/models/collections/split-payment.model';
+import StridesService from '@/services/strides-service';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
@@ -90,6 +91,7 @@ export async function createBankDetails(data: any, consentHandleId: string, user
 
         const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob, session);
         const accountId = account._id;
+      await StridesService.add(userId, 2, 'BANK_ACCOUNT_ADDED', accountId.toString());
 
         if (fiObject.Profile) {
           await new ProfileRepository().createProfile(
@@ -832,8 +834,11 @@ export async function updateTransaction(updateData: any, userId: UserIdLike, tra
     }
 
     const ObjectId = new mongoose.Types.ObjectId(transactionId);
-    const existing = await Transaction.findOne({ _id: ObjectId, userId }).select('transactionTimestamp manualTransaction bankId accountId').lean();
+    const existing = await Transaction.findOne({ _id: ObjectId, userId }).select('transactionTimestamp manualTransaction bankId accountId category').lean();
     const response = await new AutoTransactionRepository().updateTransaction(userId, ObjectId, updateData);
+    if (response?.data) {
+      (response.data as any).wasTaggedFromUntagged = existing?.category === 'Untagged' && response.data.category && response.data.category !== 'Untagged';
+    }
     if (response?.data) {
       const metricsTxs: any[] = [response.data];
       const oldTimestamp = existing?.transactionTimestamp ? new Date(existing.transactionTimestamp) : null;

@@ -70,7 +70,6 @@ export const protect = async (req: Request, res: Response, next: NextFunction): 
 
     next();
   } catch (error) {
-    console.log('Authentication Middleware Error:', error);
     next(error);
   }
 };

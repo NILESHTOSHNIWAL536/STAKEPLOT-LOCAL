@@ -39,6 +39,7 @@ import CollectionInvitation from "./collections/collection-invitation.model";
 import ReferralCode from "./referral-code.model";
 import ReferralUsage from "./referral-usage.model";
 import UserConfig from "./user-config.model";
+import Strides from "./strides-model";
 
 export {
   // Models related to storing user's profile, fipRecords, summaries, transactions
@@ -83,4 +84,5 @@ export {
   ReferralCode,
   ReferralUsage,
   UserConfig,
+  Strides,
 };

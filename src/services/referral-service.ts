@@ -6,6 +6,7 @@ import ReferralUsage from '@/models/referral-usage.model';
 import UserConfig from '@/models/user-config.model';
 import AppError from '@/utils/errors/app-error';
 import UserConfigService from './user-config-service';
+import StridesService from './strides-service';
 
 const transactionOptions: mongoose.mongo.TransactionOptions = {
   readPreference: 'primary',
@@ -270,6 +271,22 @@ export const applyReferralCode = async (userId: string, rawCode: string) => {
         },
       };
     }, transactionOptions);
+
+    const usage: any = result!.usage;
+    await StridesService.addOnce(
+      usage.referrerUserId,
+      10,
+      'REFERRAL_INVITER',
+      `referral-inviter:${usage._id}`,
+      usage._id.toString()
+    );
+    await StridesService.addOnce(
+      usage.referredUserId,
+      5,
+      'REFERRAL_NEW_USER',
+      `referral-new-user:${usage._id}`,
+      usage._id.toString()
+    );
 
     return result!;
   } finally {

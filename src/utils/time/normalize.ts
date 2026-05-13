@@ -58,7 +58,6 @@ export function normalizeTransactionTimestamp(
 
   // ISO string that explicitly carries timezone info (ends in Z or contains +)
   const hasExplicitTz = input.endsWith('Z') || /[+\-]\d{2}:?\d{2}$/.test(input);
-  console.log("has Expits: ", hasExplicitTz);
 
   let normalized: Date | undefined;
 
@@ -84,8 +83,6 @@ export function normalizeTransactionTimestamp(
     console.warn('[normalizeTransactionTimestamp] Could not parse timestamp', { bankKey, input });
     return undefined;
   }
-
-  console.log('[normalizeTransactionTimestamp]', { bankKey, raw: input, normalized });
 
   return normalized;
 }

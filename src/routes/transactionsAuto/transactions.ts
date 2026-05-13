@@ -23,6 +23,12 @@ import {
 const router = express.Router();
 router.use(express.json());
 
+router.get(
+  '/autopays',
+  AuthMiddlewares.protect,
+  TransactionAutoController.getAutoPays
+);
+
 router.post(
   '/grouped/:groupId/categorize',
   AuthMiddlewares.protect,
