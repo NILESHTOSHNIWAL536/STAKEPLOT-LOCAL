@@ -30,6 +30,12 @@ router.get(
 );
 
 router.post(
+  '/recurring-payments/from-transaction/:transactionId',
+  AuthMiddlewares.protect,
+  TransactionAutoController.createRecurringPaymentFromTransactionController
+);
+
+router.post(
   '/grouped/:groupId/categorize',
   AuthMiddlewares.protect,
   validateRequestMiddleware(categorizeGroupedTransaction),

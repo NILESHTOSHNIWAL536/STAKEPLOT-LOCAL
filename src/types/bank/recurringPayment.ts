@@ -13,6 +13,16 @@ export interface IRecurringPayment extends Document {
 
   narration?: string;
   source?: string;
+  normalizedMerchantKey: string;
+  transactionIds?: Types.ObjectId[];
+  amountVariance?: number;
+  currency?: string;
+  confidenceScore?: number;
+  confidenceLabel?: 'high' | 'medium' | 'low';
+  detectionMethod?: 'keyword_match' | 'merchant_name' | 'bbps' | 'amount_pattern' | 'manual' | 'merchantMatch' | 'patternMatch';
+  merchantCategory?: string;
+  matchedNarrations?: string[];
+  isUserDefined?: boolean;
 
   recentMostTwoOccurrences?: Date[];
 

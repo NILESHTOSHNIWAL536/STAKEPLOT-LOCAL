@@ -110,7 +110,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async getRecurringPayments(userId: string | Types.ObjectId, isActive: boolean) {
     try {
-      return await this.RecurringModel.find({ userId, isActive }).lean();
+      return await this.RecurringModel.find({ userId, isActive }).sort({ nextReminderAt: 1, confidenceScore: -1 }).lean();
     } catch (error) {
       logger.error(`Error from getRecurringPayments: ${error}`);
       throw error;
@@ -122,7 +122,23 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   }
 
   async deleteRecurringPayment(recurringId: string | Types.ObjectId) {
-    return this.RecurringModel.deleteOne({ _id: recurringId });
+    const recurring = await this.RecurringModel.findOne({ _id: recurringId }).lean();
+    const response = await this.RecurringModel.deleteOne({ _id: recurringId });
+
+    if (recurring?.transactionIds?.length) {
+      await this.TransactionModel.updateMany(
+        { _id: { $in: recurring.transactionIds }, autoPayId: recurringId.toString() },
+        {
+          $set: {
+            isAutoPay: false,
+            autoPayId: '',
+            expectedFrequency: '',
+          },
+        }
+      );
+    }
+
+    return response;
   }
 
   // -------------------------

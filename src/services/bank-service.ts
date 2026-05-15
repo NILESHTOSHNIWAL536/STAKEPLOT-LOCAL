@@ -9,7 +9,7 @@ import redisClient from '../config/redis-config';
 import logger from '@/utils/common/logger';
 import { PendingTransaction, GroupedTransaction, Transaction } from '@/models';
 import saveGroupedTransactions from '../utils/helpers/saveGroupedTransactions';
-import detectRecurringPayments from '../utils/helpers/detect-recurring-payments';
+import { detectAndStoreAutoPays } from '@/services/auto-service';
 import { generateDataKey } from '@/services/Encryption/generateDataKey';
 import { getNextFetch, getNextMonthFetch } from '@/utils/helpers/get-next-fetch';
 import getISTTimestamp from '@/utils/helpers/get-IST-timeStamp';
@@ -126,7 +126,7 @@ export async function createBankDetails(data: any, consentHandleId: string, user
 
         // grouping and downstream jobs
         await saveGroupedTransactions(userId);
-        await detectRecurringPayments(userId);
+        await detectAndStoreAutoPays(userId);
       }
     }
 
@@ -241,6 +241,7 @@ export async function updateBankDetails(data: any, consentHandleId: string, user
       if (fiObject.Transactions?.Transaction) {
         await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank!._id, data.fipId);
         await saveGroupedTransactions(userId);
+        await detectAndStoreAutoPays(userId);
       }
     }
 

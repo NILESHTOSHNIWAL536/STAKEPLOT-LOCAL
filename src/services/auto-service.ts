@@ -1,6 +1,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
-import { PendingTransaction, GroupedTransaction, Transaction } from '@/models';
+import { RecurringPayment, Transaction } from '@/models';
 import { IBankTransaction } from '@/types/bank';
+import { Types } from 'mongoose';
 
 
 export type Frequency = 'monthly' | 'quarterly' | 'biannual' | 'annual';
@@ -59,7 +60,7 @@ export interface DetectedAutoPay {
 
   // Source narrations used for detection
   matchedNarrations: string[];
-  detectionMethod: 'keyword_match' | 'merchant_name' | 'bbps' | 'amount_pattern';
+  detectionMethod: 'keyword_match' | 'merchant_name' | 'bbps' | 'amount_pattern' | 'manual';
 }
 
 export type MerchantCategory =
@@ -346,26 +347,182 @@ const BBPS_PATTERNS = [
   /bbpsbpaxl/i,
   /bill\s?pay/i,
   /billpayment/i,
+  /bill\s?desk/i,
+  /utility\s?bill/i,
+  /electricity\s?bill/i,
+  /water\s?bill/i,
+  /gas\s?bill/i,
+  /mobile\s?bill/i,
+  /postpaid/i,
   /nach\s?debit/i,
   /ecs\s?debit/i,
   /autopay\s?debit/i,
+  /auto\s?pay/i,
+  /mandate/i,
+  /upi\s?mandate/i,
+  /recurring/i,
   /standing\s?instruction/i,
   /si\s?debit/i,
 ];
 
+const GENERIC_RECURRING_FINGERPRINTS: Array<{
+  canonicalName: string;
+  category: MerchantCategory;
+  patterns: RegExp[];
+}> = [
+  {
+    canonicalName: 'Room Rent',
+    category: 'subscription_other',
+    patterns: [
+      /\broom\s*rent\b/i,
+      /\bhou?se\s*rent\b/i,
+      /\bflat\s*rent\b/i,
+      /\bhome\s*rent\b/i,
+      /\bapartment\s*rent\b/i,
+      /\bpg\s*rent\b/i,
+      /\boffice\s*rent\b/i,
+      /\brent\s*(paid|payment|transfer|to|for)?\b/i,
+      /\brent\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Wifi / Broadband',
+    category: 'internet',
+    patterns: [
+      /\bwifi\b/i,
+      /\bwi-fi\b/i,
+      /\bwi\s*fi\b/i,
+      /\bbroadband\b/i,
+      /\binternet\b/i,
+      /\bfibernet\b/i,
+      /\bfiber\b/i,
+      /\bfibre\b/i,
+      /\bisp\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Utility Bill',
+    category: 'utility',
+    patterns: [
+      /\bbill\s*pay(ment)?\b/i,
+      /\butility\s*bill\b/i,
+      /\belectricity\b/i,
+      /\bpower\s*bill\b/i,
+      /\bwater\s*bill\b/i,
+      /\bgas\s*bill\b/i,
+      /\bpostpaid\b/i,
+      /\bmobile\s*bill\b/i,
+      /\bdth\b/i,
+      /\bcable\b/i,
+      /\brecharge\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Autopay Mandate',
+    category: 'subscription_other',
+    patterns: [
+      /\bauto\s*pay\b/i,
+      /\bautopay\b/i,
+      /\bmandate\b/i,
+      /\bnach\b/i,
+      /\becs\b/i,
+      /\bstanding\s*instruction\b/i,
+      /\bsi\s*debit\b/i,
+      /\bsubscription\b/i,
+      /\brecurring\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Recurring Transfer',
+    category: 'subscription_other',
+    patterns: [
+      /\brtgs\b/i,
+      /\bneft\b/i,
+      /\bimps\b/i,
+      /\bupi\b/i,
+      /\bbank\s*transfer\b/i,
+      /\btransfer\s*to\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Maintenance',
+    category: 'utility',
+    patterns: [
+      /\bmaintenance\b/i,
+      /\bsociety\s*maintenance\b/i,
+      /\bapartment\s*maintenance\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Maid / Domestic Help',
+    category: 'subscription_other',
+    patterns: [
+      /\bmaid\b/i,
+      /\bdomestic\s*help\b/i,
+      /\bhouse\s*help\b/i,
+    ],
+  },
+  {
+    canonicalName: 'Tuition / Classes',
+    category: 'subscription_other',
+    patterns: [
+      /\btuition\b/i,
+      /\bclass(es)?\b/i,
+      /\bcoaching\b/i,
+    ],
+  },
+];
+
 // ─── Frequency Windows (in days) ─────────────────────────────────────────────
 const FREQUENCY_WINDOWS: Record<Frequency, { min: number; max: number; label: string }> = {
-  monthly:   { min: 25,  max: 35,  label: 'Monthly' },
+  monthly:   { min: 23,  max: 38,  label: 'Monthly' },
   quarterly: { min: 80,  max: 100, label: 'Quarterly' },
   biannual:  { min: 170, max: 200, label: 'Bi-Annual' },
   annual:    { min: 340, max: 390, label: 'Annual' },
 };
 
-// Amount tolerance: transactions are grouped if amounts are within ±15%
-const AMOUNT_TOLERANCE = 0.15;
-
-// Minimum occurrences to confirm recurring
-const MIN_OCCURRENCES = 2;
+const DETECTION_WINDOW_MONTHS = 12;
+const MIN_OCCURRENCES = 3;
+const MONTHLY_MIN_COVERAGE = 3;
+const AMOUNT_VARIANCE_SOFT_LIMIT = 0.45;
+const NARRATION_MERCHANT_CATEGORIES = new Set([
+  'Room Rent',
+  'Wifi / Broadband',
+  'Utility Bill',
+  'Autopay Mandate',
+  'Recurring Transfer',
+  'Maintenance',
+  'Maid / Domestic Help',
+  'Tuition / Classes',
+]);
+const MANUAL_MATCH_AMOUNT_TOLERANCE = 0.08;
+const MANUAL_MATCH_LOOKBACK_MONTHS = 18;
+const RECURRING_CONTEXT_STOP_WORDS = new Set([
+  'rent',
+  'room',
+  'house',
+  'home',
+  'flat',
+  'apartment',
+  'pg',
+  'bill',
+  'bills',
+  'wifi',
+  'broadband',
+  'internet',
+  'fiber',
+  'fibre',
+  'recharge',
+  'utility',
+  'electricity',
+  'water',
+  'gas',
+  'maintenance',
+  'subscription',
+  'autopay',
+  'mandate',
+  'monthly',
+]);
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -395,6 +552,7 @@ const GENERIC_NARRATION_STOP_WORDS = new Set([
   'transferred',
   'bill',
   'txn',
+  'txnid',
   'ref',
   'reference',
   'imps',
@@ -423,6 +581,11 @@ const GENERIC_NARRATION_STOP_WORDS = new Set([
   'barb',
   'cnrb',
   'punb',
+  'paytm',
+  'phonepe',
+  'gpay',
+  'googlepay',
+  'bhim',
 ]);
 
 function isNoiseToken(token: string): boolean {
@@ -446,8 +609,52 @@ function titleCase(value: string): string {
 function cleanedNarrationTokens(value: string): string[] {
   return normalizeNarration(value)
     .split(' ')
+    .flatMap((token) => token.split(/(?=rent|wifi|broadband|internet|maintenance)/i))
     .map((token) => token.replace(/^(paytm|phonepe|gpay|googlepay|bhim)/, ''))
     .filter((token) => !isNoiseToken(token));
+}
+
+function significantNarrationTokens(value: string): string[] {
+  return cleanedNarrationTokens(value).filter((token) => !RECURRING_CONTEXT_STOP_WORDS.has(token));
+}
+
+function manualMerchantName(txn: IBankTransaction): string {
+  const tokens = significantNarrationTokens(`${txn.merchant || ''} ${txn.name || ''} ${txn.narration || ''}`);
+  if (tokens.length > 0) return titleCase(tokens.slice(0, 4).join(' '));
+
+  return extractGenericMerchantName(txn) || 'Recurring Payment';
+}
+
+function tokenOverlapScore(a: string[], b: string[]): number {
+  if (a.length === 0 || b.length === 0) return 0;
+
+  const bSet = new Set(b);
+  const matched = new Set(a.filter((token) => bSet.has(token)));
+  return matched.size / Math.min(a.length, b.length);
+}
+
+function isAmountClose(a: number, b: number, tolerance = MANUAL_MATCH_AMOUNT_TOLERANCE): boolean {
+  if (!a || !b) return false;
+  const baseline = Math.max(Math.abs(a), Math.abs(b), 1);
+  return Math.abs(a - b) / baseline <= tolerance;
+}
+
+function amountGroupKey(amount: number): string {
+  return `amount_${Math.round(amount)}`;
+}
+
+function sharedNameFromTransactions(transactions: IBankTransaction[]): string | null {
+  if (transactions.length === 0) return null;
+
+  const tokenLists = transactions.map((txn) =>
+    significantNarrationTokens(`${txn.merchant || ''} ${txn.name || ''} ${txn.narration || ''}`)
+  );
+  const firstTokens = tokenLists[0] || [];
+  const shared = firstTokens.filter((token) =>
+    tokenLists.every((tokens) => tokens.includes(token))
+  );
+
+  return shared.length > 0 ? titleCase(shared.slice(0, 4).join(' ')) : null;
 }
 
 function phraseFromNarrationPart(value: string): string | null {
@@ -589,6 +796,19 @@ export function matchMerchant(narration: string): MatchResult | null {
     }
   }
 
+  for (const fp of GENERIC_RECURRING_FINGERPRINTS) {
+    if (fp.patterns.some((pattern) => pattern.test(norm))) {
+      return {
+        fingerprint: {
+          canonicalName: fp.canonicalName,
+          category: fp.category,
+          keywords: [fp.canonicalName],
+        },
+        method: 'keyword_match',
+      };
+    }
+  }
+
   return null;
 }
 
@@ -597,20 +817,137 @@ export function matchMerchant(narration: string): MatchResult | null {
 //   (a) same canonical merchant name
 //   (b) amount within ±AMOUNT_TOLERANCE of each other
 
-function amountBucket(amount: number): string {
-  // Round to nearest 5 for loose bucketing
-  return String(Math.round(amount / 5) * 5);
+function merchantKey(canonicalName: string): string {
+  return normalizeNarration(canonicalName).replace(/\s+/g, '_');
 }
 
-export function groupingKey(canonicalName: string, amount: number): string {
-  return `${canonicalName}::${amountBucket(amount)}`;
+export function groupingKey(canonicalName: string, amount?: number): string {
+  return merchantKey(canonicalName);
+}
+
+function detectionCutoff(months = DETECTION_WINDOW_MONTHS): Date {
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - months);
+  cutoff.setHours(0, 0, 0, 0);
+  return cutoff;
+}
+
+function uniqueMonthCount(dates: Date[]): number {
+  return new Set(dates.map((date) => `${date.getUTCFullYear()}-${date.getUTCMonth()}`)).size;
+}
+
+function median(values: number[]): number {
+  if (!values.length) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+}
+
+function inferFrequencyFromTransactions(transactions: IBankTransaction[], fallback: Frequency = 'monthly'): Frequency {
+  const sorted = [...transactions]
+    .map((txn) => new Date(txn.transactionTimestamp))
+    .filter((date) => !Number.isNaN(date.getTime()))
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  if (sorted.length < 2) return fallback;
+
+  const intervals: number[] = [];
+  for (let i = 1; i < sorted.length; i++) {
+    intervals.push(daysBetween(sorted[i - 1], sorted[i]));
+  }
+
+  return detectFrequency(median(intervals)) || fallback;
+}
+
+function amountVariancePercent(amounts: number[]): number {
+  if (amounts.length < 2) return 0;
+
+  const avgAmount = amounts.reduce((sum, amount) => sum + amount, 0) / amounts.length;
+  if (!avgAmount) return 0;
+
+  return Math.round(((Math.max(...amounts) - Math.min(...amounts)) / avgAmount) * 10000) / 100;
+}
+
+function buildRecurringDoc(detected: DetectedAutoPay, existing?: any) {
+  const recent = detected.recentMostTransaction;
+
+  return {
+    recentMostTransactionId: new Types.ObjectId(detected.recentMostTransactionId),
+    userId: new Types.ObjectId(String(detected.userId)),
+    merchant: detected.merchant,
+    frequency: detected.frequency,
+    amount: Math.round(detected.amount * 100) / 100,
+    recentMostTransactionTimestamp: detected.recentMostTransactionTimestamp,
+    nextReminderAt: existing?.isActive && existing?.nextReminderAt ? existing.nextReminderAt : detected.nextReminderAt,
+    narration: recent?.narration || detected.matchedNarrations[detected.matchedNarrations.length - 1] || '',
+    source: detected.detectionMethod,
+    recentMostTwoOccurrences: detected.recentMostTwoOccurrences,
+    occurrencesCount: detected.occurrencesCount,
+    isActive: existing?.isActive ?? detected.isActive,
+    isDaily: existing?.isDaily ?? false,
+    normalizedMerchantKey: detected.normalizedMerchantKey,
+    transactionIds: detected.transactionIds.map((id) => new Types.ObjectId(id)),
+    amountVariance: detected.amountVariance,
+    currency: detected.currency,
+    confidenceScore: detected.confidenceScore,
+    confidenceLabel: detected.confidenceLabel,
+    detectionMethod: detected.detectionMethod,
+    merchantCategory: detected.merchantCategory,
+    matchedNarrations: detected.matchedNarrations,
+    isUserDefined: existing?.isUserDefined ?? false,
+  };
+}
+
+export async function persistDetectedAutoPays(userId: string | Types.ObjectId, detected: DetectedAutoPay[]): Promise<any[]> {
+  const saved: any[] = [];
+
+  for (const autoPay of detected) {
+    if (autoPay.occurrencesCount < MIN_OCCURRENCES) continue;
+
+    const filter = {
+      userId: new Types.ObjectId(String(userId)),
+      normalizedMerchantKey: autoPay.normalizedMerchantKey,
+    };
+    const existing = await RecurringPayment.findOne(filter).lean();
+    const doc = buildRecurringDoc(autoPay, existing);
+    const savedAutoPay = await RecurringPayment.findOneAndUpdate(filter, { $set: doc }, { new: true, upsert: true, setDefaultsOnInsert: true });
+
+    if (savedAutoPay) {
+      saved.push(savedAutoPay);
+      await Transaction.updateMany(
+        { _id: { $in: autoPay.transactionIds }, userId },
+        {
+          $set: {
+            isAutoPay: true,
+            autoPayId: savedAutoPay._id.toString(),
+            merchant: autoPay.merchant,
+            expectedFrequency: autoPay.frequency,
+          },
+        }
+      );
+    }
+  }
+
+  return saved.sort((a, b) => {
+    const activeDiff = Number(b.isActive) - Number(a.isActive);
+    if (activeDiff !== 0) return activeDiff;
+    return new Date(a.nextReminderAt).getTime() - new Date(b.nextReminderAt).getTime();
+  });
 }
 
 // ─── Main Detection Function ──────────────────────────────────────────────────
 
-export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> {
-  // Only look at DEBIT transactions
-  const debits = await Transaction.find({ userId, type: 'DEBIT', }).lean();
+export async function detectAutoPays(userId, options: { persist?: boolean; months?: number } = {}): Promise<DetectedAutoPay[] | null> {
+  const { persist = true, months = DETECTION_WINDOW_MONTHS } = options;
+  const cutoff = detectionCutoff(months);
+
+  const debits = await Transaction.find({
+    userId,
+    type: 'DEBIT',
+    Hidden: { $ne: true },
+    isExcluded: { $ne: true },
+    transactionTimestamp: { $gte: cutoff },
+  }).lean();
 
   if(!debits || debits.length === 0) return null;
   
@@ -628,8 +965,21 @@ export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> 
     const ts = new Date(txn.transactionTimestamp);
     if (Number.isNaN(ts.getTime())) continue;
 
-    const match = matchMerchant(txn.narration);
+    let match = matchMerchant(txn.narration);
     if (match) {
+      const narrationMerchant = extractGenericMerchantName(txn);
+      if (
+        narrationMerchant &&
+        NARRATION_MERCHANT_CATEGORIES.has(match.fingerprint.canonicalName)
+      ) {
+        match = {
+          ...match,
+          fingerprint: {
+            ...match.fingerprint,
+            canonicalName: narrationMerchant,
+          },
+        };
+      }
       candidates.push({ txn, match, ts });
       continue;
     }
@@ -651,36 +1001,48 @@ export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> 
     });
   }
 
-  // Step 2: Group candidates by (canonicalName + amount bucket)
-  const groups = new Map<string, Candidate[]>();
+  // Step 2: Group candidates by merchant/narration fingerprint. Amount is
+  // scored later, not used as the grouping gate, so variable bills still match.
+  const groups = new Map<string, { candidates: Candidate[]; isAmountFallback: boolean }>();
   for (const c of candidates) {
-    const key = groupingKey(c.match.fingerprint.canonicalName, c.txn.amount);
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)!.push(c);
+    const merchantGroupKey = `merchant:${groupingKey(c.match.fingerprint.canonicalName)}`;
+    const amountKey = amountGroupKey(c.txn.amount);
+    const amountFallbackKey = `amount:${amountKey}`;
+
+    if (!groups.has(merchantGroupKey)) {
+      groups.set(merchantGroupKey, { candidates: [], isAmountFallback: false });
+    }
+    groups.get(merchantGroupKey)!.candidates.push(c);
+
+    if (!groups.has(amountFallbackKey)) {
+      groups.set(amountFallbackKey, { candidates: [], isAmountFallback: true });
+    }
+    groups.get(amountFallbackKey)!.candidates.push(c);
   }
 
   const results: DetectedAutoPay[] = [];
 
   // Step 3: Analyze each group for recurring pattern
-  for (const [, groupCandidates] of groups) {
+  for (const [groupKey, group] of groups) {
+    const groupCandidates = group.candidates;
     if (groupCandidates.length < MIN_OCCURRENCES) continue;
 
     // Sort by timestamp ascending
     const sorted = [...groupCandidates].sort((a, b) => a.ts.getTime() - b.ts.getTime());
 
-    // Compute intervals between consecutive occurrences
+    if (sorted.length < MIN_OCCURRENCES) continue;
+
     const intervals: number[] = [];
     for (let i = 1; i < sorted.length; i++) {
       intervals.push(daysBetween(sorted[i - 1].ts, sorted[i].ts));
     }
 
-    // Use minimum interval for frequency detection.
-    // Rationale: a subscription is monthly if it ever recurred monthly.
-    // Larger gaps happen when users temporarily cancel or when data window is incomplete.
-    const minInterval = Math.min(...intervals);
-    const frequency = detectFrequency(minInterval);
+    const averageInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+    const medianInterval = median(intervals);
+    const frequency = detectFrequency(medianInterval) || detectFrequency(averageInterval);
 
     if (!frequency) continue; // Not a recognized recurring interval
+    if (frequency === 'monthly' && uniqueMonthCount(sorted.map((c) => c.ts)) < MONTHLY_MIN_COVERAGE) continue;
 
     // Compute amount stats
     const amounts = sorted.map((c) => c.txn.amount);
@@ -693,10 +1055,10 @@ export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> 
     // Consistency score
     const consistency = intervalConsistencyScore(intervals);
 
-    // Confidence: combine consistency + occurrence count + amount stability
-    const occurrenceBonus = Math.min(sorted.length / 6, 0.3); // up to 0.3 bonus for many hits
-    const amountBonus = 1 - amountVariance; // 1.0 = exact same amount
-    const rawConfidence = consistency * 0.5 + amountBonus * 0.3 + occurrenceBonus;
+    const amountBonus = Math.max(0, 1 - Math.min(amountVariance, AMOUNT_VARIANCE_SOFT_LIMIT) / AMOUNT_VARIANCE_SOFT_LIMIT);
+    const occurrenceBonus = Math.min(sorted.length / 6, 0.25);
+    const methodBonus = sorted.some((c) => c.match.method === 'keyword_match' || c.match.method === 'bbps') ? 0.15 : 0;
+    const rawConfidence = consistency * 0.45 + amountBonus * 0.2 + occurrenceBonus + methodBonus;
     const confidenceScore = Math.min(1, rawConfidence);
     const confidenceLabel: DetectedAutoPay['confidenceLabel'] =
       confidenceScore >= 0.7 ? 'high' : confidenceScore >= 0.45 ? 'medium' : 'low';
@@ -706,6 +1068,17 @@ export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> 
 
     const mostRecent = sorted[sorted.length - 1];
     const recentTwo = sorted.slice(-2).map((c) => c.ts);
+    const avgRounded = Math.round(avgAmount);
+    const fallbackName =
+      sharedNameFromTransactions(sorted.map((c) => c.txn)) ||
+      extractGenericMerchantName(mostRecent.txn) ||
+      `Recurring ${avgRounded}`;
+    const merchant = group.isAmountFallback
+      ? fallbackName
+      : mostRecent.match.fingerprint.canonicalName;
+    const normalizedMerchantKey = group.isAmountFallback
+      ? groupKey.replace(':', '_')
+      : groupingKey(merchant);
 
     results.push({
       transactionIds: sorted.map((c) => c.txn._id.toString()),
@@ -713,17 +1086,14 @@ export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> 
       transactions: sorted.map((c) => c.txn),
       recentMostTransaction: mostRecent.txn,
       userId: mostRecent.txn.userId,
-      merchant: mostRecent.match.fingerprint.canonicalName,
+      merchant,
       merchantCategory: mostRecent.match.fingerprint.category,
-      normalizedMerchantKey: groupingKey(
-        mostRecent.match.fingerprint.canonicalName,
-        mostRecent.txn.amount
-      ),
+      normalizedMerchantKey,
       amount: avgAmount,
       amountVariance: Math.round(amountVariance * 10000) / 100, // as %
       currency: 'INR',
       frequency,
-      averageIntervalDays: Math.round(intervals.reduce((a,b) => a+b, 0) / intervals.length),
+      averageIntervalDays: Math.round(averageInterval),
       intervalConsistencyScore: Math.round(consistency * 100) / 100,
       recentMostTransactionTimestamp: mostRecent.ts,
       nextReminderAt: nextReminderDate(mostRecent.ts, frequency),
@@ -733,14 +1103,164 @@ export async function detectAutoPays(userId): Promise<DetectedAutoPay[] | null> 
       confidenceScore: Math.round(confidenceScore * 100) / 100,
       confidenceLabel,
       matchedNarrations: sorted.map((c) => c.txn.narration),
-      detectionMethod: mostRecent.match.method,
+      detectionMethod: group.isAmountFallback ? 'amount_pattern' : mostRecent.match.method,
     });
   }
 
-  // Sort by confidence desc, then amount desc
-  return results.sort((a, b) => {
+  const sortedResults = results.sort((a, b) => {
     if (b.confidenceScore !== a.confidenceScore) return b.confidenceScore - a.confidenceScore;
     return b.amount - a.amount;
+  }).reduce<DetectedAutoPay[]>((unique, item) => {
+    const ids = new Set(item.transactionIds);
+    const duplicate = unique.some((existing) => {
+      const existingIds = new Set(existing.transactionIds);
+      const overlap = [...ids].filter((id) => existingIds.has(id)).length;
+      return overlap / Math.min(ids.size, existingIds.size) >= 0.8;
+    });
+
+    if (!duplicate) unique.push(item);
+    return unique;
+  }, []);
+
+  if (persist) await persistDetectedAutoPays(userId, sortedResults);
+  return sortedResults;
+
+}
+
+export async function detectAndStoreAutoPays(userId: string | Types.ObjectId): Promise<any[]> {
+  const detected = (await detectAutoPays(userId, { persist: false })) || [];
+  await persistDetectedAutoPays(userId, detected);
+  return RecurringPayment.find({
+    userId,
+    $or: [
+      { occurrencesCount: { $gte: MIN_OCCURRENCES } },
+      { isUserDefined: true },
+      { isDaily: true },
+    ],
+  })
+    .populate('transactionIds')
+    .sort({ isActive: -1, nextReminderAt: 1, confidenceScore: -1 })
+    .lean();
+}
+
+async function findManualRecurringTransactions(userId: string | Types.ObjectId, selectedTxn: IBankTransaction): Promise<IBankTransaction[]> {
+  const selectedTokens = significantNarrationTokens(
+    `${selectedTxn.merchant || ''} ${selectedTxn.name || ''} ${selectedTxn.narration || ''}`
+  );
+  const selectedMerchantKey = merchantKey(manualMerchantName(selectedTxn));
+  const cutoff = detectionCutoff(MANUAL_MATCH_LOOKBACK_MONTHS);
+
+  const candidates = await Transaction.find({
+    userId,
+    // type: 'DEBIT',
+    Hidden: { $ne: true },
+    isExcluded: { $ne: true },
+    transactionTimestamp: { $gte: cutoff },
+  }).lean();
+
+  const matched: IBankTransaction[] = candidates.filter((candidate) => {
+    const candidateId = candidate._id?.toString();
+    if (candidateId && candidateId === selectedTxn._id?.toString()) return true;
+    if (!isAmountClose(candidate.amount, selectedTxn.amount)) return false;
+
+    const candidateTokens = significantNarrationTokens(
+      `${candidate.merchant || ''} ${candidate.name || ''} ${candidate.narration || ''}`
+    );
+    const candidateMerchantKey = merchantKey(manualMerchantName(candidate));
+
+    if (selectedMerchantKey && candidateMerchantKey === selectedMerchantKey) return true;
+
+    const overlap = tokenOverlapScore(selectedTokens, candidateTokens);
+    if (selectedTokens.length >= 2) return overlap >= 0.5;
+
+    return overlap >= 1;
   });
 
+  const selectedId = selectedTxn._id?.toString();
+  if (selectedId && !matched.some((candidate) => candidate._id?.toString() === selectedId)) {
+    matched.push(selectedTxn);
+  }
+
+  return matched.sort(
+    (a, b) =>
+      new Date(a.transactionTimestamp).getTime() -
+      new Date(b.transactionTimestamp).getTime()
+  );
+}
+
+export async function createRecurringPaymentFromTransaction(
+  userId: string | Types.ObjectId,
+  transactionId: string | Types.ObjectId,
+  dueDay?: number
+): Promise<any> {
+  const txn = await Transaction.findOne({ _id: transactionId, userId }).lean();
+  if (!txn) throw new Error('Transaction not found');
+
+  const matched = matchMerchant(txn.narration || '');
+  const recurringTransactions = await findManualRecurringTransactions(userId, txn);
+  const mostRecentTxn = recurringTransactions[recurringTransactions.length - 1] || txn;
+  const merchant = manualMerchantName(txn);
+  const frequency = inferFrequencyFromTransactions(recurringTransactions, 'monthly');
+  const transactionDate = new Date(mostRecentTxn.transactionTimestamp);
+  const nextReminderAt = nextReminderDate(transactionDate, frequency);
+  const transactionIds = recurringTransactions.map((transaction) => transaction._id);
+  const amounts = recurringTransactions.map((transaction) => transaction.amount);
+  const avgAmount = amounts.length
+    ? Math.round((amounts.reduce((sum, amount) => sum + amount, 0) / amounts.length) * 100) / 100
+    : txn.amount;
+  const recentMostTwoOccurrences = recurringTransactions
+    .slice(-2)
+    .map((transaction) => new Date(transaction.transactionTimestamp));
+
+  if (dueDay && dueDay >= 1 && dueDay <= 31) {
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth();
+    const day = Math.min(dueDay, new Date(Date.UTC(year, month + 1, 0)).getUTCDate());
+    nextReminderAt.setUTCFullYear(year, month, day);
+    nextReminderAt.setUTCHours(9, 0, 0, 0);
+    if (nextReminderAt.getTime() <= now.getTime()) {
+      nextReminderAt.setUTCMonth(nextReminderAt.getUTCMonth() + 1);
+    }
+  }
+
+  const normalizedMerchantKey = groupingKey(merchant);
+  const saved = await RecurringPayment.findOneAndUpdate(
+    { userId: new Types.ObjectId(String(userId)), normalizedMerchantKey },
+    {
+      $set: {
+        recentMostTransactionId: txn._id,
+        userId,
+        merchant,
+        frequency,
+        amount: avgAmount,
+        recentMostTransactionTimestamp: transactionDate,
+        nextReminderAt,
+        narration: mostRecentTxn.narration || txn.narration || '',
+        source: 'manual',
+        recentMostTwoOccurrences,
+        occurrencesCount: recurringTransactions.length,
+        isActive: true,
+        isDaily: false,
+        normalizedMerchantKey,
+        transactionIds,
+        amountVariance: amountVariancePercent(amounts),
+        currency: 'INR',
+        confidenceScore: 1,
+        confidenceLabel: 'high',
+        detectionMethod: 'manual',
+        merchantCategory: matched?.fingerprint.category || 'subscription_other',
+        matchedNarrations: recurringTransactions.map((transaction) => transaction.narration || ''),
+        isUserDefined: true,
+      },
+    },
+    { new: true, upsert: true, setDefaultsOnInsert: true }
+  );
+
+  await Transaction.updateMany(
+    { _id: { $in: transactionIds }, userId },
+    { $set: { isAutoPay: true, autoPayId: saved!._id.toString(), merchant, expectedFrequency: frequency } }
+  );
+
+  return RecurringPayment.findById(saved!._id).populate('transactionIds').lean();
 }
