@@ -7,7 +7,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart'
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
 import '../loginservices/login.dart';
 
 RxBool sessionId = false.obs;

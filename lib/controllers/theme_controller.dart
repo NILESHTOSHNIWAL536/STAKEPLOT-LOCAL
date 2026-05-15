@@ -29,7 +29,7 @@ class ThemeController extends GetxController {
           themeMode.value = ThemeMode.light;
           break;
         default:
-          themeMode.value = ThemeMode.light;
+          themeMode.value = ThemeMode.system;
       }
     }
   }

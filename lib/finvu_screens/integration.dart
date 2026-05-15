@@ -17,6 +17,7 @@ import '../routes/route_finvu.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
 
+
 void initFinvuManager(BuildContext context) async {
   String url = FinspaceStrings().liveIntegration
       ? Credentials.Live_finvu_api

@@ -1,5 +1,3 @@
-import 'package:finvu_flutter_sdk_core/finvu_consent_info.dart';
-import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -8,23 +6,20 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/integration.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/fipmetrics-controller.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../Constants/app_styles.dart';
 import '../Constants/theme_helper.dart';
 import '../loginservices/login.dart';
 import '../onboarding_screens/onboarding_screen.dart';
 import '../repository/referral_repository.dart';
 import 'LinkingAccount.dart';
+
 
 class Access extends StatefulWidget {
   const Access({super.key});
@@ -156,7 +151,7 @@ class _AccessState extends State<Access> {
                       // Bank logos
                       Wrap(
                         spacing: 6,
-                        runSpacing: 4,
+                        runSpacing: 4, 
                         children: bankImgMap.entries.map((e) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(6),

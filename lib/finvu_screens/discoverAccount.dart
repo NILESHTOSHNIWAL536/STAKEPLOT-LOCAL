@@ -13,8 +13,6 @@ import '../controllers/fipmetrics-controller.dart';
 import '../loginservices/login.dart';
 import 'integration.dart';
 
-// ── Filter ────────────────────────────────────────────────────────────────
-
 enum _StatusFilter { all, live, slow, down }
 
 extension _StatusFilterExt on _StatusFilter {
