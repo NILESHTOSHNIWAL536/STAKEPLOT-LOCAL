@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/autopay_detection_screen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/dummy_insight_api_screen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
@@ -57,6 +58,8 @@ class IndexScreen extends StatelessWidget {
                             manualTransactionButton(context),
                             historyButton(context)
                           ]),
+                      const SizedBox(height: 10),
+                      AutoPayQuickAddButton(),
 
                       const SizedBox(height: 10),
                       _insightDashboardButton(context),
@@ -149,6 +152,61 @@ class IndexScreen extends StatelessWidget {
     return allAutoPayData.isEmpty
         ? const SizedBox.shrink()
         : SizedBox(height: AppComponentSizes.h3, child: AutoPayCarousel());
+  }
+}
+
+class AutoPayQuickAddButton extends StatelessWidget {
+  const AutoPayQuickAddButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const AutoPayDetectionScreen(),
+          ),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colors.border),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: colors.primary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(Icons.add, color: colors.primary, size: 22),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                "Autopay & repeating transactions",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 14,
+                  lWeight: FontWeight.w700,
+                  color: colors.onBackground,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.secondaryText),
+          ],
+        ),
+      ),
+    );
   }
 }
 
