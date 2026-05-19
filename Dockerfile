@@ -4,10 +4,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bash curl tar && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 COPY . .
 # ---------- Final (runtime) stage ----------
-FROM node:18
+FROM node:24
 WORKDIR /app
 ENV NODE_ENV=dev
 ENV SPACY_HOME=/app/spacy_models
