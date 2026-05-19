@@ -75,13 +75,15 @@ export async function decryptScrapeFields(record: Record<string, any>): Promise<
   const result = { ...record };
   for (const field of SCRAPE_STRING_FIELDS) {
     const val = result[field];
-    if (val && typeof val === 'object' && val.encryptedData) {
+    // use 'in' check, not truthiness — encryptedData is "" for encrypted empty strings
+    if (val !== null && val !== undefined && typeof val === 'object' && 'encryptedData' in val) {
       result[field] = await decryptToken(val.encryptedData, val.iv, val.authTag);
     }
+    // else: plain string (old pre-encryption data) — leave as-is
   }
   // banks_checked: decrypt then parse back to array
   const bc = result.banks_checked;
-  if (bc && typeof bc === 'object' && bc.encryptedData) {
+  if (bc !== null && bc !== undefined && typeof bc === 'object' && 'encryptedData' in bc) {
     try {
       result.banks_checked = JSON.parse(await decryptToken(bc.encryptedData, bc.iv, bc.authTag));
     } catch {
