@@ -32,7 +32,6 @@ import app from './app';
 import connectDatabases from './dbConnections';
 import { ServerConfig, RedisClient, Logger } from './config';
 import { loadSecrets } from './config/secrets';
-import './cron-jobs';
 
 // Loads local .env file in dev; no-op in staging/prod containers (env vars come from docker-compose)
 dotenv.config();
@@ -55,8 +54,9 @@ const startServer = async (): Promise<void> => {
       await RedisClient.connect();
     }
 
-    // Load cron jobs (TS style dynamic import)
-    
+    // Imported here (not at top level) so Bull queue gets REDIS_PASSWORD after loadSecrets() runs
+    await import('./cron-jobs');
+
   } catch (error) {
     Logger.error('Server Start Error:', error);
     process.exit(1);
