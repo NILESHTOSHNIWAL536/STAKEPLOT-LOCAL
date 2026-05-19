@@ -153,7 +153,6 @@ class IndexScreen extends StatelessWidget {
 }
 
 Widget buildTopSection(BuildContext context) {
-  
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
     // width: MediaQuery.of(context).size.width,
