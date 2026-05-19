@@ -41,8 +41,8 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/devops-tools/
-            ./docker-control.sh down email-service
-            ./docker-control.sh rm email-service
+            cd /home/ubuntu/devops-tools/scripts
+            ./docker-control.qa.sh down email-service
+            ./docker-control.qa.sh rm email-service
             docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
-            ./docker-control.sh up email-service
+            ./docker-control.qa.sh up email-service
