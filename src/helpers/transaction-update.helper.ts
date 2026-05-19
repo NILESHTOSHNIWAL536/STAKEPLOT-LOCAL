@@ -8,6 +8,7 @@ import extractNarrationPattern from "@/utils/helpers/extractNarrationPattern";
 import { PredictedCategories } from "@/models"; // adjust import based on your project
 import { handleDailyCounter } from "@/utils/helpers/increment_score";
 import { scoreToAdd, scoreToGetReward } from "../utils/common/enums";
+import { createRecurringPaymentFromTransaction, detectAndStoreAutoPays } from "@/services/auto-service";
 
 interface UpdateInput {
   userId: string | Types.ObjectId;
@@ -78,6 +79,18 @@ export const updateTransactionLogic = async ({
       scoreToAdd.Tag,
       scoreToGetReward.Tag
     );
+  }
+
+  if (data.isAutoPay === true) {
+    await createRecurringPaymentFromTransaction(userId, txId);
+  } else if (
+    "amount" in data ||
+    "narration" in data ||
+    "transactionTimestamp" in data ||
+    "isExcluded" in data ||
+    "Hidden" in data
+  ) {
+    await detectAndStoreAutoPays(userId);
   }
 
   return {

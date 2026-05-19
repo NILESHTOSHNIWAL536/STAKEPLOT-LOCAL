@@ -17,7 +17,7 @@ import Collection from '@/models/collections/collection.model';
 import Split from '@/models/collections/split.model';
 import SplitPayment from '@/models/collections/split-payment.model';
 import { runInTransaction } from '@/utils/run-in-transaction';
-import { detectAutoPays } from '@/services/auto-service';
+import { createRecurringPaymentFromTransaction, detectAndStoreAutoPays } from '@/services/auto-service';
 
 /**
  * NOTE:
@@ -73,10 +73,25 @@ export const getAutoPays = async (req: Request, res: Response): Promise<Response
   try {
     const userId = req.user!._id;
     // AccountRepository typing left as any
-    const response =await detectAutoPays(userId);
-    console.log('response from getAutoPays controller:', response);
+    const response = await detectAndStoreAutoPays(userId);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);  } catch (error: any) {
+    ErrorResponse.error = error;
+    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
+export const createRecurringPaymentFromTransactionController = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const userId = req.user!._id;
+    const { transactionId } = req.params;
+    const dueDay = req.body?.dueDay ? Number(req.body.dueDay) : undefined;
+    const response = await createRecurringPaymentFromTransaction(userId, transactionId, dueDay);
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error: any) {
+    console.log(error);
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);

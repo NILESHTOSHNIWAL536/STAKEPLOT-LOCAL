@@ -9,7 +9,7 @@ import redisClient from '../config/redis-config';
 import logger from '@/utils/common/logger';
 import { PendingTransaction, GroupedTransaction, Transaction } from '@/models';
 import saveGroupedTransactions from '../utils/helpers/saveGroupedTransactions';
-import detectRecurringPayments from '../utils/helpers/detect-recurring-payments';
+import { detectAndStoreAutoPays } from '@/services/auto-service';
 import deduplicateAllTransactions from '@/utils/helpers/delete-transactions-from-db';
 import { generateDataKey } from '@/services/Encryption/generateDataKey';
 import { getNextFetch, getNextMonthFetch } from '@/utils/helpers/get-next-fetch';
@@ -135,7 +135,7 @@ export async function createBankDetails(data: any, consentHandleId: string, user
     }
     await deduplicateAllTransactions(userId);
     await saveGroupedTransactions(userId);
-    await detectRecurringPayments(userId);
+    await detectAndStoreAutoPays(userId);
 
     await redisClient.del(`banksWithAccountDetails:${userId}`);
     logger.debug('cleared bank cache after createBankDetails');
@@ -244,6 +244,7 @@ export async function updateBankDetails(data: any, consentHandleId: string, user
     }
     await deduplicateAllTransactions(userId);
     await saveGroupedTransactions(userId);
+    await detectAndStoreAutoPays(userId);
 
     await redisClient.del(`banksWithAccountDetails:${userId}`);
     logger.debug('cleared bank cache after updateBankDetails');

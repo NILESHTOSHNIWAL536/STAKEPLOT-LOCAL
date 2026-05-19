@@ -8,6 +8,7 @@ import type { ITransactionRule } from '@/models/transactions-automation/transact
 import deduplicateTransactions from '@/utils/helpers/de-duplicate-transactions';
 import categorizeTransactions from '@/utils/helpers/categorizeTransactions';
 import deduplicateAllTransactions from '@/utils/helpers/delete-transactions-from-db';
+import { detectAndStoreAutoPays } from '@/services/auto-service';
 
 interface CreateTxInput {
   transactions: Partial<IBankTransaction>[];
@@ -26,6 +27,7 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
     const created = session
       ? (await Transaction.create([transactions[0]], { session }))[0]
       : await Transaction.create(transactions[0]);
+    await detectAndStoreAutoPays(userId);
     return { data: created, categorizedTransactions: [created] };
   }
 
@@ -50,6 +52,7 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
     if (!session) {
       await deduplicateAllTransactions(userId);
     }
+    await detectAndStoreAutoPays(userId);
 
     return {
       insertedCount: insertResult.length,
@@ -58,6 +61,7 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
     };
   } catch (error: any) {
     if (error.code === 11000) {
+      await detectAndStoreAutoPays(userId);
       return {
         insertedCount: error.result?.insertedCount || 0,
         message: 'Some transactions were duplicates',
