@@ -40,7 +40,7 @@ router.use(express.json());
 router.use(protect);
 
 // generate access token and store it in the googleToken document
-router.post('/generate-token', validateGenerateToken, EmailController.generateAccessToken);
+router.post('/generate-token', EmailController.generateAccessToken);
 
 // read emails from user's gmail account based on the bank id provided
 router.post('/scrape', validateScrape, EmailController.scrapeEmailsByBankId);

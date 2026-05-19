@@ -71,10 +71,10 @@ export async function generateAccessToken(userId: string, authCode: string, bank
 
   const group = map.mappings.find((m) => m.email === email);
   if (group) {
-    if (group.creditCardIds.includes(bankId)) {
-      throw new AppError('Bank already connected', StatusCodes.INTERNAL_SERVER_ERROR);
+    if (!group.creditCardIds.includes(bankId)) {
+      // throw new AppError('Bank already connected', StatusCodes.INTERNAL_SERVER_ERROR);
+      group.creditCardIds.push(bankId);
     }
-    group.creditCardIds.push(bankId);
   } else {
     map.mappings.push({ email, creditCardIds: [bankId] });
   }

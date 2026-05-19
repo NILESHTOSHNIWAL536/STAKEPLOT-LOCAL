@@ -18,7 +18,9 @@ const generateAccessTokenImpl = async (
 ): Promise<void> => {
   try {
     const { user } = req as AuthenticatedRequest;
-    const { idToken, bankId } = req.body as { idToken: string; bankId: string };
+    // const { idToken, bankId } = req.body as { idToken: string; bankId: string };
+    const { idToken,bankId = "HDFCLtd-FIP"} = req.body as {idToken: string;bankId?: string;};
+
     const result = await EmailScrapingService.generateAccessToken(user._id, idToken, bankId);
 
     res.status(StatusCodes.OK).json({ ...SuccessResponse, data: result });
