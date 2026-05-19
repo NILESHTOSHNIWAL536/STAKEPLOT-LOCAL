@@ -33,7 +33,14 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/devops-tools/
-            ./docker-control.sh down email-service
-            ./docker-control.sh rm email-service
-            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
-            ./docker-control.sh up email-service
+
+            echo "Logging into Amazon ECR..."
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+
+            echo "Pulling latest email-service image..."
+            ./scripts/docker-control.prod.sh pull email-service
+
+            echo "Restarting email-service..."
+            ./scripts/docker-control.prod.sh restart email-service
+
+            echo "Production deployment completed successfully!"
