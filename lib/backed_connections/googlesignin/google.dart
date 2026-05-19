@@ -8,35 +8,44 @@ import '../apis_connect.dart';
 import 'google_auth_token.dart';
 
 class AuthService {
-   GoogleSignIn _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail:false );
+  GoogleSignIn _googleSignIn =
+      GoogleAuthToken.createGoogleSignIn(isEmail: false);
 
-  Future<Map<String, dynamic>?> signInWithGoogle(context, {bool flag = true,bool isEmail=false}) async {
+  Future<Map<String, dynamic>?> signInWithGoogle(context,
+      {bool flag = true, bool isEmail = false}) async {
     try {
       // Trigger Google Sign-In
-      if(isEmail)_googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail:isEmail);
+      if (isEmail)
+        _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
       await _googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         return null;
       }
       // Get authentication details
-      final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
-      final String? idToken = googleAuth.idToken; // final String? accessToken = googleAuth.accessToken;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final String? idToken = googleAuth
+          .idToken; // final String? accessToken = googleAuth.accessToken;
       if (idToken == null) return null;
 
-     //don't remove this code
-        final String? authCode = await googleUser.serverAuthCode;
-        if (authCode != null)
-        {
-          final response = await postDataApiCall(AuthApiRoutes.generateToken, {'idToken':  authCode});
-          if(!flag)return {};
-        }
+      //don't remove this code
+      final String? authCode = await googleUser.serverAuthCode;
+      if (authCode != null) {
+        final response = await postDataApiCall(AuthApiRoutes.generateToken, {
+          'idToken': authCode,
+          "bankId": cardController.selectedBankName.value.isEmpty
+              ? "HDFCLtd-FIP"
+              : cardController.selectedBankName.value,
+        });
+        if (!flag) return {};
+      }
 
       updateDeviceData(deviceData);
-      final response = await postDataApiCall(AuthApiRoutes.googleAuth,
-
-        {'idToken': idToken,'deviceInfo': deviceData.value.toJson(),}
-      );
+      final response = await postDataApiCall(AuthApiRoutes.googleAuth, {
+        'idToken': idToken,
+        'deviceInfo': deviceData.value.toJson(),
+      });
 
       if (getFlagOfResponse(response)) return json.decode(response.body);
     } catch (e) {}
@@ -64,15 +73,12 @@ class AuthService {
       if (idToken == null) {
         return null;
       }
-      final response = await postDataApiCall(AuthApiRoutes.appleAuth,
-
-          {
-          'idToken': idToken,
-          'authorizationCode': authCode,
-          'email': email,
-          'fullName': fullName,
-        }
-      );
+      final response = await postDataApiCall(AuthApiRoutes.appleAuth, {
+        'idToken': idToken,
+        'authorizationCode': authCode,
+        'email': email,
+        'fullName': fullName,
+      });
       if (response.statusCode == 400) {
         return null;
       }
@@ -81,10 +87,7 @@ class AuthService {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {}
-    } catch (e) {
-
-    }
+    } catch (e) {}
     return null;
   }
 }
-
