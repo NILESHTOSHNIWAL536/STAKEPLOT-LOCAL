@@ -31,14 +31,17 @@ import dotenv from 'dotenv';
 import app from './app';
 import connectDatabases from './dbConnections';
 import { ServerConfig, RedisClient, Logger } from './config';
+import { loadSecrets } from './config/secrets';
 import './cron-jobs';
-// If you really need this later:
-// import { getModels } from './models/index-model';
 
+// Loads local .env file in dev; no-op in staging/prod containers (env vars come from docker-compose)
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
   try {
+    // Must run first — fetches secrets from AWS Secrets Manager and injects into process.env
+    await loadSecrets();
+
     app.listen(ServerConfig.PORT, '0.0.0.0', () => {
       Logger.info(`Server running on port: ${ServerConfig.PORT}`);
     });
