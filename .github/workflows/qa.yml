@@ -36,13 +36,20 @@ jobs:
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.QA_EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/devops-tools/scripts
-            ./docker-control.qa.sh down email-service
-            ./docker-control.qa.sh rm email-service
-            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
-            ./docker-control.qa.sh up email-service
+            cd /home/ubuntu/devops-tools/
+
+            echo "Logging into Amazon ECR..."
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+
+            echo "Pulling latest email-service image..."
+            ./scripts/docker-control.qa.sh pull email-service
+
+            echo "Restarting email-service..."
+            ./scripts/docker-control.qa.sh restart email-service
+
+            echo "QA deployment completed successfully!"
