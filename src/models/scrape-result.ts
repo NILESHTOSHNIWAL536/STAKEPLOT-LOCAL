@@ -1,21 +1,34 @@
 
 import { Schema, model, Types, Document } from 'mongoose';
 
+export interface IEncryptedField {
+  encryptedData: string;
+  iv: string;
+  authTag: string;
+}
+
 export interface IScrapeResult extends Document {
   userId: Types.ObjectId;
-  category: string;
-  amount: string;
-  date: string;
-  card_number: string;
-  transaction_id: string;
-  total_due: string;
-  mode: string;
-  type: string;
-  matched_bank: string;
-  logo: string;
-  bankName: string;
-  banks_checked: any[]; // keeping loose as in original
+  // all payload fields stored as AES-256-GCM ciphertext
+  category: IEncryptedField;
+  mode: IEncryptedField;
+  type: IEncryptedField;
+  matched_bank: IEncryptedField;
+  logo: IEncryptedField;
+  bankName: IEncryptedField;
+  banks_checked: IEncryptedField; // JSON-stringified array, then encrypted
+  amount: IEncryptedField;
+  date: IEncryptedField;
+  card_number: IEncryptedField;
+  transaction_id: IEncryptedField;
+  total_due: IEncryptedField;
 }
+
+const encryptedFieldSchema = {
+  encryptedData: { type: String, default: '' },
+  iv: { type: String, default: '' },
+  authTag: { type: String, default: '' },
+};
 
 const scrapeResultSchema = new Schema<IScrapeResult>(
   {
@@ -23,18 +36,18 @@ const scrapeResultSchema = new Schema<IScrapeResult>(
       type: Schema.Types.ObjectId,
       required: true,
     },
-    category: { type: String, default: '' },
-    amount: { type: String, default: '' },
-    date: { type: String, default: '' },
-    card_number: { type: String, default: '' },
-    transaction_id: { type: String, default: '' },
-    total_due: { type: String, default: '' },
-    mode: { type: String, default: '' },
-    type: { type: String, default: '' },
-    matched_bank: { type: String, default: '' },
-    logo: { type: String, default: '' },
-    bankName: { type: String, default: '' },
-    banks_checked: { type: [String], default: [] },
+    category: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    mode: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    type: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    matched_bank: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    logo: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    bankName: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    banks_checked: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    amount: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    date: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    card_number: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    transaction_id: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    total_due: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
   },
   { timestamps: true }
 );

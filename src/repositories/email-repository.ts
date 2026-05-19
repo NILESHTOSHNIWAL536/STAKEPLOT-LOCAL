@@ -104,7 +104,7 @@
 // };
 
 import mongoose from 'mongoose';
-import { decryptToken } from '../utils/encryption';
+import { decryptToken, encryptScrapeFields, decryptScrapeFields } from '../utils/encryption';
 import creditCards from '../utils/credit-cards.json';
 import AppError from '../utils/app-error';
 import { StatusCodes } from 'http-status-codes';
@@ -169,7 +169,8 @@ export async function scrapeEmailsByBankId(scrapedEmails: any, userId: string) {
 
     const emailDB = (global as any).emailDB;
 
-    await emailDB.model('scrapeResult').insertMany(records);
+    const encryptedRecords = await Promise.all(records.map(encryptScrapeFields));
+    await emailDB.model('scrapeResult').insertMany(encryptedRecords);
 
     if (scrapedEmails.bankConfig && scrapedEmails.bankConfig.bankId) {
       try {
@@ -196,10 +197,13 @@ export async function scrapeEmailsByBankId(scrapedEmails: any, userId: string) {
 export async function getScrapedEmailsByUserId(userId: string) {
   const emailDB = (global as any).emailDB;
 
-  return await emailDB
+  const docs = await emailDB
     .model('scrapeResult')
     .find({ userId: { $eq: new mongoose.Types.ObjectId(userId) } })
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return Promise.all(docs.map(decryptScrapeFields));
 }
 
 export async function getUserEmailById(userId: string): Promise<string> {
