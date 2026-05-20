@@ -3,7 +3,7 @@ name: QA CI/CD
 on:
   push:
     branches:
-      - qa
+      - dev_roshan
 
 jobs:
   build-and-deploy:

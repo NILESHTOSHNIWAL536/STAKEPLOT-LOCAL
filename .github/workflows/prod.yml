@@ -3,7 +3,7 @@ name: PROD CI/CD
 on:
   push:
     branches:
-      - prod
+      - main
 
 jobs:
   retag-and-deploy:
