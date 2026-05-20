@@ -42,6 +42,6 @@ jobs:
           script: |
             cd /home/ubuntu/devops-tools/scripts
             ./docker-control.prod.sh down bank-service
-            ./docker-control.prod.sh rm bank-service
+            ./docker-control.prod.sh delete-container bank-service
             docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/bank-service:prod
             ./docker-control.prod.sh up bank-service
