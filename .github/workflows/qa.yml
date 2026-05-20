@@ -29,9 +29,9 @@ jobs:
           ECR_REGISTRY: 058264382454.dkr.ecr.ap-south-1.amazonaws.com
           ECR_REPOSITORY: bank-service
         run: |
-          docker build --platform linux/amd64 -t $ECR_REPOSITORY:latest .
-          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker build --platform linux/amd64 -t $ECR_REPOSITORY:staging .
+          docker tag $ECR_REPOSITORY:staging $ECR_REGISTRY/$ECR_REPOSITORY:staging
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:staging
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.7
@@ -41,8 +41,8 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/devops-tools/
-            ./docker-control.sh down bank-service
-            ./docker-control.sh rm bank-service
-            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/bank-service:latest
-            ./docker-control.sh up bank-service
+            cd /home/ubuntu/devops-tools/scripts
+            ./docker-control.qa.sh down bank-service
+            ./docker-control.qa.sh rm bank-service
+            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/bank-service:staging
+            ./docker-control.qa.sh up bank-service
