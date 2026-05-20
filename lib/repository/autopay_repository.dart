@@ -7,31 +7,20 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
-Future<List<CardData>> getAutoPayInfo({bool flag=false}) async {
+Future<List<CardData>> getAutoPayInfo({bool flag = false}) async {
   try {
-    // Fetch both false and true auto pay info
-    // if(flag)return allAutoPayData;
-    final responses = await Future.wait([
-      getDataApiCall(BankTransactionRoutes.getRecurringPayments(isActive: false)),
-      getDataApiCall(BankTransactionRoutes.getRecurringPayments(isActive: true)),
-    ]);
-
+    final response = await getDataApiCall(BankTransactionRoutes.getAutoPays);
     allAutoPayData.clear();
-    for (int i = 0; i < responses.length; i++) {
-      final response = responses[i];
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = jsonDecode(response.body);
-        if (jsonData['success'] == true) {
-          final List<dynamic> autoPayDataInfo = jsonData['data'];
-          allAutoPayData.addAll(
-            autoPayDataInfo.asMap().entries.map((entry) {
-              final index = entry.key;
-              final data = entry.value as Map<String, dynamic>;
-              return CardData.fromJson(
-                  {...data, 'index': allAutoPayData.length + index});
-            }),
-          );
-        }
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final jsonData = jsonDecode(response.body);
+      if (jsonData['success'] == true) {
+        final List<dynamic> autoPayDataInfo = jsonData['data'] ?? [];
+        allAutoPayData.addAll(
+          autoPayDataInfo.asMap().entries.map((entry) {
+            final data = entry.value as Map<String, dynamic>;
+            return CardData.fromJson({...data, 'index': entry.key});
+          }),
+        );
       }
     }
 
@@ -46,10 +35,35 @@ Future<List<CardData>> getAutoPayInfo({bool flag=false}) async {
   }
 }
 
+Future<bool> createAutoPayFromTransaction(String transactionId,
+    {int? dueDay}) async {
+  try {
+    final response = await postDataApiCall(
+      BankTransactionRoutes.createRecurringPaymentFromTransaction(
+          transactionId: transactionId),
+      {
+        if (dueDay != null) 'dueDay': dueDay,
+      },
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final jsonData = jsonDecode(response.body);
+      if (jsonData['success'] == true) {
+        await getAutoPayInfo(flag: false);
+        return true;
+      }
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
 Future<bool> addRecurringPayment(String id, bool isActive) async {
   try {
     final response = await updateDataApiCall2(
-         BankTransactionRoutes.updateRecurringPayment(id: id),{'isActive': isActive});
+        BankTransactionRoutes.updateRecurringPayment(id: id),
+        {'isActive': isActive});
 
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -65,7 +79,8 @@ Future<bool> addRecurringPayment(String id, bool isActive) async {
 Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
   try {
     final response = await updateDataApiCall2(
-          BankTransactionRoutes.updateRecurringPayment(id: id), {'isDaily': isDaily});
+        BankTransactionRoutes.updateRecurringPayment(id: id),
+        {'isDaily': isDaily});
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;
@@ -92,7 +107,7 @@ Future<bool> updateRecurringPaymentDate(
     ).toIso8601String();
 
     final response = await updateDataApiCall2(
-       BankTransactionRoutes.updateRecurringPayment(id: id),
+      BankTransactionRoutes.updateRecurringPayment(id: id),
       {'nextReminderAt': formattedDate, 'isActive': isActive},
     );
 
@@ -104,15 +119,16 @@ Future<bool> updateRecurringPaymentDate(
     } else {
       return false;
     }
-  } catch (e, stackTrace) {
+  } catch (e) {
     return false;
   }
 }
 
 Future<bool> ignoreRecurringPayment(String id) async {
   try {
-    final response =
-        await deleteDataApiCall(  BankTransactionRoutes.deleteRecurringPayment(id: id),);
+    final response = await deleteDataApiCall(
+      BankTransactionRoutes.deleteRecurringPayment(id: id),
+    );
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       await getAutoPayInfo(flag: false);

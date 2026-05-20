@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:app_links/app_links.dart';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';

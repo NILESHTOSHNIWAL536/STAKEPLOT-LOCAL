@@ -1,5 +1,3 @@
-import 'package:finvu_flutter_sdk_core/finvu_consent_info.dart';
-import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -8,22 +6,20 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/integration.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/fipmetrics-controller.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../Constants/app_styles.dart';
+import '../Constants/theme_helper.dart';
 import '../loginservices/login.dart';
 import '../onboarding_screens/onboarding_screen.dart';
 import '../repository/referral_repository.dart';
 import 'LinkingAccount.dart';
+
 
 class Access extends StatefulWidget {
   const Access({super.key});
@@ -48,7 +44,7 @@ class _AccessState extends State<Access> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F0E8),
+      backgroundColor: context.appColors.background,
       bottomNavigationBar: const SafeArea(child: BottomBar()),
       body: SafeArea(
         child: Obx(() {
@@ -72,7 +68,7 @@ class _AccessState extends State<Access> {
             children: [
               IconButton(
                 icon: const Icon(Icons.arrow_back_sharp),
-                color: const Color(0xFF1C1C1E),
+                color: context.appColors.onBackground,
                 onPressed: () {
                   if (showDetails.value) {
                     showDetails.value = false;
@@ -88,7 +84,7 @@ class _AccessState extends State<Access> {
                     style: FontManager().getTextStyle(context,
                         fontSize: 17,
                         lWeight: FontWeight.w600,
-                        color: Color(0xFF1C1C1E)),
+                        color: context.appColors.onBackground),
                   ),
                 ),
               ),
@@ -98,11 +94,11 @@ class _AccessState extends State<Access> {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFD1D1D6)),
+                    border: Border.all(color: context.appColors.border),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.question_mark_rounded,
-                      size: 16, color: Color(0xFF8E8E93)),
+                  child: Icon(Icons.question_mark_rounded,
+                      size: 16, color: context.appColors.secondaryText),
                 ),
               ),
             ],
@@ -122,7 +118,7 @@ class _AccessState extends State<Access> {
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w400,
                         fontSize: 15,
-                        color: const Color(0xFF1C1C1E),
+                        color: context.appColors.onBackground,
                         lineHeight: 1.5),
                     children: [
                       TextSpan(
@@ -149,13 +145,13 @@ class _AccessState extends State<Access> {
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w500,
                             fontSize: 14,
-                            color: const Color(0xFF1C1C1E)),
+                            color: context.appColors.onSurface),
                       ),
                       const SizedBox(height: 6),
                       // Bank logos
                       Wrap(
                         spacing: 6,
-                        runSpacing: 4,
+                        runSpacing: 4, 
                         children: bankImgMap.entries.map((e) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(6),
@@ -186,8 +182,8 @@ class _AccessState extends State<Access> {
                   title: FinvuStrings().permissionValidity,
                   child: Row(
                     children: [
-                      const Icon(Icons.calendar_month_outlined,
-                          size: 16, color: Color(0xFF8E8E93)),
+                       Icon(Icons.calendar_month_outlined,
+                          size: 16, color: context.appColors.secondaryText),
                       const SizedBox(width: 5),
                       Text(
                         _fmt(finvuConsentRequestDetailInfo
@@ -196,14 +192,14 @@ class _AccessState extends State<Access> {
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w500,
                             fontSize: 14,
-                            color: const Color(0xFF1C1C1E)),
+                            color: context.appColors.onSurface),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward_rounded,
-                          size: 14, color: Color(0xFF8E8E93)),
+                       Icon(Icons.arrow_forward_rounded,
+                          size: 14, color: context.appColors.secondaryText),
                       const SizedBox(width: 8),
-                      const Icon(Icons.calendar_month_outlined,
-                          size: 16, color: Color(0xFF8E8E93)),
+                       Icon(Icons.calendar_month_outlined,
+                          size: 16, color: context.appColors.secondaryText),
                       const SizedBox(width: 5),
                       Text(
                         _fmt(finvuConsentRequestDetailInfo
@@ -228,7 +224,7 @@ class _AccessState extends State<Access> {
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: const Color(0xFF1C1C1E)),
+                        color: context.appColors.onSurface),
                   ),
                 ),
 
@@ -269,8 +265,8 @@ class _AccessState extends State<Access> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.info_outline_rounded,
-                  size: 14, color: Color(0xFF8E8E93)),
+               Icon(Icons.info_outline_rounded,
+                  size: 14, color: context.appColors.secondaryText),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -278,7 +274,7 @@ class _AccessState extends State<Access> {
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w400,
                       fontSize: 11,
-                      color: const Color(0xFF8E8E93)),
+                      color: context.appColors.secondaryText),
                 ),
               ),
             ],
@@ -289,7 +285,8 @@ class _AccessState extends State<Access> {
           child: Text(
             'Powered securely by Ekjut',
             style: FontManager()
-                .getTextStyle(context, fontSize: 11, color: Color(0xFFAEAEB2)),
+                .getTextStyle(
+                    context, fontSize: 11, color: context.appColors.hintText),
           ),
         ),
       ],
@@ -308,7 +305,7 @@ class _AccessState extends State<Access> {
             children: [
               IconButton(
                 icon: const Icon(Icons.arrow_back_sharp),
-                color: const Color(0xFF1C1C1E),
+                color: context.appColors.onBackground,
                 onPressed: () => showDetails.value = false,
               ),
               Expanded(
@@ -318,7 +315,7 @@ class _AccessState extends State<Access> {
                     style: FontManager().getTextStyle(context,
                         fontSize: 17,
                         lWeight: FontWeight.w600,
-                        color: Color(0xFF1C1C1E)),
+                        color: context.appColors.onBackground),
                   ),
                 ),
               ),
@@ -326,11 +323,11 @@ class _AccessState extends State<Access> {
                 width: 30,
                 height: 30,
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFD1D1D6)),
+                  border: Border.all(color: context.appColors.border),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.question_mark_rounded,
-                    size: 16, color: Color(0xFF8E8E93)),
+                child: Icon(Icons.question_mark_rounded,
+                    size: 16, color: context.appColors.secondaryText),
               ),
             ],
           ),
@@ -370,9 +367,9 @@ class _AccessState extends State<Access> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.appColors.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE5E5EA)),
+                border: Border.all(color: context.appColors.border),
               ),
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
@@ -445,7 +442,7 @@ class _AccessState extends State<Access> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: const Color(0xFF3D3B5E),
+                color: context.appColors.primary,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(
@@ -465,7 +462,8 @@ class _AccessState extends State<Access> {
           child: Text(
             'Powered securely by Ekjut',
             style: FontManager()
-                .getTextStyle(context, fontSize: 11, color: Color(0xFFAEAEB2)),
+                .getTextStyle(
+                    context, fontSize: 11, color: context.appColors.hintText),
           ),
         ),
       ],
@@ -511,7 +509,7 @@ class _AccessState extends State<Access> {
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w400,
                       fontSize: 14,
-                      color: const Color(0xFF8E8E93))),
+                      color: context.appColors.secondaryText)),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -520,12 +518,13 @@ class _AccessState extends State<Access> {
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
-                        side: const BorderSide(color: Color(0xFFD1D1D6)),
+                        side: BorderSide(color: context.appColors.border),
                       ),
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(FinvuStrings().no,
                           style: FontManager()
-                              .getTextStyle(context, color: Color(0xFF1C1C1E))),
+                              .getTextStyle(
+                                  context, color: context.appColors.onSurface)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -597,9 +596,9 @@ class _InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5EA), width: 0.8),
+        border: Border.all(color: context.appColors.border, width: 0.8),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -651,13 +650,13 @@ class _DetailRow extends StatelessWidget {
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w400,
                         fontSize: 13,
-                        color: const Color(0xFF8E8E93))),
+                        color: context.appColors.secondaryText)),
                 const SizedBox(height: 3),
                 Text(value,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                         fontSize: 15,
-                        color: const Color(0xFF1C1C1E))),
+                        color: context.appColors.onSurface)),
               ],
             ),
           ),
@@ -665,10 +664,10 @@ class _DetailRow extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F6F2),
+              color: context.appColors.surfaceVariant,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, size: 20, color: const Color(0xFF4A4F8C)),
+            child: Icon(icon, size: 20, color: context.appColors.primary),
           ),
         ],
       ),
@@ -730,8 +729,8 @@ class _ConsentActions extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
                 color: hasError
-                    ? const Color(0xFF3D3B5E).withOpacity(0.38)
-                    : const Color(0xFF3D3B5E),
+                    ? context.appColors.primary.withOpacity(0.38)
+                    : context.appColors.primary,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -874,7 +873,7 @@ class _WarningConfirmDialog extends StatelessWidget {
                     style: FontManager().getTextStyle(context,
                         fontSize: 16,
                         lWeight: FontWeight.w600,
-                        color: Color(0xFF1C1C1E)),
+                        color: context.appColors.onSurface),
                   ),
                 ),
               ],
@@ -883,7 +882,9 @@ class _WarningConfirmDialog extends StatelessWidget {
             Text(
               'We detected issues with this bank. Data access may be affected.',
               style: FontManager().getTextStyle(context,
-                  fontSize: 13, color: Color(0xFF636366), lineHeight: 1.5),
+                  fontSize: 13,
+                  color: context.appColors.secondaryText,
+                  lineHeight: 1.5),
             ),
             const SizedBox(height: 16),
             ...warnings.map((w) => Container(
@@ -925,8 +926,8 @@ class _WarningConfirmDialog extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(
-                          color: Color(0xFFD1D1D6), width: 0.8),
+                      side:  BorderSide(
+                          color: context.appColors.border, width: 0.8),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(vertical: 13),
@@ -941,7 +942,7 @@ class _WarningConfirmDialog extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3D3B5E),
+                      backgroundColor: context.appColors.primary,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(vertical: 13),

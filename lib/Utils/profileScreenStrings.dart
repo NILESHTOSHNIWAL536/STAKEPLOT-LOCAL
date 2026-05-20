@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-
 import '../routes/route_constant.dart';
 
 class ProfileScreenStrings {

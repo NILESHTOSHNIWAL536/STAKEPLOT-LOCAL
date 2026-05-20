@@ -6,7 +6,8 @@ class BankTransactionRoutes {
   // Create user details
   static String createUserDetails = "$_urlPath/";
 
-  static final String customCategory = "${API.mainBackendUrl}/custom/custom-category";
+  static final String customCategory =
+      "${API.mainBackendUrl}/custom/custom-category";
   // Grouped transactions
   static String categorizeGroupedTransaction({required String groupId}) =>
       "$_urlPath/grouped/$groupId/categorize";
@@ -37,8 +38,8 @@ class BankTransactionRoutes {
   //         required String isBankAccount}) =>
   //     "$_urlPath/getTransactions/$page/$search/$isBankAccount";
 
-  // this is new api 
-static String getSearchedTransactions(
+  // this is new api
+  static String getSearchedTransactions(
           {required int page,
           required String search,
           required String isBankAccount}) =>
@@ -74,8 +75,12 @@ static String getSearchedTransactions(
       "$_urlPath/get-day-wise-transactions/$date";
 
   // Recurring payments
+  static String getAutoPays = "$_urlPath/autopays";
   static String getRecurringPayments({required bool isActive}) =>
       "$_urlPath/get-recurring-payments/$isActive";
+  static String createRecurringPaymentFromTransaction(
+          {required String transactionId}) =>
+      "$_urlPath/recurring-payments/from-transaction/$transactionId";
   static String updateRecurringPayment({required String id}) =>
       "$_urlPath/recurring-payments/$id";
   static String deleteRecurringPayment({required String id}) =>
@@ -126,11 +131,7 @@ static String getSearchedTransactions(
   static String getTopThreeTransactionsOfWeek =
       "$_urlPath/top-three-transactions-of-week";
 
-  static String getHighestSpentInsight =
-      "$_urlPath/insights";
-
-
-
+  static String getHighestSpentInsight = "$_urlPath/insights";
 
   // Income & category spent
   static String getIncomeAndCategorySpent =
@@ -139,12 +140,12 @@ static String getSearchedTransactions(
   // Delete bank data
   static String deleteBankAccount(
           {required String bankId, required String accountId}) =>
-"$_urlPath/$bankId/$accountId";
+      "$_urlPath/$bankId/$accountId";
 
   // Delete transactions
   static String deleteTransactions = "$_urlPath/delete";
 
-  // reserve 
+  // reserve
   static String createReserve = "$_urlPath/api/reserves";
 }
 

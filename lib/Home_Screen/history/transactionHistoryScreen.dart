@@ -215,27 +215,21 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                               isSearchActive
                                   ? _buildSearchAndTabsSection(context)
                                   : historyHeader(context, widget.fromAutoPay),
-                              Obx(() {
-                                if (isSearchActive) {
-                                  return const SizedBox.shrink();
-                                }
-                                if (widget.fromAutoPay) {
-                                  return const SizedBox.shrink();
-                                }
+                              if (!isSearchActive && !widget.fromAutoPay)
+                                Obx(() {
+                                  if (showFilter.value ||
+                                      isDateSummaryView.value) {
+                                    return Column(
+                                      children: [
+                                        _buildTabsOrCheckbox(),
+                                        _buildTagHideButtons(),
+                                        _buildFilterSection(),
+                                      ],
+                                    );
+                                  }
 
-                                if (showFilter.value ||
-                                    isDateSummaryView.value) {
-                                  return Column(
-                                    children: [
-                                      _buildTabsOrCheckbox(),
-                                      _buildTagHideButtons(),
-                                      _buildFilterSection(),
-                                    ],
-                                  );
-                                }
-
-                                return _buildSearchAndTabsSection(context);
-                              }),
+                                  return _buildSearchAndTabsSection(context);
+                                }),
                             ],
                           ),
                         ),

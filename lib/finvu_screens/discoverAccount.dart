@@ -1,23 +1,17 @@
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
-
-import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/theme_helper.dart';
 import '../controllers/fipmetrics-controller.dart';
 import '../loginservices/login.dart';
 import 'integration.dart';
-import 'shareAccountLogin.dart';
-
-// ── Filter ────────────────────────────────────────────────────────────────
 
 enum _StatusFilter { all, live, slow, down }
 
@@ -160,7 +154,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F0E8),
+      backgroundColor: context.appColors.background,
       bottomNavigationBar: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -173,7 +167,8 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                       padding: const EdgeInsets.only(top: 6, bottom: 2),
                       child: Text('$n bank${n > 1 ? 's' : ''} selected',
                           style: FontManager().getTextStyle(context,
-                              fontSize: 12, color: Color(0xFF8E8E93))),
+                              fontSize: 12,
+                              color: context.appColors.secondaryText)),
                     )
                   : const SizedBox(height: 6);
             }),
@@ -185,7 +180,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   decoration: BoxDecoration(
-                      color: const Color(0xFF3D3B5E),
+                      color: context.appColors.primary,
                       borderRadius: BorderRadius.circular(14)),
                   child: Center(
                     child: Text('Continue',
@@ -217,17 +212,18 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w600,
                       fontSize: 16,
-                      color: const Color(0xFF1C1C1E))),
+                      color: context.appColors.onBackground)),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 2, 20, 12),
               child: Row(children: [
                 Icon(Icons.info_outline_rounded,
-                    size: 13, color: Color(0xFF8E8E93)),
+                    size: 13, color: context.appColors.secondaryText),
                 SizedBox(width: 4),
                 Text('Unable to support joint account holders',
                     style: FontManager().getTextStyle(context,
-                        fontSize: 12, color: Color(0xFF8E8E93))),
+                        fontSize: 12,
+                        color: context.appColors.secondaryText)),
               ]),
             ),
 
@@ -259,7 +255,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                             style: FontManager().getTextStyle(context,
                                 fontSize: 14,
                                 lWeight: FontWeight.w600,
-                                color: Color(0xFF3D3B5E))),
+                                color: context.appColors.primary)),
                         const SizedBox(height: 10),
                         Row(
                           children: List.generate(
@@ -276,14 +272,14 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                       const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                     color: sel
-                                        ? const Color(0xFF3D3B5E)
+                                        ? context.appColors.primary
                                             .withOpacity(0.08)
-                                        : Colors.white,
+                                        : context.appColors.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                         color: sel
-                                            ? const Color(0xFF3D3B5E)
-                                            : const Color(0xFFE5E5EA),
+                                            ? context.appColors.primary
+                                            : context.appColors.border,
                                         width: sel ? 1.5 : 0.8),
                                   ),
                                   child: Column(children: [
@@ -298,8 +294,8 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                           fontSize: 11,
                                           lWeight: FontWeight.w500,
                                           color: sel
-                                              ? const Color(0xFF3D3B5E)
-                                              : const Color(0xFF1C1C1E)),
+                                              ? context.appColors.primary
+                                              : context.appColors.onSurface),
                                     ),
                                   ]),
                                 ),
@@ -326,23 +322,23 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                 child: Text('No banks found',
                                     style: FontManager().getTextStyle(context,
                                         fontSize: 14,
-                                        color: Color(0xFF8E8E93)))))
+                                        color: context.appColors.secondaryText))))
                       else
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: context.appColors.surface,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                                color: const Color(0xFFE5E5EA), width: 0.8),
+                                color: context.appColors.border, width: 0.8),
                           ),
                           child: ListView.separated(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: list.length,
-                            separatorBuilder: (_, __) => const Divider(
+                            separatorBuilder: (_, __) => Divider(
                                 height: 1,
                                 thickness: 0.5,
-                                color: Color(0xFFF2F2F7),
+                                color: context.appColors.divider,
                                 indent: 56),
                             itemBuilder: (_, i) {
                               final bank = list[i];
@@ -431,7 +427,7 @@ class _BankRowState extends State<_BankRow> {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         color: widget.isSelected
-            ? const Color(0xFF3D3B5E).withOpacity(0.04)
+            ? context.appColors.primary.withOpacity(0.08)
             : Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -453,7 +449,7 @@ class _BankRowState extends State<_BankRow> {
                         style: FontManager().getTextStyle(context,
                             fontSize: 14,
                             lWeight: FontWeight.w500,
-                            color: Color(0xFF1C1C1E)),
+                            color: context.appColors.onSurface),
                       ),
                       if (status != FipHealthStatus.unknown) ...[
                         const SizedBox(height: 4),
@@ -465,7 +461,8 @@ class _BankRowState extends State<_BankRow> {
                               const SizedBox(width: 6),
                               Text('${latency.toStringAsFixed(0)} ms',
                                   style: FontManager().getTextStyle(context,
-                                      fontSize: 11, color: Color(0xFF8E8E93))),
+                                      fontSize: 11,
+                                      color: context.appColors.secondaryText)),
                             ],
                             if (widget.messages.isNotEmpty) ...[
                               const Spacer(),
@@ -480,13 +477,13 @@ class _BankRowState extends State<_BankRow> {
                                             context,
                                             fontSize: 11,
                                             lWeight: FontWeight.w500,
-                                            color: Color(0xFF3D3B5E))),
+                                            color: context.appColors.primary)),
                                     Icon(
                                       _expanded
                                           ? Icons.keyboard_arrow_up_rounded
                                           : Icons.keyboard_arrow_down_rounded,
                                       size: 14,
-                                      color: const Color(0xFF3D3B5E),
+                                      color: context.appColors.primary,
                                     ),
                                   ],
                                 ),
@@ -515,8 +512,10 @@ class _BankRowState extends State<_BankRow> {
             // Expanded full list
             if (_expanded && widget.messages.isNotEmpty) ...[
               const SizedBox(height: 8),
-              const Divider(
-                  height: 1, thickness: 0.5, color: Color(0xFFEEEEEE)),
+              Divider(
+                  height: 1,
+                  thickness: 0.5,
+                  color: context.appColors.divider),
               const SizedBox(height: 8),
               ...widget.messages.map((m) => Padding(
                     padding: const EdgeInsets.only(bottom: 6),
@@ -717,12 +716,14 @@ class _FilterPillRow extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                 decoration: BoxDecoration(
-                  color: isActive ? const Color(0xFF3D3B5E) : Colors.white,
+                  color: isActive
+                      ? context.appColors.primary
+                      : context.appColors.surface,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                       color: isActive
-                          ? const Color(0xFF3D3B5E)
-                          : const Color(0xFFE5E5EA),
+                          ? context.appColors.primary
+                          : context.appColors.border,
                       width: 0.8),
                 ),
                 child: Row(
@@ -744,7 +745,7 @@ class _FilterPillRow extends StatelessWidget {
                             lWeight: FontWeight.w500,
                             color: isActive
                                 ? Colors.white
-                                : const Color(0xFF3C3C3C))),
+                                : context.appColors.onSurface)),
                   ],
                 ),
               ),
@@ -770,7 +771,7 @@ class _TopBar extends StatelessWidget {
         children: [
           IconButton(
               icon: const Icon(Icons.arrow_back_sharp),
-              color: const Color(0xFF1C1C1E),
+              color: context.appColors.onBackground,
               onPressed: onBack,
               padding: EdgeInsets.zero),
           const Spacer(),
@@ -778,10 +779,10 @@ class _TopBar extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFD1D1D6)),
+                border: Border.all(color: context.appColors.border),
                 borderRadius: BorderRadius.circular(8)),
-            child: const Icon(Icons.question_mark_rounded,
-                size: 16, color: Color(0xFF8E8E93)),
+            child: Icon(Icons.question_mark_rounded,
+                size: 16, color: context.appColors.secondaryText),
           ),
         ],
       ),
@@ -799,23 +800,25 @@ class _SearchField extends StatelessWidget {
     return Container(
       height: 46,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.appColors.inputBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5EA), width: 0.8),
+        border: Border.all(color: context.appColors.border, width: 0.8),
       ),
       child: Row(
         children: [
           const SizedBox(width: 14),
-          const Icon(Icons.search_rounded, size: 20, color: Color(0xFF8E8E93)),
+          Icon(Icons.search_rounded,
+              size: 20, color: context.appColors.secondaryText),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              style: const TextStyle(fontSize: 14, color: Color(0xFF1C1C1E)),
-              decoration: const InputDecoration(
+              style: TextStyle(fontSize: 14, color: context.appColors.onSurface),
+              decoration: InputDecoration(
                 hintText: 'Search banks...',
-                hintStyle: TextStyle(fontSize: 14, color: Color(0xFFAEAEB2)),
+                hintStyle:
+                    TextStyle(fontSize: 14, color: context.appColors.hintText),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
@@ -843,10 +846,10 @@ class _CheckBox extends StatelessWidget {
         width: 24,
         height: 24,
         decoration: BoxDecoration(
-          color: value ? const Color(0xFF3D3B5E) : Colors.transparent,
+          color: value ? context.appColors.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-              color: value ? const Color(0xFF3D3B5E) : const Color(0xFFD1D1D6),
+              color: value ? context.appColors.primary : context.appColors.border,
               width: 1.5),
         ),
         child: value

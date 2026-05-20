@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 
 enum AutoPayStep { selectDate, confirm }
-
 
 class CreateAutoPayFromTransactionScreen extends StatefulWidget {
   final TransactionModel transaction;
@@ -26,8 +27,7 @@ class _CreateAutoPayFromTransactionScreenState
   AutoPayStep currentStep = AutoPayStep.selectDate;
 
   int? selectedDay;
-
-  
+  bool isSaving = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +53,11 @@ class _CreateAutoPayFromTransactionScreenState
           currentStep == AutoPayStep.confirm
               ? "Confirm Autopay"
               : "Select Due Date",
-         
-            style:  FontManager().getTextStyle(
+          style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
             fontSize: 18,
             color: AppColors.primaryColor,
-          
           ),
         ),
       ),
@@ -85,7 +83,7 @@ class _CreateAutoPayFromTransactionScreenState
     return Container(
       padding: const EdgeInsets.all(AppSizes.p12),
       decoration: BoxDecoration(
-        color:AppColors.backgroundColor,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [
           BoxShadow(
@@ -102,52 +100,46 @@ class _CreateAutoPayFromTransactionScreenState
             children: [
               Text(
                 widget.transaction.narration,
-                style:  FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: AppColors.accentColor,
-                        ),
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: AppColors.accentColor,
+                ),
               ),
-                Text(
-        "₹${widget.transaction.amount}",
-        style:  FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w400,
-        fontSize: 16,
-        color: AppColors.accentColor,
-      ),
-      ),
+              Text(
+                "₹${widget.transaction.amount}",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 16,
+                  color: AppColors.accentColor,
+                ),
+              ),
             ],
           ),
-
-           SizedBox(height: AppSizes.h8),
+          SizedBox(height: AppSizes.h8),
           if (showDetails && selectedDay != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Due Date:",
-                   style:  FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: AppColors.greyCard,
-                          ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text(
+                "Due Date:",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: AppColors.greyCard,
                 ),
-              
-            
-            Text(
-              "${selectedDay}th of every month",
-               style:  FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w400,
-        fontSize: 14,
-        color: AppColors.accentColor,
-      ),
-            ),
-              ])
-         
+              ),
+              Text(
+                "${selectedDay}th of every month",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: AppColors.accentColor,
+                ),
+              ),
+            ])
         ],
       ),
     );
@@ -160,14 +152,14 @@ class _CreateAutoPayFromTransactionScreenState
       children: [
         _transactionCard(),
         SizedBox(height: AppSizes.h20),
-         Text("Select day of the month for payment",  style:  FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w400,
-            fontSize: 12,
-            color: AppColors.accentColor,
-          )),
-         SizedBox(height: AppSizes.h12),
-
+        Text("Select day of the month for payment",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w400,
+              fontSize: 12,
+              color: AppColors.accentColor,
+            )),
+        SizedBox(height: AppSizes.h12),
         GridView.builder(
           shrinkWrap: true,
           itemCount: 31,
@@ -195,20 +187,19 @@ class _CreateAutoPayFromTransactionScreenState
                         : AppColors.greyCard,
                   ),
                 ),
-                child: Text(
-                  "$day",
-                  style:  FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w400,
-            fontSize: 16,
-            color:isSelected?AppColors.backgroundColor: AppColors.accentColor,
-          )
-                ),
+                child: Text("$day",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: isSelected
+                          ? AppColors.backgroundColor
+                          : AppColors.accentColor,
+                    )),
               ),
             );
           },
         ),
-
         const Spacer(),
         _actionButton(
           text: "Continue",
@@ -228,21 +219,24 @@ class _CreateAutoPayFromTransactionScreenState
       children: [
         _transactionCard(showDetails: true),
         SizedBox(height: AppSizes.h30),
-
         _actionButton(
           text: "Confirm Autopay",
-          enabled: true,
-          onTap: () {
-            ///  FINAL API PAYLOAD EXAMPLE
-            /*
-            {
-              transactionId: widget.transaction.id,
+          enabled: !isSaving,
+          onTap: () async {
+            setState(() => isSaving = true);
+            final success = await createAutoPayFromTransaction(
+              widget.transaction.id,
               dueDay: selectedDay,
-              reminderTime: "08:00"
-            }
-            */
-
-            Navigator.pop(context);
+            );
+            if (!mounted) return;
+            setState(() => isSaving = false);
+            snackBarCalled(
+              context,
+              success
+                  ? "Autopay added for next month"
+                  : "Failed to add autopay",
+            );
+            if (success) Navigator.pop(context, true);
           },
         ),
       ],
@@ -267,12 +261,22 @@ class _CreateAutoPayFromTransactionScreenState
           ),
         ),
         onPressed: enabled ? onTap : null,
-        child: Text(text,  style:  FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w500,
-            fontSize: 14,
-            color: enabled? AppColors.backgroundColor:AppColors.grey,
-          )),
+        child: isSaving
+            ? const SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(text,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: enabled ? AppColors.backgroundColor : AppColors.grey,
+                )),
       ),
     );
   }

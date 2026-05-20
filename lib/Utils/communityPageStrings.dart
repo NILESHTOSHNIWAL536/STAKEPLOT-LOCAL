@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import '../routes/route_constant.dart'; 
 
-import '../routes/route_constant.dart'; // For url
 
 class CommunityScreenStrings {
   static final CommunityScreenStrings _instance =

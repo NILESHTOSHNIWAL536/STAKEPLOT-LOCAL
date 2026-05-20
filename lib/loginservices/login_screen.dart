@@ -23,7 +23,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/theme_helper.dart';
-import '../backed_connections/apiAutomations/install_apk_api.dart';
 import '../repository/auth_service/login_apis.dart';
 import '../services/secure_storage.dart';
 import 'googl_button.dart';
@@ -69,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(color: AppColors.newbg),
+          decoration: BoxDecoration(color: context.appColors.background),
           child: Container(
             height: MediaQuery.of(context).size.height,
             child: Column(
@@ -109,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           containerIconSiginWith(FontAwesomeIcons.google,
-                              AppColors.backgroundColor, context),
+                              context.appColors.surface, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),
                           kIsWeb
@@ -126,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
-                                          color: const Color(0xFFE5E7EB),
+                                          color: context.appColors.border,
                                           width: 1,
                                         ),
                                         boxShadow: [AppShadows.soft],
@@ -202,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
             fontWeight: FontWeight.w400,
             fontsize: 16,
             lineHeight: 20 / 16,
-            c: AppColors.grey),
+            c: context.appColors.secondaryText),
       ],
     );
   }
@@ -213,14 +212,21 @@ class _LoginScreenState extends State<LoginScreen> {
       onChanged: (c) {
         acceptReset.value = false;
       },
-      cursorColor: AppColors.backgroundColor,
-      style: TextStyle(color: ThemeHelper(context).appColors.secondaryText),
+      cursorColor: context.appColors.primary,
+      style: TextStyle(color: context.appColors.onBackground),
       decoration: InputDecoration(
         // fillColor: Color.fromRGBO(255, 255, 255, 0.23),
-        border: UnderlineInputBorder(),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: context.appColors.border),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: context.appColors.primary),
+        ),
         hintText: 'Enter your email',
         hintStyle: FontManager().getTextStyle(context,
-            lWeight: FontWeight.w400, fontSize: 14, color: AppColors.grey),
+            lWeight: FontWeight.w400,
+            fontSize: 14,
+            color: context.appColors.hintText),
 
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
@@ -258,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
           width: double.infinity,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.primaryColor,
+            color: context.appColors.primary,
             borderRadius: BorderRadius.circular(12),
           ),
           child: acceptReset.value
@@ -269,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     context,
                     lWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: AppColors.backgroundColor,
+                    color: Colors.white,
                   ),
                 ),
         ),
@@ -286,7 +292,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Text(
             'Or login with',
             style: FontManager()
-                .getTextStyle(context, color: AppColors.grey, fontSize: 14),
+                .getTextStyle(
+                    context,
+                    color: context.appColors.secondaryText,
+                    fontSize: 14),
           ),
         ),
       ],

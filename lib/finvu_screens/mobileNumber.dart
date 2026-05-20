@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 
 import '../Constants/colorcodes.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/theme_helper.dart';
 
 RxBool loadConsentId = false.obs;
 RxBool isOtpWrong = false.obs;
@@ -116,7 +117,7 @@ class _MobileNumberState extends State<MobileNumber> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F0E8),
+        backgroundColor: context.appColors.background,
         bottomNavigationBar: SafeArea(child: BottomBar()),
         body: SafeArea(
           child: Column(
@@ -128,7 +129,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back_sharp),
-                      color: const Color(0xFF1C1C1E),
+                      color: context.appColors.onBackground,
                       onPressed: () {
                         logoutAndDisconnect();
                         Navigator.pop(context);
@@ -140,10 +141,10 @@ class _MobileNumberState extends State<MobileNumber> {
                       width: 30,
                       height: 30,
                       decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFFD1D1D6)),
+                          border: Border.all(color: context.appColors.border),
                           borderRadius: BorderRadius.circular(8)),
-                      child: const Icon(Icons.question_mark_rounded,
-                          size: 16, color: Color(0xFF8E8E93)),
+                      child: Icon(Icons.question_mark_rounded,
+                          size: 16, color: context.appColors.secondaryText),
                     ),
                   ],
                 ),
@@ -163,7 +164,7 @@ class _MobileNumberState extends State<MobileNumber> {
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w700,
                             fontSize: 30,
-                            color: const Color(0xFF1C1C1E)),
+                            color: context.appColors.onBackground),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -171,7 +172,7 @@ class _MobileNumberState extends State<MobileNumber> {
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w400,
                             fontSize: 14,
-                            color: const Color(0xFF8E8E93)),
+                            color: context.appColors.secondaryText),
                       ),
 
                       const SizedBox(height: 36),
@@ -198,8 +199,8 @@ class _MobileNumberState extends State<MobileNumber> {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             decoration: BoxDecoration(
                               color: isValid
-                                  ? const Color(0xFF3D3B5E)
-                                  : const Color(0xFFD1D1D6),
+                                  ? context.appColors.primary
+                                  : context.appColors.unselectedChip,
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: Center(
@@ -218,7 +219,7 @@ class _MobileNumberState extends State<MobileNumber> {
                                           lWeight: FontWeight.bold,
                                           color: isValid
                                               ? Colors.white
-                                              : const Color(0xFF8E8E93)),
+                                              : context.appColors.secondaryText),
                                     ),
                             ),
                           ),
@@ -236,14 +237,14 @@ class _MobileNumberState extends State<MobileNumber> {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 12,
-                                color: const Color(0xFF8E8E93)),
+                                color: context.appColors.secondaryText),
                             children: [
                               TextSpan(
                                 text: FinvuStrings().termsAndConditions,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    color: const Color(0xFF3D3B5E)),
+                                    color: context.appColors.primary),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => redirectToUrl(
                                       context, Credentials.FinvuUrl),
@@ -288,13 +289,13 @@ class _PhoneField extends StatelessWidget {
             style: FontManager().getTextStyle(context,
                 fontSize: 13,
                 lWeight: FontWeight.w500,
-                color: Color(0xFF1C1C1E))),
+                color: context.appColors.onBackground)),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.appColors.inputBackground,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE5E5EA), width: 0.8),
+            border: Border.all(color: context.appColors.border, width: 0.8),
           ),
           child: Row(
             children: [
@@ -302,9 +303,9 @@ class _PhoneField extends StatelessWidget {
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    right: BorderSide(color: Color(0xFFE5E5EA), width: 0.8),
+                    right: BorderSide(color: context.appColors.border, width: 0.8),
                   ),
                 ),
                 child: Text(
@@ -312,7 +313,7 @@ class _PhoneField extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 15,
                       lWeight: FontWeight.w600,
-                      color: Color(0xFF1C1C1E)),
+                      color: context.appColors.onSurface),
                 ),
               ),
               Expanded(
@@ -328,15 +329,15 @@ class _PhoneField extends StatelessWidget {
                   ],
                   onChanged: onChanged,
                   contextMenuBuilder: (ctx, state) => const SizedBox(),
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF1C1C1E)),
+                      color: context.appColors.onSurface),
                   decoration: InputDecoration(
                     counterText: '',
                     hintText: '10-digit mobile number',
                     hintStyle:
-                        const TextStyle(fontSize: 14, color: Color(0xFFAEAEB2)),
+                        TextStyle(fontSize: 14, color: context.appColors.hintText),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 14),
