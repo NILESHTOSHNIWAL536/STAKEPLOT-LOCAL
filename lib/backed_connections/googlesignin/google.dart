@@ -28,15 +28,15 @@ class AuthService {
       final String? idToken = googleAuth
           .idToken; // final String? accessToken = googleAuth.accessToken;
       if (idToken == null) return null;
-
+      cardController.selectedEmail.value = googleUser.email;
       //don't remove this code
       final String? authCode = await googleUser.serverAuthCode;
       if (authCode != null) {
         final response = await postDataApiCall(AuthApiRoutes.generateToken, {
           'idToken': authCode,
-          "bankId": cardController.selectedBankName.value.isEmpty
-              ? "HDFCLtd-FIP"
-              : cardController.selectedBankName.value,
+          // "bankId": cardController.selectedBankName.value.isEmpty
+          //     ? "HDFCLtd-FIP"
+          //     : cardController.selectedBankName.value,
         });
         if (!flag) return {};
       }
