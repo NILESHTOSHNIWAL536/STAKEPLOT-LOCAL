@@ -43,6 +43,6 @@ jobs:
           script: |
             cd /home/ubuntu/devops-tools/scripts
             ./docker-control.base.sh qa down bank-service
-            docker rm bank-service
+            docker rm -f bank-service || true
             docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/bank-service:staging
             ./docker-control.base.sh qa up bank-service
