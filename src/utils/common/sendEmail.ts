@@ -1,14 +1,8 @@
 const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 require("dotenv").config();
 
-// Initialize SES client
-const sesClient = new SESClient({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+// No credentials passed — EC2 IAM role provides them automatically via IMDS.
+const sesClient = new SESClient({ region: process.env.AWS_REGION });
 
 const sendEmail = async (subject, message, sendTo, sendFrom, replyTo) => {
   const params = {

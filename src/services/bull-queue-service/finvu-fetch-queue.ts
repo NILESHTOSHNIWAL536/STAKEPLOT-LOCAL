@@ -9,10 +9,6 @@ import bankLogos from '@/config/bankLogos';
 import logger from '@/utils/common/logger';
 import { publishSocketEvent } from '@/utils/webHook';
 
-const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
-const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
-
 export type FinvuFetchJobData = {
   sessionId: string;
   custId: string;
@@ -24,19 +20,24 @@ export type FinvuFetchJobData = {
 
 const notificationRepository = new NotificationRepository();
 
-// ─── Queue ────────────────────────────────────────────────────────────────────
+let _queue: InstanceType<typeof Queue> | null = null;
 
-const finvuFetchQueue = new Queue<FinvuFetchJobData>('finvu-fetch', {
-  redis: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    password: REDIS_PASSWORD || undefined,
-  },
-});
+// ─── Lazy factory ─────────────────────────────────────────────────────────────
+// Deferred so process.env.REDIS_PASSWORD is populated by loadSecrets() before connection.
 
-// ─── Worker ───────────────────────────────────────────────────────────────────
+const getQueue = (): InstanceType<typeof Queue> => {
+  if (_queue) return _queue;
+  _queue = new Queue<FinvuFetchJobData>('finvu-fetch', {
+    redis: {
+      host: process.env.REDIS_HOST || '127.0.0.1',
+      port: Number(process.env.REDIS_PORT) || 6379,
+      password: process.env.REDIS_PASSWORD || undefined,
+    },
+  });
 
-finvuFetchQueue.process(async (job: Job<FinvuFetchJobData>) => {
+  // ─── Worker ─────────────────────────────────────────────────────────────────
+
+  _queue.process(async (job: Job<FinvuFetchJobData>) => {
   const { sessionId, custId, consentId, handleId, isUpdate, userId } = job.data;
 
   logger.info(`[FinvuFetchQueue] Processing job ${job.id} for session ${sessionId}`);
@@ -114,22 +115,25 @@ finvuFetchQueue.process(async (job: Job<FinvuFetchJobData>) => {
   }
 
   logger.info(`[FinvuFetchQueue] Job ${job.id} completed for session ${sessionId}`);
-});
+  });
 
-finvuFetchQueue.on('failed', (job, err) => {
-  logger.error(`[FinvuFetchQueue] Job ${job.id} failed: ${err.message}`);
-});
+  _queue.on('failed', (job, err) => {
+    logger.error(`[FinvuFetchQueue] Job ${job.id} failed: ${err.message}`);
+  });
 
-finvuFetchQueue.on('completed', (job) => {
-  logger.info(`[FinvuFetchQueue] Job ${job.id} completed`);
-});
+  _queue.on('completed', (job) => {
+    logger.info(`[FinvuFetchQueue] Job ${job.id} completed`);
+  });
+
+  return _queue;
+};
 
 // ─── Enqueue helper ───────────────────────────────────────────────────────────
 
 const FETCH_DELAY_MS = 12_000; // 12 s — gives the aggregator time to settle
 
 export async function enqueueFinvuFetch(data: FinvuFetchJobData, delayMs = FETCH_DELAY_MS): Promise<void> {
-  await finvuFetchQueue.add(data, {
+  await getQueue().add(data, {
     jobId: `finvu-fetch:${data.sessionId}`, // deduplicates if triggered twice
     delay: delayMs,
     removeOnComplete: true,
@@ -140,5 +144,13 @@ export async function enqueueFinvuFetch(data: FinvuFetchJobData, delayMs = FETCH
 
   logger.info(`[FinvuFetchQueue] Enqueued session ${data.sessionId} — fires in ${delayMs / 1000}s`);
 }
+
+const finvuFetchQueue = new Proxy({} as InstanceType<typeof Queue>, {
+  get(_target, prop: string) {
+    const q = getQueue();
+    const value = (q as any)[prop];
+    return typeof value === 'function' ? value.bind(q) : value;
+  },
+});
 
 export default finvuFetchQueue;
