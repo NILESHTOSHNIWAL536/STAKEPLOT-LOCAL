@@ -58,9 +58,17 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   // 🔥 HANDLE REFRESH TOKEN
   let existing = await GoogleAuth.findOne({ email });
 
+  // if (tokens.refresh_token) {
+  //   const encrypted = await encryptToken(tokens.refresh_token);
+  //   existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+  // }
+
   if (tokens.refresh_token) {
+    const userEmail = await EmailRepository.getUserEmailById(userId);
+    const normalizedUserEmail = normalizeEmail(userEmail);
     const encrypted = await encryptToken(tokens.refresh_token);
-    existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+    await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+    existing = await GoogleAuth.findOneAndUpdate({ email: normalizedUserEmail }, { refreshToken: encrypted }, { upsert: true, new: true });
   }
 
   if (!existing) {
