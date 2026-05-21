@@ -1,13 +1,13 @@
-import dotenv from 'dotenv';
 import crypto, { CipherGCM, DecipherGCM } from 'crypto';
 
-dotenv.config();
+// Read lazily inside functions — module-level reads happen before loadSecrets() injects SM values
+const getKey = (): Buffer => {
+  const raw = process.env.ENCRYPTION_KEY_32BYTE;
+  if (!raw) throw new Error('ENCRYPTION_KEY_32BYTE is not set');
+  return Buffer.from(raw, 'hex');
+};
 
-const ENCRYPTION_KEY_HEX = process.env.ENCRYPTION_KEY || '';
-const ALGORITHM = process.env.ALGORITHM || '';
-
-// 32-byte key for AES-256 (assumed)
-const ENCRYPTION_KEY = Buffer.from(ENCRYPTION_KEY_HEX, 'hex');
+const getAlgorithm = (): string => process.env.ALGORITHM || 'aes-256-gcm';
 
 export interface EncryptedToken {
   encryptedData: string;
@@ -20,7 +20,7 @@ export async function encryptToken(token: string): Promise<EncryptedToken> {
     const iv = crypto.randomBytes(16); // 16 bytes IV for GCM
 
     // explicitly tell TS we're using a GCM cipher
-    const cipher = crypto.createCipheriv(ALGORITHM, ENCRYPTION_KEY, iv) as CipherGCM;
+    const cipher = crypto.createCipheriv(getAlgorithm(), getKey(), iv) as CipherGCM;
 
     let encrypted = cipher.update(token, 'utf8', 'base64');
     encrypted += cipher.final('base64');
@@ -40,7 +40,7 @@ export async function encryptToken(token: string): Promise<EncryptedToken> {
 
 export async function decryptToken(encryptedData: string, iv: string, authTag: string): Promise<string> {
   try {
-    const decipher = crypto.createDecipheriv(ALGORITHM, ENCRYPTION_KEY, Buffer.from(iv, 'base64')) as DecipherGCM;
+    const decipher = crypto.createDecipheriv(getAlgorithm(), getKey(), Buffer.from(iv, 'base64')) as DecipherGCM;
 
     decipher.setAuthTag(Buffer.from(authTag, 'base64'));
 

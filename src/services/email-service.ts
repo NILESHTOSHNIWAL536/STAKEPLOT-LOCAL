@@ -11,11 +11,20 @@ import { StatusCodes } from 'http-status-codes';
 import { getModels } from '../models/index-model';
 import { googleAuthSchema } from '../models/google-auth';
 
-const CLIENT_ID = process.env.CLIENT_ID || '';
-const CLIENT_SECRET = process.env.CLIENT_SECRET || '';
-const REDIRECT_URI = '';
+// Client created lazily so CLIENT_SECRET (from loadSecrets) and REDIRECT_URI are
+// read after process.env is fully populated — not at module-import time.
+let _oauth2Client: InstanceType<typeof google.auth.OAuth2> | null = null;
 
-const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+const getOAuth2Client = () => {
+  if (!_oauth2Client) {
+    _oauth2Client = new google.auth.OAuth2(
+      process.env.CLIENT_ID || '',
+      process.env.CLIENT_SECRET || '',
+      '',
+    );
+  }
+  return _oauth2Client;
+};
 const allowedBankIds = new Set((creditCards as any[]).map((card) => card.bankId));
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,10 +46,10 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   assertAllowedBankId(bankId);
   const { GoogleAuth, UserBankMap } = await getModels();
 
-  const { tokens } = await oauth2Client.getToken(authCode);
-  oauth2Client.setCredentials(tokens);
+  const { tokens } = await getOAuth2Client().getToken(authCode);
+  getOAuth2Client().setCredentials(tokens);
 
-  const oauth2 = google.oauth2({ auth: oauth2Client, version: 'v2' });
+  const oauth2 = google.oauth2({ auth: getOAuth2Client(), version: 'v2' });
   const { data } = await oauth2.userinfo.get();
 
   const email = data.email!;
@@ -49,9 +58,17 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   // 🔥 HANDLE REFRESH TOKEN
   let existing = await GoogleAuth.findOne({ email });
 
+  // if (tokens.refresh_token) {
+  //   const encrypted = await encryptToken(tokens.refresh_token);
+  //   existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+  // }
+
   if (tokens.refresh_token) {
+    const userEmail = await EmailRepository.getUserEmailById(userId);
+    const normalizedUserEmail = normalizeEmail(userEmail);
     const encrypted = await encryptToken(tokens.refresh_token);
-    existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+    await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+    existing = await GoogleAuth.findOneAndUpdate({ email: normalizedUserEmail }, { refreshToken: encrypted }, { upsert: true, new: true });
   }
 
   if (!existing) {
@@ -109,8 +126,8 @@ export async function scrapeEmailsByBankId(userId: string, bankIds: string[], em
     throw new AppError('No credit card found for the provided bank IDs', StatusCodes.BAD_REQUEST);
   }
 
-  oauth2Client.setCredentials({ refresh_token: decryptedRefreshToken });
-  const gmailClient = google.gmail({ version: 'v1', auth: oauth2Client });
+  getOAuth2Client().setCredentials({ refresh_token: decryptedRefreshToken });
+  const gmailClient = google.gmail({ version: 'v1', auth: getOAuth2Client() });
 
   const scrapeEmailsUsingParser = await emailScraperHelper(gmailClient as any, creditCard);
 
