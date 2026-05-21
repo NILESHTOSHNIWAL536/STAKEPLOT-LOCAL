@@ -41,8 +41,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/devops-tools/scripts
-            ./docker-control.base.sh qa down email-service
-            docker rm -f email-service || true
-            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:staging
-            ./docker-control.base.sh qa up email-service
+            cd /home/ubuntu/devops-tools/
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+            ./scripts/docker-control.qa.sh pull email-service
+            ./scripts/docker-control.qa.sh restart email-service
