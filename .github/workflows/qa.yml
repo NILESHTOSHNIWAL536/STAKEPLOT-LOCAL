@@ -43,5 +43,7 @@ jobs:
           script: |
             cd /home/ubuntu/devops-tools/
             aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+            ./scripts/docker-control.qa.sh down email-service
+            ./scripts/docker-control.qa.sh delete-container email-service
             ./scripts/docker-control.qa.sh pull email-service
-            ./scripts/docker-control.qa.sh restart email-service
+            ./scripts/docker-control.qa.sh up email-service
