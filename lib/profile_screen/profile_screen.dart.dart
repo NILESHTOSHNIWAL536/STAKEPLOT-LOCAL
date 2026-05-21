@@ -14,7 +14,7 @@ import 'package:flutter_application_code_stakeplot/components/bottomNavigations.
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/edit_user_profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/Constants/vibration.dart';
@@ -32,6 +32,8 @@ class ProfileScreenDart extends StatefulWidget {
 }
 
 class _ProfileScreenDartState extends State<ProfileScreenDart> {
+  bool _isLoggingOut = false;
+
   @override
   void initState() {
     super.initState();
@@ -314,8 +316,20 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       children: [
         InkWell(
           onTap: () async {
-            logoutUserFromDevice(context);
+            if (_isLoggingOut) return;
+
+            setState(() {
+              _isLoggingOut = true;
+            });
+
+            await logoutUserFromDevice(context);
+
+            if (!mounted) return;
+            setState(() {
+              _isLoggingOut = false;
+            });
           },
+          borderRadius: BorderRadius.circular(14),
           child: Container(
             decoration: BoxDecoration(
                 color: colors.surface,
@@ -323,11 +337,21 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 border: Border.all(color: colors.border)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
-              child: _buildOption(
-                ProfileImage(url: ProfileIcons.logout),
-                ProfileScreenStrings().logoutLabel, // Direct access
-                ProfileScreenStrings().logoutSubLabel, // Direct access
-                isLogout: true,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: _isLoggingOut
+                    ? _buildOption(
+                        _logoutLoader(),
+                        "Logging out...",
+                        "Please wait while we secure your session",
+                        isLogout: true,
+                      )
+                    : _buildOption(
+                        ProfileImage(url: ProfileIcons.logout),
+                        ProfileScreenStrings().logoutLabel, // Direct access
+                        ProfileScreenStrings().logoutSubLabel, // Direct access
+                        isLogout: true,
+                      ),
               ),
             ),
           ),
@@ -343,6 +367,19 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _logoutLoader() {
+    final colors = context.appColors;
+
+    return SizedBox(
+      height: 20,
+      width: 20,
+      child: CircularProgressIndicator(
+        strokeWidth: 2.3,
+        valueColor: AlwaysStoppedAnimation<Color>(colors.onBackground),
+      ),
     );
   }
 

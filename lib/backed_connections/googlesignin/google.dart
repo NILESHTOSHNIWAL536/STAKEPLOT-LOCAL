@@ -15,8 +15,7 @@ class AuthService {
       {bool flag = true, bool isEmail = false}) async {
     try {
       // Trigger Google Sign-In
-      if (isEmail)
-        _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
+      if (isEmail)_googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
       await _googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {

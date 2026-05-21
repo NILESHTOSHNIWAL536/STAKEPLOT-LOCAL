@@ -102,7 +102,6 @@ void clearPostReportHide(int index, context, [bool f = true]) {
 
 Future<bool> check(context, String flag) async {
   bool f = await SecureStorageService().containsKey("accessToken");
-  // //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   if (!f && flag != "loginuser") {
     Navigator.pushReplacementNamed(context, '/');
     return false;
@@ -117,19 +116,16 @@ Future<bool> check(context, String flag) async {
 
 Future<void> storeDeviceInfo(context) async {
   try {
-    final json = await getUserStats();
+    await Future(() async {
+      final json = await getUserStats();
 
-    await Future.wait([
-      postDataApiCallwithOutSharedPref(
-        SendNotificationsRoutes.deviceScreenTime,
-        json,
-      ),
-      postDataApiCall(
+      await postDataApiCall(
         AuthApiRoutes.logout,
-        {},
-      ),
-    ]);
-  } catch (e) {
+        json,
+      );
+    }).timeout(const Duration(seconds: 5));
+  } catch (e) 
+  {
     print("Store Device Info Error: $e");
   }
 }
@@ -246,44 +242,21 @@ Future<void> getAllContstant(context) async {
   }
 }
 
-// void logoutUserFromDevice(context2) async {
-//   BuildContext context =  context2 ?? navigatorKey.currentState!.context;
-//   try {
-//     Navigator.pushReplacementNamed(context, '/');
-//     Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-//     await storeDeviceInfo(context);
-//     clearGetX();
-//     final SharedPreferences _pref = await SharedPreferences.getInstance();
-//     await _pref.remove("token");
-//     await _pref.remove("accessToken");
-//     await SecureStorageService().delete("token");
-//     await SecureStorageService().delete("accessToken");
-//     await ReferralRepository.clearAllReferralCodes();
-//     await ReferralRepository.clearMyShareReferralCode();
-//     await SecureStorageService().deleteAll();
-//   } catch (e) {}
-// }
+bool _isLogoutInProgress = false;
 
 Future<void> logoutUserFromDevice(BuildContext? context2) async {
+  if (_isLogoutInProgress) return;
+  _isLogoutInProgress = true;
+
   final context = context2 ?? navigatorKey.currentState!.context;
+  final navigator = Navigator.of(context);
 
   try {
-    /// ✅ 1. Send logout API safely
-    storeDeviceInfo(context);
+    await storeDeviceInfo(context);
 
     /// ✅ 2. Clear local data
     final pref = await SharedPreferences.getInstance();
-
-    // await pref.remove("token");
-    // await pref.remove("accessToken");
-
-    // await SecureStorageService().delete("token");
-    // await SecureStorageService().delete("accessToken");
-    // await SecureStorageService().deleteAll();
-
-    // await ReferralRepository.clearAllReferralCodes();
-    // await ReferralRepository.clearMyShareReferralCode();
-    Future.wait([
+    await Future.wait([
       pref.remove("token"),
       pref.remove("accessToken"),
       SecureStorageService().delete("token"),
@@ -294,7 +267,7 @@ Future<void> logoutUserFromDevice(BuildContext? context2) async {
     ]);
 
     /// ✅ 3. Navigate ONLY ONCE
-    Navigator.of(context).pushNamedAndRemoveUntil(
+    navigator.pushNamedAndRemoveUntil(
       '/',
       (Route<dynamic> route) => false,
     );
@@ -307,10 +280,12 @@ Future<void> logoutUserFromDevice(BuildContext? context2) async {
     print("Logout Error: $e");
 
     /// 🔥 Even if error → still force logout locally
-    Navigator.of(context).pushNamedAndRemoveUntil(
+    navigator.pushNamedAndRemoveUntil(
       '/',
       (Route<dynamic> route) => false,
     );
+  } finally {
+    _isLogoutInProgress = false;
   }
 }
 
@@ -372,9 +347,6 @@ void initGetControllersIfisRegistered() {
   if (!Get.isRegistered<PostController>()) {
     Get.put(PostController());
   }
-  //  if (!Get.isRegistered<FinoraController>()) {
-  //   Get.put(FinoraController());
-  // }
   if (!Get.isRegistered<CardDueController>()) {
     Get.put(CardDueController());
   }
