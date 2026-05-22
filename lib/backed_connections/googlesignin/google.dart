@@ -33,11 +33,17 @@ class AuthService {
       if (authCode != null) {
         final response = await postDataApiCall(AuthApiRoutes.generateToken, {
           'idToken': authCode,
-          // "bankId": cardController.selectedBankName.value.isEmpty
-          //     ? "HDFCLtd-FIP"
-          //     : cardController.selectedBankName.value,
+          "bankId": cardController.selectedBankId.value.isEmpty
+              ? "HDFCLtd-FIP"
+              : cardController.selectedBankId.value,
         });
-        if (!flag) return {};
+        if(getFlagOfResponse(response)){
+            if (!flag) return {};
+        }else {
+          var data = jsonDecode(response.body);
+          snackBarCalledfail(context, data['message'] ?? data['error'] ?? "Failed to generate token");
+          return null;
+        }
       }
 
       updateDeviceData(deviceData);

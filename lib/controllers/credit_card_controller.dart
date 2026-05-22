@@ -52,7 +52,7 @@ class CardDueController extends GetxController {
 
       var response = await postDataApiCall("${AuthApiRoutes.scrape}/", {
         "bankIds": [selectedBankId.value],
-        // "email": selectedEmail.value,
+        "email": selectedEmail.value,
       });
 
       if (getFlagOfResponse(response)) {

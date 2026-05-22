@@ -123,9 +123,8 @@ Future<void> storeDeviceInfo(context) async {
         AuthApiRoutes.logout,
         json,
       );
-    }).timeout(const Duration(seconds: 5));
-  } catch (e) 
-  {
+    });
+  } catch (e) {
     print("Store Device Info Error: $e");
   }
 }
@@ -174,7 +173,6 @@ void clearGraph() {
 }
 
 void clearGetX() {
-  final controller = Get.find<FinoraController>();
   messages.clear();
   messagesTemp.clear();
 
@@ -218,7 +216,9 @@ void clearGetX() {
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
   transactionsHistory.clear();
-  controller.spendingsOnCategories.clear();
+  if (Get.isRegistered<FinoraController>()) {
+    Get.find<FinoraController>().spendingsOnCategories.clear();
+  }
   isLoadingMore.value = false;
   isFected.value = false;
   currentPage = 1;
@@ -226,9 +226,10 @@ void clearGetX() {
   isBankLinked.value = false;
   clearGraph();
   loadBanks.value = true;
-  deleteGetControllers();
   HiveStorage.closeAllBoxes();
-  collectionsController.clearAllData();
+  if (Get.isRegistered<CollectionsController>()) {
+    Get.find<CollectionsController>().clearAllData();
+  }
 }
 
 RxMap<String, String> ListOfBankImages = RxMap();
@@ -245,7 +246,6 @@ Future<void> getAllContstant(context) async {
 bool _isLogoutInProgress = false;
 
 Future<void> logoutUserFromDevice(BuildContext? context2) async {
-  if (_isLogoutInProgress) return;
   _isLogoutInProgress = true;
 
   final context = context2 ?? navigatorKey.currentState!.context;
@@ -254,8 +254,8 @@ Future<void> logoutUserFromDevice(BuildContext? context2) async {
   try {
     await storeDeviceInfo(context);
 
-    /// ✅ 2. Clear local data
     final pref = await SharedPreferences.getInstance();
+
     await Future.wait([
       pref.remove("token"),
       pref.remove("accessToken"),
@@ -264,22 +264,24 @@ Future<void> logoutUserFromDevice(BuildContext? context2) async {
       SecureStorageService().deleteAll(),
       ReferralRepository.clearAllReferralCodes(),
       ReferralRepository.clearMyShareReferralCode(),
+      navigator.pushNamedAndRemoveUntil(
+        '/',
+        (Route<dynamic> route) => false,
+      )
     ]);
-
-    /// ✅ 3. Navigate ONLY ONCE
-    navigator.pushNamedAndRemoveUntil(
-      '/',
-      (Route<dynamic> route) => false,
-    );
+    _isLogoutInProgress = false;
 
     Future.microtask(() {
-      deleteGetControllers();
-      clearGetX();
+      try {
+        clearGetX();
+        deleteGetControllers();
+      } catch (e) {
+        print("Logout cleanup Error: $e");
+      }
     });
   } catch (e) {
     print("Logout Error: $e");
 
-    /// 🔥 Even if error → still force logout locally
     navigator.pushNamedAndRemoveUntil(
       '/',
       (Route<dynamic> route) => false,
@@ -333,11 +335,18 @@ void initGetControllers() {
 }
 
 void deleteGetControllers() {
-  Get.delete<UserController>();
-  Get.delete<PostController>();
+  // Keep UserController registered while the old authenticated widget tree is
+  // disposing; several widgets can still rebuild briefly during logout.
+  if (Get.isRegistered<PostController>()) {
+    Get.delete<PostController>();
+  }
   // Get.delete<FinoraController>();
-  Get.delete<CardDueController>();
-  Get.delete<ThemeController>();
+  if (Get.isRegistered<CardDueController>()) {
+    Get.delete<CardDueController>();
+  }
+  if (Get.isRegistered<ThemeController>()) {
+    Get.delete<ThemeController>();
+  }
 }
 
 void initGetControllersIfisRegistered() {
