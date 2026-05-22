@@ -10,7 +10,7 @@
     android:label="Stakeplot"
     android:name="${applicationName}"
     android:exported="true"
-    android:icon="@mipmap/launcher_icon"
+    android:icon="@mipmap/mainicon"
     android:allowBackup="false"
     android:fullBackupContent="false"
     tools:replace="android:allowBackup,android:fullBackupContent">
@@ -63,7 +63,7 @@
             android:name="com.stakeplot.pfa.IconDefault"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/launcher_icon"
+            android:icon="@mipmap/mainicon"
             android:label="Stakeplot"
             android:targetActivity="com.stakeplot.pfa.MainActivity">
             <intent-filter>

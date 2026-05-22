@@ -147,13 +147,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )),
-                          // userController.phone.value == "0"
-                          //     ? SizedBox.shrink()
-                          //     : Text(userController.phone.value,
-                          //         style: FontManager().getTextStyle(context,
-                          //             lWeight: FontWeight.w400,
-                          //             fontSize: 10,
-                          //             color: AppColors.bg1)),
+
                         ],
                       ),
                     ),

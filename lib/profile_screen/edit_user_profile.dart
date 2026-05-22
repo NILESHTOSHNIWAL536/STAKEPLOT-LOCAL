@@ -30,9 +30,9 @@ import '../show_modal/theme_modal.dart';
 
 late BuildContext showSnackBarContext;
 
-class EditDetails extends StatefulWidget {
+class EditDetails extends StatefulWidget 
+{
   const EditDetails({super.key});
-
   @override
   State<EditDetails> createState() => _EditDetailsState();
 }

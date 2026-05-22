@@ -1,5 +1,6 @@
 // lib/widgets/icon_picker_modal.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/model/app_icon_option.dart';
 import 'package:flutter_application_code_stakeplot/services/app_icon_changer.dart';
 
 import '../Constants/colors.dart';
@@ -12,7 +13,7 @@ class IconPickerModal {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.backgroundColor,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) => _IconPickerContent(),
@@ -27,7 +28,22 @@ class _IconPickerContent extends StatefulWidget {
 
 class _IconPickerContentState extends State<_IconPickerContent> {
   bool isLoading = false;
-  String selectedIcon = "";
+  String selectedIcon = AppIconOptions.defaultAlias;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedIcon();
+  }
+
+  Future<void> _loadSelectedIcon() async {
+    final alias = await AppIconChanger.selectedIconAlias();
+    if (!mounted) return;
+
+    setState(() {
+      selectedIcon = alias;
+    });
+  }
 
   Future<void> _changeIcon(String alias) async {
     setState(() {
@@ -46,20 +62,20 @@ class _IconPickerContentState extends State<_IconPickerContent> {
             ? "App icon changed successfully!"
             : "Failed to change app icon."),
         backgroundColor: success ? Colors.green : AppColors.redColor,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
 
     if (success) Navigator.pop(context);
   }
 
-  Widget _iconItem(String label, String asset, String alias) {
-    final isSelected = selectedIcon == alias;
+  Widget _iconItem(AppIconOption option) {
+    final isSelected = selectedIcon == option.alias;
 
     return GestureDetector(
-      onTap: isLoading ? null : () => _changeIcon(alias),
+      onTap: isLoading ? null : () => _changeIcon(option.alias),
       child: Container(
-        padding: EdgeInsets.all(AppSizes.p10),
+        padding: const EdgeInsets.all(AppSizes.p10),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? Colors.blue : Colors.transparent,
@@ -70,13 +86,13 @@ class _IconPickerContentState extends State<_IconPickerContent> {
         child: Column(
           children: [
             Image.asset(
-              asset,
+              option.assetPath,
               height: 70,
               width: 70,
             ),
-            SizedBox(height: AppSizes.h8),
+            const SizedBox(height: AppSizes.h8),
             Text(
-              label,
+              option.label,
               style: FontManager().getTextStyle(context,
                   fontSize: 14, lWeight: FontWeight.w500),
             ),
@@ -93,7 +109,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: AppSizes.p10, bottom: 20),
+            margin: const EdgeInsets.only(top: AppSizes.p10, bottom: 20),
             height: 5,
             width: 50,
             decoration: BoxDecoration(
@@ -104,18 +120,14 @@ class _IconPickerContentState extends State<_IconPickerContent> {
           Text("Choose App Icon",
               style: FontManager().getTextStyle(context,
                   fontSize: 18, lWeight: FontWeight.bold)),
-          SizedBox(height: AppSizes.h20),
+          const SizedBox(height: AppSizes.h20),
           isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _iconItem("Default", "assets/app_icons/mainicon.png",
-                        "IconDefault"),
-                    _iconItem("Icon 1", "assets/app_icons/icon1.png", "Icon1"),
-                    _iconItem("Icon 2", "assets/app_icons/icon2.png", "Icon2"),
-                    _iconItem("Icon 3", "assets/app_icons/icon3.png", "Icon3"),
-                  ],
+                  children: AppIconOptions.all
+                      .map((icon) => _iconItem(icon))
+                      .toList(),
                 ),
         ],
       ),

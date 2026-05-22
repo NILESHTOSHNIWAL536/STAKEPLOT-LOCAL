@@ -24,7 +24,9 @@ class MainActivity : FlutterFragmentActivity() {
     private val WIDGET_SELECTED_KEY = "selected_options"
 
     // Full alias names as declared in AndroidManifest.xml
+    private val DEFAULT_COMPONENT = "com.stakeplot.pfa.MainActivity"
     private val ICON_COMPONENTS = listOf(
+        DEFAULT_COMPONENT,
         "com.stakeplot.pfa.IconDefault",
         "com.stakeplot.pfa.Icon1",
         "com.stakeplot.pfa.Icon2",
@@ -114,9 +116,8 @@ class MainActivity : FlutterFragmentActivity() {
                 try {
                     if (call.method == "changeIcon") {
                         val aliasShort = call.argument<String>("alias") ?: "IconDefault"
-                        val fullAlias = "com.stakeplot.pfa.$aliasShort"
-                        Log.d("MainActivity", "Requested icon: $fullAlias")
-                        val success = changeAppIcon(fullAlias)
+                        Log.d("MainActivity", "Requested icon: $aliasShort")
+                        val success = changeAppIcon(aliasShort)
                         result.success(success)
                     } else {
                         result.notImplemented()
@@ -129,16 +130,32 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     // Toggle aliases: disable all, enable chosen
-    private fun changeAppIcon(fullAlias: String): Boolean {
+    private fun changeAppIcon(aliasShort: String): Boolean {
         val pm = packageManager
         try {
+            val fullAlias = if (aliasShort == "IconDefault") {
+                DEFAULT_COMPONENT
+            } else {
+                "com.stakeplot.pfa.$aliasShort"
+            }
+
             if (!ICON_COMPONENTS.contains(fullAlias)) {
-                Log.e("ICON", "Alias not allowed: $fullAlias")
+                Log.e("ICON", "Alias not allowed: $aliasShort")
                 return false
             }
 
-            // Disable all aliases
+            val target = ComponentName(packageName, fullAlias)
+            pm.setComponentEnabledSetting(
+                target,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP
+            )
+
+            // Disable every other alias after the target is enabled so the app
+            // always keeps one launcher entry alive.
             ICON_COMPONENTS.forEach { comp ->
+                if (comp == fullAlias) return@forEach
+
                 try {
                     val compName = ComponentName(packageName, comp)
                     pm.setComponentEnabledSetting(
@@ -150,14 +167,6 @@ class MainActivity : FlutterFragmentActivity() {
                     Log.w("ICON", "Could not disable $comp: ${e.message}")
                 }
             }
-
-            // Enable the chosen alias
-            val target = ComponentName(packageName, fullAlias)
-            pm.setComponentEnabledSetting(
-                target,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
-            )
 
             Log.d("ICON", "Switched icon to: $fullAlias")
             return true
