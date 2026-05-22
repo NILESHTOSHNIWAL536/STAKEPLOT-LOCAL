@@ -7,7 +7,6 @@ import type { SearchPipelineInput } from '@/types/bank/search.types';
  */
 export const buildSearchPipeline = (input: SearchPipelineInput): PipelineStage[] => {
   const { userId, searchFilter, accountId, minAmount, maxAmount, startDate, endDate } = input;
-  console.log('input from here: ', input);
 
   const hasCash = Array.isArray(searchFilter) && searchFilter.some((f) => typeof f === 'string' && f.toLowerCase() === 'cash');
 

@@ -2,12 +2,20 @@ import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { SuccessResponse } from '../utils/common';
 import CollectionService from '../services/collection-service';
+import CollectionInvitationService from '../services/collection-invitation-service';
+import { publishSocketEvent } from '@/utils/webHook';
+import StridesService from '@/services/strides-service';
 
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
-    const data = req.body;
-    const collection = await CollectionService.createCollection(userId, data);
+    const { friends = [], ...collectionData } = req.body;
+    const collection = await CollectionService.createCollection(userId, collectionData, friends);
+    if (collectionData.type === 'PERSONAL') {
+      await StridesService.addOnce(userId, 2, 'PERSONAL_COLLECTION_CREATED', `collection-personal:${userId}`, collection?._id?.toString());
+    } else if (collectionData.type === 'SHARED') {
+      await StridesService.addOnce(userId, 3, 'SHARED_COLLECTION_CREATED', `collection-shared:${userId}`, collection?._id?.toString());
+    }
     SuccessResponse.data = collection;
     SuccessResponse.message = 'Collection created successfully';
     res.status(StatusCodes.CREATED).json(SuccessResponse);
@@ -22,6 +30,18 @@ export const getUserCollections = async (req: Request, res: Response, next: Next
     const collections = await CollectionService.getUserCollections(userId);
     SuccessResponse.data = collections;
     SuccessResponse.message = 'Collections fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCollectionLimitSummary = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const summary = await CollectionService.getUserCollectionLimitSummary(userId);
+    SuccessResponse.data = summary;
+    SuccessResponse.message = 'Collection limit summary fetched successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     next(error);
@@ -52,10 +72,11 @@ export const addMembers = async (req: Request, res: Response, next: NextFunction
       return res.status(StatusCodes.BAD_REQUEST).json(SuccessResponse);
     }
 
-    const members = await CollectionService.addMembers(id, authorId, friends);
-    SuccessResponse.data = members;
-    SuccessResponse.message = 'Members added successfully';
-    res.status(StatusCodes.OK).json(SuccessResponse);
+    // Send invitations instead of directly adding members
+    const invitations = await CollectionInvitationService.sendInvitations(id, authorId, friends);
+    SuccessResponse.data = invitations;
+    SuccessResponse.message = 'Invitations sent successfully';
+    res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
     next(error);
   }
@@ -67,6 +88,15 @@ export const addTransaction = async (req: Request, res: Response, next: NextFunc
     const { id: collectionId } = req.params;
     const { transactionIds, splitType, customSplits } = req.body;
     const result = await CollectionService.addTransactions(collectionId, userId, transactionIds, splitType, customSplits);
+    const collectionDetails=await CollectionService.getCollectionById(collectionId,userId);  
+    
+     await publishSocketEvent(collectionId, 'collection', {
+        type: 'splitUpdate',
+        data: {
+           "collection":{...result,"collectionDetails":collectionDetails}
+        },
+      });
+
     SuccessResponse.data = result;
     SuccessResponse.message = 'Transactions added to collection successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -146,9 +176,242 @@ export const getBalances = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+export const updateCollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { name, description, expiryAt,active } = req.body;
+    const collection = await CollectionService.updateCollection(collectionId, userId, { name, description, expiryAt,active });
+    await publishSocketEvent(collectionId, 'collection', {
+        type: name ? 'nameUpdate' : description ? 'descriptionUpdate' : expiryAt ? 'expiryUpdate' : 'update',
+        data: {
+           collection
+        },
+      });
+    SuccessResponse.data = collection;
+    SuccessResponse.message = 'Collection updated successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const closeCollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const collection = await CollectionService.closeCollection(collectionId, userId);
+    SuccessResponse.data = collection;
+    SuccessResponse.message = 'Collection closed successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllTransactions = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { page, limit } = req.query;
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = parseInt(limit as string) || 20;
+    const result = await CollectionService.getAllTransactions(collectionId, userId, pageNum, limitNum);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Transactions fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateCollectionMember = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, memberId } = req.params;
+    const { role, limitAmount } = req.body;
+
+    const updatedMember = await CollectionService.updateCollectionMember(collectionId, userId, memberId, role, limitAmount);
+    SuccessResponse.data = updatedMember;
+    SuccessResponse.message = 'Collection member amount updated successfully';
+      await publishSocketEvent(collectionId, 'collection', {
+        type: 'updatedMember',
+        data: {
+           "members":updatedMember
+        },
+      });
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const exitCollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+
+    const result = await CollectionService.exitCollectionByMember(collectionId, userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Successfully exited the collection';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ============================================
+// COLLECTION INVITATION ENDPOINTS
+// ============================================
+
+export const getPendingInvitations = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+
+    const result = await CollectionInvitationService.getPendingInvitations(userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Pending invitations fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const acceptInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { invitationId } = req.params;
+
+    const result = await CollectionInvitationService.acceptInvitation(invitationId, userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Invitation accepted successfully';
+
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const rejectInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { invitationId } = req.params;
+
+    const result = await CollectionInvitationService.rejectInvitation(invitationId, userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Invitation rejected successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, invitationId } = req.params;
+
+    await CollectionInvitationService.cancelInvitation(invitationId, userId);
+    SuccessResponse.data = {};
+    SuccessResponse.message = 'Invitation cancelled successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCollectionInvitations = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { status } = req.query;
+
+    const invitations = await CollectionInvitationService.getCollectionInvitations(collectionId, userId, status as 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined);
+    SuccessResponse.data = invitations;
+    SuccessResponse.message = 'Collection invitations fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const recordPayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, splitId } = req.params;
+    const { amount, note } = req.body;
+
+    if (!amount || isNaN(Number(amount))) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'amount is required and must be a number' });
+    }
+
+    const result = await CollectionService.recordPayment(collectionId, userId, splitId, Number(amount), note);
+     await publishSocketEvent(collectionId, 'collection', {
+        type: 'splitUpdate',
+        data: {
+           "collection":result
+        },
+      });
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Payment recorded successfully';
+    res.status(StatusCodes.CREATED).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const clearPayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, splitId } = req.params;
+    const { payerId, amount, note } = req.body;
+
+    if (!payerId) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'payerId is required' });
+    }
+    if (!amount || isNaN(Number(amount))) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'amount is required and must be a number' });
+    }
+
+    const result = await CollectionService.clearPayment(collectionId, userId, splitId, payerId, Number(amount), note);
+     await publishSocketEvent(collectionId, 'collection', {
+        type: 'splitUpdate',
+        data: {
+           "collection":result
+        },
+      });
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Payment cleared successfully';
+    res.status(StatusCodes.CREATED).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const setMemberLimits = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { limits } = req.body;
+
+
+    if (!Array.isArray(limits) || limits.length === 0) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'limits must be a non-empty array' });
+    }
+
+    const result = await CollectionService.setMemberLimits(collectionId, userId, limits);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Member limits updated successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createCollection,
   getUserCollections,
+  getCollectionLimitSummary,
   getCollectionById,
   addMembers,
   addTransaction,
@@ -157,4 +420,17 @@ export default {
   getAvailableTransactions,
   getCollectionSplits,
   getBalances,
+  updateCollection,
+  closeCollection,
+  getAllTransactions,
+  updateCollectionMember,
+  exitCollection,
+  getPendingInvitations,
+  acceptInvitation,
+  rejectInvitation,
+  cancelInvitation,
+  getCollectionInvitations,
+  recordPayment,
+  clearPayment,
+  setMemberLimits,
 };

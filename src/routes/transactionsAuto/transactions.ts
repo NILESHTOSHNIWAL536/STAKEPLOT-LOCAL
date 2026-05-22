@@ -23,6 +23,18 @@ import {
 const router = express.Router();
 router.use(express.json());
 
+router.get(
+  '/autopays',
+  AuthMiddlewares.protect,
+  TransactionAutoController.getAutoPays
+);
+
+router.post(
+  '/recurring-payments/from-transaction/:transactionId',
+  AuthMiddlewares.protect,
+  TransactionAutoController.createRecurringPaymentFromTransactionController
+);
+
 router.post(
   '/grouped/:groupId/categorize',
   AuthMiddlewares.protect,

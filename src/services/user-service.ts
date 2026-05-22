@@ -31,7 +31,7 @@ export async function getUserInfo(): Promise<UserId[]> {
   }
 }
 
-export async function hydrateUsers(userIds: string[]): Promise<any[]> {
+export async function hydrateUsers(userIds: string[] | Types.ObjectId[]): Promise<any[]> {
   if (!userIds || userIds.length === 0) return [];
 
   const uniqueIds = Array.from(new Set(userIds.filter(id => id && Types.ObjectId.isValid(id))));

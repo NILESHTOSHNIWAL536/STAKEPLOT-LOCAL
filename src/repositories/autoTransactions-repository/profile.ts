@@ -7,7 +7,7 @@ import logger from '@/utils/common/logger';
 import { StatusCodes } from 'http-status-codes';
 
 import { IProfile, IEncryptedField } from '@/types/bank';
-import { Types } from 'mongoose';
+import { Types, ClientSession } from 'mongoose';
 
 interface CreateProfileData {
   holder: Record<string, any>;
@@ -31,7 +31,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // CREATE PROFILE
   // ----------------------------------------------------
-  async createProfile(data: CreateProfileData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async createProfile(data: CreateProfileData, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     try {
       const existingProfiles = await this.model.find({
         accountId: data.accountId,
@@ -52,13 +52,13 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
       if (Array.isArray(existingProfiles) && existingProfiles.length > 0) {
         const existing = existingProfiles[0];
 
-        return this.model.findByIdAndUpdate(existing._id, { $set: profileData }, { new: true });
+        return this.model.findByIdAndUpdate(existing._id, { $set: profileData }, { new: true, session });
       }
 
       // --------------------------
       // CREATE NEW PROFILE
       // --------------------------
-      return await this.create(profileData);
+      return await this.create(profileData, session);
     } catch (error) {
       logger.error(`Error in createProfile: ${error}`);
       throw error;
@@ -91,7 +91,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // UPDATE PROFILE
   // ----------------------------------------------------
-  async updateProfile(query: { accountId: string | Types.ObjectId }, data: UpdateProfileData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async updateProfile(query: { accountId: string | Types.ObjectId }, data: UpdateProfileData, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     try {
       const existingProfile = await Profile.findOne({
         accountId: query.accountId,
@@ -108,7 +108,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
         encryptedDEK: ciphertextBlob,
       };
 
-      return await Profile.findOneAndUpdate({ _id: existingProfile._id }, { $set: profileData }, { new: true });
+      return await Profile.findOneAndUpdate({ _id: existingProfile._id }, { $set: profileData }, { new: true, session });
     } catch (error) {
       logger.error(`Error in updateProfile: ${error}`);
       throw error;
@@ -118,12 +118,12 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // DELETE PROFILE
   // ----------------------------------------------------
-  async deleteProfile(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
+  async deleteProfile(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId, session?: ClientSession) {
     try {
       if (accountId) {
-        return await this.deleteOne({ userId, accountId });
+        return await this.deleteOne({ userId, accountId }, session);
       }
-      return await this.deleteMany({ userId });
+      return await this.deleteMany({ userId }, session);
     } catch (error) {
       logger.error(`Error in deleteProfile: ${error}`);
       throw error;

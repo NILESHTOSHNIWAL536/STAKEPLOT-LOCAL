@@ -6,7 +6,7 @@ import AppError from '@/utils/errors/app-error';
 import logger from '@/utils/common/logger';
 import { StatusCodes } from 'http-status-codes';
 import { ISummary } from '@/types/bank';
-import { Types } from 'mongoose';
+import { Types, ClientSession } from 'mongoose';
 
 interface CreateSummaryData {
   data: Record<string, any>;
@@ -28,7 +28,7 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
   // ----------------------------------------------------
   // CREATE SUMMARY
   // ----------------------------------------------------
-  async createSummary(data: CreateSummaryData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async createSummary(data: CreateSummaryData, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     try {
       // Check if summary already exists
       const existingSummary = await this.model.find({
@@ -47,11 +47,11 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
       if (Array.isArray(existingSummary) && existingSummary.length > 0) {
         const existing = existingSummary[0];
 
-        return await this.model.findByIdAndUpdate(existing._id, { $set: summaryData }, { new: true });
+        return await this.model.findByIdAndUpdate(existing._id, { $set: summaryData }, { new: true, session });
       }
 
       // CREATE CASE
-      return await this.create(summaryData);
+      return await this.create(summaryData, session);
     } catch (error: any) {
       logger.error(`Error creating summary: ${error.message}`);
       throw error;
@@ -84,7 +84,7 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
   // ----------------------------------------------------
   // UPDATE SUMMARY
   // ----------------------------------------------------
-  async updateSummary(query: { accountId: string | Types.ObjectId }, data: UpdateSummaryData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async updateSummary(query: { accountId: string | Types.ObjectId }, data: UpdateSummaryData, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     try {
       const existingSummary = await Summary.findOne({
         accountId: query.accountId,
@@ -102,7 +102,7 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
         encryptedDEK: ciphertextBlob,
       };
 
-      return await Summary.findOneAndUpdate({ _id: existingSummary._id }, { $set: summaryData }, { new: true });
+      return await Summary.findOneAndUpdate({ _id: existingSummary._id }, { $set: summaryData }, { new: true, session });
     } catch (error) {
       logger.error(`Error in updateSummary: ${error}`);
       throw error;
@@ -112,13 +112,13 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
   // ----------------------------------------------------
   // DELETE SUMMARY
   // ----------------------------------------------------
-  async deleteSummary(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
+  async deleteSummary(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId, session?: ClientSession) {
     try {
       if (accountId) {
-        return await this.deleteOne({ userId, accountId });
+        return await this.deleteOne({ userId, accountId }, session);
       }
 
-      return await this.deleteMany({ userId });
+      return await this.deleteMany({ userId }, session);
     } catch (error) {
       logger.error(`Error in deleteSummary: ${error}`);
       throw error;

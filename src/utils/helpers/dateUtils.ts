@@ -1,3 +1,7 @@
+import moment from 'moment-timezone';
+
+const DEFAULT_TZ = 'Asia/Kolkata';
+
 // -----------------------------
 // Types
 // -----------------------------
@@ -24,24 +28,9 @@ export interface FillResult {
 }
 
 // -----------------------------
-// Helper: Get start date of ISO week
-// -----------------------------
-export const getStartDateOfISOWeek = (weekNum: number, year: number): Date => {
-  const simple = new Date(year, 0, 1 + (weekNum - 1) * 7);
-  const dayOfWeek = simple.getDay();
-  const ISOweekStart = new Date(simple);
-
-  if (dayOfWeek <= 4) {
-    ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-  } else {
-    ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-  }
-
-  return ISOweekStart;
-};
-
-// -----------------------------
 // Main: Get date range for month, week, custom, year
+// All boundaries are IST-aligned and returned as UTC Dates so that
+// MongoDB queries (which store timestamps in UTC) are correct for Indian users.
 // -----------------------------
 export const getDateRange = (type: RangeType, value: string): DateRange => {
   let startDate: Date;
@@ -49,36 +38,25 @@ export const getDateRange = (type: RangeType, value: string): DateRange => {
   let groupBy: 'day' | 'month' = 'day';
 
   if (type === 'month') {
-    const [year, month] = value.split('-');
-    const y = parseInt(year, 10);
-    const m = parseInt(month, 10) - 1;
-
-    startDate = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0));
-    endDate = new Date(Date.UTC(y, m + 1, 0, 23, 59, 59, 999));
+    // value = "YYYY-MM"
+    const m = moment.tz(value, 'YYYY-MM', DEFAULT_TZ);
+    startDate = m.clone().startOf('month').utc().toDate();
+    endDate   = m.clone().endOf('month').utc().toDate();
   } else if (type === 'week') {
-    const [yearStr, weekStr] = value.split('-W');
-    const year = parseInt(yearStr, 10);
-    const weekNum = parseInt(weekStr, 10);
-
-    startDate = getStartDateOfISOWeek(weekNum, year);
-    startDate = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(), 0, 0, 0, 0));
-
-    endDate = new Date(startDate);
-    endDate.setUTCDate(endDate.getUTCDate() + 6);
-    endDate.setUTCHours(23, 59, 59, 999);
+    // value = "YYYY-WNN" (ISO week)
+    const m = moment.tz(value, 'GGGG-[W]WW', DEFAULT_TZ);
+    startDate = m.clone().startOf('isoWeek').utc().toDate();
+    endDate   = m.clone().endOf('isoWeek').utc().toDate();
   } else if (type === 'custom') {
+    // value = "YYYY-MM-DD,YYYY-MM-DD"
     const [start, end] = value.split(',');
-    startDate = new Date(start);
-    endDate = new Date(end);
-
-    startDate.setUTCHours(0, 0, 0, 0);
-    endDate.setUTCHours(23, 59, 59, 999);
+    startDate = moment.tz(start.trim(), DEFAULT_TZ).startOf('day').utc().toDate();
+    endDate   = moment.tz(end.trim(),   DEFAULT_TZ).endOf('day').utc().toDate();
   } else if (type === 'year') {
-    const y = parseInt(value, 10);
-
-    startDate = new Date(Date.UTC(y, 0, 1, 0, 0, 0, 0));
-    endDate = new Date(Date.UTC(y, 11, 31, 23, 59, 59, 999));
-
+    // value = "YYYY"
+    const m = moment.tz(value, 'YYYY', DEFAULT_TZ);
+    startDate = m.clone().startOf('year').utc().toDate();
+    endDate   = m.clone().endOf('year').utc().toDate();
     groupBy = 'month';
   } else {
     throw new Error('Invalid type parameter');

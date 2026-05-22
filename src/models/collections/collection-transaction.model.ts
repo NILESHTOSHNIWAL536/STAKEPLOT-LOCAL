@@ -9,30 +9,33 @@ export interface ICollectionTransaction extends Document {
   updatedAt: Date;
 }
 
-const collectionTransactionSchema = new Schema<ICollectionTransaction>({
-  collectionId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Collection',
-    required: true,
-  },
+const collectionTransactionSchema = new Schema<ICollectionTransaction>(
+  {
+    collectionId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Collection',
+      required: true,
+    },
 
-  transactionId: {
-    type: Schema.Types.ObjectId,
-    ref: 'BankTransaction',
-    required: true,
-  },
+    transactionId: {
+      type: Schema.Types.ObjectId,
+      ref: 'BankTransaction',
+      required: true,
+    },
 
-  addedBy: {
-    type: Schema.Types.ObjectId,
-    
-    required: true,
-  },
+    addedBy: {
+      type: Schema.Types.ObjectId,
 
-  amount: {
-    type: Number,
-    required: true,
+      required: true,
+    },
+
+    amount: {
+      type: Number,
+      required: true,
+    },
   },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 // One transaction can only belong to a specific collection once
 collectionTransactionSchema.index({ collectionId: 1, transactionId: 1 }, { unique: true });

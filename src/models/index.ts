@@ -4,6 +4,7 @@ import Bank from "./transactions-automation/bank";
 import Profile from "./transactions-automation/profile";
 import Summary from "./transactions-automation/summary";
 import Transaction from "./transactions-automation/transaction";
+import UserDailyMetrics from "./transactions-automation/user-daily-metrics";
 import PendingTransaction from "./pendingTransaction";
 import GroupedTransaction from "./transactions-automation/grouped-transactions";
 import Finvu from "./transactions-automation/finvu";
@@ -33,6 +34,13 @@ import notificationTracker from "./notification-tracker";
 import WealthscapeSession from "./wealthscape-session";
 import WealthscapeAccountData from "./wealthscape-account-data";
 
+// Collection models
+import CollectionInvitation from "./collections/collection-invitation.model";
+import ReferralCode from "./referral-code.model";
+import ReferralUsage from "./referral-usage.model";
+import UserConfig from "./user-config.model";
+import Strides from "./strides-model";
+
 export {
   // Models related to storing user's profile, fipRecords, summaries, transactions
   Account,
@@ -40,6 +48,7 @@ export {
   Profile,
   Summary,
   Transaction,
+  UserDailyMetrics,
   PendingTransaction,
   GroupedTransaction,
   Finvu,
@@ -67,4 +76,13 @@ export {
   // Wealthscape & Finsense
   WealthscapeSession,
   WealthscapeAccountData,
+
+  // Collection models
+  CollectionInvitation,
+
+  // Referral models
+  ReferralCode,
+  ReferralUsage,
+  UserConfig,
+  Strides,
 };

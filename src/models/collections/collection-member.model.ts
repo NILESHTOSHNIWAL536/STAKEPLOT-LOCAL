@@ -4,32 +4,40 @@ export interface ICollectionMember extends Document {
   collectionId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   role: 'VIEW' | 'CONTRIBUTE';
+  limitAmount: String;
   joinedAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const collectionMemberSchema = new Schema<ICollectionMember>({
-  collectionId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Collection',
-    required: true,
-  },
+const collectionMemberSchema = new Schema<ICollectionMember>(
+  {
+    collectionId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Collection',
+      required: true,
+    },
 
-  userId: {
-    type: Schema.Types.ObjectId,
-    
-    required: true,
-  },
+    userId: {
+      type: Schema.Types.ObjectId,
 
-  role: {
-    type: String,
-    enum: ['VIEW', 'CONTRIBUTE'],
-    default: 'VIEW',
-  },
+      required: true,
+    },
 
-  joinedAt: { type: Date, default: Date.now },
-}, { timestamps: true });
+    role: {
+      type: String,
+      enum: ['VIEW', 'CONTRIBUTE'],
+      default: 'VIEW',
+    },
+
+    limitAmount: {
+      type: String,
+    },
+
+    joinedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
 
 // Optimize query for max collections limit per user
 collectionMemberSchema.index({ userId: 1 });

@@ -71,11 +71,10 @@ export async function encryptObject(obj: Record<string, any> | Map<string, any>,
   const entries = obj instanceof Map ? obj.entries() : Object.entries(obj);
 
   for (const [key, value] of entries) {
-    if (value !== null && value !== undefined) {
-      encryptedObj[key] = await encrypt(String(value), plaintextKey);
-    } else {
-      encryptedObj[key] = { encryptedData: '', iv: '', authTag: '' };
-    }
+    if (value === null || value === undefined) continue;
+    if (typeof value === 'string' && value.trim() === '') continue;
+
+    encryptedObj[key] = await encrypt(String(value), plaintextKey);
   }
 
   return encryptedObj;

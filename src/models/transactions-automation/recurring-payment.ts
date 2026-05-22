@@ -49,6 +49,59 @@ const recurringPaymentSchema = new Schema<IRecurringPayment>(
       type: String,
     },
 
+    normalizedMerchantKey: {
+      type: String,
+      default: '',
+    },
+
+    transactionIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'BankTransaction',
+      default: [],
+    },
+
+    amountVariance: {
+      type: Number,
+      default: 0,
+    },
+
+    currency: {
+      type: String,
+      default: 'INR',
+    },
+
+    confidenceScore: {
+      type: Number,
+      default: 0,
+    },
+
+    confidenceLabel: {
+      type: String,
+      enum: ['high', 'medium', 'low'],
+      default: 'medium',
+    },
+
+    detectionMethod: {
+      type: String,
+      enum: ['keyword_match', 'merchant_name', 'bbps', 'amount_pattern', 'manual', 'merchantMatch', 'patternMatch'],
+      default: 'amount_pattern',
+    },
+
+    merchantCategory: {
+      type: String,
+      default: 'subscription_other',
+    },
+
+    matchedNarrations: {
+      type: [String],
+      default: [],
+    },
+
+    isUserDefined: {
+      type: Boolean,
+      default: false,
+    },
+
     recentMostTwoOccurrences: {
       type: [Date],
       validate: [(array: Date[]) => array.length <= 2, 'Must contain at most 2 dates'],
@@ -80,6 +133,7 @@ const recurringPaymentSchema = new Schema<IRecurringPayment>(
 ============================ */
 
 recurringPaymentSchema.index({ nextReminderAt: 1 });
+recurringPaymentSchema.index({ userId: 1, normalizedMerchantKey: 1 }, { unique: true, sparse: true });
 
 /* ============================
    Export Model

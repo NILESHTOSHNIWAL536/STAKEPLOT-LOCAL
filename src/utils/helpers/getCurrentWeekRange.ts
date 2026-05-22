@@ -1,62 +1,47 @@
+import moment from 'moment-timezone';
+
+const DEFAULT_TZ = 'Asia/Kolkata';
+
 export function getCurrentWeekRange(): {
   currentWeekStart: Date;
   currentWeekEnd: Date;
 } {
-  const now = new Date();
-  const day = now.getDay(); // Sunday = 0
-  const diffToMonday = (day === 0 ? -6 : 1) - day;
-
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + diffToMonday);
-  monday.setHours(0, 0, 0, 0);
-
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23, 59, 59, 999);
-
-  return { currentWeekStart: monday, currentWeekEnd: sunday };
+  const now = moment().tz(DEFAULT_TZ);
+  return {
+    currentWeekStart: now.clone().startOf('isoWeek').utc().toDate(),
+    currentWeekEnd: now.clone().endOf('isoWeek').utc().toDate(),
+  };
 }
 
 export function getLastWeekRange(): {
   lastWeekStart: Date;
   lastWeekEnd: Date;
 } {
-  const now = new Date();
-  const day = now.getDay();
-  const diffToMonday = (day === 0 ? -6 : 1) - day;
-
-  const thisWeekMonday = new Date(now);
-  thisWeekMonday.setDate(now.getDate() + diffToMonday);
-  thisWeekMonday.setHours(0, 0, 0, 0);
-
-  const lastWeekMonday = new Date(thisWeekMonday);
-  lastWeekMonday.setDate(thisWeekMonday.getDate() - 7); // one full week earlier
-
-  const lastWeekSunday = new Date(lastWeekMonday);
-  lastWeekSunday.setDate(lastWeekMonday.getDate() + 6);
-  lastWeekSunday.setHours(23, 59, 59, 999);
-
-  return { lastWeekStart: lastWeekMonday, lastWeekEnd: lastWeekSunday };
+  const now = moment().tz(DEFAULT_TZ);
+  return {
+    lastWeekStart: now.clone().subtract(1, 'week').startOf('isoWeek').utc().toDate(),
+    lastWeekEnd: now.clone().subtract(1, 'week').endOf('isoWeek').utc().toDate(),
+  };
 }
 
 export function getCurrentMonthRange(): {
   currentMonthStart: Date;
   currentMonthEnd: Date;
 } {
-  const now = new Date();
-  const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
-  return { currentMonthStart, currentMonthEnd };
+  const now = moment().tz(DEFAULT_TZ);
+  return {
+    currentMonthStart: now.clone().startOf('month').utc().toDate(),
+    currentMonthEnd: now.clone().endOf('month').utc().toDate(),
+  };
 }
 
 export function getLastMonthRange(): {
   lastMonthStart: Date;
   lastMonthEnd: Date;
 } {
-  const now = new Date();
-  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
-
-  return { lastMonthStart, lastMonthEnd };
+  const now = moment().tz(DEFAULT_TZ);
+  return {
+    lastMonthStart: now.clone().subtract(1, 'month').startOf('month').utc().toDate(),
+    lastMonthEnd: now.clone().subtract(1, 'month').endOf('month').utc().toDate(),
+  };
 }

@@ -2,7 +2,6 @@ import { KMSClient, GenerateDataKeyCommand, GenerateDataKeyCommandInput, DataKey
 import logger from '../../utils/common/logger';
 
 const kmsClient = new KMSClient({ region: process.env.AWS_REGION });
-const keyId = process.env.KMS_KEY_ID as string;
 
 export async function generateDataKey(): Promise<{
   plaintextKey: Uint8Array | string;
@@ -10,7 +9,7 @@ export async function generateDataKey(): Promise<{
 }> {
   try {
     const params: GenerateDataKeyCommandInput = {
-      KeyId: keyId,
+      KeyId: process.env.KMS_KEY_ID as string,
       KeySpec: 'AES_256' satisfies DataKeySpec,
     };
 

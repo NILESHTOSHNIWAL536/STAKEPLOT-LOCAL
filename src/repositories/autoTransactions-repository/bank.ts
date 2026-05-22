@@ -6,14 +6,14 @@ import AppError from '@/utils/errors/app-error';
 import logger from '@/utils/common/logger';
 import { StatusCodes } from 'http-status-codes';
 import { IAccount, IBank, IEncryptedField, IFiAccountInfo } from '@/types/bank';
-import { Types } from 'mongoose';
+import { Types, ClientSession } from 'mongoose';
 
 interface CreateFipData {
   fipId: string;
   fipName: string;
   custId: string;
   consentId: string;
-  sessionId: string;
+  sessionId?: string;
   consentHandleId: string;
   from: Date;
   to: Date;
@@ -29,7 +29,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // CREATE FIP RECORD
   // ----------------------------------------------------
-  async createFipRecord(fipData: any, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async createFipRecord(fipData: any, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     const existingBanks = await Bank.find({ userId: fipData.userId });
 
     // Check duplicates
@@ -55,16 +55,15 @@ class FipRepository extends CrudRepository<typeof Bank> {
     );
 
     // Encrypt main fields
-    const encryptionTasks = {
-      fipId: encrypt(fipData.fipId, plaintextKey),
-      fipName: encrypt(fipData.fipName, plaintextKey),
-      custId: encrypt(fipData.custId, plaintextKey),
-      consentId: encrypt(fipData.consentId, plaintextKey),
-      sessionId: encrypt(fipData.sessionId, plaintextKey),
-      consentHandleId: encrypt(fipData.consentHandleId, plaintextKey),
-    };
+    const encrypted = await Promise.all([
+      encrypt(fipData.fipId, plaintextKey),
+      encrypt(fipData.fipName, plaintextKey),
+      encrypt(fipData.custId, plaintextKey),
+      encrypt(fipData.consentId, plaintextKey),
+      fipData.sessionId ? encrypt(fipData.sessionId, plaintextKey) : Promise.resolve(undefined),
+      encrypt(fipData.consentHandleId, plaintextKey),
+    ]);
 
-    const encrypted = await Promise.all(Object.values(encryptionTasks));
     const [fipId, fipName, custId, consentId, sessionId, consentHandleId] = encrypted;
 
     const payload = {
@@ -72,7 +71,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       fipName,
       custId,
       consentId,
-      sessionId,
+      ...(sessionId ? { sessionId } : {}),
       consentHandleId,
       fiAccountInfo,
       from: fipData.from,
@@ -81,7 +80,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       encryptedDEK: ciphertextBlob,
     };
 
-    return await this.create(payload);
+    return await this.create(payload, session);
   }
 
   // ----------------------------------------------------
@@ -150,7 +149,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       fipName: decryptField(record.fipName),
       custId: decryptField(record.custId),
       consentId: decryptField(record.consentId),
-      sessionId: decryptField(record.sessionId),
+      sessionId: record.sessionId ? decryptField(record.sessionId) : null,
       consentHandleId: decryptField(record.consentHandleId),
       userId: record.userId,
       fiAccountInfo: record.fiAccountInfo.map((acc: any) => ({
@@ -201,7 +200,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
           fipName: decryptField(rec.fipName),
           custId: decryptField(rec.custId),
           consentId: decryptField(rec.consentId),
-          sessionId: decryptField(rec.sessionId),
+          sessionId: rec.sessionId ? decryptField(rec.sessionId) : null,
           consentHandleId: ch,
           userId: rec.userId,
         };
@@ -214,7 +213,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // UPDATE FIP RECORD
   // ----------------------------------------------------
-  async updateFipRecord(bankId: string | Types.ObjectId, data: any, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async updateFipRecord(bankId: string | Types.ObjectId, data: any, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     // Encrypt fiAccountInfo
     const fiAccountInfo = await Promise.all(
       data.fiAccountInfo.map(async (acc: any) => ({
@@ -229,7 +228,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       encrypt(data.fipName, plaintextKey),
       encrypt(data.custId, plaintextKey),
       encrypt(data.consentId, plaintextKey),
-      encrypt(data.sessionId, plaintextKey),
+      data.sessionId ? encrypt(data.sessionId, plaintextKey) : Promise.resolve(undefined),
       encrypt(data.consentHandleId, plaintextKey),
     ]);
 
@@ -240,33 +239,33 @@ class FipRepository extends CrudRepository<typeof Bank> {
       fipName,
       custId,
       consentId,
-      sessionId,
+      ...(sessionId ? { sessionId } : {}),
       consentHandleId,
       fiAccountInfo,
       userId: data.userId,
       encryptedDEK: ciphertextBlob,
     };
 
-    return Bank.findOneAndUpdate({ _id: bankId }, { $set: updateData }, { new: true });
+    return Bank.findOneAndUpdate({ _id: bankId }, { $set: updateData }, { new: true, session });
   }
 
   // ----------------------------------------------------
   // DELETE BANK
   // ----------------------------------------------------
-  async deleteBank(userId: string | Types.ObjectId, bankId?: string | Types.ObjectId) {
+  async deleteBank(userId: string | Types.ObjectId, bankId?: string | Types.ObjectId, session?: ClientSession) {
     if (bankId) {
-      const record = await Bank.findOne({ _id: bankId, userId });
+      const record = await Bank.findOne({ _id: bankId, userId }).session(session ?? null);
 
       if (!record) throw new AppError('Bank record not found', 404);
 
       if (record.fiAccountInfo.length === 1) {
-        return this.deleteOne({ _id: bankId });
+        return this.deleteOne({ _id: bankId }, session);
       }
 
       return { message: 'Bank has multiple accounts; cannot delete.' };
     }
 
-    return this.deleteMany({ userId });
+    return this.deleteMany({ userId }, session);
   }
 }
 

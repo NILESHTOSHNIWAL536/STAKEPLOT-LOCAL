@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as Common from '@/utils/common';
+import { toISTArray } from '@/utils/time/formatResponse';
 import * as BankService from '../../services/bank-service';
+import StridesService from '@/services/strides-service';
 import monthNames from '@/config/monthNames';
 import { Transaction } from '@/models';
 import { Types as MongooseTypes, ObjectId as MongooseObjectId, Types } from 'mongoose';
@@ -10,6 +12,12 @@ import { AccountRepository, FipRepository } from '@/repositories';
 import logger from '@/utils/common/logger';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import CollectionTransaction from '@/models/collections/collection-transaction.model';
+import Collection from '@/models/collections/collection.model';
+import Split from '@/models/collections/split.model';
+import SplitPayment from '@/models/collections/split-payment.model';
+import { runInTransaction } from '@/utils/run-in-transaction';
+import { createRecurringPaymentFromTransaction, detectAndStoreAutoPays } from '@/services/auto-service';
 
 /**
  * NOTE:
@@ -61,11 +69,40 @@ export const updateBankDetails = async (details: any[], consentHandleId: string,
    Controllers
    --------------------------- */
 
+export const getAutoPays = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const userId = req.user!._id;
+    // AccountRepository typing left as any
+    const response = await detectAndStoreAutoPays(userId);
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);  } catch (error: any) {
+    ErrorResponse.error = error;
+    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
+export const createRecurringPaymentFromTransactionController = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const userId = req.user!._id;
+    const { transactionId } = req.params;
+    const dueDay = req.body?.dueDay ? Number(req.body.dueDay) : undefined;
+    const response = await createRecurringPaymentFromTransaction(userId, transactionId, dueDay);
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error: any) {
+    console.log(error);
+    ErrorResponse.error = error;
+    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
 export const getMap = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
     // AccountRepository typing left as any
-    const response = await new (AccountRepository as any)().getMap(userId);
+     const response = await BankService.getUserDetails(userId);
     return res.status(StatusCodes.OK).json(response);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -148,7 +185,7 @@ export const getMonthlyTransactionsHistory = async (req: Request, res: Response)
     const { type, page } = req.params;
     const pageNum = page ? Number(page) : 1;
     const response = await BankService.getMonthlyTransactionsHistory(userId, type, pageNum);
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -161,7 +198,7 @@ export const getAllTransactionsOfUser = async (req: Request, res: Response): Pro
   try {
     const userId = req.user!._id;
     const response = await BankService.getAllTransactionsOfUser(userId);
-    return res.status(StatusCodes.OK).json(response);
+    return res.status(StatusCodes.OK).json(toISTArray(response));
   } catch (error: any) {
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
@@ -334,6 +371,9 @@ export const updateTransaction = async (req: Request, res: Response): Promise<Re
     const { transactionId } = req.params;
     const updateData = req.body;
     const response = await BankService.updateTransaction(updateData, userId, transactionId);
+    if (response?.data?.wasTaggedFromUntagged) {
+      await StridesService.recordTaggedTransaction(userId, transactionId);
+    }
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -356,7 +396,11 @@ export const getPreviousTransactions = async (req: Request, res: Response): Prom
 
     const accountId = req.params.accountId;
     const response = await BankService.getPreviousTransactions(userId, modifiedDate, accountId);
-    SuccessResponse.data = response;
+    // response = { transactions: [...], profile, summary, account, ... }
+    SuccessResponse.data = {
+      ...response,
+      transactions: toISTArray(response?.transactions),
+    };
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     return res.status(500).json({ success: false, error: (error as Error).message });
@@ -371,7 +415,7 @@ export const getGroupedTransactions = async (req: Request, res: Response): Promi
     const userId = req.user!._id;
     const response = await BankService.getGroupedTransactions(userId);
 
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     logger.error(`error from getGroupedTransactions, transaction-controller ${error}`);
@@ -408,7 +452,7 @@ export const getPendingForReviewTransactions = async (req: Request, res: Respons
     const userId = req.user!._id;
     const response = await BankService.getPendingForReviewTransactions(userId);
 
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -602,7 +646,12 @@ export const getSearchedTransactions = async (req: Request, res: Response) => {
       endDate: endDate ? new Date(endDate as string) : undefined,
     });
 
-    return res.json({ data: response });
+    return res.json({
+      data: {
+        ...response,
+        transactions: toISTArray(response?.transactions),
+      },
+    });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ error: e });
@@ -629,7 +678,7 @@ export const getTransactionsByDate = async (req: Request, res: Response): Promis
 
     const response = await BankService.getTransactionsByDate(userId, date);
 
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -691,15 +740,52 @@ export const deleteTransactions = async (req: Request, res: Response): Promise<R
       return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse, error: 'transactionIds must be a non-empty array.' });
     }
 
-    const sanitizedIds = transactionIds.filter((id: any) => mongoose.Types.ObjectId.isValid(id)).map((id: any) => new mongoose.Types.ObjectId(id));
+    const sanitizedIds = transactionIds
+      .filter((id: any) => mongoose.Types.ObjectId.isValid(id))
+      .map((id: any) => new mongoose.Types.ObjectId(id));
 
-    await Transaction.deleteMany({ _id: { $in: sanitizedIds }, manualTransaction: true, userId: new mongoose.Types.ObjectId(userId) });
+    // Resolve the actual IDs that will be deleted (must be manual and belong to this user)
+    const toDelete = await Transaction.find(
+      { _id: { $in: sanitizedIds }, manualTransaction: true, userId: new mongoose.Types.ObjectId(userId) },
+      { _id: 1 }
+    ).lean();
+    const confirmedIds = toDelete.map((t) => t._id);
 
-    SuccessResponse.data = `${sanitizedIds.length} transaction(s) deleted successfully`;
+    if (confirmedIds.length === 0) {
+      SuccessResponse.data = '0 transaction(s) deleted successfully';
+      return res.status(StatusCodes.OK).json(SuccessResponse);
+    }
 
+    // Snapshot reads before the atomic section
+    const affectedCollectionTxns = await CollectionTransaction.find({ transactionId: { $in: confirmedIds } }).lean();
+
+    const collectionDeductMap = new Map<string, number>();
+    for (const ct of affectedCollectionTxns) {
+      const key = ct.collectionId.toString();
+      collectionDeductMap.set(key, (collectionDeductMap.get(key) ?? 0) + ct.amount);
+    }
+
+    const affectedSplitIds = await Split.find({ transactionIds: { $in: confirmedIds } }).distinct('_id');
+
+    await runInTransaction(async (session) => {
+      // Adjust collection totals for the removed transactions
+      for (const [colId, amount] of collectionDeductMap) {
+        await Collection.findByIdAndUpdate(colId, { $inc: { totalAmount: -amount } }, { session });
+      }
+
+      if (affectedSplitIds.length > 0) {
+        await SplitPayment.deleteMany({ splitId: { $in: affectedSplitIds } }).session(session);
+        await Split.deleteMany({ _id: { $in: affectedSplitIds } }).session(session);
+      }
+
+      await CollectionTransaction.deleteMany({ transactionId: { $in: confirmedIds } }).session(session);
+      await Transaction.deleteMany({ _id: { $in: confirmedIds } }).session(session);
+    });
+
+    SuccessResponse.data = `${confirmedIds.length} transaction(s) deleted successfully`;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
-    logger.error(`Error from deleteBankAccount, transaction-controller ${error}`);
+    logger.error(`Error from deleteTransactions, transaction-controller ${error}`);
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
@@ -713,6 +799,7 @@ export const deleteBankAccount = async (req: Request, res: Response): Promise<Re
 
     // delete bank account
     await BankService.deleteBankAccount(userId, bankId, accountId);
+    await StridesService.add(userId, -2, 'BANK_ACCOUNT_REMOVED', accountId);
 
     SuccessResponse.data = 'Bank data deleted successfully';
     return res.status(StatusCodes.OK).json(SuccessResponse);

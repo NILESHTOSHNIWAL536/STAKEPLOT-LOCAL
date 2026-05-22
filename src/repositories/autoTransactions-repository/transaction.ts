@@ -1,33 +1,43 @@
-import { Types, Model, PipelineStage } from 'mongoose';
+import { Types, Model, PipelineStage, ClientSession } from 'mongoose';
+import moment from 'moment-timezone';
 
 import { IBankTransaction, IRecurringPayment } from '@/types/bank';
 import { ITransactionRule } from '@/models/transactions-automation/transactionRule';
 
 import { buildSearchPipeline } from '@/pipelines/search.pipeline';
-import { buildMonthlyCategorizationPipeline } from '@/pipelines/categorize-monthly.pipeline';
-import { buildFrequencyAnalysisPipeline, buildMostSpentCategoriesPipeline, buildMostSpentDayPipeline, buildWeeklyTotalSpendPipeline, getCurrentWeekRangeUTC, getLastWeekRangeUTC } from '@/pipelines/frequency-analysis.pipeline';
+import { buildFrequencyAnalysisPipeline, getCurrentWeekRangeUTC, getLastWeekRangeUTC } from '@/pipelines/frequency-analysis.pipeline';
 import { groupSimilarTransactionsPipeline } from '@/pipelines/group-similar.pipeline';
-import { buildBudgetPipeline } from '@/pipelines/budget.pipeline';
-import { buildSpendingPipeline } from '@/pipelines/spending.pipeline';
 
 import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import { createTransactionsBulk } from '@/helpers/transaction-create.helper';
 import { updateTransactionLogic } from '@/helpers/transaction-update.helper';
 import { predictCategoriesForTransactions } from '@/helpers/predictions.helper';
 import { calculateLoanEligibilityTS } from '@/helpers/loan-calculation.helper';
+import { updateDailyMetrics } from '@/services/daily-metrics.service';
 
 import { Transaction, TransactionRule, RecurringPayment, GroupedTransaction, PredictedCategories } from '@/models';
+import UserDailyMetrics from '@/models/transactions-automation/user-daily-metrics';
 
 import CrudRepository from '../crud-repository';
 import logger from '@/utils/common/logger';
 import FipRepository from './bank';
 import extractNarrationPattern from '@/utils/helpers/extractNarrationPattern';
 import calculatePercentageChange from '@/utils/helpers/comparePersentage';
-import { getTransactions } from '@/utils/helpers/graphDataFromTransactions';
 import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
-import { startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth } from 'date-fns';
 
 type GroupBy = 'day' | 'week' | 'month';
+
+const DEFAULT_TZ = 'Asia/Kolkata';
+
+// IST-aligned helpers: date boundaries expressed as UTC so that
+// queries against UserDailyMetrics.date (which stores IST midnight in UTC) are correct.
+function toIstDayStart(date: Date): Date {
+  return moment(date).tz(DEFAULT_TZ).startOf('day').utc().toDate();
+}
+
+function toIstDayEnd(date: Date): Date {
+  return moment(date).tz(DEFAULT_TZ).endOf('day').utc().toDate();
+}
 
 /**
  * AutoTransactionRepository:
@@ -52,17 +62,29 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     transactions: Partial<IBankTransaction>[],
     accountId: string | Types.ObjectId | null,
     userId: string | Types.ObjectId,
-    bankId: string | Types.ObjectId | null
+    bankId: string | Types.ObjectId | null,
+    bankKey: string = 'UNKNOWN',
+    session?: ClientSession,
   ) {
     try {
-      return await createTransactionsBulk({
-        transactions,
+      const txArray = Array.isArray(transactions) ? transactions : [transactions as any];
+      const result: any = await createTransactionsBulk({
+        transactions: txArray,
         accountId,
         userId,
         bankId,
+        bankKey,
         Transaction: this.TransactionModel,
         TransactionRule: this.RuleModel,
+        session,
       });
+      // When a session is provided the caller (bank-service) owns the
+      // transaction boundary and will call updateDailyMetrics after commit.
+      if (!session) {
+        const metricsInput = result?.categorizedTransactions || txArray;
+        await updateDailyMetrics(metricsInput, userId);
+      }
+      return result;
     } catch (error: any) {
       logger.error('Error creating transactions:', error);
       throw error;
@@ -94,7 +116,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async getRecurringPayments(userId: string | Types.ObjectId, isActive: boolean) {
     try {
-      return await this.RecurringModel.find({ userId, isActive }).lean();
+      return await this.RecurringModel.find({ userId, isActive }).sort({ nextReminderAt: 1, confidenceScore: -1 }).lean();
     } catch (error) {
       logger.error(`Error from getRecurringPayments: ${error}`);
       throw error;
@@ -106,7 +128,23 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   }
 
   async deleteRecurringPayment(recurringId: string | Types.ObjectId) {
-    return this.RecurringModel.deleteOne({ _id: recurringId });
+    const recurring = await this.RecurringModel.findOne({ _id: recurringId }).lean();
+    const response = await this.RecurringModel.deleteOne({ _id: recurringId });
+
+    if (recurring?.transactionIds?.length) {
+      await this.TransactionModel.updateMany(
+        { _id: { $in: recurring.transactionIds }, autoPayId: recurringId.toString() },
+        {
+          $set: {
+            isAutoPay: false,
+            autoPayId: '',
+            expectedFrequency: '',
+          },
+        }
+      );
+    }
+
+    return response;
   }
 
   // -------------------------
@@ -131,6 +169,11 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
 
     if (filteredIds.length > 0) {
       await Transaction.updateMany({ _id: { $in: filteredIds } }, { $set: { category, subcategory } });
+
+      const updatedTxs = await Transaction.find({ _id: { $in: filteredIds } })
+        .select('transactionTimestamp manualTransaction bankId accountId')
+        .lean();
+      await updateDailyMetrics(updatedTxs, userId);
     }
 
     await TransactionRule.findOneAndUpdate(
@@ -269,19 +312,14 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
           _id: {
             $dateToString: {
               format: '%Y-%m-%d',
-              date: '$transactionTimestamp',
+              date: '$date',
             },
           },
-          count: { $sum: 1 },
-          creditAmount: {
-            $sum: { $cond: [{ $eq: ['$type', 'CREDIT'] }, '$amount', 0] },
-          },
-          debitAmount: {
-            $sum: { $cond: [{ $eq: ['$type', 'DEBIT'] }, '$amount', 0] },
-          },
+          count: { $sum: '$transactionCount' },
+          creditAmount: { $sum: '$totalCredit' },
+          debitAmount: { $sum: '$totalDebit' },
         },
       },
-
       { $sort: { _id: -1 } },
 
       {
@@ -295,7 +333,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       },
     ];
 
-    return this.model.aggregate(pipeline);
+    return UserDailyMetrics.aggregate(pipeline);
   }
 
   // -------------------------
@@ -334,15 +372,66 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async categorizeTransactions(userId: string | Types.ObjectId, startDate: Date, endDate: Date) {
     const userObjectId = new Types.ObjectId(userId as string);
+    const rangeStart = toIstDayStart(startDate);
+    const rangeEnd = toIstDayEnd(endDate);
 
-    const currentData = await this.model.aggregate(buildMonthlyCategorizationPipeline(userObjectId, startDate, endDate));
+    const currentData = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: rangeStart, $lte: rangeEnd },
+        },
+      },
+      { $unwind: '$categoryBreakdown' },
+      {
+        $group: {
+          _id: '$categoryBreakdown.category',
+          total_debit: { $sum: '$categoryBreakdown.debit' },
+          total_credit: { $sum: '$categoryBreakdown.credit' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: '$_id',
+          total_debit: 1,
+          total_credit: 1,
+        },
+      },
+    ]);
 
     const prevStartDate = new Date(startDate);
     prevStartDate.setUTCMonth(prevStartDate.getUTCMonth() - 1);
     const prevEndDate = new Date(endDate);
     prevEndDate.setUTCMonth(prevEndDate.getUTCMonth() - 1);
 
-    const prevData = await this.model.aggregate(buildMonthlyCategorizationPipeline(userObjectId, prevStartDate, prevEndDate));
+    const prevRangeStart = toIstDayStart(prevStartDate);
+    const prevRangeEnd = toIstDayEnd(prevEndDate);
+
+    const prevData = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: prevRangeStart, $lte: prevRangeEnd },
+        },
+      },
+      { $unwind: '$categoryBreakdown' },
+      {
+        $group: {
+          _id: '$categoryBreakdown.category',
+          total_debit: { $sum: '$categoryBreakdown.debit' },
+          total_credit: { $sum: '$categoryBreakdown.credit' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: '$_id',
+          total_debit: 1,
+          total_credit: 1,
+        },
+      },
+    ]);
 
     const prevMap = new Map(prevData.map((item: any) => [item.category.toLowerCase(), item]));
 
@@ -361,34 +450,136 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       })
       .filter((item: any) => !(item.total_debit === 0 && item.total_credit > 0));
 
-    const totalDebitThisMonth = result.reduce((sum: number, item: any) => sum + item.total_debit, 0);
-    const totalCreditThisMonth = result.reduce((sum: number, item: any) => sum + item.total_credit, 0);
+    const totalsAgg = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: rangeStart, $lte: rangeEnd },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalDebit: { $sum: '$totalDebit' },
+          totalCredit: { $sum: '$totalCredit' },
+        },
+      },
+      { $project: { _id: 0, totalDebit: 1, totalCredit: 1 } },
+    ]);
+
+    const totalDebitThisMonth = totalsAgg?.[0]?.totalDebit || 0;
+    const totalCreditThisMonth = totalsAgg?.[0]?.totalCredit || 0;
 
     const moreDrasticChange = [...result]
       .sort((a: any, b: any) => b.debit_diff - a.debit_diff)
       .slice(0, 4)
       .map(({ category, debit_diff }: any) => ({ category, debit_diff }));
 
-    const frequentPayments = await this.model.aggregate(buildFrequencyAnalysisPipeline(userObjectId, startDate, endDate));
-    // NEW ADDITIONS (THIS IS WHAT YOU WANT)
-    const [mostSpentDay] = await this.model.aggregate(
-      buildMostSpentDayPipeline(userObjectId, startDate, endDate)
-    );
+    const frequentPayments = await this.model.aggregate(buildFrequencyAnalysisPipeline(userObjectId, rangeStart, rangeEnd));
 
-    const mostSpentCategory = await this.model.aggregate(
-      buildMostSpentCategoriesPipeline(userObjectId, startDate, endDate)
-    );
-    //  WEEKLY TREND (NEW)
+    const [mostSpentDay] = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: rangeStart, $lte: rangeEnd },
+        },
+      },
+      {
+        $group: {
+          _id: '$date',
+          totalDebit: { $sum: '$totalDebit' },
+        },
+      },
+      { $sort: { totalDebit: -1 } },
+      { $limit: 1 },
+      {
+        $project: {
+          _id: 0,
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$_id' } },
+          amount: '$totalDebit',
+        },
+      },
+    ]);
+
+    const mostSpentCategory = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: rangeStart, $lte: rangeEnd },
+        },
+      },
+      { $unwind: '$categoryBreakdown' },
+      {
+        $group: {
+          _id: '$categoryBreakdown.category',
+          totalAmount: { $sum: '$categoryBreakdown.debit' },
+        },
+      },
+      { $sort: { totalAmount: -1 } },
+      {
+        $facet: {
+          topCategories: [{ $limit: 2 }],
+          totalSpend: [
+            {
+              $group: {
+                _id: null,
+                total: { $sum: '$totalAmount' },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          topCategories: 1,
+          totalSpend: { $arrayElemAt: ['$totalSpend.total', 0] },
+        },
+      },
+      { $unwind: '$topCategories' },
+      {
+        $project: {
+          category: '$topCategories._id',
+          amount: '$topCategories.totalAmount',
+          percentage: {
+            $cond: [
+              { $gt: ['$totalSpend', 0] },
+              {
+                $round: [
+                  { $multiply: [{ $divide: ['$topCategories.totalAmount', '$totalSpend'] }, 100] },
+                  2,
+                ],
+              },
+              0,
+            ],
+          },
+        },
+      },
+    ]);
+
     const { weekStart, weekEnd } = getCurrentWeekRangeUTC();
     const { lastWeekStart, lastWeekEnd } = getLastWeekRangeUTC();
 
-    const [currentWeekData] = await this.model.aggregate(
-      buildWeeklyTotalSpendPipeline(userObjectId, weekStart, weekEnd)
-    );
+    const [currentWeekData] = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: toIstDayStart(weekStart), $lte: toIstDayEnd(weekEnd) },
+        },
+      },
+      { $group: { _id: null, totalSpend: { $sum: '$totalDebit' } } },
+      { $project: { _id: 0, totalSpend: 1 } },
+    ]);
 
-    const [lastWeekData] = await this.model.aggregate(
-      buildWeeklyTotalSpendPipeline(userObjectId, lastWeekStart, lastWeekEnd)
-    );
+    const [lastWeekData] = await UserDailyMetrics.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+          date: { $gte: toIstDayStart(lastWeekStart), $lte: toIstDayEnd(lastWeekEnd) },
+        },
+      },
+      { $group: { _id: null, totalSpend: { $sum: '$totalDebit' } } },
+      { $project: { _id: 0, totalSpend: 1 } },
+    ]);
 
     const currentWeekSpend = currentWeekData?.totalSpend || 0;
     const lastWeekSpend = lastWeekData?.totalSpend || 0;
@@ -414,7 +605,6 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
 
     };
 
-
     return {
       categorized: result,
       moreDrasticChange,
@@ -423,7 +613,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       totalCreditThisMonth,
       mostSpentDay: mostSpentDay || null,
       mostSpentCategory: mostSpentCategory || null,
-      weeklyTrend
+      weeklyTrend,
     };
   }
 
@@ -448,31 +638,24 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       {
         $match: {
           userId: new Types.ObjectId(userId as string),
-          type: 'DEBIT',
-          category: { $ne: 'Untagged' },
         },
       },
-
+      { $unwind: '$categoryBreakdown' },
+      { $match: { 'categoryBreakdown.category': { $ne: 'untagged' } } },
       {
         $group: {
-          _id: '$category',
-          totalDebit: { $sum: '$amount' },
+          _id: '$categoryBreakdown.category',
+          totalDebit: { $sum: '$categoryBreakdown.debit' },
         },
       },
 
       { $sort: { totalDebit: -1 } },
 
       { $limit: 5 },
-
-      {
-        $project: {
-          _id: 0,
-          category: '$_id',
-        },
-      },
+      { $project: { _id: 0, category: '$_id' } },
     ];
 
-    const topCategories = await this.model.aggregate(pipeline);
+    const topCategories = await UserDailyMetrics.aggregate(pipeline);
     return topCategories.map((item: any) => item.category);
   }
 
@@ -480,35 +663,121 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // 17. Last Period Debit
   // -------------------------
   async getLastPeriodDebit(userId: string | Types.ObjectId, accountId: string | Types.ObjectId, startDate: Date, endDate: Date) {
-    const pipeline = [
+    const pipeline: PipelineStage[] = [
       {
         $match: {
           userId: new Types.ObjectId(userId as string),
           accountId: new Types.ObjectId(accountId as string),
-          transactionTimestamp: { $gte: startDate, $lte: endDate },
-          type: 'DEBIT',
+          date: { $gte: startDate, $lte: endDate },
         },
       },
-      { $group: { _id: null, totalDebit: { $sum: '$amount' } } },
+      { $group: { _id: null, totalDebit: { $sum: '$totalDebit' } } },
     ];
 
-    return await this.model.aggregate(pipeline);
+    return await UserDailyMetrics.aggregate(pipeline);
   }
 
   // -------------------------
   // 18. Budget Transactions (with groupBy)
   // -------------------------
   async getBudgetTransactions(userId: string | Types.ObjectId, startDate: Date, endDate: Date, categories: string[], groupBy: 'day' | 'week' | 'month') {
-    return this.model.aggregate(buildBudgetPipeline(userId, startDate, endDate, categories, groupBy));
+    let dateFormat = '%Y-%m-%d';
+    if (groupBy === 'month') dateFormat = '%B';
+
+    const normalizedCategories = categories.map((c) => c.toLowerCase());
+
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          userId: new Types.ObjectId(userId as string),
+          date: { $gte: startDate, $lte: endDate },
+        },
+      },
+      { $unwind: '$categoryBreakdown' },
+      { $match: { 'categoryBreakdown.category': { $in: normalizedCategories } } },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: dateFormat, date: '$date' } },
+            category: '$categoryBreakdown.category',
+          },
+          debitAmount: { $sum: '$categoryBreakdown.debit' },
+          creditAmount: { $sum: '$categoryBreakdown.credit' },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.date',
+          debit: { $push: { k: '$_id.category', v: '$debitAmount' } },
+          credit: { $push: { k: '$_id.category', v: '$creditAmount' } },
+          debitTotalAmount: { $sum: '$debitAmount' },
+          creditTotalAmount: { $sum: '$creditAmount' },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          debit: { $arrayToObject: '$debit' },
+          credit: { $arrayToObject: '$credit' },
+          debitTotalAmount: 1,
+          creditTotalAmount: 1,
+        },
+      },
+      { $sort: { _id: 1 } },
+    ];
+
+    return UserDailyMetrics.aggregate(pipeline);
   }
 
   // -------------------------
   // 19. Category Spending (w/ subcategories)
   // -------------------------
   async getSpentAmounts(userId: string | Types.ObjectId, startDate: Date, endDate: Date, categories: string[]) {
-    const pipeline = buildSpendingPipeline(new Types.ObjectId(userId as string), startDate, endDate, categories);
+    const normalizedCategories = categories.map((c) => c.toLowerCase());
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          userId: new Types.ObjectId(userId as string),
+          date: { $gte: startDate, $lte: endDate },
+        },
+      },
+      { $unwind: '$subcategoryBreakdown' },
+      { $match: { 'subcategoryBreakdown.category': { $in: normalizedCategories } } },
+      {
+        $group: {
+          _id: { category: '$subcategoryBreakdown.category', subcategory: '$subcategoryBreakdown.subcategory' },
+          totalAmount: { $sum: '$subcategoryBreakdown.debit' },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          totalAmount: 1,
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.category',
+          totalSpent: { $sum: '$totalAmount' },
+          breakdown: {
+            $push: {
+              name: '$_id.subcategory',
+              amount: '$totalAmount',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: '$_id',
+          totalSpent: 1,
+          breakdown: 1,
+        },
+      },
+    ];
 
-    return this.model.aggregate(pipeline);
+    return UserDailyMetrics.aggregate(pipeline);
   }
 
   // -------------------------
@@ -546,16 +815,17 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // 21. Category-wise Spendings (with percentage)
   // -------------------------
   async categoryWiseSpendings(userId: string | Types.ObjectId, categoryNames: string[], startDate: Date, endDate: Date) {
-    const result = await Transaction.aggregate([
+    const normalizedCategories = categoryNames.map((c) => c.toLowerCase());
+    const result = await UserDailyMetrics.aggregate([
       {
         $match: {
           userId: new Types.ObjectId(userId as string),
-          type: 'DEBIT',
-          category: { $in: categoryNames },
-          transactionTimestamp: { $gte: startDate, $lte: endDate },
+          date: { $gte: startDate, $lte: endDate },
         },
       },
-      { $group: { _id: '$category', totalSpending: { $sum: '$amount' } } },
+      { $unwind: '$categoryBreakdown' },
+      { $match: { 'categoryBreakdown.category': { $in: normalizedCategories } } },
+      { $group: { _id: '$categoryBreakdown.category', totalSpending: { $sum: '$categoryBreakdown.debit' } } },
       {
         $group: {
           _id: null,
@@ -582,14 +852,60 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // 22. Graph Data - Timeline for specific account
   // -------------------------
   async getAllTransactionsByTimeLine(userId: string | Types.ObjectId, accountId: string | Types.ObjectId | null, startDate: Date, endDate: Date, groupBy: GroupBy = 'day') {
-    return getTransactions(this.model, userId, startDate, endDate, groupBy, accountId);
+    const dateFormat = groupBy === 'month' ? '%Y-%m' : '%Y-%m-%d';
+
+    const matchCondition: any = {
+      userId: new Types.ObjectId(userId as string),
+      date: { $gte: startDate, $lte: endDate },
+    };
+
+    if (accountId) {
+      matchCondition.accountId = new Types.ObjectId(accountId as string);
+    }
+
+    const pipeline: PipelineStage[] = [
+      { $match: matchCondition },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: dateFormat, date: '$date' } },
+          },
+          debit: { $sum: '$totalDebit' },
+          credit: { $sum: '$totalCredit' },
+        },
+      },
+      { $sort: { '_id.date': 1 } },
+    ];
+
+    return UserDailyMetrics.aggregate(pipeline);
   }
 
   // -------------------------
   // 23. Graph Data - Main graph (all accounts)
   // -------------------------
   async getAllTransactionsForMainGraph(userId: string | Types.ObjectId, startDate: Date, endDate: Date, groupBy: GroupBy = 'day') {
-    return getTransactions(this.model, userId, startDate, endDate, groupBy);
+    const dateFormat = groupBy === 'month' ? '%Y-%m' : '%Y-%m-%d';
+
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          userId: new Types.ObjectId(userId as string),
+          date: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: dateFormat, date: '$date' } },
+          },
+          debit: { $sum: '$totalDebit' },
+          credit: { $sum: '$totalCredit' },
+        },
+      },
+      { $sort: { '_id.date': 1 } },
+    ];
+
+    return UserDailyMetrics.aggregate(pipeline);
   }
 
   // -------------------------
@@ -646,39 +962,30 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-      const results = await this.model.aggregate([
+      const results = await UserDailyMetrics.aggregate([
         {
           $match: {
             userId: new Types.ObjectId(userId as string),
-            isExcluded: false,
-            transactionTimestamp: { $gte: startOfLastMonth },
+            date: { $gte: startOfLastMonth },
           },
         },
         {
           $facet: {
             income: [
-              {
-                $match: {
-                  type: 'CREDIT',
-                  transactionTimestamp: { $gte: startOfCurrentMonth },
-                },
-              },
-              { $group: { _id: null, totalIncome: { $sum: '$amount' } } },
+              { $match: { date: { $gte: startOfCurrentMonth } } },
+              { $group: { _id: null, totalIncome: { $sum: '$totalCredit' } } },
             ],
             categorySpending: [
-              { $match: { type: 'DEBIT' } },
-              {
-                $project: {
-                  amount: 1,
-                  category: 1,
-                  month: { $month: '$transactionTimestamp' },
-                  year: { $year: '$transactionTimestamp' },
-                },
-              },
+              { $project: { date: 1, categoryBreakdown: 1 } },
+              { $unwind: '$categoryBreakdown' },
               {
                 $group: {
-                  _id: { category: '$category', month: '$month', year: '$year' },
-                  totalSpent: { $sum: '$amount' },
+                  _id: {
+                    category: '$categoryBreakdown.category',
+                    month: { $month: '$date' },
+                    year: { $year: '$date' },
+                  },
+                  totalSpent: { $sum: '$categoryBreakdown.debit' },
                 },
               },
               {
@@ -723,12 +1030,12 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   // 30. Delete transactions
   // -------------------------
-  async deleteTransactions(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
+  async deleteTransactions(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId, session?: ClientSession) {
     try {
       const criteria: any = { userId };
       if (accountId) criteria.accountId = accountId;
 
-      const result = await this.TransactionModel.deleteMany(criteria);
+      const result = await this.TransactionModel.deleteMany(criteria).session(session ?? null);
       return result.deletedCount ?? 0;
     } catch (error) {
       logger.error(`Error deleting transactions: ${error}`);

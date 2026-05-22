@@ -1,6 +1,6 @@
 // src2/helpers/transaction-create.helper.ts
 
-import type { Model } from 'mongoose';
+import type { Model, ClientSession } from 'mongoose';
 import { Types } from 'mongoose';
 import type { IBankTransaction } from '@/types/bank';
 import type { ITransactionRule } from '@/models/transactions-automation/transactionRule';
@@ -8,21 +8,27 @@ import type { ITransactionRule } from '@/models/transactions-automation/transact
 import deduplicateTransactions from '@/utils/helpers/de-duplicate-transactions';
 import categorizeTransactions from '@/utils/helpers/categorizeTransactions';
 import deduplicateAllTransactions from '@/utils/helpers/delete-transactions-from-db';
+import { detectAndStoreAutoPays } from '@/services/auto-service';
 
 interface CreateTxInput {
   transactions: Partial<IBankTransaction>[];
   accountId: string | Types.ObjectId | null;
   userId: string | Types.ObjectId;
   bankId: string | Types.ObjectId | null;
+  bankKey?: string;
   Transaction: Model<IBankTransaction>;
   TransactionRule: Model<ITransactionRule>;
+  session?: ClientSession;
 }
 
-export const createTransactionsBulk = async ({ transactions, accountId, userId, bankId, Transaction, TransactionRule }: CreateTxInput) => {
+export const createTransactionsBulk = async ({ transactions, accountId, userId, bankId, bankKey = 'UNKNOWN', Transaction, TransactionRule, session }: CreateTxInput) => {
   // 1. Manual transaction (shortcut path)
   if (transactions[0]?.manualTransaction) {
-    const created = await Transaction.create(transactions[0]);
-    return { data: created };
+    const created = session
+      ? (await Transaction.create([transactions[0]], { session }))[0]
+      : await Transaction.create(transactions[0]);
+    await detectAndStoreAutoPays(userId);
+    return { data: created, categorizedTransactions: [created] };
   }
 
   // 2. Fetch rules (used for auto-tagging)
@@ -33,26 +39,33 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
   const uniqueTransactions = deduplicateTransactions(transactions);
 
   // 4. Categorize using your helper
-  const categorized = categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap);
+  const categorized = categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap, bankKey);
 
   // 5. Insert
   try {
     const insertResult = await Transaction.insertMany(categorized, {
       ordered: false,
+      ...(session ? { session } : {}),
     });
 
-    // 6. Cleanup DB-level duplicates
-    await deduplicateAllTransactions(userId);
+    // 6. Cleanup DB-level duplicates — skip inside a transaction (run after commit)
+    if (!session) {
+      await deduplicateAllTransactions(userId);
+    }
+    await detectAndStoreAutoPays(userId);
 
     return {
       insertedCount: insertResult.length,
       message: 'Transactions inserted',
+      categorizedTransactions: categorized,
     };
   } catch (error: any) {
     if (error.code === 11000) {
+      await detectAndStoreAutoPays(userId);
       return {
         insertedCount: error.result?.insertedCount || 0,
         message: 'Some transactions were duplicates',
+        categorizedTransactions: categorized,
       };
     }
     throw error;

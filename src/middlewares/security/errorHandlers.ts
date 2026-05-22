@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import * as Sentry from '@sentry/node';
 
 export function notFoundHandler(req: Request, res: Response): void {
   res.status(404).json({
@@ -15,6 +16,15 @@ export function globalErrorHandler(
 ): void {
   res.setHeader('X-Content-Type-Options', 'nosniff');
 
+  const statusCode: number = err.statusCode || 500;
+
+  // Only report unexpected server errors to Sentry — skip known client errors
+  if (statusCode >= 500) {
+    Sentry.captureException(err, {
+      extra: { path: req.path, method: req.method },
+    });
+  }
+
   console.error('[ERROR]', {
     message: err.message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
@@ -22,8 +32,6 @@ export function globalErrorHandler(
     method: req.method,
     ip: req.ip,
   });
-
-  const statusCode: number = err.statusCode || 500;
 
   res.status(statusCode).json({
     error: statusCode === 500 ? 'Internal Server Error' : err.message,
