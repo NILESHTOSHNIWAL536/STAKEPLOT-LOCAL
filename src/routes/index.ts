@@ -1,0 +1,31 @@
+import express from 'express';
+import transactionRoutes from './transaction-routes';
+import notificationApiOneSignal from './notifications';
+import transactionAuto from './transactionsAuto/transactions';
+import finvuRoutes from './finvu-routes';
+import customCategory from './transactionsAuto/custom-category-routes';
+import wealthscapeRoutes from './wealthscape-routes';
+import collectionRoutes from './collection-routes';
+import reserveRoutes from './reserve-routes';
+import referralRoutes from './referral-routes';
+import insightRoutes from './insight-routes';
+import webHook from '@/utils/webHook';
+import finvuQueueTestRoutes from './finvu-queue-test-routes'; // staging test only
+
+const router = express.Router();
+
+router.post('/FI/Notification', webHook);
+
+router.use('/notify', notificationApiOneSignal);
+router.use('/transaction', transactionRoutes);
+router.use('/transactionauto', transactionAuto);
+router.use('/custom', customCategory);
+router.use('/finvu', finvuRoutes);
+router.use('/wealthscape', wealthscapeRoutes);
+router.use('/collections', collectionRoutes);
+router.use('/reserve', reserveRoutes);
+router.use('/referral', referralRoutes);
+router.use('/finvu-queue', finvuQueueTestRoutes); // staging test only
+router.use('/insights', insightRoutes);
+
+export default router;

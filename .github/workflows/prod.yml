@@ -1,0 +1,47 @@
+name: PROD CI/CD
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  retag-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Retag staging image as prod in ECR
+        env:
+          ECR_REGISTRY: 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+          ECR_REPOSITORY: bank-service
+        run: |
+          MANIFEST=$(aws ecr batch-get-image \
+            --repository-name $ECR_REPOSITORY \
+            --image-ids imageTag=staging \
+            --query 'images[0].imageManifest' \
+            --output text)
+          aws ecr put-image \
+            --repository-name $ECR_REPOSITORY \
+            --image-tag prod \
+            --image-manifest "$MANIFEST"
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_PROD_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/devops-tools/scripts
+            ./docker-control.prod.sh down bank-service
+            ./docker-control.prod.sh delete-container bank-service
+            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/bank-service:prod
+            ./docker-control.prod.sh up bank-service
