@@ -6,13 +6,10 @@ on:
       - prod
 
 jobs:
-  build-and-deploy:
+  retag-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -20,9 +17,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+      - name: Retag staging image as prod in ECR
+        env:
+          ECR_REGISTRY: 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+          ECR_REPOSITORY: email-service
+        run: |
+          MANIFEST=$(aws ecr batch-get-image \
+            --repository-name $ECR_REPOSITORY \
+            --image-ids imageTag=staging \
+            --query 'images[0].imageManifest' \
+            --output text)
+          aws ecr put-image \
+            --repository-name $ECR_REPOSITORY \
+            --image-tag prod \
+            --image-manifest "$MANIFEST"
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.7
@@ -32,8 +40,8 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/devops-tools/
-            ./docker-control.sh down email-service
-            ./docker-control.sh rm email-service
-            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
-            ./docker-control.sh up email-service
+            cd /home/ubuntu/devops-tools/scripts
+            ./docker-control.base.sh prod down email-service
+            docker rm -f email-service || true
+            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:prod
+            ./docker-control.base.sh prod up email-service

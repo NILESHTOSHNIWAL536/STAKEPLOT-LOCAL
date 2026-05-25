@@ -29,20 +29,21 @@ jobs:
           ECR_REGISTRY: 058264382454.dkr.ecr.ap-south-1.amazonaws.com
           ECR_REPOSITORY: email-service
         run: |
-          docker build --platform linux/amd64 -t $ECR_REPOSITORY:latest .
-          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker build --platform linux/amd64 -t $ECR_REPOSITORY:staging .
+          docker tag $ECR_REPOSITORY:staging $ECR_REGISTRY/$ECR_REPOSITORY:staging
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:staging
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.QA_EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/devops-tools/
-            ./docker-control.sh down email-service
-            ./docker-control.sh rm email-service
-            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
-            ./docker-control.sh up email-service
+            cd /home/ubuntu/devops-tools/scripts
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+            ./docker-control.base.sh qa down email-service
+            docker rm -f email-service || true
+            docker pull 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:staging
+            ./docker-control.base.sh qa up email-service
