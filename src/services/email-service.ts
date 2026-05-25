@@ -58,18 +58,18 @@ export async function generateAccessToken(userId: string, authCode: string, bank
   // 🔥 HANDLE REFRESH TOKEN
   let existing = await GoogleAuth.findOne({ email });
 
-  // if (tokens.refresh_token) {
-  //   const encrypted = await encryptToken(tokens.refresh_token);
-  //   existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
-  // }
-
   if (tokens.refresh_token) {
-    const userEmail = await EmailRepository.getUserEmailById(userId);
-    const normalizedUserEmail = normalizeEmail(userEmail);
     const encrypted = await encryptToken(tokens.refresh_token);
-    await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
-    existing = await GoogleAuth.findOneAndUpdate({ email: normalizedUserEmail }, { refreshToken: encrypted }, { upsert: true, new: true });
+    existing = await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
   }
+
+  // if (tokens.refresh_token) {
+  //   const userEmail = await EmailRepository.getUserEmailById(userId);
+  //   const normalizedUserEmail = normalizeEmail(userEmail);
+  //   const encrypted = await encryptToken(tokens.refresh_token);
+  //   await GoogleAuth.findOneAndUpdate({ email }, { refreshToken: encrypted }, { upsert: true, new: true });
+  //   existing = await GoogleAuth.findOneAndUpdate({ email: normalizedUserEmail }, { refreshToken: encrypted }, { upsert: true, new: true });
+  // }
 
   if (!existing) {
     //  throw new Error('Reconnect required');
@@ -88,10 +88,10 @@ export async function generateAccessToken(userId: string, authCode: string, bank
 
   const group = map.mappings.find((m) => m.email === email);
   if (group) {
-    if (!group.creditCardIds.includes(bankId)) {
-      // throw new AppError('Bank already connected', StatusCodes.INTERNAL_SERVER_ERROR);
-      group.creditCardIds.push(bankId);
+    if (group.creditCardIds.includes(bankId)) {
+      throw new AppError('Bank already connected', StatusCodes.INTERNAL_SERVER_ERROR);
     }
+    group.creditCardIds.push(bankId);
   } else {
     map.mappings.push({ email, creditCardIds: [bankId] });
   }
