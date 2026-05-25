@@ -21,7 +21,8 @@ function extractImportantInfo(narration) {
   const upiArAbMatch = narration.match(/(UPIAR|UPIAB)\/[0-9]+\/(CR|DR)\/([^/]+)\/[A-Z]{3,}\//);
   if (upiArAbMatch) {
     const name = upiArAbMatch[3].trim();
-    if (['PhonePe', 'IRCTC Rail APP', 'ZEPTO', 'AMAZON PAY', 'Swiggy L'].includes(name)) return name;
+    if (['PhonePe', 'IRCTC Rail APP', 'ZEPTO', 'AMAZON PAY', 'Swiggy L'].includes(name))
+      return name;
     if (name && !name.match(/^[A-Za-z0-9]+@[a-z]+$/)) return name;
     const vpa = narration.match(/\/([^/]+)$/);
     if (vpa) {
@@ -61,20 +62,38 @@ function extractImportantInfo(narration) {
     if (narration.includes('PhonePe')) return 'PhonePe';
   }
 
-  const upiNameMatch = narration.match(/^UPI-([^-]+)-([A-Za-z0-9@]+|[0-9]+-?[0-9]*@?[A-Za-z]*)-[A-Z]{4,}/);
+  const upiNameMatch = narration.match(
+    /^UPI-([^-]+)-([A-Za-z0-9@]+|[0-9]+-?[0-9]*@?[A-Za-z]*)-[A-Z]{4,}/
+  );
   if (upiNameMatch) {
     const name = upiNameMatch[1].trim();
     if (['PhonePe', 'IRCTC Rail APP', 'ZEPTO', 'AMAZON PAY'].includes(name)) return name;
-    if (narration.includes('PAID VIA NAVI UPI') || narration.includes('PAYMENT FROM PHONE') || narration.includes('PAY TO MERCHANT')) return name;
+    if (
+      narration.includes('PAID VIA NAVI UPI') ||
+      narration.includes('PAYMENT FROM PHONE') ||
+      narration.includes('PAY TO MERCHANT')
+    )
+      return name;
     return name;
   }
 
   const upiSlashMatch = narration.match(/UPI\/[0-9]+\/[0-9]+\/UPI\/([^/]+)/);
   if (upiSlashMatch) {
     const recipient = upiSlashMatch[1];
-    if (recipient.includes('paytmqr') || recipient.includes('paytm-') || recipient.includes('PTYS') || recipient.includes('PTYBL')) return 'Paytm';
+    if (
+      recipient.includes('paytmqr') ||
+      recipient.includes('paytm-') ||
+      recipient.includes('PTYS') ||
+      recipient.includes('PTYBL')
+    )
+      return 'Paytm';
     if (recipient.includes('BHARATPE')) return 'BharatPe';
-    if (recipient.includes('gpay-') || recipient.includes('OKBIZAXIS') || recipient.includes('OKAXIS')) return 'Google Pay';
+    if (
+      recipient.includes('gpay-') ||
+      recipient.includes('OKBIZAXIS') ||
+      recipient.includes('OKAXIS')
+    )
+      return 'Google Pay';
     if (recipient.match(/^[A-Za-z0-9]+@[a-z]+$/)) {
       if (recipient.endsWith('@ybl')) return 'Paytm';
       if (recipient.endsWith('@ok') || recipient.endsWith('OKAXIS')) return 'Google Pay';
@@ -90,7 +109,21 @@ function extractImportantInfo(narration) {
 
   // 🔽 FINAL fallback: Extract a meaningful name from narration using delimiters
   // const parts = narration.split(/[-/_\s]+/).filter(Boolean);
-  const blacklist = ['UPI', 'CR', 'DR', 'TXN', 'TRANSFER', 'PAYMENT', 'FROM', 'TO', 'REF', 'VIA', 'RTGS', 'TPT', 'TRF'];
+  const blacklist = [
+    'UPI',
+    'CR',
+    'DR',
+    'TXN',
+    'TRANSFER',
+    'PAYMENT',
+    'FROM',
+    'TO',
+    'REF',
+    'VIA',
+    'RTGS',
+    'TPT',
+    'TRF',
+  ];
 
   return extractCleanName(narration, blacklist) || narration;
 }
@@ -98,7 +131,14 @@ function extractImportantInfo(narration) {
 function extractCleanName(narration, blacklist = []) {
   const parts = narration.split('-');
   const parts2 = narration.split('/');
-  const candidates = [parts[1]?.trim(), parts[2]?.trim(), parts[3]?.trim(), parts2[1]?.trim(), parts2[2]?.trim(), parts2[3]?.trim()];
+  const candidates = [
+    parts[1]?.trim(),
+    parts[2]?.trim(),
+    parts[3]?.trim(),
+    parts2[1]?.trim(),
+    parts2[2]?.trim(),
+    parts2[3]?.trim(),
+  ];
 
   for (const name of candidates) {
     if (
@@ -199,7 +239,9 @@ async function enrichTransactionWithBankDetails(transactions, banks) {
           logger.warn(`Bank not found for transaction ${txn._id}`);
         }
 
-        const bankLogo = bank ? bankLogos[bank.fipId] || 'https://cdn.finvu.in/finvulogos/bank_large_light.png' : null;
+        const bankLogo = bank
+          ? bankLogos[bank.fipId] || 'https://cdn.finvu.in/finvulogos/bank_large_light.png'
+          : null;
         const narration = await extractImportantInfo(txn.narration || txn.category);
 
         return {
