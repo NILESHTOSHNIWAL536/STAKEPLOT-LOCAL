@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/services/phone_hint_service.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -35,9 +39,32 @@ class FinvuVerifyOtpScreen extends StatefulWidget {
 }
 
 class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
-  void click() {
-      redirectToUrl(context, Credentials.FinvuUrl);
+  StreamSubscription<String>? _otpSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      _otpSubscription = PhoneHintService.smsOtpStream.listen((otp) {
+        if (!mounted || otp.length != widget.otpLength) return;
+        widget.otpController.text = otp;
+        widget.otpCode.value = otp;
+        widget.isOtpValid.value = true;
+        _checkOtp(context);
+      });
+    }
   }
+
+  @override
+  void dispose() {
+    _otpSubscription?.cancel();
+    super.dispose();
+  }
+
+  void click() {
+    redirectToUrl(context, Credentials.FinvuUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

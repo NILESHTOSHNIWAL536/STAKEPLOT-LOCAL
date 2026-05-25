@@ -207,8 +207,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildEmailField() {
-    return TextField(
+    return AutofillGroup(
+      child: TextField(
       controller: emailController,
+      keyboardType: TextInputType.emailAddress,
+      autofillHints: const [AutofillHints.email],
       onChanged: (c) {
         acceptReset.value = false;
       },
@@ -232,6 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
           horizontal: 20,
           vertical: 0,
         ),
+      ),
       ),
     );
   }

@@ -3,12 +3,19 @@ package com.stakeplot.pfa
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.appwidget.AppWidgetManager
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.identity.GetPhoneNumberHintIntentRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONArray
 
@@ -17,6 +24,33 @@ class MainActivity : FlutterFragmentActivity() {
     // Channels
     private val NAV_CHANNEL = "com.stakeplot.pfa/navigation"
     private val ICON_CHANNEL = "com.stakeplot.pfa/app_icon"
+    private val PHONE_HINT_CHANNEL = "com.stakeplot.pfa/phone_hint"
+    private val SMS_OTP_CHANNEL = "com.stakeplot.pfa/sms_otp"
+
+    // Phone hint state
+    private var phoneHintResult: MethodChannel.Result? = null
+    private val phoneHintLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            try {
+                val raw = Identity.getSignInClient(this).getPhoneNumberFromIntent(result.data)
+                // Strip country code, keep last 10 digits for Indian numbers
+                val normalized = raw.replace(Regex("[^0-9]"), "").takeLast(10)
+                phoneHintResult?.success(normalized)
+            } catch (e: Exception) {
+                Log.e("PhoneHint", "Parse error: ${e.message}")
+                phoneHintResult?.error("PARSE_ERROR", e.message, null)
+            }
+        } else {
+            phoneHintResult?.success(null) // User dismissed picker
+        }
+        phoneHintResult = null
+    }
+
+    // SMS OTP state
+    private val smsReceiver = SmsBroadcastReceiver()
+    private var smsReceiverRegistered = false
 
     // Widget prefs keys
     private val WIDGET_PREFS = "stakeplot_widget_prefs"
@@ -107,6 +141,38 @@ class MainActivity : FlutterFragmentActivity() {
             }
 
         // -------------------------
+        // Phone Number Hint channel
+        // Uses Google Identity Services — no permissions needed, Play Store safe
+        // -------------------------
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PHONE_HINT_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == "requestPhoneHint") {
+                    phoneHintResult = result
+                    requestPhoneNumberHint()
+                } else {
+                    result.notImplemented()
+                }
+            }
+
+        // -------------------------
+        // SMS OTP autofill channel (SMS Retriever API — no READ_SMS permission)
+        // -------------------------
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_OTP_CHANNEL)
+            .setStreamHandler(object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
+                    smsReceiver.eventSink = events
+                    startSmsRetriever()
+                }
+                override fun onCancel(arguments: Any?) {
+                    smsReceiver.eventSink = null
+                    if (smsReceiverRegistered) {
+                        try { unregisterReceiver(smsReceiver) } catch (_: Exception) {}
+                        smsReceiverRegistered = false
+                    }
+                }
+            })
+
+        // -------------------------
         // Icon change channel (friend's code)
         // -------------------------
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ICON_CHANNEL)
@@ -125,6 +191,48 @@ class MainActivity : FlutterFragmentActivity() {
                     Log.e("ICON", "Icon channel error: ${e.message}", e)
                     result.error("ERROR", e.message, null)
                 }
+            }
+    }
+
+    private fun requestPhoneNumberHint() {
+        val request = GetPhoneNumberHintIntentRequest.builder().build()
+        Identity.getSignInClient(this)
+            .getPhoneNumberHintIntent(request)
+            .addOnSuccessListener { pendingIntent ->
+                try {
+                    phoneHintLauncher.launch(
+                        IntentSenderRequest.Builder(pendingIntent.intentSender).build()
+                    )
+                } catch (e: Exception) {
+                    Log.e("PhoneHint", "Launch failed: ${e.message}")
+                    phoneHintResult?.error("LAUNCH_FAILED", e.message, null)
+                    phoneHintResult = null
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("PhoneHint", "Hint unavailable: ${e.message}")
+                phoneHintResult?.error("UNAVAILABLE", e.message, null)
+                phoneHintResult = null
+            }
+    }
+
+    @Suppress("UnspecifiedRegisterReceiverFlag")
+    private fun startSmsRetriever() {
+        SmsRetriever.getClient(this).startSmsRetriever()
+            .addOnSuccessListener {
+                if (!smsReceiverRegistered) {
+                    registerReceiver(
+                        smsReceiver,
+                        IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
+                        SmsRetriever.SEND_PERMISSION,
+                        null
+                    )
+                    smsReceiverRegistered = true
+                    Log.d("SmsRetriever", "Started — waiting for OTP SMS (5 min window)")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("SmsRetriever", "Failed to start: ${e.message}")
             }
     }
 

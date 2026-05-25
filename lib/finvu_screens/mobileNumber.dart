@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/services/phone_hint_service.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
@@ -55,6 +57,19 @@ class _MobileNumberState extends State<MobileNumber> {
       _phoneController.text =
           number.value.toString() == '0' ? '' : number.value.toString();
       _isPhoneValid.value = _phoneController.text.length == 10;
+    }
+    // Show Google phone-number picker if the field is empty (Android only).
+    // Falls back gracefully — user just types manually if unavailable.
+    if (Platform.isAndroid && _phoneController.text.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _requestPhoneHint());
+    }
+  }
+
+  Future<void> _requestPhoneHint() async {
+    final phone = await PhoneHintService.requestPhoneHint();
+    if (phone != null && phone.length == 10 && mounted) {
+      _phoneController.text = phone;
+      _isPhoneValid.value = true;
     }
   }
 
@@ -324,6 +339,7 @@ class _PhoneField extends StatelessWidget {
                   autocorrect: false,
                   enableSuggestions: false,
                   keyboardType: TextInputType.phone,
+                  autofillHints: const [AutofillHints.telephoneNumberNational],
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(regex),
                   ],
