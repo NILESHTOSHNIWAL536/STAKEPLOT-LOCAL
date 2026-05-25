@@ -18,7 +18,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/edit_user_profile.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/referral_code_screen.dart';

@@ -30,9 +30,9 @@ import '../show_modal/theme_modal.dart';
 
 late BuildContext showSnackBarContext;
 
-class EditDetails extends StatefulWidget {
+class EditDetails extends StatefulWidget 
+{
   const EditDetails({super.key});
-
   @override
   State<EditDetails> createState() => _EditDetailsState();
 }
@@ -55,9 +55,7 @@ class _EditDetailsState extends State<EditDetails> {
     _controllers[ProfileScreenStrings().emailLabel]!.text =
         userController.email.value;
     _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
-
-    // checkBiometricsStatus();
-  }
+   }
 
   @override
   void dispose() {
@@ -66,13 +64,6 @@ class _EditDetailsState extends State<EditDetails> {
     super.dispose();
   }
 
-  // void checkBiometricsStatus() async {
-  //   final LocalAuthentication auth = LocalAuthentication();
-  //   bool canCheckBiometrics = await auth.canCheckBiometrics;
-  //   bool isDeviceSupported = await auth.isDeviceSupported();
-  //   List<BiometricType> availableBiometrics =
-  //       await auth.getAvailableBiometrics();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -217,15 +208,6 @@ class _EditDetailsState extends State<EditDetails> {
                           Icons.phone,
                           ProfileScreenStrings().numberLabel,
                           userController.phone.value),
-                  // const Divider(),
-                  // _buildNonEditableField(
-                  //   Icons.calendar_today,
-                  //   ProfileScreenStrings().dobLabel,
-                  //   userController.dob.value.isNotEmpty
-                  //       ? DateFormat('yyyy-MM-dd')
-                  //           .format(DateTime.parse(userController.dob.value))
-                  //       : 'Not provided',
-                  // ),
                 ],
               ),
             ),

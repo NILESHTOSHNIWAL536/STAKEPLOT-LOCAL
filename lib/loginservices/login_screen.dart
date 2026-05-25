@@ -107,7 +107,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          containerIconSiginWith(FontAwesomeIcons.google,
+                        kIsWeb
+                              ? Text(""):   containerIconSiginWith(FontAwesomeIcons.google,
                               context.appColors.surface, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),

@@ -122,8 +122,7 @@ Future<Map<String, dynamic>> getUserStats() async {
   return {
     "_id": userController.userId.value,
     'loginCount': pref.getInt(todayKey) ?? 0, // previously 'daily_login_count'
-    'loginHistory': extractValues(pref
-        .getStringList('login_history_$userId')), // previously 'login_history'
+    'loginHistory': extractValues(pref.getStringList('login_history_$userId')), // previously 'login_history'
     'appOpenCount':
         tracker.getDailyAppOpenCount(), // previously 'daily_app_open_count'
     'appOpenHistory': extractValues(  

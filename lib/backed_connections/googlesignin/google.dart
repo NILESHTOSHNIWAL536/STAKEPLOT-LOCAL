@@ -15,8 +15,7 @@ class AuthService {
       {bool flag = true, bool isEmail = false}) async {
     try {
       // Trigger Google Sign-In
-      if (isEmail)
-        _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
+      if (isEmail)_googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
       await _googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -28,17 +27,23 @@ class AuthService {
       final String? idToken = googleAuth
           .idToken; // final String? accessToken = googleAuth.accessToken;
       if (idToken == null) return null;
-
+      cardController.selectedEmail.value = googleUser.email;
       //don't remove this code
       final String? authCode = await googleUser.serverAuthCode;
       if (authCode != null) {
         final response = await postDataApiCall(AuthApiRoutes.generateToken, {
           'idToken': authCode,
-          "bankId": cardController.selectedBankName.value.isEmpty
+          "bankId": cardController.selectedBankId.value.isEmpty
               ? "HDFCLtd-FIP"
-              : cardController.selectedBankName.value,
+              : cardController.selectedBankId.value,
         });
-        if (!flag) return {};
+        if(getFlagOfResponse(response)){
+            if (!flag) return {};
+        }else {
+          var data = jsonDecode(response.body);
+          snackBarCalledfail(context, data['message'] ?? data['error'] ?? "Failed to generate token");
+          return null;
+        }
       }
 
       updateDeviceData(deviceData);

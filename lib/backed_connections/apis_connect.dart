@@ -23,11 +23,15 @@ import '../model/device_model.dart';
 import 'googlesignin/credentials.dart';
 part '../Constants/snackBars.dart';
 
-
-UserController get userController => Get.find<UserController>();
-PostController get postController => Get.find<PostController>();
-CardDueController get cardController => Get.find<CardDueController>();
-CollectionsController get collectionsController =>Get.find<CollectionsController>();
+UserController get userController => ControllerManagement.userController;
+PostController get postController => ControllerManagement.postController;
+CardDueController get cardController => Get.isRegistered<CardDueController>()
+    ? Get.find<CardDueController>()
+    : Get.put(CardDueController());
+CollectionsController get collectionsController =>
+    Get.isRegistered<CollectionsController>()
+        ? Get.find<CollectionsController>()
+        : Get.put(CollectionsController());
 
 Rx<DeviceModel> deviceData = DeviceModel(
   deviceId: "",
@@ -200,7 +204,3 @@ var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
 final RxList<Map<String, dynamic>> yearlyMonths = <Map<String, dynamic>>[].obs;
-
-
-
- 
