@@ -115,18 +115,20 @@ class FipRepository extends CrudRepository<typeof Bank> {
   }
 
   // ----------------------------------------------------
-  // GET BANK BY NAME + CONSENT HANDLE ID
+  // GET BANK BY FIP ID/NAME + CONSENT HANDLE ID
   // ----------------------------------------------------
-  async getBankByName(userId: string | Types.ObjectId, fipName: string, consentHandleId: string) {
+  async getBankByName(userId: string | Types.ObjectId, fipIdentifier: string, consentHandleId: string) {
     const records = await this.get({ userId });
 
     for (const record of records as IBank[]) {
       const plaintextKey = await decryptDataKey(record.encryptedDEK);
 
+      const fipId = decrypt(record.fipId.encryptedData, record.fipId.iv, record.fipId.authTag, plaintextKey);
       const name = decrypt(record.fipName.encryptedData, record.fipName.iv, record.fipName.authTag, plaintextKey);
       const ch = decrypt(record.consentHandleId.encryptedData, record.consentHandleId.iv, record.consentHandleId.authTag, plaintextKey);
+      const consentId = decrypt(record.consentId.encryptedData, record.consentId.iv, record.consentId.authTag, plaintextKey);
 
-      if (name === fipName && ch === consentHandleId) {
+      if ((fipId === fipIdentifier || name === fipIdentifier || consentId === fipIdentifier) && ch === consentHandleId) {
         return record;
       }
     }

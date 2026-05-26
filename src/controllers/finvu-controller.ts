@@ -99,7 +99,6 @@ export async function loginAndGetHandleId(req: Request, res: Response) {
     const { custId, number } = req.body as LoginRequestBody;
 
     const token = await generateToken();
-
     const consentResponse = await apiClient.post(`${baseUrl}/ConsentRequestPlus`, token, {
       header: headers,
       body: {
@@ -357,11 +356,11 @@ export async function fetchTransactionsWeekly(req: Request, res: Response) {
   const body = req.body as WeeklyFetchBody;
 
   try {
-    const token = body.token || (await redisClient.get('auth_token'));
+    const token = body.token || (await redisClient.get('auth_token')) || await generateToken();
 
     const TO = getISTTimestamp();
 
-    const sessionId = await initiateFIRequest(token!, body.handleId, body.custId, body.consentId, body.FROM, TO, body.userId);
+    const sessionId = await initiateFIRequest(token, body.handleId, body.custId, body.consentId, body.FROM, TO, body.userId);
 
     if (!sessionId) throw new Error('Failed to initiate FI Request');
 
@@ -369,9 +368,21 @@ export async function fetchTransactionsWeekly(req: Request, res: Response) {
     await redisClient.setEx(`finvu:${sessionId}`, 600, JSON.stringify(finvuData));
     await addFinvuData(finvuData);
 
-    return res.json({ sessionId });
+    
+    return res.json({
+      sessionId,
+      accountId: body.accountId,
+      handleId: body.handleId,
+      consentId: body.consentId,
+      bankName: body.bankName,
+      fetchInProgress: true,
+    });
   } catch (error: any) {
-    await sendFailedNotification(body.userId);
+    await sendFailedNotification(body.userId, {
+      handleId: body.handleId,
+      consentId: body.consentId,
+      bankName: body.bankName,
+    });
     return res.status(500).json({ error: error.message });
   }
 }
@@ -435,13 +446,17 @@ export async function getFipsDetails(req: Request, res: Response) {
 // Helpers
 // =======================================
 
-async function sendFailedNotification(userId: string | Types.ObjectId) {
+async function sendFailedNotification(
+  userId: string | Types.ObjectId,
+  fetchStatus: { handleId?: string; consentId?: string; bankName?: string } = {}
+) {
   // WebSocket message to the user
   await publishSocketEvent(userId, 'addUserToSocket', {
     type: 'fetchedApiCall',
     data: {
       message: "we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.",
       failed: true,
+      ...fetchStatus,
     },
   });
 }

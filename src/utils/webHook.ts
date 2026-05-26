@@ -27,6 +27,7 @@ async function webHook(req: Request, res: Response): Promise<Response> {
   const lockKey = `finvu-lock:${dataSessionId}`;
 
   let lockAcquired = false;
+  let finvuData: any = null;
 
   try {
     // ✅ 1. Acquire lock (2 min TTL)
@@ -43,8 +44,6 @@ async function webHook(req: Request, res: Response): Promise<Response> {
 
     // ✅ 2. Cache-first lookup
     const cached = await redisClient.get(`finvu:${dataSessionId}`);
-    let finvuData: any = null;
-
     if (cached) {
       try {
         finvuData = JSON.parse(cached);
@@ -74,15 +73,21 @@ async function webHook(req: Request, res: Response): Promise<Response> {
     }
 
     // ✅ 6. Fetch final data
+    // console.locs('Final data fetched and stored in DB');
     const finalData = await FinvuController.fetchFinalData(token, finvuData.custId, finvuData.consentId, finvuData.sessionId);
 
     if (finalData !== 'Account data not found.') {
       await Finvu.findOneAndUpdate({ sessionId: finvuData.sessionId }, { $set: { data: finalData } }, { new: true });
-
       if (finvuData.isUpdate) {
-        await TransactionAutoController.updateBankDetails(finalData, finvuData.handleId, finvuData.userId);
+        const updateResult = await TransactionAutoController.updateBankDetails(finalData, finvuData.handleId, finvuData.userId);
+        if (updateResult instanceof Error) {
+          throw updateResult;
+        }
       } else {
-        await TransactionAutoController.createBankDetails(finalData, finvuData.handleId, finvuData.userId);
+        const createResult = await TransactionAutoController.createBankDetails(finalData, finvuData.handleId, finvuData.userId);
+        if (createResult instanceof Error) {
+          throw createResult;
+        }
       }
 
       await FinvuController.deleteConsentHandleById(finvuData.handleId);
@@ -123,6 +128,9 @@ async function webHook(req: Request, res: Response): Promise<Response> {
         data: {
           message: `${name} fetched successfully! ${totalTransactions} new transactions.`,
           failed: false,
+          handleId: finvuData.handleId,
+          consentId: finvuData.consentId,
+          bankName: name,
         },
       });
 
@@ -142,6 +150,9 @@ async function webHook(req: Request, res: Response): Promise<Response> {
         data: {
           message: 'No transactions were found at the moment, try again later',
           failed: true,
+          handleId: finvuData.handleId,
+          consentId: finvuData.consentId,
+          bankName: finvuData.bankName,
         },
       });
     }
@@ -149,6 +160,18 @@ async function webHook(req: Request, res: Response): Promise<Response> {
     return res.status(200).json({ message: 'Data fetched successfully' });
   } catch (error: any) {
     logger.error(`Webhook error: ${error.message}`);
+    if (finvuData?.userId) {
+      await publishSocketEvent(finvuData.userId, 'addUserToSocket', {
+        type: 'fetchedApiCall',
+        data: {
+          message: 'Sorry, we are unable to fetch your bank details. Please try again later.',
+          failed: true,
+          handleId: finvuData.handleId,
+          consentId: finvuData.consentId,
+          bankName: finvuData.bankName,
+        },
+      });
+    }
     return res.status(500).json({
       message: 'Error fetching data',
       error: error.message,
