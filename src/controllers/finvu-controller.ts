@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import apiClient from '../utils/helpers/apiClient';
+import { enqueueFinvuFetch } from '../services/bull-queue-service/finvu-fetch-queue';
 import { Finvu, FipsMetric, FailedTransaction, ConsentHandleId } from '../models';
 import { getDeviceIdsByUserId } from '../utils/helpers/getDeviceIds';
 import { SendNotificationToDeviceSpecific } from '../services/notification-service';
@@ -195,6 +196,12 @@ export async function fetchTransactions(req: Request, res: Response) {
 
     await addFinvuData(finvuData);
 
+    // In staging Finvu hasn't registered our webhook yet, so we simulate the
+    // webhook call by enqueuing a delayed fetch job instead.
+    if (process.env.NODE_ENV !== 'production') {
+      await enqueueFinvuFetch({ sessionId, custId, consentId, handleId, isUpdate: false, userId: String(userId) });
+    }
+
     return res.json({ message: 'FI Request started', sessionId });
   } catch (error: any) {
     console.error('Error fetching data:', error);
@@ -369,6 +376,10 @@ export async function fetchTransactionsWeekly(req: Request, res: Response) {
     await addFinvuData(finvuData);
 
     
+    if (process.env.NODE_ENV !== 'production') {
+      await enqueueFinvuFetch({ sessionId, custId: body.custId, consentId: body.consentId, handleId: body.handleId, isUpdate: true, userId: String(body.userId) });
+    }
+
     return res.json({
       sessionId,
       accountId: body.accountId,
@@ -377,6 +388,7 @@ export async function fetchTransactionsWeekly(req: Request, res: Response) {
       bankName: body.bankName,
       fetchInProgress: true,
     });
+
   } catch (error: any) {
     await sendFailedNotification(body.userId, {
       handleId: body.handleId,

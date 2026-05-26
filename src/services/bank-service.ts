@@ -10,6 +10,7 @@ import logger from '@/utils/common/logger';
 import { PendingTransaction, GroupedTransaction, Transaction } from '@/models';
 import saveGroupedTransactions from '../utils/helpers/saveGroupedTransactions';
 import { detectAndStoreAutoPays } from '@/services/auto-service';
+import deduplicateAllTransactions from '@/utils/helpers/delete-transactions-from-db';
 import { generateDataKey } from '@/services/Encryption/generateDataKey';
 import { getNextFetch, getNextMonthFetch } from '@/utils/helpers/get-next-fetch';
 import getISTTimestamp from '@/utils/helpers/get-IST-timeStamp';
@@ -24,6 +25,12 @@ import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
 import BankTransaction from '@/models/transactions-automation/transaction';
 import UserDailyMetrics from '@/models/transactions-automation/user-daily-metrics';
 import { updateDailyMetrics } from '@/services/daily-metrics.service';
+import { runInTransaction } from '@/utils/run-in-transaction';
+import CollectionTransaction from '@/models/collections/collection-transaction.model';
+import Collection from '@/models/collections/collection.model';
+import CollectionMember from '@/models/collections/collection-member.model';
+import Split from '@/models/collections/split.model';
+import SplitPayment from '@/models/collections/split-payment.model';
 import StridesService from '@/services/strides-service';
 
 // Helper type for userId inputs
@@ -37,103 +44,101 @@ const autoTransactionRepo = new AutoTransactionRepository();
 // -------------------------
 export async function createBankDetails(data: any, consentHandleId: string, userId: UserIdLike): Promise<any> {
   try {
+    // Encryption + timestamp computed OUTSIDE the transaction (no DB writes yet)
     const { plaintextKey, ciphertextBlob } = await generateDataKey();
-
     const nextFetch = getNextFetch();
     const lastFetch = getISTTimestamp();
     logger.debug(`lastFetch from the createNewBank: ${lastFetch}`);
     logger.debug(`nextFetch from the createNewBank ${nextFetch}`);
 
-    const bankData = {
-      fipId: data.fipId,
-      fipName: data.fipName,
-      custId: data.custId,
-      consentId: data.consentId,
-      fiAccountInfo: data.fiAccountInfo,
-      consentHandleId,
-      userId,
-    };
-
-    const bank = await new FipRepository().createFipRecord(bankData, plaintextKey, ciphertextBlob);
-
     const fiObjects = data.fiObjects || [];
 
-    for (const fiObject of fiObjects) {
-      if (typeof fiObject === 'string') continue; // skip non-object entries
+    // Collect categorized transactions so we can run updateDailyMetrics after commit
+    const allCategorizedTxns: any[] = [];
 
-      const accountData: any = {
-        type: fiObject.type,
-        maskedAccNumber: fiObject.maskedAccNumber,
-        version: fiObject.version,
-        linkedAccRef: fiObject.linkedAccRef,
-        schemaLocation: fiObject.schemaLocation,
-        startDate: fiObject.Transactions?.startDate,
-        endDate: fiObject.Transactions?.endDate,
-        bankId: bank._id,
-        nextFetch: new Date(nextFetch),
-        lastFetch: new Date(lastFetch),
-        fetchCount: 1,
+    // --- ATOMIC SECTION ---
+    // Bank, Account, Profile, Summary, PendingTxns, Transactions all succeed or all roll back.
+    await runInTransaction(async (session) => {
+      const bankData = {
+        fipId: data.fipId,
+        fipName: data.fipName,
+        custId: data.custId,
+        consentId: data.consentId,
+        fiAccountInfo: data.fiAccountInfo,
+        consentHandleId,
         userId,
       };
 
-      const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob);
-      const accountId = account._id;
+      const bank = await new FipRepository().createFipRecord(bankData, plaintextKey, ciphertextBlob, session);
+
+      for (const fiObject of fiObjects) {
+        if (typeof fiObject === 'string') continue;
+
+        const accountData: any = {
+          type: fiObject.type,
+          maskedAccNumber: fiObject.maskedAccNumber,
+          version: fiObject.version,
+          linkedAccRef: fiObject.linkedAccRef,
+          schemaLocation: fiObject.schemaLocation,
+          startDate: fiObject.Transactions?.startDate,
+          endDate: fiObject.Transactions?.endDate,
+          bankId: bank._id,
+          nextFetch: new Date(nextFetch),
+          lastFetch: new Date(lastFetch),
+          fetchCount: 1,
+          userId,
+        };
+
+        const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob, session);
+        const accountId = account._id;
       await StridesService.add(userId, 2, 'BANK_ACCOUNT_ADDED', accountId.toString());
 
-      if (fiObject.Profile) {
-        await new ProfileRepository().createProfile(
-          {
-            holder: { ...fiObject.Profile.Holders.Holder },
-            accountId,
-            type: fiObject.Profile.Holders.type,
-            userId,
-          },
-          plaintextKey,
-          ciphertextBlob
-        );
+        if (fiObject.Profile) {
+          await new ProfileRepository().createProfile(
+            { holder: { ...fiObject.Profile.Holders.Holder }, accountId, type: fiObject.Profile.Holders.type, userId },
+            plaintextKey, ciphertextBlob, session
+          );
+        }
+
+        if (fiObject.Summary) {
+          await new SummaryRepository().createSummary(
+            { data: { ...fiObject.Summary }, accountId, userId },
+            plaintextKey, ciphertextBlob, session
+          );
+        }
+
+        const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns)
+          ? fiObject.Summary.PendingTxns
+          : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
+
+        if (pendingData.length > 0) {
+          await Promise.all(
+            pendingData.map((txn: any) =>
+              PendingTransaction.create([{ ...txn, accountId, userId }], { session })
+            )
+          );
+        }
+
+        if (fiObject.Transactions?.Transaction) {
+          const result = await new AutoTransactionRepository().createTransaction(
+            fiObject.Transactions.Transaction, accountId, userId, bank._id, data.fipId, session
+          );
+          allCategorizedTxns.push(...(result?.categorizedTransactions || []));
+        }
       }
+    });
+    // --- END ATOMIC SECTION ---
 
-      if (fiObject.Summary) {
-        await new SummaryRepository().createSummary(
-          {
-            data: { ...fiObject.Summary },
-            accountId,
-            userId,
-          },
-          plaintextKey,
-          ciphertextBlob
-        );
-      }
-
-      // Normalize pending txns (PendingTxns)
-      const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns) ? fiObject.Summary.PendingTxns : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
-
-      if (pendingData.length > 0) {
-        await Promise.all(
-          pendingData.map((txn: any) =>
-            PendingTransaction.create({
-              ...txn,
-              accountId,
-              userId,
-            })
-          )
-        );
-      }
-
-      // Transactions
-      if (fiObject.Transactions?.Transaction) {
-        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank._id, data.fipId);
-
-        // grouping and downstream jobs
-        await saveGroupedTransactions(userId);
-        await detectAndStoreAutoPays(userId);
-      }
+    // Post-commit: derived/analytics jobs (non-critical, do not roll back core data if these fail)
+    if (allCategorizedTxns.length > 0) {
+      await updateDailyMetrics(allCategorizedTxns, userId);
     }
+    await deduplicateAllTransactions(userId);
+    await saveGroupedTransactions(userId);
+    await detectAndStoreAutoPays(userId);
 
-    // Clear cache
-    const cacheKey = `banksWithAccountDetails:${userId}`;
-    const clearedBanksCache = await redisClient.del(cacheKey);
-    logger.debug(`cleared bank cached details: ${clearedBanksCache}`);
+    await redisClient.del(`banksWithAccountDetails:${userId}`);
+    logger.debug('cleared bank cache after createBankDetails');
   } catch (error: any) {
     logger.error(`Error creating user details ${error}`);
     throw new AppError('Error creating user details', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -145,7 +150,13 @@ export async function createBankDetails(data: any, consentHandleId: string, user
 // -------------------------
 export async function updateBankDetails(data: any, consentHandleId: string, userId: UserIdLike): Promise<any> {
   try {
+    // Resolve keys and existing bank record OUTSIDE the transaction (reads, no DB writes)
     const { plaintextKey, ciphertextBlob } = await generateDataKey();
+
+    const existingBank = await new FipRepository().getBankByName(userId, data.fipId, consentHandleId);
+    if (!existingBank) throw new AppError('Bank not found', StatusCodes.NOT_FOUND);
+
+    const accountsForBank = await new AccountRepository().getAccounts({ bankId: existingBank._id });
 
     const fipData = {
       fipId: data.fipId,
@@ -157,97 +168,86 @@ export async function updateBankDetails(data: any, consentHandleId: string, user
       userId,
     };
 
-    const existingBank = await new FipRepository().getBankByName(userId, data.fipId, consentHandleId);
-    if (!existingBank) {
-      throw new AppError('Bank not found', StatusCodes.NOT_FOUND);
-    }
+    const allCategorizedTxns: any[] = [];
 
-    const bank = await new FipRepository().updateFipRecord(existingBank._id, fipData, plaintextKey, ciphertextBlob);
-    const getAccountLinkedsByBank = await new AccountRepository().getAccounts({ bankId: bank!._id });
+    // --- ATOMIC SECTION ---
+    await runInTransaction(async (session) => {
+      const bank = await new FipRepository().updateFipRecord(existingBank._id, fipData, plaintextKey, ciphertextBlob, session);
 
-    for (const fiObject of data.fiObjects || []) {
-      if (typeof fiObject === 'string') continue;
+      for (const fiObject of data.fiObjects || []) {
+        if (typeof fiObject === 'string') continue;
 
-      const matchedAccount = getAccountLinkedsByBank.find((acc: any) => acc.accounts?.linkedAccRef === fiObject.linkedAccRef);
-      if (!matchedAccount) continue;
+        const matchedAccount = accountsForBank.find((acc: any) => acc.accounts?.linkedAccRef === fiObject.linkedAccRef);
+        if (!matchedAccount) continue;
 
-      const accountId = matchedAccount._id;
-      let nextFetch: Date | string | number;
-      const lastFetch = getISTTimestamp();
+        const accountId = matchedAccount._id;
+        const lastFetch = getISTTimestamp();
+        const nextFetch = matchedAccount.accounts.fetchCount === 4 ? getNextMonthFetch() : getNextFetch();
 
-      if (matchedAccount.accounts.fetchCount === 4) {
-        nextFetch = getNextMonthFetch();
-      } else {
-        nextFetch = getNextFetch();
-      }
+        const accountData: any = {
+          type: fiObject.type,
+          maskedAccNumber: fiObject.maskedAccNumber,
+          version: fiObject.version,
+          linkedAccRef: fiObject.linkedAccRef,
+          schemaLocation: fiObject.schemaLocation,
+          startDate: fiObject.Transactions?.startDate,
+          endDate: fiObject.Transactions?.endDate,
+          bankId: bank!._id,
+          nextFetch: new Date(nextFetch),
+          lastFetch: new Date(lastFetch),
+          userId,
+        };
 
-      const accountData: any = {
-        type: fiObject.type,
-        maskedAccNumber: fiObject.maskedAccNumber,
-        version: fiObject.version,
-        linkedAccRef: fiObject.linkedAccRef,
-        schemaLocation: fiObject.schemaLocation,
-        startDate: fiObject.Transactions?.startDate,
-        endDate: fiObject.Transactions?.endDate,
-        bankId: bank!._id,
-        nextFetch: new Date(nextFetch),
-        lastFetch: new Date(lastFetch),
-        userId,
-      };
+        await new AccountRepository().updateAccount(accountId, accountData, plaintextKey, ciphertextBlob, session);
 
-      await new AccountRepository().updateAccount(accountId, accountData, plaintextKey, ciphertextBlob);
-
-      if (fiObject.Profile) {
-        await new ProfileRepository().updateProfile(
-          { accountId },
-          {
-            holder: { ...fiObject.Profile.Holders.Holder },
-            type: fiObject.Profile.Holders.type,
-            userId,
-          },
-          plaintextKey,
-          ciphertextBlob
-        );
-      }
-
-      if (fiObject.Summary) {
-        await new SummaryRepository().updateSummary(
-          { accountId },
-          {
-            data: { ...fiObject.Summary },
-            accountId,
-            userId,
-          },
-          plaintextKey,
-          ciphertextBlob
-        );
-
-        // Normalize PendingTxns (note: original code had different key names)
-        const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns) ? fiObject.Summary.PendingTxns : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
-
-        if (pendingData.length > 0) {
-          await Promise.all(
-            pendingData.map((txn: any) =>
-              PendingTransaction.create({
-                ...txn,
-                accountId,
-                userId,
-              })
-            )
+        if (fiObject.Profile) {
+          await new ProfileRepository().updateProfile(
+            { accountId },
+            { holder: { ...fiObject.Profile.Holders.Holder }, type: fiObject.Profile.Holders.type, userId },
+            plaintextKey, ciphertextBlob, session
           );
         }
-      }
 
-      if (fiObject.Transactions?.Transaction) {
-        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank!._id, data.fipId);
-        await saveGroupedTransactions(userId);
-        await detectAndStoreAutoPays(userId);
+        if (fiObject.Summary) {
+          await new SummaryRepository().updateSummary(
+            { accountId },
+            { data: { ...fiObject.Summary }, accountId, userId },
+            plaintextKey, ciphertextBlob, session
+          );
+
+          const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns)
+            ? fiObject.Summary.PendingTxns
+            : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
+
+          if (pendingData.length > 0) {
+            await Promise.all(
+              pendingData.map((txn: any) =>
+                PendingTransaction.create([{ ...txn, accountId, userId }], { session })
+              )
+            );
+          }
+        }
+
+        if (fiObject.Transactions?.Transaction) {
+          const result = await new AutoTransactionRepository().createTransaction(
+            fiObject.Transactions.Transaction, accountId, userId, bank!._id, data.fipId, session
+          );
+          allCategorizedTxns.push(...(result?.categorizedTransactions || []));
+        }
       }
+    });
+    // --- END ATOMIC SECTION ---
+
+    // Post-commit: derived/analytics jobs
+    if (allCategorizedTxns.length > 0) {
+      await updateDailyMetrics(allCategorizedTxns, userId);
     }
+    await deduplicateAllTransactions(userId);
+    await saveGroupedTransactions(userId);
+    await detectAndStoreAutoPays(userId);
 
-    const cacheKey = `banksWithAccountDetails:${userId}`;
-    const clearedBanksCache = await redisClient.del(cacheKey);
-    logger.debug(`cleared bank cached details: ${clearedBanksCache}`);
+    await redisClient.del(`banksWithAccountDetails:${userId}`);
+    logger.debug('cleared bank cache after updateBankDetails');
   } catch (error: any) {
     logger.error(`Error updating user details ${error}`);
     throw new AppError('Error updating user details', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -967,43 +967,176 @@ export async function getLoanCalculation(data: any): Promise<any> {
 }
 
 // -------------------------
-// DELETE BANK / ACCOUNT
+// DELETE BANK / ACCOUNT (unlink flow)
 // -------------------------
 export async function deleteBankAccount(userId: UserIdLike, bankId: string | Types.ObjectId, accountId: string | Types.ObjectId): Promise<any> {
   try {
     const objectBankId = new mongoose.Types.ObjectId(String(bankId));
     const objectAccountId = new mongoose.Types.ObjectId(String(accountId));
+    const objectUserId = new mongoose.Types.ObjectId(String(userId));
 
-    const deleteBank = await new FipRepository().deleteBank(userId, objectBankId);
-    const deleteAccount = await new AccountRepository().deleteAccount(userId, objectAccountId);
-    const deleteProfile = await new ProfileRepository().deleteProfile(userId, objectAccountId);
-    const deleteSummary = await new SummaryRepository().deleteSummary(userId, objectAccountId);
-    const deleteTransactions = await new AutoTransactionRepository().deleteTransactions(userId, objectAccountId);
+    // Read the transaction IDs for this account BEFORE the transaction (snapshot read is fine)
+    const transactionsToRemove = await Transaction.find(
+      { userId: objectUserId, accountId: objectAccountId },
+      { _id: 1 }
+    ).lean();
+    const transactionIds = transactionsToRemove.map((t) => t._id);
 
-    const cacheKey = `banksWithAccountDetails:${userId}`;
-    const deleteBanksWithAccountDetails = await redisClient.del(cacheKey);
-    logger.debug(`Deleted cache for key: ${cacheKey}, result: ${deleteBanksWithAccountDetails}`);
+    // Find collection-level records referencing these transactions (read outside tx is fine)
+    const affectedCollectionTxns = transactionIds.length > 0
+      ? await CollectionTransaction.find({ transactionId: { $in: transactionIds } }).lean()
+      : [];
 
-    await GroupedTransaction.deleteMany({ userId: new mongoose.Types.ObjectId(String(userId)) });
+    // Build a map: collectionId → total amount being removed
+    const collectionDeductMap = new Map<string, number>();
+    for (const ct of affectedCollectionTxns) {
+      const key = ct.collectionId.toString();
+      collectionDeductMap.set(key, (collectionDeductMap.get(key) ?? 0) + ct.amount);
+    }
 
+    // Find splits that reference these transactions (for toPay/toReceive cleanup)
+    const affectedSplitIds = transactionIds.length > 0
+      ? await Split.find({ transactionIds: { $in: transactionIds } }).distinct('_id')
+      : [];
+
+    // --- ATOMIC SECTION ---
+    // Everything below is a single transaction: collection cleanup + core bank data deletion.
+    const result = await runInTransaction(async (session) => {
+      // 1. Subtract removed amounts from each affected collection's totalAmount
+      for (const [colId, amount] of collectionDeductMap) {
+        await Collection.findByIdAndUpdate(
+          colId,
+          { $inc: { totalAmount: -amount } },
+          { session }
+        );
+      }
+
+      // 2. Delete SplitPayments for affected splits
+      //    (toPay / toReceive is computed on-the-fly from Split + SplitPayment data,
+      //     so removing the underlying records is sufficient — no stored field to update)
+      if (affectedSplitIds.length > 0) {
+        await SplitPayment.deleteMany({ splitId: { $in: affectedSplitIds } }).session(session);
+        await Split.deleteMany({ _id: { $in: affectedSplitIds } }).session(session);
+      }
+
+      // 3. Delete CollectionTransaction join records
+      if (transactionIds.length > 0) {
+        await CollectionTransaction.deleteMany({ transactionId: { $in: transactionIds } }).session(session);
+      }
+
+      // 4. Delete core bank data
+      const deleteBank        = await new FipRepository().deleteBank(userId, objectBankId, session);
+      const deleteAccount     = await new AccountRepository().deleteAccount(userId, objectAccountId, session);
+      const deleteProfile     = await new ProfileRepository().deleteProfile(userId, objectAccountId, session);
+      const deleteSummary     = await new SummaryRepository().deleteSummary(userId, objectAccountId, session);
+      const deleteTransactions = await new AutoTransactionRepository().deleteTransactions(userId, objectAccountId, session);
+
+      return { deleteBank, deleteAccount, deleteProfile, deleteSummary, deleteTransactions };
+    });
+    // --- END ATOMIC SECTION ---
+
+    // Post-commit: rebuild grouped transactions and clear cache
+    await GroupedTransaction.deleteMany({ userId: objectUserId });
     await saveGroupedTransactions(userId);
+    await redisClient.del(`banksWithAccountDetails:${userId}`);
 
-    return { deleteBank, deleteAccount, deleteProfile, deleteSummary, deleteTransactions };
+    return result;
   } catch (error: any) {
+    logger.error(`Error deleting bank account: ${error}`);
     return error;
   }
 }
 
 export async function deleteWholeBankData(userId: UserIdLike): Promise<any> {
   try {
-    const deleteBank = await new FipRepository().deleteBank(userId);
-    const deleteAccount = await new AccountRepository().deleteAccount(userId);
-    const deleteProfile = await new ProfileRepository().deleteProfile(userId);
-    const deleteSummary = await new SummaryRepository().deleteSummary(userId);
-    const deleteTransactions = await new AutoTransactionRepository().deleteTransactions(userId);
+    const objectUserId = new mongoose.Types.ObjectId(String(userId));
 
-    return { deleteBank, deleteAccount, deleteProfile, deleteSummary, deleteTransactions };
+    // --- Snapshot reads (outside transaction) ---
+
+    // All transactions belonging to this user
+    const userTransactionIds = await BankTransaction.find({ userId: objectUserId }, { _id: 1 }).lean().then((docs) => docs.map((d) => d._id));
+
+    // Collections owned by this user — delete entirely
+    const ownedCollectionIds = await Collection.find({ ownerId: objectUserId }, { _id: 1 }).lean().then((docs) => docs.map((d) => d._id));
+
+    // CollectionTransactions in non-owned collections that reference this user's transactions
+    const externalCollectionTxns = userTransactionIds.length > 0
+      ? await CollectionTransaction.find({
+          transactionId: { $in: userTransactionIds },
+          collectionId: { $nin: ownedCollectionIds },
+        }).lean()
+      : [];
+
+    const externalCollectionDeductMap = new Map<string, number>();
+    for (const ct of externalCollectionTxns) {
+      const key = ct.collectionId.toString();
+      externalCollectionDeductMap.set(key, (externalCollectionDeductMap.get(key) ?? 0) + ct.amount);
+    }
+
+    // Splits in external collections that reference this user's transactions
+    const externalSplitIds = userTransactionIds.length > 0
+      ? await Split.find({
+          transactionIds: { $in: userTransactionIds },
+          collectionId: { $nin: ownedCollectionIds },
+        }).distinct('_id')
+      : [];
+
+    // --- Atomic cleanup ---
+    await runInTransaction(async (session) => {
+      // 1. Delete owned collections and all their related data
+      if (ownedCollectionIds.length > 0) {
+        await SplitPayment.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await Split.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await CollectionTransaction.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await CollectionMember.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await Collection.deleteMany({ _id: { $in: ownedCollectionIds } }).session(session);
+      }
+
+      // 2. Clean up user's footprint in external collections
+      //    Adjust totalAmount for each external collection that loses transactions
+      for (const [colId, amount] of externalCollectionDeductMap) {
+        await Collection.findByIdAndUpdate(colId, { $inc: { totalAmount: -amount } }, { session });
+      }
+
+      if (externalSplitIds.length > 0) {
+        await SplitPayment.deleteMany({ splitId: { $in: externalSplitIds } }).session(session);
+        await Split.deleteMany({ _id: { $in: externalSplitIds } }).session(session);
+      }
+
+      if (userTransactionIds.length > 0) {
+        await CollectionTransaction.deleteMany({
+          transactionId: { $in: userTransactionIds },
+          collectionId: { $nin: ownedCollectionIds },
+        }).session(session);
+      }
+
+      // 3. Remove any remaining split-payment records the user is party to
+      await SplitPayment.deleteMany({ $or: [{ payerId: objectUserId }, { receiverId: objectUserId }] }).session(session);
+
+      // 4. Remove user from splits in external collections (splits where user is paidBy or listed as debtor)
+      await Split.deleteMany({
+        collectionId: { $nin: ownedCollectionIds },
+        $or: [{ paidBy: objectUserId }, { 'splits.userId': objectUserId }],
+      }).session(session);
+
+      // 5. Remove user's collection memberships (as non-owner)
+      await CollectionMember.deleteMany({ userId: objectUserId }).session(session);
+
+      // 6. Delete core bank data
+      await new FipRepository().deleteBank(userId, undefined, session);
+      await new AccountRepository().deleteAccount(userId, undefined, session);
+      await new ProfileRepository().deleteProfile(userId, undefined, session);
+      await new SummaryRepository().deleteSummary(userId, undefined, session);
+      await new AutoTransactionRepository().deleteTransactions(userId, undefined, session);
+    });
+
+    // Post-commit cleanup
+    await GroupedTransaction.deleteMany({ userId: objectUserId });
+    await redisClient.del(`banksWithAccountDetails:${userId}`);
+
+    return { success: true };
   } catch (error: any) {
+    logger.error(`Error deleting whole bank data: ${error}`);
     return error;
   }
 }

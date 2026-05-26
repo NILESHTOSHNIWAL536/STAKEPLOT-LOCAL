@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from 'express';
+import * as Sentry from '@sentry/node';
 import { securityMiddleware } from './middlewares/security/security';
 import { corsMiddleware } from './middlewares/security/cors';
 import { metricsMiddleware } from './middlewares/security/metrics';
@@ -31,7 +32,8 @@ app.get('/', (req: Request, res: Response) => {
 app.post('/Wealthscape/Notification', WealthscapeController.handleConsentNotification);
 app.post('/Wealthscape/DataReady', WealthscapeController.handleDataReadyNotification);
 
-// ✅ Error handling
+// ✅ Error handling — Sentry must come before custom handlers
+Sentry.setupExpressErrorHandler(app);
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
 

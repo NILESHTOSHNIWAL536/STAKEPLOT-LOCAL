@@ -6,7 +6,7 @@ import AppError from '@/utils/errors/app-error';
 import logger from '@/utils/common/logger';
 import { StatusCodes } from 'http-status-codes';
 import { IAccount, IBank, IEncryptedField, IFiAccountInfo } from '@/types/bank';
-import { Types } from 'mongoose';
+import { Types, ClientSession } from 'mongoose';
 
 interface CreateFipData {
   fipId: string;
@@ -29,7 +29,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // CREATE FIP RECORD
   // ----------------------------------------------------
-  async createFipRecord(fipData: any, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async createFipRecord(fipData: any, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     const existingBanks = await Bank.find({ userId: fipData.userId });
 
     // Check duplicates
@@ -80,7 +80,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       encryptedDEK: ciphertextBlob,
     };
 
-    return await this.create(payload);
+    return await this.create(payload, session);
   }
 
   // ----------------------------------------------------
@@ -215,7 +215,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // UPDATE FIP RECORD
   // ----------------------------------------------------
-  async updateFipRecord(bankId: string | Types.ObjectId, data: any, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async updateFipRecord(bankId: string | Types.ObjectId, data: any, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     // Encrypt fiAccountInfo
     const fiAccountInfo = await Promise.all(
       data.fiAccountInfo.map(async (acc: any) => ({
@@ -248,26 +248,26 @@ class FipRepository extends CrudRepository<typeof Bank> {
       encryptedDEK: ciphertextBlob,
     };
 
-    return Bank.findOneAndUpdate({ _id: bankId }, { $set: updateData }, { new: true });
+    return Bank.findOneAndUpdate({ _id: bankId }, { $set: updateData }, { new: true, session });
   }
 
   // ----------------------------------------------------
   // DELETE BANK
   // ----------------------------------------------------
-  async deleteBank(userId: string | Types.ObjectId, bankId?: string | Types.ObjectId) {
+  async deleteBank(userId: string | Types.ObjectId, bankId?: string | Types.ObjectId, session?: ClientSession) {
     if (bankId) {
-      const record = await Bank.findOne({ _id: bankId, userId });
+      const record = await Bank.findOne({ _id: bankId, userId }).session(session ?? null);
 
       if (!record) throw new AppError('Bank record not found', 404);
 
       if (record.fiAccountInfo.length === 1) {
-        return this.deleteOne({ _id: bankId });
+        return this.deleteOne({ _id: bankId }, session);
       }
 
       return { message: 'Bank has multiple accounts; cannot delete.' };
     }
 
-    return this.deleteMany({ userId });
+    return this.deleteMany({ userId }, session);
   }
 }
 

@@ -6,7 +6,7 @@ import AppError from '@/utils/errors/app-error';
 import logger from '@/utils/common/logger';
 import { IAccount } from '@/types/bank';
 import { IEncryptedField } from '@/types/bank';
-import { Types } from 'mongoose';
+import { Types, ClientSession } from 'mongoose';
 
 // Type for create/update incoming request
 interface CreateAccountData {
@@ -33,7 +33,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // CREATE ACCOUNT
   // -----------------------------
-  async createAccount(data: CreateAccountData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async createAccount(data: CreateAccountData, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     try {
       const fieldsToEncrypt = [data.type, data.maskedAccNumber, data.version, data.linkedAccRef, data.schemaLocation];
 
@@ -75,7 +75,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
       }
 
       // Create new account
-      return await this.create(accountData);
+      return await this.create(accountData, session);
     } catch (error) {
       return error;
     }
@@ -146,7 +146,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // UPDATE ACCOUNT
   // -----------------------------
-  async updateAccount(accountId: string, data: CreateAccountData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
+  async updateAccount(accountId: string, data: CreateAccountData, plaintextKey: string | Uint8Array, ciphertextBlob: string, session?: ClientSession) {
     const fieldsToEncrypt = [data.type, data.maskedAccNumber, data.version, data.linkedAccRef, data.schemaLocation];
 
     const encryptedFields = await Promise.all(fieldsToEncrypt.map((field) => encrypt(field, plaintextKey)));
@@ -166,7 +166,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
       encryptedDEK: ciphertextBlob,
     };
 
-    return await Account.findOneAndUpdate({ _id: accountId }, { ...updatedData, $inc: { fetchCount: 1 } }, { new: true });
+    return await Account.findOneAndUpdate({ _id: accountId }, { ...updatedData, $inc: { fetchCount: 1 } }, { new: true, session });
   }
 
   // -----------------------------
@@ -197,12 +197,12 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // DELETE ACCOUNT(S)
   // -----------------------------
-  async deleteAccount(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
+  async deleteAccount(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId, session?: ClientSession) {
     try {
       if (accountId) {
-        return await this.deleteOne({ userId, _id: accountId });
+        return await this.deleteOne({ userId, _id: accountId }, session);
       } else {
-        return await this.deleteMany({ userId });
+        return await this.deleteMany({ userId }, session);
       }
     } catch (error) {
       logger.error(`Error in deleteAccount: ${error}`);

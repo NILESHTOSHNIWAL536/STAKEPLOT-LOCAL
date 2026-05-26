@@ -1,37 +1,40 @@
 import { Queue, QueueEvents } from "bullmq";
-import dotenv from "dotenv";
 
-dotenv.config();
+// Deferred so process.env.REDIS_PASSWORD is populated by loadSecrets() before connection.
+const getConnection = () => ({
+  host: process.env.REDIS_HOST || "127.0.0.1",
+  port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+  password: process.env.REDIS_PASSWORD || undefined,
+});
 
-const REDIS_HOST: string = process.env.REDIS_HOST || "127.0.0.1";
-const REDIS_PORT: number = process.env.REDIS_PORT
-  ? Number(process.env.REDIS_PORT)
-  : 6379;
+let _queue: Queue<any> | null = null;
+let _events: QueueEvents | null = null;
 
-const REDIS_PASSWORD: string | undefined =
-  process.env.REDIS_PASSWORD || undefined;
+const getQueue = (): Queue<any> => {
+  if (!_queue) _queue = new Queue("category-updated", { connection: getConnection() });
+  return _queue;
+};
 
-export const categoryUpdatedQueue = new Queue("category-updated", {
-  connection: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    password: REDIS_PASSWORD,
+const getQueueEvents = (): QueueEvents => {
+  if (_events) return _events;
+  _events = new QueueEvents("category-updated", { connection: getConnection() });
+  _events.on("waiting", () => console.log("📦 Queue is online & waiting for jobs"));
+  _events.on("failed", ({ jobId, failedReason }) => console.error(`❌ Job ${jobId} failed:`, failedReason));
+  return _events;
+};
+
+export const categoryUpdatedQueue = new Proxy({} as Queue<any>, {
+  get(_target, prop: string) {
+    const q = getQueue();
+    const value = (q as any)[prop];
+    return typeof value === 'function' ? value.bind(q) : value;
   },
 });
 
-// ✅ Queue events are handled here (TYPE SAFE)
-const categoryUpdatedQueueEvents = new QueueEvents("category-updated", {
-  connection: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    password: REDIS_PASSWORD,
+export const categoryUpdatedQueueEvents = new Proxy({} as QueueEvents, {
+  get(_target, prop: string) {
+    const e = getQueueEvents();
+    const value = (e as any)[prop];
+    return typeof value === 'function' ? value.bind(e) : value;
   },
-});
-
-categoryUpdatedQueueEvents.on("waiting", () => {
-  console.log("📦 Queue is online & waiting for jobs");
-});
-
-categoryUpdatedQueueEvents.on("failed", ({ jobId, failedReason }) => {
-  console.error(`❌ Job ${jobId} failed:`, failedReason);
 });

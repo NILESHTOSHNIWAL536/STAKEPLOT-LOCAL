@@ -12,6 +12,11 @@ import { AccountRepository, FipRepository } from '@/repositories';
 import logger from '@/utils/common/logger';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import CollectionTransaction from '@/models/collections/collection-transaction.model';
+import Collection from '@/models/collections/collection.model';
+import Split from '@/models/collections/split.model';
+import SplitPayment from '@/models/collections/split-payment.model';
+import { runInTransaction } from '@/utils/run-in-transaction';
 import { createRecurringPaymentFromTransaction, detectAndStoreAutoPays } from '@/services/auto-service';
 
 /**
@@ -735,15 +740,52 @@ export const deleteTransactions = async (req: Request, res: Response): Promise<R
       return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse, error: 'transactionIds must be a non-empty array.' });
     }
 
-    const sanitizedIds = transactionIds.filter((id: any) => mongoose.Types.ObjectId.isValid(id)).map((id: any) => new mongoose.Types.ObjectId(id));
+    const sanitizedIds = transactionIds
+      .filter((id: any) => mongoose.Types.ObjectId.isValid(id))
+      .map((id: any) => new mongoose.Types.ObjectId(id));
 
-    await Transaction.deleteMany({ _id: { $in: sanitizedIds }, manualTransaction: true, userId: new mongoose.Types.ObjectId(userId) });
+    // Resolve the actual IDs that will be deleted (must be manual and belong to this user)
+    const toDelete = await Transaction.find(
+      { _id: { $in: sanitizedIds }, manualTransaction: true, userId: new mongoose.Types.ObjectId(userId) },
+      { _id: 1 }
+    ).lean();
+    const confirmedIds = toDelete.map((t) => t._id);
 
-    SuccessResponse.data = `${sanitizedIds.length} transaction(s) deleted successfully`;
+    if (confirmedIds.length === 0) {
+      SuccessResponse.data = '0 transaction(s) deleted successfully';
+      return res.status(StatusCodes.OK).json(SuccessResponse);
+    }
 
+    // Snapshot reads before the atomic section
+    const affectedCollectionTxns = await CollectionTransaction.find({ transactionId: { $in: confirmedIds } }).lean();
+
+    const collectionDeductMap = new Map<string, number>();
+    for (const ct of affectedCollectionTxns) {
+      const key = ct.collectionId.toString();
+      collectionDeductMap.set(key, (collectionDeductMap.get(key) ?? 0) + ct.amount);
+    }
+
+    const affectedSplitIds = await Split.find({ transactionIds: { $in: confirmedIds } }).distinct('_id');
+
+    await runInTransaction(async (session) => {
+      // Adjust collection totals for the removed transactions
+      for (const [colId, amount] of collectionDeductMap) {
+        await Collection.findByIdAndUpdate(colId, { $inc: { totalAmount: -amount } }, { session });
+      }
+
+      if (affectedSplitIds.length > 0) {
+        await SplitPayment.deleteMany({ splitId: { $in: affectedSplitIds } }).session(session);
+        await Split.deleteMany({ _id: { $in: affectedSplitIds } }).session(session);
+      }
+
+      await CollectionTransaction.deleteMany({ transactionId: { $in: confirmedIds } }).session(session);
+      await Transaction.deleteMany({ _id: { $in: confirmedIds } }).session(session);
+    });
+
+    SuccessResponse.data = `${confirmedIds.length} transaction(s) deleted successfully`;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
-    logger.error(`Error from deleteBankAccount, transaction-controller ${error}`);
+    logger.error(`Error from deleteTransactions, transaction-controller ${error}`);
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);

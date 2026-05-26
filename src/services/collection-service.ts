@@ -11,27 +11,8 @@ import UserService from './user-service';
 import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import FipRepository from '@/repositories/autoTransactions-repository/bank';
 import UserConfigService from './user-config-service';
-
-
-const transactionOptions: mongoose.mongo.TransactionOptions = {
-  readPreference: 'primary',
-  readConcern: { level: 'snapshot' },
-  writeConcern: { w: 'majority' },
-};
-
-const runInTransaction = async <T>(fn: (session: mongoose.ClientSession) => Promise<T>): Promise<T> => {
-  const session = await mongoose.startSession();
-  try {
-    let result: T;
-    await session.withTransaction(async () => {
-      result = await fn(session);
-    }, transactionOptions);
-    // `result` is definitely assigned inside the transaction callback
-    return result!;
-  } finally {
-    await session.endSession();
-  }
-};
+import { getEndOfDay } from '@/utils/time';
+import { runInTransaction } from '@/utils/run-in-transaction';
 
 // Helper function to calculate member spending metrics
 const calculateMemberSpending = (userId: string, splits: any[]) => {
@@ -154,6 +135,11 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
   }
   // Remove friends from data to avoid persisting arbitrary fields[]
   const { friends: _ignoredFriends, ...collectionData } = data || {};
+
+  // Normalize expiryAt to IST end-of-day UTC so the expiry sweep closes it at the right time
+  if (collectionData.expiryAt) {
+    collectionData.expiryAt = getEndOfDay(new Date(collectionData.expiryAt));
+  }
 
   return runInTransaction(async (session) => {
     const collection = new Collection({
@@ -849,15 +835,17 @@ export const setMemberLimits = async (
 
   const updatedMembers: any[] = [];
 
-  for (const limit of limits) {
-    const targetMember = await CollectionMember.findOne({ collectionId, userId: limit.userId });
-    if (!targetMember) {
-      throw new AppError(`Member with userId ${limit.userId} not found in this collection`, StatusCodes.NOT_FOUND);
+  await runInTransaction(async (session) => {
+    for (const limit of limits) {
+      const targetMember = await CollectionMember.findOne({ collectionId, userId: limit.userId }).session(session);
+      if (!targetMember) {
+        throw new AppError(`Member with userId ${limit.userId} not found in this collection`, StatusCodes.NOT_FOUND);
+      }
+      targetMember.limitAmount = limit.limitAmount;
+      await targetMember.save({ session });
+      updatedMembers.push(targetMember.toObject());
     }
-    targetMember.limitAmount = limit.limitAmount;
-    await targetMember.save();
-    updatedMembers.push(targetMember.toObject());
-  }
+  });
 
   // Hydrate user data
   const userIds = limits.map((l) => l.userId);
@@ -881,10 +869,11 @@ export const deleteCollection = async (collectionId: string, userId: string) => 
   }
 
   await runInTransaction(async (session) => {
-    await Collection.findByIdAndDelete(collectionId).session(session);
-    await CollectionMember.deleteMany({ collectionId }).session(session);
-    await CollectionTransaction.deleteMany({ collectionId }).session(session);
+    await SplitPayment.deleteMany({ collectionId }).session(session);
     await Split.deleteMany({ collectionId }).session(session);
+    await CollectionTransaction.deleteMany({ collectionId }).session(session);
+    await CollectionMember.deleteMany({ collectionId }).session(session);
+    await Collection.findByIdAndDelete(collectionId).session(session);
   });
 };
 
@@ -904,7 +893,7 @@ export const updateCollection = async (collectionId: string, userId: string, dat
 
   if (data.name !== undefined) collection.name = data.name;
   if (data.description !== undefined) collection.description = data.description;
-  if (data.expiryAt !== undefined) collection.expiryAt = data.expiryAt;
+  if (data.expiryAt !== undefined) collection.expiryAt = getEndOfDay(new Date(data.expiryAt));
   if(data.active){
     //  const activeCount = await getUserCollectionsCount(userId);
     //  if(AppLimits.MAX_COLLECTIONS_PER_USER<activeCount){

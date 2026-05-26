@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import * as Sentry from '@sentry/node';
 import { StatusCodes } from 'http-status-codes';
 import { AuthUser } from '@/types/user/user';
 import AppError from '@/utils/errors/app-error';
@@ -63,6 +64,9 @@ export const protect = async (req: Request, res: Response, next: NextFunction): 
 
     // Attach user to request
     req.user = { _id: payload.sub, token } as AuthUser;
+
+    // Set Sentry user context for this request scope
+    Sentry.setUser({ id: payload.sub, ip_address: req.ip });
 
     next();
   } catch (error) {

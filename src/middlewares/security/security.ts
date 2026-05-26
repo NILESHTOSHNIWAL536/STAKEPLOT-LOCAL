@@ -6,6 +6,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import hpp from 'hpp';
 import { ServerConfig } from '@/config';
 
 export function securityMiddleware(app: Application): void {
@@ -13,6 +14,9 @@ export function securityMiddleware(app: Application): void {
   app.use(express.json({ limit: '5mb' }));
   app.use(bodyParser.json({ limit: '5mb' }));
   app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+
+  // ✅ HTTP Parameter Pollution protection
+  app.use(hpp());
 
   // ✅ Helmet (security headers)
   app.use(
