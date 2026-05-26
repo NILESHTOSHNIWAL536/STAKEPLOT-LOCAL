@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.appwidget.AppWidgetManager
@@ -217,17 +218,27 @@ class MainActivity : FlutterFragmentActivity() {
             }
     }
 
-    @Suppress("UnspecifiedRegisterReceiverFlag")
     private fun startSmsRetriever() {
         SmsRetriever.getClient(this).startSmsRetriever()
             .addOnSuccessListener {
                 if (!smsReceiverRegistered) {
-                    registerReceiver(
-                        smsReceiver,
-                        IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
-                        SmsRetriever.SEND_PERMISSION,
-                        null
-                    )
+                    val filter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerReceiver(
+                            smsReceiver,
+                            filter,
+                            SmsRetriever.SEND_PERMISSION,
+                            null,
+                            Context.RECEIVER_EXPORTED
+                        )
+                    } else {
+                        registerReceiver(
+                            smsReceiver,
+                            filter,
+                            SmsRetriever.SEND_PERMISSION,
+                            null
+                        )
+                    }
                     smsReceiverRegistered = true
                     Log.d("SmsRetriever", "Started — waiting for OTP SMS (5 min window)")
                 }
