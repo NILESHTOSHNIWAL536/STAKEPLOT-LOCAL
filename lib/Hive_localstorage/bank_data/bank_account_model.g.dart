@@ -28,13 +28,17 @@ class BankAccountModelAdapter extends TypeAdapter<BankAccountModel> {
       lastFetch: fields[8] as String,
       nextFetch: fields[9] as String,
       fetchCount: fields[10] as String,
+      consentId: fields[11] as String? ?? '',
+      consendHandleId: fields[12] as String? ?? '',
+      sessionId: fields[13] as String? ?? '',
+      custId: fields[14] as String? ?? '',
     );
   }
 
   @override
   void write(BinaryWriter writer, BankAccountModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.bankId)
       ..writeByte(1)
@@ -56,7 +60,15 @@ class BankAccountModelAdapter extends TypeAdapter<BankAccountModel> {
       ..writeByte(9)
       ..write(obj.nextFetch)
       ..writeByte(10)
-      ..write(obj.fetchCount);
+      ..write(obj.fetchCount)
+      ..writeByte(11)
+      ..write(obj.consentId)
+      ..writeByte(12)
+      ..write(obj.consendHandleId)
+      ..writeByte(13)
+      ..write(obj.sessionId)
+      ..writeByte(14)
+      ..write(obj.custId);
   }
 
   @override

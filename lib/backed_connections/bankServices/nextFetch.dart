@@ -1,25 +1,18 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
-import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
+import '../../Constants/theme_helper.dart';
 import '../../components/shared_utils.dart';
+import '../../model/bank_model.dart';
 import '../../model/fips_metric_model.dart';
 // <-- make sure this is imported
 import '../../repository/bankinfo.dart';
@@ -32,6 +25,10 @@ RxInt modalPage = 0.obs;
 final PageController modalPageController = PageController();
 
 class Nextfetch extends StatefulWidget {
+  final BankAccountModel bankAccount;
+
+  const Nextfetch({super.key, required this.bankAccount});
+
   @override
   _RotatingIconState createState() => _RotatingIconState();
 }
@@ -64,12 +61,26 @@ class _RotatingIconState extends State<Nextfetch>
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    _timer2.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(() {
+      final bool isCurrentAccountFetching =
+          isBankHandleFetching(widget.bankAccount.consendHandleId);
+      final String fetchLabel = isCurrentAccountFetching
+          ? "${widget.bankAccount.bankName} syncing"
+          : HomepageStringsDart().nextFetchLabel;
       String formattedNextFetch = '';
       try {
-        if (nextFecthDate.value.isNotEmpty) {
-          DateTime nextFetchDateTime = DateTime.parse(nextFecthDate.value);
+        if (widget.bankAccount.nextFetch.isNotEmpty) {
+          DateTime nextFetchDateTime =
+              DateTime.parse(widget.bankAccount.nextFetch);
           formattedNextFetch = formatWhatsAppDate(nextFetchDateTime);
         } else {
           formattedNextFetch = HomepageStringsDart().notScheduled;
@@ -92,7 +103,7 @@ class _RotatingIconState extends State<Nextfetch>
                   width: MediaQuery.of(context).size.width / 1.4,
                   child: Row(
                     children: [
-                      isFected.value
+                      isCurrentAccountFetching
                           ? Container(
                               height: 30,
                               width: 30,
@@ -130,19 +141,29 @@ class _RotatingIconState extends State<Nextfetch>
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 2),
                         // const EdgeInsets.only(right:10,left:6,bottom: 2),
-                        child: textStyle(
-                            context: context,
-                            text: isFected.value
-                                ? HomepageStringsDart().fetchingInProgress
-                                : HomepageStringsDart().nextFetchLabel,
-                            fontWeight: FontWeight.w500,
-                            c: AppColors.backgroundColor,
-                            fontsize: 14,
-                            lineHeight: 18 / fontSize),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width / 2.4,
+                          ),
+                          child: Text(
+                            fetchLabel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: AppColors.backgroundColor,
+                              lineHeight: 18 / fontSize,
+                            ),
+                          ),
+                        ),
                       ),
                       textStyle(
                           context: context,
-                          text: isFected.value ? "" : formattedNextFetch,
+                          text: isCurrentAccountFetching
+                              ? ""
+                              : formattedNextFetch,
                           fontWeight: FontWeight.w500,
                           c: AppColors.backgroundColor,
                           fontsize: 14,
@@ -176,41 +197,15 @@ class _RotatingIconState extends State<Nextfetch>
 
   showFetchModal(BuildContext context) {
     if (consentAndHandleDetails.isEmpty) return;
+    _selectWidgetAccount(context);
+
+    if (modalPageController.hasClients) {
+      modalPageController.jumpToPage(0);
+    }
 
     // modalPageController.jumpToPage(0); // 🔑 reset to first page
 
-    String nextFetch = nextFecthDate.value;
-    String lastFetch = LastFetchDate.value;
-
-    DateTime nextFetchDate;
-    DateTime lastFetchDate;
-
-    try {
-      nextFetchDate =
-          nextFetch.isNotEmpty ? DateTime.parse(nextFetch) : DateTime.now();
-    } catch (_) {
-      nextFetchDate = DateTime.now();
-    }
-
-    try {
-      lastFetchDate =
-          lastFetch.isNotEmpty ? DateTime.parse(lastFetch) : DateTime.now();
-    } catch (_) {
-      lastFetchDate = DateTime.now();
-    }
-
-    String formattedNextFetch = formatWhatsAppDate(nextFetchDate);
-    String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
-
-    final double screenWidth = MediaQuery.of(context).size.width;
-
-    bool limit = int.parse(fetchCount.value) >= 5;
     if (fipsMetricList.isEmpty) return;
-
-    final FipsMetric metric = fipsMetricList.firstWhere(
-      (item) => item.BankName == BankName.value,
-      orElse: () => fipsMetricList.first,
-    );
 
     showModalBottomSheet(
       context: context,
@@ -220,175 +215,265 @@ class _RotatingIconState extends State<Nextfetch>
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return SafeArea(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 32, vertical: AppSizes.p30),
-            decoration: const BoxDecoration(
-              color: AppColors.backgroundColor,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              child: isFected.value
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                              color: AppColors.border, shape: BoxShape.circle),
-                          child: const Icon(Icons.sync,
-                              size: 26, color: AppColors.primaryColor),
-                        ),
-                        SizedBox(height: AppSizes.h20),
-                        Text(
-                          "Sync in progress",
-                          textAlign: TextAlign.center,
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: AppColors.bg1,
-                          ),
-                        ),
-                        SizedBox(height: AppSizes.h10),
-                        Text(
-                          "Please wait while we retrieve the latest data from your bank. The process may take a moment depending on your bank's server response.",
-                          textAlign: TextAlign.center,
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w300,
-                              fontSize: 12,
-                              color: AppColors.grey),
-                        ),
-                        SizedBox(
-                            height: MediaQuery.sizeOf(context).height / 30),
-                        SizedBox(
-                          width: double.infinity,
-                          height: AppSizes.h48,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14)),
-                            ),
-                            child: Center(
-                                child: Text(
-                              "Done",
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: AppColors.backgroundColor),
-                            )),
-                          ),
-                        )
-                      ],
-                    )
-                  : PageView(
-                      controller: modalPageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        /// ================= PAGE 0 =================
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              textStyle(
-                                  context: context,
-                                  text: "Connected Banks",
-                                  fontsize: 16,
-                                  c: AppColors.bg1,
-                                  fontWeight: FontWeight.w500,
-                                  lineHeight: 21 / fontSize),
-                              SizedBox(height: AppSizes.h16),
-                              connectedBanksRow(context),
-                              SizedBox(height: AppSizes.h20),
-                              _buildInfoCard(
-                                context: context,
-                                title: "Average latency",
-                                value: "${metric.latencyAvgMs + 40}ms",
-                              ),
-                              SizedBox(height: AppSizes.h12),
-                              _buildInfoCard(
-                                context: context,
-                                title: HomepageStringsDart().lastFetchLabel,
-                                value: formattedLastFetch,
-                              ),
-                              SizedBox(height: AppSizes.h12),
-                              _buildInfoCard(
-                                context: context,
-                                title: HomepageStringsDart().nextFetchTitle,
-                                value: formattedNextFetch,
-                              ),
-                              SizedBox(height: AppSizes.h12),
-                              _buildInfoCard(
-                                context: context,
-                                title: HomepageStringsDart().fetchCountTitle,
-                                value: '${!limit ? fetchCount.value : "5"}/5',
-                              ),
-                              SizedBox(height: AppSizes.h20),
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    modalPageController.animateToPage(
-                                      1,
-                                      duration:
-                                          const Duration(milliseconds: 350),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width /
-                                        1.14,
-                                    height:
-                                        MediaQuery.of(context).size.height / 16,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryColor,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Center(
-                                      child: textStyleOnly2(
-                                        context: context,
-                                        text: "Continue",
-                                        fontsize: 16,
-                                        color: AppColors.backgroundColor,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            final FipsMetric metric = fipsMetricList.firstWhere(
+              (item) => item.BankName == BankName.value,
+              orElse: () => fipsMetricList.first,
+            );
+            final selectedConsent = _selectedConsentInfo();
+            final formattedNextFetch = _formatFetchDate(nextFecthDate.value);
+            final formattedLastFetch = _formatFetchDate(LastFetchDate.value);
+            final currentFetchCount = int.tryParse(fetchCount.value) ?? 0;
+            final bool limit = currentFetchCount >= 5;
+
+            return SafeArea(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24, vertical: AppSizes.p24),
+                decoration: BoxDecoration(
+                  color: context.appColors.dialogBackground,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.58,
+                  child: isBankHandleFetching(
+                          widget.bankAccount.consendHandleId)
+                      ? _buildSyncInProgress(context)
+                      : PageView(
+                          controller: modalPageController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Connected Banks",
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      fontSize: 16,
+                                      lWeight: FontWeight.w500,
+                                      color: context.appColors.onSurface,
+                                      lineHeight: 21 / fontSize,
                                     ),
                                   ),
-                                ),
+                                  SizedBox(height: AppSizes.h16),
+                                  connectedBanksRow(
+                                    context,
+                                    onBankChanged: () => setModalState(() {}),
+                                  ),
+                                  SizedBox(height: AppSizes.h20),
+                                  _buildInfoCard(
+                                    context: context,
+                                    title: "Fetching bank",
+                                    value: BankName.value,
+                                  ),
+                                  SizedBox(height: AppSizes.h12),
+                                  _buildInfoCard(
+                                    context: context,
+                                    title: "Average latency",
+                                    value: "${metric.latencyAvgMs + 40}ms",
+                                  ),
+                                  SizedBox(height: AppSizes.h12),
+                                  _buildInfoCard(
+                                    context: context,
+                                    title: HomepageStringsDart().lastFetchLabel,
+                                    value: formattedLastFetch,
+                                  ),
+                                  SizedBox(height: AppSizes.h12),
+                                  _buildInfoCard(
+                                    context: context,
+                                    title: HomepageStringsDart().nextFetchTitle,
+                                    value: formattedNextFetch,
+                                  ),
+                                  SizedBox(height: AppSizes.h12),
+                                  _buildInfoCard(
+                                    context: context,
+                                    title:
+                                        HomepageStringsDart().fetchCountTitle,
+                                    value:
+                                        '${!limit ? fetchCount.value : "5"}/5',
+                                  ),
+                                  SizedBox(height: AppSizes.h20),
+                                  _buildContinueButton(context),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            BankSyncFlow(
+                              consentInfo: selectedConsent,
+                              bankName: BankName.value,
+                              bankLogo: BankUrl.value,
+                            ),
+                          ],
                         ),
-
-                        /// ================= PAGE 1 =================
-                        const BankSyncFlow(),
-                      ],
-                    ),
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  Widget connectedBanksRow(BuildContext context) {
+  Widget _buildSyncInProgress(BuildContext context) {
+    final displayBankName = fetchingBankNameForHandle(
+      widget.bankAccount.consendHandleId,
+      widget.bankAccount.bankName,
+    );
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: context.appColors.iconBackground,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.sync, size: 26, color: context.appColors.primary),
+        ),
+        SizedBox(height: AppSizes.h20),
+        Text(
+          "$displayBankName sync in progress",
+          textAlign: TextAlign.center,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w500,
+            fontSize: 16,
+            color: context.appColors.onSurface,
+          ),
+        ),
+        SizedBox(height: AppSizes.h10),
+        Text(
+          "Please wait while we retrieve the latest data from $displayBankName. The process may take a moment depending on the bank's server response.",
+          textAlign: TextAlign.center,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w300,
+            fontSize: 12,
+            color: context.appColors.secondaryText,
+            lineHeight: 18 / fontSize,
+          ),
+        ),
+        SizedBox(height: MediaQuery.sizeOf(context).height / 30),
+        SizedBox(
+          width: double.infinity,
+          height: AppSizes.h48,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: context.appColors.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+            child: Text(
+              "Done",
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w500,
+                fontSize: 16,
+                color: AppColors.backgroundColor,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildContinueButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          modalPageController.animateToPage(
+            1,
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOut,
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          height: AppSizes.h48,
+          decoration: BoxDecoration(
+            color: context.appColors.primary,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: textStyleOnly2(
+              context: context,
+              text: "Continue",
+              fontsize: 16,
+              color: AppColors.backgroundColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatFetchDate(String value) {
+    try {
+      return value.isNotEmpty
+          ? formatWhatsAppDate(DateTime.parse(value))
+          : HomepageStringsDart().notScheduled;
+    } catch (_) {
+      return HomepageStringsDart().notScheduled;
+    }
+  }
+
+  ConsentInfoModel? _selectedConsentInfo() {
+    if (consentAndHandleDetails.isEmpty) return null;
+
+    final selectedAccount = scrollBankPage.value >= 0 &&
+            scrollBankPage.value < bankAccountLinkedList.length
+        ? bankAccountLinkedList[scrollBankPage.value]
+        : null;
+
+    return consentAndHandleDetails.firstWhereOrNull(
+          (item) =>
+              selectedAccount != null &&
+              item.consendHandleId == selectedAccount.consendHandleId,
+        ) ??
+        consentAndHandleDetails.firstWhereOrNull(
+          (item) => item.accountId == accountId.value,
+        ) ??
+        consentAndHandleDetails.firstWhereOrNull(
+          (item) =>
+              selectedAccount != null && item.fipId == selectedAccount.fipId,
+        ) ??
+        consentAndHandleDetails.firstWhereOrNull(
+          (item) => item.bankName == BankName.value,
+        );
+  }
+
+  void _selectWidgetAccount(BuildContext context) {
+    final index = bankAccountLinkedList.indexWhere(
+      (item) => item.accountId == widget.bankAccount.accountId,
+    );
+    if (index == -1) return;
+    bankInfoController.selectBankAccount(index, context);
+  }
+
+  Widget connectedBanksRow(BuildContext context,
+      {VoidCallback? onBankChanged}) {
     if (bankAccountLinkedList.isEmpty) return const SizedBox();
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 6),
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.button,
+          color: context.appColors.border,
           width: 1,
         ),
       ),
@@ -400,27 +485,24 @@ class _RotatingIconState extends State<Nextfetch>
           separatorBuilder: (_, __) => const SizedBox(width: 2),
           itemBuilder: (context, index) {
             final bank = bankAccountLinkedList[index];
-            final bool isActive = bank.bankName == BankName.value;
+            final bool isActive = bank.accountId == accountId.value;
 
             return GestureDetector(
               onTap: () {
-                BankName.value = bank.bankName;
-                BankUrl.value = bank.bankLogo;
-                accountId.value = bank.accountId;
-                LastFetchDate.value = bank.lastFetch;
-                nextFecthDate.value = bank.nextFetch;
-                fetchCount.value = bank.fetchCount.toString();
-
-                calledFunctionToFetchData(context);
+                bankInfoController.selectBankAccount(index, context);
+                onBankChanged?.call();
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
+                width: 86,
                 padding: const EdgeInsets.symmetric(
                   vertical: AppSizes.p6,
                   horizontal: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.transparentColor,
+                  color: isActive
+                      ? context.appColors.iconBackground
+                      : AppColors.transparentColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -435,11 +517,15 @@ class _RotatingIconState extends State<Nextfetch>
                     SizedBox(height: AppSizes.h4),
                     Text(
                       bank.bankName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: FontManager().getTextStyle(context,
-                          fontSize: 14,
+                          fontSize: 12,
                           lWeight: FontWeight.w500,
-                          color: AppColors.accentColor,
-                          lineHeight: 20 / fontSize),
+                          color: isActive
+                              ? context.appColors.primary
+                              : context.appColors.onSurface,
+                          lineHeight: 18 / fontSize),
                     ),
                   ],
                 ),
@@ -513,55 +599,39 @@ class _RotatingIconState extends State<Nextfetch>
       width: double.infinity,
       padding: EdgeInsets.all(screenWidth * 0.04),
       decoration: BoxDecoration(
-        color: AppColors.newbg,
+        color: context.appColors.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.grey, width: 1),
+        border: Border.all(color: context.appColors.border, width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          textStyleOnly2(
-            context: context,
-            text: title,
-            fontsize: screenWidth < 400 ? 12 : 14,
-            color: AppColors.accentColor,
-            fontWeight: FontWeight.w400,
+          Expanded(
+            child: textStyleOnly2(
+              context: context,
+              text: title,
+              fontsize: screenWidth < 400 ? 12 : 14,
+              color: context.appColors.onSurface,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-          textStyleOnly2(
-            context: context,
-            text: value,
-            fontsize: screenWidth < 400 ? 10 : 12,
-            color: AppColors.grey,
-            fontWeight: FontWeight.w400,
+          const SizedBox(width: AppSizes.w10),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: screenWidth < 400 ? 10 : 12,
+                color: context.appColors.secondaryText,
+                lWeight: FontWeight.w400,
+              ),
+            ),
           ),
         ],
       ),
     );
-  }
-
-  void checkAndFetchData() async {
-    setUpSocketListenerMainPage(context);
-    if (consentAndHandleDetails.isNotEmpty) {
-      for (final item in consentAndHandleDetails) {
-        getWeeklyfetchData(
-          item.consentId,
-          item.consendHandleId,
-          item.sessionId,
-          item.custId,
-          item.lastFetch,
-          item.bankName,
-          item.fipId,
-          item.fetchCount,
-          item.accountId,
-        );
-      }
-    }
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString("fetchingData", consentAndHandleDetails.toString());
-    isFected.value = true;
-    fetchNow.value = false;
-    scrollBankPage.value = 0;
-    callApi(context);
-    Navigator.pop(context);
   }
 }

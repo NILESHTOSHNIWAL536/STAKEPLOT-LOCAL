@@ -164,6 +164,10 @@ class BankInfoController extends GetxController {
             bankName: bank['bankName']?.toString() ?? '',
             bankLogo: (bank['bankLogo'] ?? bankImage).toString(),
             fipId: bank['fipId']?.toString() ?? '',
+            consentId: bank['consentId']?.toString() ?? '',
+            consendHandleId: bank['consendHandleId']?.toString() ?? '',
+            sessionId: bank['sessionId']?.toString() ?? '',
+            custId: bank['custId']?.toString() ?? '',
             accountId: currentAccountId,
             maskedAccNumber: maskedAccNumber,
             type: account['type']?.toString() ?? '',
@@ -287,11 +291,22 @@ class BankInfoController extends GetxController {
     };
 
     try {
-      await updateDataApiCall2(userUrl, {"fetchInProgress": true});
+      markBankFetchStarted(consendHandleId, bankName);
+      await updateDataApiCall2(userUrl, {
+        "fetchInProgress": true,
+        "fetchHandleId": consendHandleId,
+        "fetchConsentId": consentId,
+        "fetchBankName": bankName,
+      });
       await postDataApiCall(apiUrl, body);
     } catch (e) {
-      isFected.value = false;
-      await updateDataApiCall2(userUrl, {"fetchInProgress": false});
+      markBankFetchCompleted(consendHandleId);
+      await updateDataApiCall2(userUrl, {
+        "fetchInProgress": false,
+        "fetchHandleId": consendHandleId,
+        "fetchConsentId": consentId,
+        "fetchBankName": bankName,
+      });
     }
   }
 
