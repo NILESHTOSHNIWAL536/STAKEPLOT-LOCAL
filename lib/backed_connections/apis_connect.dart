@@ -83,6 +83,42 @@ RxBool getInsights = false.obs;
 RxBool getCreditCardBudgetDebts = false.obs;
 
 RxString accountId = "".obs;
+RxString fetchingHandleId = "".obs;
+RxString fetchingBankName = "".obs;
+RxMap<String, String> fetchingBankNamesByHandle = <String, String>{}.obs;
+
+void markBankFetchStarted(String handleId, String bankName) {
+  if (handleId.isEmpty) return;
+  fetchingBankNamesByHandle[handleId] = bankName;
+  fetchingHandleId.value = fetchingBankNamesByHandle.keys.first;
+  fetchingBankName.value = fetchingBankNamesByHandle[fetchingHandleId.value] ?? "";
+  isFected.value = fetchingBankNamesByHandle.isNotEmpty;
+  userController.fetchInProgress.value = isFected.value;
+}
+
+void markBankFetchCompleted(String handleId) {
+  if (handleId.isNotEmpty) {
+    fetchingBankNamesByHandle.remove(handleId);
+  } else {
+    fetchingBankNamesByHandle.clear();
+  }
+
+  fetchingHandleId.value =
+      fetchingBankNamesByHandle.isEmpty ? "" : fetchingBankNamesByHandle.keys.first;
+  fetchingBankName.value = fetchingHandleId.value.isEmpty
+      ? ""
+      : fetchingBankNamesByHandle[fetchingHandleId.value] ?? "";
+  isFected.value = fetchingBankNamesByHandle.isNotEmpty;
+  userController.fetchInProgress.value = isFected.value;
+}
+
+bool isBankHandleFetching(String handleId) {
+  return handleId.isNotEmpty && fetchingBankNamesByHandle.containsKey(handleId);
+}
+
+String fetchingBankNameForHandle(String handleId, [String fallback = ""]) {
+  return fetchingBankNamesByHandle[handleId] ?? fallback;
+}
 
 RxString accountIdPdf = "".obs;
 RxString accountSelected = "".obs;

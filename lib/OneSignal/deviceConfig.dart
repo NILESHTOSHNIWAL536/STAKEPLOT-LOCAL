@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
@@ -27,7 +28,7 @@ import '../components/shared_utils.dart';
 import '../controllers/finora_controller.dart';
 import '../repository/auth_service/login_apis.dart';
 import '../routes/index_route.dart';
-
+import '../routes/route_user_login.dart';
 
 DateTime? _lastSent;
 Timer? snackbarTimer;
@@ -80,24 +81,19 @@ void setUpSocketListenerMainPage(BuildContext context) {
   try {
     if (userController.userId.value == "") return;
     mainPageWebSocket = IO.io(
-     API.urlWithLocallHost,
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .build(),
+      API.urlWithLocallHost,
+      IO.OptionBuilder().setTransports(['websocket']).build(),
     );
     // Connect the socket
-    mainPageWebSocket.onConnectError( (data) {
-    });
+    mainPageWebSocket.onConnectError((data) {});
 
     mainPageWebSocket.connect();
 
     mainPageWebSocket.onConnect((_) {
       try {
-       
         mainPageWebSocket.emit("addUserToSocket", userController.userId.value);
       } catch (e) {}
     });
-
 
     // Listener for events from the socket
     mainPageWebSocket.on("addUserToSocket", (data) async {
@@ -106,7 +102,9 @@ void setUpSocketListenerMainPage(BuildContext context) {
         hasGetNewNotifications.value = !hasGetNewNotifications.value;
         hasGetNewNotifications.value = !hasGetNewNotifications.value;
         myNotificationBool.value = !myNotificationBool.value;
-        getNotifications(context, );
+        getNotifications(
+          context,
+        );
       } else if (type == "reactOnPost") {
         onPostReactLikeAndCommentWebSocket(data['data'], context);
       } else if (type == "NewPost") {
@@ -116,9 +114,21 @@ void setUpSocketListenerMainPage(BuildContext context) {
       } else if (type == 'Reward') {
         callRewardApis(context);
       } else if (type == "fetchedApiCall") {
-        isFected.value = false;
-        String message = data['data']['message'] ?? "";
-        bool flag = data['data']['failed'] ?? false;
+        final eventData = data['data'] ?? {};
+        final handleId = eventData['handleId']?.toString() ?? "";
+        final consentId = eventData['consentId']?.toString() ?? "";
+        final bankName = eventData['bankName']?.toString() ?? "";
+        if (handleId.isNotEmpty) {
+          markBankFetchCompleted(handleId);
+          await updateDataApiCall2(UserRoutes.updateFetchStatus, {
+            "fetchInProgress": false,
+            "fetchHandleId": handleId,
+            "fetchConsentId": consentId,
+            "fetchBankName": bankName,
+          });
+        }
+        String message = eventData['message'] ?? "";
+        bool flag = eventData['failed'] ?? false;
 
         if (flag) {
           snackBarCalledfail(context, message);
@@ -156,16 +166,12 @@ void onPostDataCallWebSocket(data, context) {
   try {
     var element = data['data'];
     uploadRefreshCall(element, context);
-  } catch (e) {
-    
-  }
+  } catch (e) {}
 }
 
-
-bool securityCheck(){
+bool securityCheck() {
   assert(() {
-    debugPrint = (String? message, {int? wrapWidth}) {
-    };
+    debugPrint = (String? message, {int? wrapWidth}) {};
     return true;
   }());
   return false;
@@ -173,12 +179,9 @@ bool securityCheck(){
 
 Future<void> loadEnvs() async {
   try {
-    await dotenv.load(fileName: ".env"); 
-  } catch (e) {
-  }
+    await dotenv.load(fileName: ".env");
+  } catch (e) {}
 }
-
-
 
 void checkFirebaseAndValidUser() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -227,7 +230,7 @@ Future<void> checkIsUserValid() async {
 class InstallationChecker {
   static Future<bool> isInstalledFromPlayStore() async {
     if (kIsWeb) {
-        return false;
+      return false;
     }
     if (!Platform.isAndroid) {
       return true; // iOS apps are generally from App Store
@@ -264,7 +267,8 @@ catWidgetBindUpdate(context) {
     await HomeWidget.setAppGroupId('group.com.stakeplot.pfa');
     await updateWidgetSpendingCategories();
   });
-  ever(controller.spendingsOnCategories, (_) => updateWidgetSpendingCategories());
+  ever(controller.spendingsOnCategories,
+      (_) => updateWidgetSpendingCategories());
   ever(controller.totalValue, (_) => updateWidgetSpendingCategories());
 }
 

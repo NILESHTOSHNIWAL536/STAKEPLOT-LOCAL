@@ -6,6 +6,10 @@ class BankAccountModel {
   final String bankName;
   final String bankLogo;
   final String fipId;
+  final String consentId;
+  final String consendHandleId;
+  final String sessionId;
+  final String custId;
 
   // -------- Account info --------
   final String accountId;
@@ -34,6 +38,10 @@ class BankAccountModel {
     required this.bankName,
     required this.bankLogo,
     required this.fipId,
+    required this.consentId,
+    required this.consendHandleId,
+    required this.sessionId,
+    required this.custId,
     required this.accountId,
     required this.maskedAccNumber,
     required this.type,
@@ -56,6 +64,10 @@ class BankAccountModel {
       bankName: json['bankName']?.toString() ?? '',
       bankLogo: json['bankLogo']?.toString() ?? '',
       fipId: json['fipId']?.toString() ?? '',
+      consentId: json['consentId']?.toString() ?? '',
+      consendHandleId: json['consendHandleId']?.toString() ?? '',
+      sessionId: json['sessionId']?.toString() ?? '',
+      custId: json['custId']?.toString() ?? '',
       accountId: json['accountId']?.toString() ?? '',
       maskedAccNumber: json['maskedAccNumber']?.toString() ?? '',
       type: json['type']?.toString() ?? '',
@@ -80,6 +92,10 @@ class BankAccountModel {
       'bankName': bankName,
       'bankLogo': bankLogo,
       'fipId': fipId,
+      'consentId': consentId,
+      'consendHandleId': consendHandleId,
+      'sessionId': sessionId,
+      'custId': custId,
       'accountId': accountId,
       'maskedAccNumber': maskedAccNumber,
       'type': type,

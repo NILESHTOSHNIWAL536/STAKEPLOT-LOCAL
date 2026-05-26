@@ -17,12 +17,11 @@ import '../routes/route_finvu.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
 
-
 void initFinvuManager(BuildContext context) async {
-  String url = FinspaceStrings().liveIntegration
+  String url = !FinspaceStrings().liveIntegration
       ? Credentials.Live_finvu_api
       : Credentials.Dev_finvu_api;
-      
+
   finvuManager.initialize(
     FinvuConfig(
       finvuEndpoint: url,
@@ -46,7 +45,7 @@ Future<String> login(context) async {
       handleId.value,
     );
     otpReference = login.reference;
-  } catch (e) { 
+  } catch (e) {
     snackBarCalledfail(context, e.toString());
   }
   return otpReference;

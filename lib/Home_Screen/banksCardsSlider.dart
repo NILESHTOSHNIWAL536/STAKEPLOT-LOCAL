@@ -302,7 +302,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   SizedBox(height: AppSizes.h40), // space for top-right logos
 
                   /// NEXT FETCH
-                  Nextfetch(),
+                  Nextfetch(bankAccount: data),
 
                   SizedBox(height: AppSizes.h10),
 
