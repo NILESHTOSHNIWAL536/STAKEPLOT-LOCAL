@@ -99,6 +99,8 @@ export async function loginAndGetHandleId(req: Request, res: Response) {
     const userId = req.user._id;
     const { custId, number } = req.body as LoginRequestBody;
 
+    console.log(req.body);
+
     const token = await generateToken();
     const consentResponse = await apiClient.post(`${baseUrl}/ConsentRequestPlus`, token, {
       header: headers,
@@ -198,7 +200,8 @@ export async function fetchTransactions(req: Request, res: Response) {
 
     // In staging Finvu hasn't registered our webhook yet, so we simulate the
     // webhook call by enqueuing a delayed fetch job instead.
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production')
+    {
       await enqueueFinvuFetch({ sessionId, custId, consentId, handleId, isUpdate: false, userId: String(userId) });
     }
 

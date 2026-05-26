@@ -1,4 +1,5 @@
 import mongoose, { ClientSession } from 'mongoose';
+import logger from '@/utils/common/logger';
 
 const txOptions: mongoose.mongo.TransactionOptions = {
   readPreference: 'primary',
@@ -20,7 +21,41 @@ const txOptions: mongoose.mongo.TransactionOptions = {
  *
  * Requires MongoDB to be running as a replica set (Atlas always qualifies).
  */
-export async function runInTransaction<T>(fn: (session: ClientSession) => Promise<T>): Promise<T> {
+let transactionSupport: boolean | null = null;
+
+async function supportsTransactions(): Promise<boolean> {
+  if (transactionSupport !== null) return transactionSupport;
+
+  const db = mongoose.connection.db;
+  if (!db) {
+    transactionSupport = false;
+    return transactionSupport;
+  }
+
+  try {
+    const hello = await db.admin().command({ hello: 1 });
+    transactionSupport = Boolean(hello.setName || hello.msg === 'isdbgrid');
+  } catch {
+    try {
+      const isMaster = await db.admin().command({ isMaster: 1 });
+      transactionSupport = Boolean(isMaster.setName || isMaster.msg === 'isdbgrid');
+    } catch {
+      transactionSupport = false;
+    }
+  }
+
+  if (!transactionSupport) {
+    logger.warn('MongoDB transactions are unavailable on this connection; running operation without a transaction.');
+  }
+
+  return transactionSupport;
+}
+
+export async function runInTransaction<T>(fn: (session?: ClientSession) => Promise<T>): Promise<T> {
+  if (!(await supportsTransactions())) {
+    return fn();
+  }
+
   const session = await mongoose.startSession();
   let result: T;
   try {

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import logger from './common/logger';
 import redisClient from '@/config/redis-config';
 import bankLogos from '@/config/bankLogos';
@@ -16,6 +17,114 @@ const notificationRepository = new NotificationRepository();
 
 async function publishSocketEvent(userId: string, event: string, data: any): Promise<void> {
   await redisClient.publish('bank_events', JSON.stringify({ userId, event, data }));
+}
+
+async function clearUserFetchStatus(finvuData: any): Promise<void> {
+  if (!finvuData?.userId) return;
+
+  const userId = String(finvuData.userId);
+  const userQuery = mongoose.Types.ObjectId.isValid(userId)
+    ? { _id: new mongoose.Types.ObjectId(userId) }
+    : { _id: finvuData.userId };
+  const pullConditions: any[] = [];
+
+  if (finvuData.handleId) {
+    pullConditions.push({ fetchHandleId: finvuData.handleId });
+  }
+  if (finvuData.consentId) {
+    pullConditions.push({ fetchConsentId: finvuData.consentId });
+  }
+
+  const users = mongoose.connection.collection('users');
+
+  if (pullConditions.length > 0) {
+    await users.updateOne(userQuery, {
+      $pull: {
+        fetchStatuses: pullConditions.length === 1 ? pullConditions[0] : { $or: pullConditions },
+      },
+    });
+  }
+
+  const user = await users.findOne(userQuery, {
+    projection: { fetchStatuses: 1 },
+  });
+  const fetchStatuses = Array.isArray(user?.fetchStatuses) ? user.fetchStatuses : [];
+  const primaryStatus = fetchStatuses[0] || {
+    fetchHandleId: '',
+    fetchConsentId: '',
+    fetchBankName: '',
+  };
+
+  await users.updateOne(userQuery, {
+    $set: {
+      fetchInProgress: fetchStatuses.length > 0,
+      fetchHandleId: primaryStatus.fetchHandleId || '',
+      fetchConsentId: primaryStatus.fetchConsentId || '',
+      fetchBankName: primaryStatus.fetchBankName || '',
+    },
+  });
+}
+
+function getWebhookErrorMessage(error?: any, fallback?: string): string {
+  const rawMessage = error?.message || error?.toString?.() || fallback || '';
+  const message = rawMessage.toLowerCase();
+
+  if (message.includes('account data not found')) {
+    return 'No account data was found for this bank right now. Please try again later.';
+  }
+
+  if (message.includes('bank not found')) {
+    return 'We could not match this bank with your linked account. Please reconnect the bank and try again.';
+  }
+
+  if (message.includes('updating user details')) {
+    return 'We could not update this bank account with the latest data. Please try syncing again.';
+  }
+
+  if (message.includes('token') || message.includes('auth')) {
+    return 'Bank authentication expired while fetching your data. Please try syncing again.';
+  }
+
+  if (message.includes('timeout') || message.includes('network')) {
+    return 'The bank server took too long to respond. Please try again in a few minutes.';
+  }
+
+  return fallback || 'Sorry, we are unable to fetch your bank details. Please try again later.';
+}
+
+async function notifyFetchFailure(finvuData: any, error?: any, fallbackMessage?: string) {
+  if (!finvuData?.userId) return;
+
+  const message = getWebhookErrorMessage(error, fallbackMessage);
+  const bankName = finvuData.bankName || 'Bank';
+  const bankLogo = 'https://cdn.finvu.in/finvulogos/bank_large_light.png';
+
+  await notificationRepository.createNotification({
+    userId: finvuData.userId,
+    notificationMessage: {
+      type: 'FetchedDataFailed',
+      message,
+      failed: true,
+      bankName,
+      handleId: finvuData.handleId,
+      consentId: finvuData.consentId,
+      sessionId: finvuData.sessionId,
+      error: error?.message || error?.toString?.() || '',
+      avatarType: bankLogo,
+      logo: bankLogo,
+    },
+  });
+
+  await publishSocketEvent(finvuData.userId, 'addUserToSocket', {
+    type: 'fetchedApiCall',
+    data: {
+      message,
+      failed: true,
+      handleId: finvuData.handleId,
+      consentId: finvuData.consentId,
+      bankName,
+    },
+  });
 }
 
 /* ============================
@@ -75,6 +184,9 @@ async function webHook(req: Request, res: Response): Promise<Response> {
     // ✅ 6. Fetch final data
     // console.locs('Final data fetched and stored in DB');
     const finalData = await FinvuController.fetchFinalData(token, finvuData.custId, finvuData.consentId, finvuData.sessionId);
+    
+   console.log('Final data fetched and stored in DB');
+   console.log(finalData);
 
     if (finalData !== 'Account data not found.') {
       await Finvu.findOneAndUpdate({ sessionId: finvuData.sessionId }, { $set: { data: finalData } }, { new: true });
@@ -115,6 +227,11 @@ async function webHook(req: Request, res: Response): Promise<Response> {
           message: `${name} Data has been successfully fetched`,
           avatarType: bankLogo,
           logo: bankLogo,
+          failed: false,
+          bankName: name,
+          handleId: finvuData.handleId,
+          consentId: finvuData.consentId,
+          sessionId: finvuData.sessionId,
         },
       });
 
@@ -135,8 +252,11 @@ async function webHook(req: Request, res: Response): Promise<Response> {
       });
 
       // ✅ 7. DB cleanup after success
+      await clearUserFetchStatus(finvuData);
       await Finvu.deleteOne({ sessionId: finvuData.sessionId });
     } else {
+      await notifyFetchFailure(finvuData, new Error('Account data not found.'), 'No transactions were found at the moment. Please try again later.');
+
       await publishSocketEvent(finvuData.custId, 'registerUser', {
         message: 'Sorry, we are unable to fetch your bank details. Please try again later.',
         data: {
@@ -144,34 +264,12 @@ async function webHook(req: Request, res: Response): Promise<Response> {
           data: 'account-data-not-found',
         },
       });
-
-      await publishSocketEvent(finvuData.userId, 'addUserToSocket', {
-        type: 'fetchedApiCall',
-        data: {
-          message: 'No transactions were found at the moment, try again later',
-          failed: true,
-          handleId: finvuData.handleId,
-          consentId: finvuData.consentId,
-          bankName: finvuData.bankName,
-        },
-      });
     }
 
     return res.status(200).json({ message: 'Data fetched successfully' });
   } catch (error: any) {
     logger.error(`Webhook error: ${error.message}`);
-    if (finvuData?.userId) {
-      await publishSocketEvent(finvuData.userId, 'addUserToSocket', {
-        type: 'fetchedApiCall',
-        data: {
-          message: 'Sorry, we are unable to fetch your bank details. Please try again later.',
-          failed: true,
-          handleId: finvuData.handleId,
-          consentId: finvuData.consentId,
-          bankName: finvuData.bankName,
-        },
-      });
-    }
+    await notifyFetchFailure(finvuData, error);
     return res.status(500).json({
       message: 'Error fetching data',
       error: error.message,
@@ -185,4 +283,4 @@ async function webHook(req: Request, res: Response): Promise<Response> {
 }
 
 export default webHook;
-export { publishSocketEvent };
+export { publishSocketEvent, clearUserFetchStatus };
