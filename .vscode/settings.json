@@ -1,8 +1,107 @@
 {
-    "cmake.sourceDirectory": "C:/Users/NH2323/Desktop/A_Nilesh_stake/stakeplot/linux",
-    "flutterTools.displayGetxContextMenu": true,
-    "flutterTools.displayMobxContextMenu": false,
-    "flutterTools.displayRiverpodContextMenu": false,
-    "flutterTools.displayModularContextMenu": false,
-    "postman.settings.dotenv-detection-notification-visibility": false
+  "cmake.sourceDirectory": "C:/Users/NH2323/Desktop/A_Nilesh_stake/stakeplot/linux",
+  "flutterTools.displayGetxContextMenu": true,
+  "flutterTools.displayMobxContextMenu": false,
+  "flutterTools.displayRiverpodContextMenu": false,
+  "flutterTools.displayModularContextMenu": false,
+  "postman.settings.dotenv-detection-notification-visibility": false,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.rulers": [80, 120],
+  "editor.trimAutoWhitespace": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "editor.wordWrap": "on",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+
+  "dart": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.rulers": [80]
+  },
+
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.rulers": [80]
+  },
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "[yaml]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.format.enable": true,
+
+  "prettier.semi": true,
+  "prettier.trailingComma": "es5",
+  "prettier.singleQuote": true,
+  "prettier.arrowParens": "always",
+  "prettier.printWidth": 100,
+  "prettier.bracketSpacing": true,
+  "prettier.endOfLine": "lf",
+
+  "git.autofetch": false,
+  "git.confirmSync": true,
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.dart_tool": true,
+    "**/coverage": true,
+    "**/.next": true
+  },
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.vscode": false,
+    "**/node_modules": true,
+    "**/.dart_tool": true,
+    "**/build": true,
+    "**/*.lock": false
+  },
+
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.dart_tool/**": true,
+    "**/build/**": true
+  }
 }
