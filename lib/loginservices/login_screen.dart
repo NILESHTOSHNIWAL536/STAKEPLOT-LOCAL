@@ -23,7 +23,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/theme_helper.dart';
-import '../backed_connections/apiAutomations/install_apk_api.dart';
 import '../repository/auth_service/login_apis.dart';
 import '../services/secure_storage.dart';
 import 'googl_button.dart';
@@ -209,8 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildEmailField() {
-    return TextField(
+    return AutofillGroup(
+      child: TextField(
       controller: emailController,
+      keyboardType: TextInputType.emailAddress,
+      autofillHints: const [AutofillHints.email],
       onChanged: (c) {
         acceptReset.value = false;
       },
@@ -234,6 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
           horizontal: 20,
           vertical: 0,
         ),
+      ),
       ),
     );
   }

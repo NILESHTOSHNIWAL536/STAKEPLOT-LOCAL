@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
@@ -33,6 +34,7 @@ class _TwoFactorEmailVerificationState
     extends State<TwoFactorEmailVerification> {
   final int _otpLength = 6;
   final TextEditingController otpController = TextEditingController();
+  final FocusNode _otpFocusNode = FocusNode();
   RxString _otpCode = "123456".obs;
   RxBool _isOtpValid = false.obs;
 
@@ -47,13 +49,41 @@ class _TwoFactorEmailVerificationState
     super.initState();
     acceptReset.value = false;
     startOtpTimer2();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _otpFocusNode.requestFocus();
+      _checkClipboardForOtp();
+    });
   }
 
   @override
   void dispose() {
     otpController.dispose();
+    _otpFocusNode.dispose();
     otpTimer2?.cancel();
     super.dispose();
+  }
+
+  void _handleOtpChange(String value) {
+    // Clamp to otpLength in case paste brings in more digits
+    final clamped = value.replaceAll(RegExp(r'[^0-9]'), '');
+    if (clamped.length > _otpLength) {
+      otpController.text = clamped.substring(0, _otpLength);
+      otpController.selection =
+          TextSelection.collapsed(offset: _otpLength);
+      return;
+    }
+    _otpCode.value = clamped;
+    _isOtpValid.value = clamped.length == _otpLength;
+    if (_isOtpValid.value) verifyEmail();
+  }
+
+  Future<void> _checkClipboardForOtp() async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    final text = (data?.text ?? '').trim();
+    if (text.length == _otpLength && RegExp(r'^\d{6}$').hasMatch(text)) {
+      otpController.text = text;
+      _handleOtpChange(text);
+    }
   }
 
   void startOtpTimer2() {
@@ -242,45 +272,66 @@ class _TwoFactorEmailVerificationState
   Widget verifyOpt() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: PinCodeTextField(
-        appContext: context,
-        length: _otpLength,
-        controller: otpController,
-        keyboardType: TextInputType.number,
-        autoFocus: true,
-        animationType: AnimationType.fade,
+      child: AutofillGroup(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // ── Invisible TextField ───────────────────────────────────────
+            // Owns the focus and exposes autofillHints so iOS shows
+            // "From Mail: 123456" in the QuickType bar above the keyboard.
+            // On Android, clipboard auto-paste (see _checkClipboardForOtp)
+            // covers the equivalent use-case since Android doesn't scan email.
+            Positioned.fill(
+              child: TextField(
+                controller: otpController,
+                focusNode: _otpFocusNode,
+                autofillHints: const [AutofillHints.oneTimeCode],
+                keyboardType: TextInputType.number,
+                maxLength: _otpLength,
+                style: const TextStyle(color: Colors.transparent, fontSize: 1),
+                cursorColor: Colors.transparent,
+                cursorWidth: 0,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  counterText: '',
+                  contentPadding: EdgeInsets.zero,
+                ),
+                onChanged: _handleOtpChange,
+              ),
+            ),
 
-        pinTheme: PinTheme(
-          shape: PinCodeFieldShape.underline,
-
-          fieldHeight: MediaQuery.of(context).size.width * 0.13,
-          fieldWidth: MediaQuery.of(context).size.width * 0.13,
-
-          // underline colors
-          inactiveColor: context.appColors.border,
-          selectedColor: context.appColors.primary,
-          activeColor: context.appColors.primary,
-
-          // these must be transparent for underline style
-          inactiveFillColor: Colors.transparent,
-          selectedFillColor: Colors.transparent,
-          activeFillColor: Colors.transparent,
+            // ── Visual pin boxes ──────────────────────────────────────────
+            // IgnorePointer: taps pass through to the TextField above.
+            IgnorePointer(
+              child: PinCodeTextField(
+                appContext: context,
+                length: _otpLength,
+                controller: otpController,
+                autoFocus: false,
+                keyboardType: TextInputType.number,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.underline,
+                  fieldHeight: MediaQuery.of(context).size.width * 0.13,
+                  fieldWidth: MediaQuery.of(context).size.width * 0.13,
+                  inactiveColor: context.appColors.border,
+                  selectedColor: context.appColors.primary,
+                  activeColor: context.appColors.primary,
+                  inactiveFillColor: Colors.transparent,
+                  selectedFillColor: Colors.transparent,
+                  activeFillColor: Colors.transparent,
+                ),
+                enableActiveFill: false,
+                textStyle: TextStyle(
+                  fontSize: 20,
+                  color: context.appColors.onBackground,
+                  fontWeight: FontWeight.w600,
+                ),
+                onChanged: _handleOtpChange,
+              ),
+            ),
+          ],
         ),
-
-        enableActiveFill: false, // 🔴 IMPORTANT for underline
-        textStyle: TextStyle(
-          fontSize: 20,
-          color: context.appColors.onBackground,
-          fontWeight: FontWeight.w600,
-        ),
-
-        onChanged: (value) {
-          _otpCode.value = value;
-          _isOtpValid.value = value.length == _otpLength;
-          if (_isOtpValid.value) {
-            verifyEmail();
-          }
-        },
       ),
     );
   }

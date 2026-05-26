@@ -1,0 +1,38 @@
+# EditorConfig helps maintain consistent coding styles
+# Place this file in your project root directory
+# More info: https://editorconfig.org
+
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# JavaScript/TypeScript/JSON files
+[*.{js,ts,jsx,tsx,json}]
+indent_size = 2
+
+# Flutter/Dart files
+[*.dart]
+indent_size = 2
+
+# YAML files (pubspec.yaml, docker-compose, etc)
+[*.{yaml,yml}]
+indent_size = 2
+
+# Markdown documentation
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+# Python files (if any scripts)
+[*.py]
+indent_size = 4
+
+# Shell scripts
+[*.sh]
+indent_size = 2

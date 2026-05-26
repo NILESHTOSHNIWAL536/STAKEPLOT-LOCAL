@@ -105,6 +105,7 @@ dependencies:
   app_links: ^6.3.2
   appsflyer_sdk: ^6.17.3
   firebase_crashlytics: ^4.3.3
+  firebase_auth: ^5.7.0
   
   
 

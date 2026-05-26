@@ -211,30 +211,15 @@ class AutoPayQuickAddButton extends StatelessWidget {
 }
 
 Widget buildTopSection(BuildContext context) {
-  final height = MediaQuery.of(context).size.height;
-
-  return Stack(
-    children: [
-      Positioned.fill(
-        top: -100,
-        child: AvatarProfileImageZero(
-          url: HomePageIcons.background,
-          width: 1,
-          height: 1.2, // tweak for fit
-        ),
-      ),
-      Container(
-        height: height / 3,
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const TopRightIconsWidget(),
-            NumberPickerScreen(),
-          ],
-        ),
-      ),
-    ],
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+    // width: MediaQuery.of(context).size.width,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const TopRightIconsWidget(),
+        Bankscardsslider(),
+      ],
+    ),
   );
 }
