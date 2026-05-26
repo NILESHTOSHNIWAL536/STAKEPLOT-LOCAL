@@ -7,7 +7,7 @@ import redisClient from '@/config/redis-config';
 import generateToken from '@/utils/helpers/generate-finvu-token';
 import bankLogos from '@/config/bankLogos';
 import logger from '@/utils/common/logger';
-import { publishSocketEvent } from '@/utils/webHook';
+import { clearUserFetchStatus, publishSocketEvent } from '@/utils/webHook';
 
 export type FinvuFetchJobData = {
   sessionId: string;
@@ -95,8 +95,13 @@ const getQueue = (): InstanceType<typeof Queue> => {
       data: {
         message: `${name} fetched successfully! ${totalTransactions} new transactions.`,
         failed: false,
+        handleId,
+        consentId,
+        bankName: name,
       },
     });
+
+    await clearUserFetchStatus({ userId, handleId, consentId });
 
     await Finvu.deleteOne({ sessionId });
   } else {
@@ -110,6 +115,8 @@ const getQueue = (): InstanceType<typeof Queue> => {
       data: {
         message: 'No transactions were found at the moment, try again later',
         failed: true,
+        handleId,
+        consentId,
       },
     });
   }
