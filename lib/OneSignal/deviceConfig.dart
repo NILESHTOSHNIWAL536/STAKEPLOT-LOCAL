@@ -116,6 +116,15 @@ void setUpSocketListenerMainPage(BuildContext context) {
         final handleId = eventData['handleId']?.toString() ?? "";
         final consentId = eventData['consentId']?.toString() ?? "";
         final bankName = eventData['bankName']?.toString() ?? "";
+        final bool failed = eventData['failed'] == true;
+        final String fallbackMessage = failed
+            ? "We couldn't fetch your bank details. Please try again later."
+            : "Your bank details were fetched successfully.";
+        final String message =
+            (eventData['message']?.toString().trim().isNotEmpty ?? false)
+                ? eventData['message'].toString()
+                : fallbackMessage;
+
         if (handleId.isNotEmpty) {
           markBankFetchCompleted(handleId);
           await updateDataApiCall2(UserRoutes.updateFetchStatus, {
@@ -124,17 +133,20 @@ void setUpSocketListenerMainPage(BuildContext context) {
             "fetchConsentId": consentId,
             "fetchBankName": bankName,
           });
+        } else {
+          markBankFetchCompleted("");
         }
-        String message = eventData['message'] ?? "";
-        bool flag = eventData['failed'] ?? false;
 
-        if (flag) {
+        if (failed) {
           snackBarCalledfail(context, message);
         } else {
           snackBarCalled(context, message);
         }
 
-        getBankAccounts();
+        hasGetNewNotifications.value = !hasGetNewNotifications.value;
+        myNotificationBool.value = !myNotificationBool.value;
+        getNotifications(context);
+        await getBankAccounts();
       } else if (type == "coupon") {
         snackbarTimer = Timer(Duration(hours: 48), () {
           if (userController.coupons.value > 0) {

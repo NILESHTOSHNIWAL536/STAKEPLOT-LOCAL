@@ -89,9 +89,16 @@ RxMap<String, String> fetchingBankNamesByHandle = <String, String>{}.obs;
 
 void markBankFetchStarted(String handleId, String bankName) {
   if (handleId.isEmpty) return;
-  fetchingBankNamesByHandle[handleId] = bankName;
+  final incomingName = bankName.trim();
+  final existingName = fetchingBankNamesByHandle[handleId]?.trim() ?? "";
+  final shouldKeepExisting = existingName.isNotEmpty &&
+      (incomingName.isEmpty || incomingName == "New bank account");
+
+  fetchingBankNamesByHandle[handleId] =
+      shouldKeepExisting ? existingName : incomingName;
   fetchingHandleId.value = fetchingBankNamesByHandle.keys.first;
-  fetchingBankName.value = fetchingBankNamesByHandle[fetchingHandleId.value] ?? "";
+  fetchingBankName.value =
+      fetchingBankNamesByHandle[fetchingHandleId.value] ?? "";
   isFected.value = fetchingBankNamesByHandle.isNotEmpty;
   userController.fetchInProgress.value = isFected.value;
 }
@@ -103,8 +110,9 @@ void markBankFetchCompleted(String handleId) {
     fetchingBankNamesByHandle.clear();
   }
 
-  fetchingHandleId.value =
-      fetchingBankNamesByHandle.isEmpty ? "" : fetchingBankNamesByHandle.keys.first;
+  fetchingHandleId.value = fetchingBankNamesByHandle.isEmpty
+      ? ""
+      : fetchingBankNamesByHandle.keys.first;
   fetchingBankName.value = fetchingHandleId.value.isEmpty
       ? ""
       : fetchingBankNamesByHandle[fetchingHandleId.value] ?? "";

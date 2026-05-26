@@ -5,7 +5,6 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -70,23 +69,26 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     });
 
     socket.on(
-        "registerUser",
-        (data) => {
-              if (data['data']['data'] == "error" ||
-                  data['data']['data'] == "account-data-not-found")
-                {
-                  skipOrLets.value = "Skip",
-                }
-              else
-                {
-                  skipOrLets.value = "Let\'s Go",
-                },
-              mess.value = data['message'],
-              flagToFetchData.value = true,
-              fetchedData.value = true,
-              fetchedTrsacntionList.clear(),
-              fetchedTrsacntionList.addAll(data['data']['data']),
-            });
+      "registerUser",
+      (data) {
+        final payload = data['data'] ?? {};
+        final fetchedPayload = payload['data'];
+        final bool failed =
+            fetchedPayload == "error" || fetchedPayload == "account-data-not-found";
+
+        skipOrLets.value = failed ? "Skip" : "Let\'s Go";
+        mess.value = data['message']?.toString() ??
+            (failed
+                ? "We couldn't fetch your bank details. Please try again later."
+                : "Your bank account data has been successfully fetched.");
+        flagToFetchData.value = true;
+        fetchedData.value = true;
+        fetchedTrsacntionList.clear();
+        if (fetchedPayload is List) {
+          fetchedTrsacntionList.addAll(fetchedPayload);
+        }
+      },
+    );
 
     socket.onConnectError((data) {});
   }
@@ -112,6 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   @override
   void dispose() {
+    socket.dispose();
     _pageController.dispose();
     _animationController.dispose();
     _progressController.dispose();
@@ -626,7 +629,6 @@ class _OnboardingPageState extends State<OnboardingPage>
 
   Widget getGestTap(_onboardingScreenState) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     return Stack(alignment: Alignment.center, children: [
       if (!widget.isLastPage) // Only show progress indicator for non-last pages
         SizedBox(
