@@ -99,8 +99,6 @@ export async function loginAndGetHandleId(req: Request, res: Response) {
     const userId = req.user._id;
     const { custId, number } = req.body as LoginRequestBody;
 
-    console.log(req.body);
-
     const token = await generateToken();
     const consentResponse = await apiClient.post(`${baseUrl}/ConsentRequestPlus`, token, {
       header: headers,
