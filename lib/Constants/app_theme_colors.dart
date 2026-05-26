@@ -38,6 +38,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color credit; // Income / credit
   final Color error; // Error / danger
 
+  
   const AppThemeColors({
     required this.background,
     required this.surface,
@@ -61,6 +62,8 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     required this.debit,
     required this.credit,
     required this.error,
+
+  
   });
 
   // ── Light theme tokens ───────────────────────────────────────────────────
@@ -87,7 +90,13 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     debit: Color(0xFFCF7671),
     credit: Color(0xFF2E7D32),
     error: Color(0xFFEF4444),
+
+
+
+    
   );
+
+
 
   // ── Dark theme tokens ────────────────────────────────────────────────────
   // Uses ~12-15% HSL lightness (vs pure black ~7%) — industry standard
@@ -116,6 +125,11 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     debit: Color(0xFFEF8E8A),
     credit: Color(0xFF4CAF50),
     error: Color(0xFFEF5350),
+
+
+    
+    
+
   );
 
   @override
@@ -166,6 +180,9 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       debit: debit ?? this.debit,
       credit: credit ?? this.credit,
       error: error ?? this.error,
+
+
+      
     );
   }
 
@@ -198,6 +215,10 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       debit: Color.lerp(debit, other.debit, t)!,
       credit: Color.lerp(credit, other.credit, t)!,
       error: Color.lerp(error, other.error, t)!,
+
+
+
+     
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 /// Both use no sensitive permissions and are Play Store safe.
 class PhoneHintService {
   static const _phoneChannel = MethodChannel('com.stakeplot.pfa/phone_hint');
+  static const _emailChannel = MethodChannel('com.stakeplot.pfa/email_hint');
   static const _smsChannel = EventChannel('com.stakeplot.pfa/sms_otp');
 
   static bool get _android => Platform.isAndroid;
@@ -19,6 +20,18 @@ class PhoneHintService {
     if (!_android) return null;
     try {
       return await _phoneChannel.invokeMethod<String>('requestPhoneHint');
+    } on PlatformException {
+      return null;
+    }
+  }
+
+  /// Shows the system account picker with all Google accounts on the device.
+  /// Returns the selected email address, or null if dismissed / unavailable.
+  /// No GET_ACCOUNTS permission required — Android system handles the UI.
+  static Future<String?> requestEmailHint() async {
+    if (!_android) return null;
+    try {
+      return await _emailChannel.invokeMethod<String>('requestEmailHint');
     } on PlatformException {
       return null;
     }

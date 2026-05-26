@@ -1,5 +1,6 @@
 package com.stakeplot.pfa
 
+import android.accounts.AccountManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -25,6 +26,7 @@ class MainActivity : FlutterFragmentActivity() {
     private val NAV_CHANNEL = "com.stakeplot.pfa/navigation"
     private val ICON_CHANNEL = "com.stakeplot.pfa/app_icon"
     private val PHONE_HINT_CHANNEL = "com.stakeplot.pfa/phone_hint"
+    private val EMAIL_HINT_CHANNEL = "com.stakeplot.pfa/email_hint"
     private val SMS_OTP_CHANNEL = "com.stakeplot.pfa/sms_otp"
 
     // Phone hint state
@@ -51,6 +53,20 @@ class MainActivity : FlutterFragmentActivity() {
     // SMS OTP state
     private val smsReceiver = SmsBroadcastReceiver()
     private var smsReceiverRegistered = false
+
+    // Email hint state
+    private var emailHintResult: MethodChannel.Result? = null
+    private val emailHintLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val email = result.data?.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
+            emailHintResult?.success(email)
+        } else {
+            emailHintResult?.success(null) // User dismissed picker
+        }
+        emailHintResult = null
+    }
 
     // Widget prefs keys
     private val WIDGET_PREFS = "stakeplot_widget_prefs"
@@ -157,6 +173,19 @@ class MainActivity : FlutterFragmentActivity() {
             }
 
         // -------------------------
+        // Email Hint channel (AccountManager account picker — no GET_ACCOUNTS permission)
+        // -------------------------
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, EMAIL_HINT_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == "requestEmailHint") {
+                    emailHintResult = result
+                    requestEmailHint()
+                } else {
+                    result.notImplemented()
+                }
+            }
+
+        // -------------------------
         // SMS OTP autofill channel (SMS Retriever API — no READ_SMS permission)
         // -------------------------
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_OTP_CHANNEL)
@@ -215,6 +244,25 @@ class MainActivity : FlutterFragmentActivity() {
                 phoneHintResult?.error("UNAVAILABLE", e.message, null)
                 phoneHintResult = null
             }
+    }
+
+    private fun requestEmailHint() {
+        try {
+            val intent = AccountManager.newChooseAccountIntent(
+                null,                  // no pre-selected account
+                null,                  // no restricted list
+                arrayOf("com.google"), // only Google accounts
+                null,                  // no custom description
+                null,                  // no auth token type
+                null,                  // no required features
+                null                   // no extra options
+            )
+            emailHintLauncher.launch(intent)
+        } catch (e: Exception) {
+            Log.e("EmailHint", "Account picker unavailable: ${e.message}")
+            emailHintResult?.error("UNAVAILABLE", e.message, null)
+            emailHintResult = null
+        }
     }
 
     @Suppress("UnspecifiedRegisterReceiverFlag")

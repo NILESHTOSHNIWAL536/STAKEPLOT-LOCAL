@@ -28,13 +28,13 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final colors = context.appColors;
+    final colors = context.appPalette;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
         child: RefreshIndicator(
-          color: colors.primary,
-          backgroundColor: colors.background,
+          color: colors.blackColor,
+          backgroundColor: colors.whiteColor,
           strokeWidth: 2.5,
           displacement: 40, // spinner position from top
           edgeOffset: 0, // start right at the top
@@ -93,7 +93,7 @@ class IndexScreen extends StatelessWidget {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w500,
                                 fontSize: 16,
-                                color: colors.primary)),
+                                color: colors.blackColor)),
                       ),
                     ],
                   ),
