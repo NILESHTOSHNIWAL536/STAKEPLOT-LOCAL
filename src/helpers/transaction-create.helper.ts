@@ -39,7 +39,7 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
   const uniqueTransactions = deduplicateTransactions(transactions);
 
   // 4. Categorize using your helper
-  const categorized = categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap, bankKey);
+  const categorized = await categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap, bankKey);
 
   // 5. Insert
   try {

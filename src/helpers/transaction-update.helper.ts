@@ -9,6 +9,8 @@ import { PredictedCategories } from "@/models"; // adjust import based on your p
 import { handleDailyCounter } from "@/utils/helpers/increment_score";
 import { scoreToAdd, scoreToGetReward } from "../utils/common/enums";
 import { createRecurringPaymentFromTransaction, detectAndStoreAutoPays } from "@/services/auto-service";
+import { parseNarration } from "@/utils/narration/parseNarration";
+import { normalizeMerchantKey, upsertMerchantDirectory } from "@/utils/narration/merchantDirectoryLookup";
 
 interface UpdateInput {
   userId: string | Types.ObjectId;
@@ -61,6 +63,27 @@ export const updateTransactionLogic = async ({
       },
       { upsert: true }
     );
+
+    // Cross-user write-back: persist merchant → category into the shared directory
+    // so all future users who transact with the same counterparty benefit immediately.
+    const parsed = parseNarration(updated.narration);
+    if (parsed) {
+      const key =
+        parsed.counterpartyVPA && !/^\d+$/.test(parsed.counterpartyVPA)
+          ? normalizeMerchantKey(parsed.counterpartyVPA)
+          : parsed.counterpartyName
+          ? normalizeMerchantKey(parsed.counterpartyName)
+          : null;
+      if (key) {
+        await upsertMerchantDirectory(
+          key,
+          updated.category,
+          updated.subcategory ?? '',
+          'user_correction',
+          0.95,
+        );
+      }
+    }
 
     // ML training document
     if (data.predictedCategories && data.selectedCategory) {

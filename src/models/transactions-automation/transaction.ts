@@ -120,6 +120,23 @@ const transactionSchema = new Schema<IBankTransaction>({
     default: '',
   },
 
+  // Structured fields extracted from the raw narration by the parser layer (PR2).
+  // Optional — populated for recognised narration formats only.
+  counterpartyName: {
+    type: String,
+    default: '',
+  },
+
+  counterpartyVPA: {
+    type: String,
+    default: '',
+  },
+
+  counterpartyBankHandle: {
+    type: String,
+    default: '',
+  },
+
   expectedFrequency: {
     type: String,
     default: '',

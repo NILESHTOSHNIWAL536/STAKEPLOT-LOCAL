@@ -44,4 +44,9 @@ export interface IBankTransaction extends Document {
   label?: string,
   remainderId?: string
   currentBalance?: string | number
+
+  // Parsed narration fields (populated by the narration parser layer, PR2+PR6)
+  counterpartyName?: string;
+  counterpartyVPA?: string;
+  counterpartyBankHandle?: string;
 }
