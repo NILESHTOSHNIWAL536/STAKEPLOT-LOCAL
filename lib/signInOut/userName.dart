@@ -105,7 +105,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     updateDeviceData(deviceData);
 
     final response = await postDataApiCall(AuthApiRoutes.signUp, payload);
-
     loading.value = false;
     fg.value = false;
 
@@ -130,6 +129,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       );
     } catch (e) {
       if (!mounted) return;
+      // appLog('Error parsing response: $e');
       snackBarCalledfail(
         context,
         SignupData().errorInvalidOtp,

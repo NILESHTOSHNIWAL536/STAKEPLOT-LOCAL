@@ -1,0 +1,36 @@
+# Auto normalize line endings
+* text=auto
+
+# Always LF for source code
+*.dart text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.sh text eol=lf
+.editorconfig text eol=lf
+.eslintrc text eol=lf
+.eslintrc.* text eol=lf
+.prettierrc text eol=lf
+.prettierignore text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+docker-compose.yaml text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.jar binary
+*.tar binary
+*.gz binary

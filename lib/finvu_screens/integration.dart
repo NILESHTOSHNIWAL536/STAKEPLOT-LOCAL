@@ -13,16 +13,17 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import '../Utils/finspaceStrings.dart';
 import '../controllers/fipmetrics-controller.dart';
 import '../loginservices/login.dart';
+import '../repository/bankinfo.dart';
 import '../routes/route_finvu.dart';
+import '../routes/route_user_login.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
-
 
 void initFinvuManager(BuildContext context) async {
   String url = FinspaceStrings().liveIntegration
       ? Credentials.Live_finvu_api
       : Credentials.Dev_finvu_api;
-      
+
   finvuManager.initialize(
     FinvuConfig(
       finvuEndpoint: url,
@@ -46,7 +47,7 @@ Future<String> login(context) async {
       handleId.value,
     );
     otpReference = login.reference;
-  } catch (e) { 
+  } catch (e) {
     snackBarCalledfail(context, e.toString());
   }
   return otpReference;
@@ -76,10 +77,26 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
   try {
     final String apiUrl = FinvuRoutes.fetchData;
     final String custId = "${number.value}@finvu";
+    final bool hasLinkedAccounts = bankAccountLinkedList.isNotEmpty;
+    final String fetchDisplayName = _selectedFetchDisplayName();
 
-    //  flagToFetchData.value=false;
-    clearStackShared(context);
-    Navigator.pushNamed(context, "/OnboardingScreen");
+    flagToFetchData.value = false;
+    if (handleId.value.isNotEmpty) {
+      markBankFetchStarted(handleId.value, fetchDisplayName);
+      await updateDataApiCall2(UserRoutes.updateFetchStatus, {
+        "fetchInProgress": true,
+        "fetchHandleId": handleId.value,
+        "fetchConsentId": "",
+        "fetchBankName": fetchDisplayName,
+      });
+    }
+
+    if (hasLinkedAccounts) {
+      clearStackHome(context);
+    } else {
+      clearStackShared(context);
+      Navigator.pushNamed(context, "/OnboardingScreen");
+    }
 
     final response = await postDataApiCall(apiUrl, {
       "token": "",
@@ -92,8 +109,90 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       logoutAndDisconnect();
     } else {
       sessionId.value = true;
+      markBankFetchCompleted(handleId.value);
+      await updateDataApiCall2(UserRoutes.updateFetchStatus, {
+        "fetchInProgress": false,
+        "fetchHandleId": handleId.value,
+        "fetchConsentId": "",
+        "fetchBankName": fetchDisplayName,
+      });
     }
-  } catch (e) {}
+  } catch (e) {
+    final String fetchDisplayName = _selectedFetchDisplayName();
+    markBankFetchCompleted(handleId.value);
+    await updateDataApiCall2(UserRoutes.updateFetchStatus, {
+      "fetchInProgress": false,
+      "fetchHandleId": handleId.value,
+      "fetchConsentId": "",
+      "fetchBankName": fetchDisplayName,
+    });
+  }
+}
+
+String _selectedFetchDisplayName() {
+  final bankName = _selectedFetchBankName();
+  final accountName = _selectedFetchAccountName();
+
+  if (bankName.isNotEmpty && accountName.isNotEmpty) {
+    return "$bankName $accountName";
+  }
+  if (bankName.isNotEmpty) return bankName;
+  if (accountName.isNotEmpty) return accountName;
+  return "Bank account";
+}
+
+String _selectedFetchBankName() {
+  final selectedFipIds = <String>{
+    ...seletedAccountIds,
+    ...bankImgMap.keys.map((key) => key.toString()),
+    if (fipIdSeleted.value.trim().isNotEmpty) fipIdSeleted.value.trim(),
+  };
+
+  for (final fipId in selectedFipIds) {
+    for (final bank in listOfBankAccount) {
+      if (bank.fipId != fipId) continue;
+      final name = bank.productName?.toString().trim() ?? "";
+      if (name.isNotEmpty) return name;
+    }
+  }
+
+  if (listOfBankAccount.length == 1) {
+    return listOfBankAccount.first.productName?.toString().trim() ?? "";
+  }
+
+  return "";
+}
+
+String _selectedFetchAccountName() {
+  final selectedFipIds = <String>{
+    ...seletedAccountIds,
+    if (fipIdSeleted.value.trim().isNotEmpty) fipIdSeleted.value.trim(),
+  };
+
+  for (final fipId in selectedFipIds) {
+    final accounts = listOfAccountAdded[fipId];
+    if (accounts == null || accounts.isEmpty) continue;
+
+    if (accounts.length > 1) return "(${accounts.length} accounts)";
+
+    final account = accounts.first;
+    final accountType = account.accountType.toString().trim();
+    final masked = account.maskedAccountNumber.toString().trim();
+    final parts = <String>[];
+
+    if (accountType.isNotEmpty) parts.add("${_titleCase(accountType)} Account");
+    if (masked.isNotEmpty) parts.add(masked);
+
+    return parts.isEmpty ? "" : "(${parts.join(" ")})";
+  }
+
+  return "";
+}
+
+String _titleCase(String value) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return "";
+  return trimmed[0].toUpperCase() + trimmed.substring(1).toLowerCase();
 }
 
 //don't delete this function, it is used to store the map of images in the backend

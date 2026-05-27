@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/pending_users.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/device_model.dart';
 import '../repository/auth_service/login_apis.dart';
+import '../routes/route_user_login.dart';
 
 // Future<void> initializeOneSignal(BuildContext context) async {
 //   final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -309,7 +311,7 @@ void oneSignalAddClickListener(context) {
       _handleNotificationClick(event, Get.context ?? context, false);
     });
 
-    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+    OneSignal.Notifications.addForegroundWillDisplayListener((event) async {
       String s = event.notification.body.toString().toLowerCase().trim();
       if (s == "you have been logged out from stakeplot!") {
         return;
@@ -317,7 +319,21 @@ void oneSignalAddClickListener(context) {
       if (s.contains("problem") ||
           s.contains("try again later") ||
           s.contains("successfully fetched")) {
-        isFected.value = false;
+        final handleId =
+            event.notification.additionalData?['handleId']?.toString() ?? "";
+        final consentId =
+            event.notification.additionalData?['consentId']?.toString() ?? "";
+        final bankName =
+            event.notification.additionalData?['bankName']?.toString() ?? "";
+        if (handleId.isNotEmpty) {
+          markBankFetchCompleted(handleId);
+          await updateDataApiCall2(UserRoutes.updateFetchStatus, {
+            "fetchInProgress": false,
+            "fetchHandleId": handleId,
+            "fetchConsentId": consentId,
+            "fetchBankName": bankName,
+          });
+        }
         getBankAccounts();
       }
     });

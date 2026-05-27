@@ -58,7 +58,7 @@ class UserController extends GetxController {
   Future<void> fetchUserInfo() async {
     try {
       isLoading.value = true;
-      var response=await getDataApiCall(UserRoutes.getInfo);
+      var response = await getDataApiCall(UserRoutes.getInfo);
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);
 
@@ -84,6 +84,30 @@ class UserController extends GetxController {
         firstTimeLogin.value = obj['firstTimeLogin'] ?? true;
         isBankAccountLinked.value = obj['isBankAccountLinked'] ?? false;
         fetchInProgress.value = obj['fetchInProgress'] ?? false;
+        fetchingBankNamesByHandle.clear();
+        final fetchStatuses = obj['fetchStatuses'];
+        if (fetchInProgress.value && fetchStatuses is List) {
+          for (final status in fetchStatuses) {
+            if (status is! Map) continue;
+            final handleId = status['fetchHandleId']?.toString() ?? '';
+            if (handleId.isEmpty) continue;
+            fetchingBankNamesByHandle[handleId] =
+                status['fetchBankName']?.toString() ?? '';
+          }
+        }
+        if (fetchingBankNamesByHandle.isEmpty &&
+            fetchInProgress.value &&
+            (obj['fetchHandleId'] ?? '').toString().isNotEmpty) {
+          fetchingBankNamesByHandle[(obj['fetchHandleId'] ?? '').toString()] =
+              (obj['fetchBankName'] ?? '').toString();
+        }
+        isFected.value = fetchingBankNamesByHandle.isNotEmpty;
+        fetchingHandleId.value = fetchingBankNamesByHandle.isEmpty
+            ? ''
+            : fetchingBankNamesByHandle.keys.first;
+        fetchingBankName.value = fetchingHandleId.value.isEmpty
+            ? ''
+            : fetchingBankNamesByHandle[fetchingHandleId.value] ?? '';
         cupertinoPin.value = obj['cupertino_pin'].toString();
         cupertinoAttemptCount.value = obj['cupertinoAttemptCount'] != null
             ? obj['cupertinoAttemptCount'] > 5
@@ -98,7 +122,8 @@ class UserController extends GetxController {
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
         likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));
         savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
-        friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+        friendsList.assignAll(
+            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
 
         addFriendtoList();
         getMaskendUsers(true);
@@ -108,7 +133,6 @@ class UserController extends GetxController {
         unawaited(UserLocalStorage.cacheUserDataLocally());
       }
     } catch (e) {
-      
     } finally {
       isLoading.value = false;
     }

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
@@ -10,8 +8,7 @@ import 'package:test/test.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   const String email = "nileshtoshniwal743@gmail.com";
-  String accessToken =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Nzg5MTk5YmFmZmIyZDJhZjhiZTE5MyIsImlhdCI6MTc2MTU0Mzk3MywiZXhwIjoxNzY2NzI3OTczfQ.4kSbl1qmVGLm3Ltwz0E1CUylSbpzlfX0rbSmBb_XoHA";
+  String accessToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Nzg5MTk5YmFmZmIyZDJhZjhiZTE5MyIsImlhdCI6MTc2MTU0Mzk3MywiZXhwIjoxNzY2NzI3OTczfQ.4kSbl1qmVGLm3Ltwz0E1CUylSbpzlfX0rbSmBb_XoHA";
 
   appLog('================ Credit Card Mail Tests Start ================');
   appLog('Access Token: $accessToken\n');

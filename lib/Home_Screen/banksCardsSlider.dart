@@ -943,6 +943,7 @@ class _BankscardssliderState extends State<Bankscardsslider> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        _newAccountFetchBanner(),
         SizedBox(
           height: 240,
           child: Stack(
@@ -1058,6 +1059,7 @@ class _BankscardssliderState extends State<Bankscardsslider> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        _newAccountFetchBanner(),
         SizedBox(
             // color:  AppColors.redColor,
             height: MediaQuery.sizeOf(context).height / 4,
@@ -1166,7 +1168,7 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                   SizedBox(height: AppSizes.h40), // space for top-right logos
 
                   /// NEXT FETCH
-                  // Nextfetch(),
+                  Nextfetch(bankAccount: data),
 
                   // SizedBox(height: AppSizes.h10),
 
@@ -1321,6 +1323,63 @@ class _BankscardssliderState extends State<Bankscardsslider> {
         ),
       ),
     );
+  }
+
+  Widget _newAccountFetchBanner() {
+    return Obx(() {
+      if (fetchingBankNamesByHandle.isEmpty) return const SizedBox.shrink();
+
+      final linkedHandles =
+          bankAccountLinkedList.map((item) => item.consendHandleId).toSet();
+      final pendingNewHandles = fetchingBankNamesByHandle.keys
+          .where((handleId) => !linkedHandles.contains(handleId))
+          .toList();
+
+      if (pendingNewHandles.isEmpty) return const SizedBox.shrink();
+
+      final handleId = pendingNewHandles.first;
+      final bankName =
+          fetchingBankNamesByHandle[handleId]?.trim().isNotEmpty == true
+              ? fetchingBankNamesByHandle[handleId]!
+              : "Bank account";
+
+      return Container(
+        width: MediaQuery.of(context).size.width / 1.12,
+        margin: const EdgeInsets.only(bottom: AppSizes.m8),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12,
+          vertical: AppSizes.p8,
+        ),
+        decoration: BoxDecoration(
+          color: context.appColors.iconBackground,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: context.appColors.border),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              height: 26,
+              width: 26,
+              child: Lottie.asset("assets/splashScreen/fetchLoad.json"),
+            ),
+            const SizedBox(width: AppSizes.w8),
+            Expanded(
+              child: Text(
+                "$bankName connection is in progress",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 12,
+                  lWeight: FontWeight.w600,
+                  color: context.appColors.onSurface,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget locker(context) {
