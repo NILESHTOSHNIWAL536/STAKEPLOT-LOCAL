@@ -1,6 +1,6 @@
 const categories = {
   Food: {
-    FoodDelivery: ['Swiggy', 'Zomato'],
+    FoodDelivery: ['Swiggy', 'Zomato', 'swiggyupi', 'payzomato'],
 
     Restaurants: [
       'PISTA HOUSE',
@@ -13,9 +13,14 @@ const categories = {
       'hotel',
       'restau',
       'rasoi',
+      'TINGLE BUDS',
+      'AMAY FOOD COURT',
+      'ARABIAN GRILL',
+      'MAVAS KITCHEN',
+      'ARABIAN',
     ],
 
-    FastFood: ['Bistro', 'Mcdonalds', 'kfc', 'subway', 'dominos', 'Burger King', 'Taco Bell'],
+    FastFood: ['Bistro', 'Mcdonalds', 'kfc', 'subway', 'dominos', 'Burger King', 'Taco Bell', 'kfcrestaurants', 'burgerking'],
 
     CafesAndBeverages: [
       'Cafe',
@@ -26,6 +31,8 @@ const categories = {
       'Tea Stall',
       'Coffee Shop',
       'juice',
+      'SWISS DELIGHTS',
+      'FROZEN BOTTLE',
     ],
 
     FoodItems: [
@@ -56,7 +63,7 @@ const categories = {
   },
 
   Shopping: {
-    Ecommerce: ['Amazon', 'Flipkart'],
+    Ecommerce: ['Amazon', 'Flipkart', 'avenuesupermart'],
 
     FashionAndLifestyle: [
       'Fashion',
@@ -73,9 +80,11 @@ const categories = {
       'Footwear',
       'Jewellery',
       'Textiles',
+      'trentzudio',
+      'zudioaunitoftrent',
     ],
 
-    Electronics: ['Electronics', 'Mobiles'],
+    Electronics: ['Electronics', 'Mobiles', 'THIRD EYE CCTV', 'CCTV'],
 
     RetailStores: [
       'Shoppers',
@@ -95,6 +104,9 @@ const categories = {
       'shopping',
       'kart',
       'more',
+      'VISHAL MEGA',
+      'MR DIY',
+      'ValueZone',
     ],
 
     HomeAndFurniture: ['Furniture', 'Hardware'],
@@ -107,11 +119,22 @@ const categories = {
   },
 
   Groceries: {
-    Supermarkets: ["SPENCER'S", 'Ratnadeep', 'dmart', 'innovdmartts', 'METRO CASH'],
+    Supermarkets: ["SPENCER'S", 'Ratnadeep', 'dmart', 'innovdmartts', 'METRO CASH', 'BAZAR'],
 
-    QuickCommerce: ['ZEPTO'],
+    QuickCommerce: [
+      'ZEPTO',
+      'ZEPTOONLINEybl',
+      'ZeptoMarketplace',
+      'cfzepto',
+      'zeptopay',
+      'blinkitrzp',
+      'paytm-blinkit',
+      'blinkit',
+      'BIGBASKET',
+      'INSTAMART',
+    ],
 
-    GroceryStores: ['SUPRDAILY', 'GROCERY', 'kirana', 'General Store'],
+    GroceryStores: ['SUPRDAILY', 'GROCERY', 'kirana', 'General Store', 'KANAKENTERPRISE'],
 
     FruitsAndVegetables: ['VEGETABLE', 'FRUIT', 'Veggie'],
 
@@ -119,7 +142,7 @@ const categories = {
   },
 
   Travel: {
-    Fuel: ['Fuel', 'Petrol', 'CNG', 'Diesel', 'PETROLEUM', 'Filling'],
+    Fuel: ['Fuel', 'Petrol', 'CNG', 'Diesel', 'PETROLEUM', 'Filling', 'HP FUELS', 'FILL', 'Pump'],
 
     CabServices: ['Ola', 'Uber', 'Rapido', 'Blusmart', 'OlaCabs'],
 
@@ -133,21 +156,25 @@ const categories = {
       'railway',
       'HYDMETROINAPP',
       'REDBUS',
+      'CHALOTSRTCDQRybl',
+      'IRCTCPGONLINEaxl',
+      'IRCTCPGONLINEybl',
+      'indianrailwaysutsb',
     ],
 
-    TravelServices: ['Travels', 'Transport', 'Mobility', 'TRAVEL', 'airport'],
+    TravelServices: ['Travels', 'Transport', 'Mobility', 'TRAVEL', 'airport', 'TRANSPORT'],
 
     ParkingAndTolls: ['Parking', 'Toll'],
 
-    VehicleMaintenance: ['puncture'],
+    VehicleMaintenance: ['puncture', 'TVS'],
 
     TrafficAndFines: ['Traffic police'],
   },
 
   Health: {
-    HospitalsAndClinics: ['Hospital', 'Clinic', 'Doctor', 'Treatment', 'Surgery'],
+    HospitalsAndClinics: ['Hospital', 'Clinic', 'Doctor', 'Treatment', 'Surgery', 'HOSPIT'],
 
-    Pharmacy: ['Medical', 'Pharmacy', 'Medplus', 'Medicine'],
+    Pharmacy: ['Medical', 'Pharmacy', 'Medplus', 'Medicine', 'PHARMA', 'MEDICALS', 'Pharma', 'MEDIMORE', 'MEDI'],
 
     Diagnostics: ['Diagnostic', 'Lab', 'Test', 'Scan'],
 
@@ -157,7 +184,7 @@ const categories = {
   Bills: {
     Utilities: ['Electricity', 'Water', 'Gas'],
 
-    Telecom: ['Mobile Recharge', 'AIRTEL', 'JIO', 'IDEA', 'VI', 'BSNL'],
+    Telecom: ['Mobile Recharge', 'AIRTEL', 'JIO', 'IDEA', 'VI', 'BSNL', 'AIRTELPAYMENTS'],
 
     Internet: ['Internet', 'ACT', 'HATHWAY'],
 
@@ -169,7 +196,21 @@ const categories = {
 
     FuelBills: ['bpcl'],
 
-    MiscBills: ['Solutions', 'TATA', 'charges', 'chrg', 'playstore'],
+    MiscBills: [
+      'Solutions',
+      'TATA',
+      'charges',
+      'chrg',
+      'playstore',
+      'SMSChrgs',
+      'ANNUALFEE',
+      'DCARDFE',
+      'Debit Card AMC',
+      'Debit Interest Capitalized',
+      'BBPSBPaxl',
+      'BBPSBPybl',
+      'Euronet',
+    ],
   },
 
   Subscriptions: {
@@ -186,11 +227,20 @@ const categories = {
       'EPIC ON',
       'MUX PLAY',
       'disney',
+      'JIOINAPPDIRECTybl',
     ],
 
     Music: ['Spotify', 'GAANA'],
 
-    AppSubscriptions: ['appleServices', 'Googleplay'],
+    AppSubscriptions: [
+      'appleServices',
+      'Googleplay',
+      'OpenAI',
+      'openaillc',
+      'Google India Digital',
+      'Mandate',
+      'MandateExecute',
+    ],
 
     DeliverySubscriptions: ['Swiggy', 'Zomato', 'BLINKIT+'],
   },
@@ -231,13 +281,27 @@ const categories = {
       'solutions',
       'Service',
       'Events',
+      'AGENCIES',
+      'CHEMICALS',
+      'INDUSTRIES',
     ],
   },
 
   Emi: {
-    LoanProviders: ['Eazypay', 'slice', 'mpocket', 'mpokket'],
+    LoanProviders: [
+      'Eazypay',
+      'slice',
+      'mpocket',
+      'mpokket',
+      'BDECS-IDFC FIRST BANK',
+      'SMFG India Cre',
+      'MONEYVIEW',
+      'BRANCHONLINEaxl',
+      'branchapp',
+      'neokred',
+    ],
 
-    LoanTypes: ['postpaid', 'loan', 'emi', 'finance'],
+    LoanTypes: ['postpaid', 'loan', 'emi', 'finance', 'borrowrepayment', 'amazonpaylaterrepay'],
   },
 
   Investments: {
@@ -280,7 +344,7 @@ const categories = {
   },
 
   Support: {
-    Donations: ['Charity', 'Donation', 'Help charity'],
+    Donations: ['Charity', 'Donation', 'Help charity', 'THE GIVING HAN'],
 
     NGOsAndTrusts: ['Trust', 'ngo'],
   },
@@ -324,19 +388,19 @@ const categories = {
   Education: {
     SchoolsAndColleges: ['School', 'college', 'University', 'Institute', 'institute'],
 
-    CoachingAndTraining: ['Tuition', 'Coaching', 'Academy', 'Workshop', 'Seminar'],
+    CoachingAndTraining: ['Tuition', 'Coaching', 'Academy', 'Workshop', 'Seminar', 'NISM'],
 
     FeesAndAdmissions: ['Fees', 'Fee', 'Admission', 'Examination'],
 
-    BooksAndStationery: ['Books', 'Stationary', 'Uniform'],
+    BooksAndStationery: ['Books', 'Stationary', 'Uniform', 'STUDENT XEROX'],
 
     Accommodation: ['Hostel'],
   },
 
   Commerce: {
-    Ecommerce: ['Amazon', 'Flipkart', 'Myntra', 'Nykaa'],
+    Ecommerce: ['Amazon', 'Flipkart', 'Myntra', 'Nykaa', 'amznlpa'],
 
-    LogisticsAndDelivery: ['Bluedart', 'ekart', 'Delhivery', 'e cart'],
+    LogisticsAndDelivery: ['Bluedart', 'ekart', 'Delhivery', 'e cart', 'EKARTybl', 'paytm-delhivery', 'Shadowfax'],
 
     OnlinePharmacy: ['netmeds', '1mg'],
 
@@ -356,15 +420,15 @@ const categories = {
   Entertainment: {
     MoviesAndCinema: ['Bookmyshow', 'pvr', 'cinepolis', 'imax'],
 
-    GamingAndActivities: ['gaming', 'gokarting', 'Escape', 'Adventures'],
+    GamingAndActivities: ['gaming', 'gokarting', 'Escape', 'Adventures', 'PICKLE BALL', 'TOP SPIN', 'PLAYO'],
 
     GeneralEntertainment: ['district', 'Entertainment'],
   },
 
   PersonalTransfer: {
-    CashWithdrawal: ['CASH WDL', 'ATM'],
+    CashWithdrawal: ['CASH WDL', 'ATM', 'Cash Withdrawal'],
 
-    POSAndTransfers: ['POS', 'To:'],
+    POSAndTransfers: ['POS', 'To:', 'CHQ PAID', 'UPI Lite', 'IMPS Transfer', 'UPI Payment'],
   },
 
   PersonalTransferReceived: {
@@ -376,7 +440,15 @@ const categories = {
 
     ATMCharges: ['ATM FEE'],
 
-    ServiceCharges: ['SERVICE CHARGE', 'ANNUAL FEE', 'SMS ALERT CHARGE'],
+    ServiceCharges: [
+      'SERVICE CHARGE',
+      'ANNUAL FEE',
+      'SMS ALERT CHARGE',
+      'SMSChrgs',
+      'Debit Card AMC',
+      'Debit Interest Capitalized',
+      'DCARDFE',
+    ],
 
     BankingCharges: ['CHEQUE BOOK CHARGE'],
   },
