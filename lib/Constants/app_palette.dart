@@ -1,0 +1,92 @@
+// import 'package:flutter/material.dart';
+
+// class AppPalette{
+  
+//   static const Color backgroundColor = Color(0xFFF2F9FC);
+//   static const Color whiteColor = Color(0xFFFFFFFF);
+//   static const Color secondaryText = Color(0xFFEDF6F7);
+//   static const Color bottomtext = Color(0xFFB8D7D6);
+//   static const Color cardBackground= Color(0xFFA9CDD2);
+//   static const Color blackColor= Color(0xFF1B2135);
+
+// }
+
+
+import 'dart:ui';
+import 'package:flutter/material.dart';
+
+@immutable
+class AppPalette extends ThemeExtension<AppPalette> {
+  final Color backgroundColor;
+  final Color whiteColor;
+  final Color secondaryText;
+  final Color bottomText;
+  final Color cardBackground;
+  final Color blackColor;
+
+  const AppPalette({
+    required this.backgroundColor,
+    required this.whiteColor,
+    required this.secondaryText,
+    required this.bottomText,
+    required this.cardBackground,
+    required this.blackColor,
+  });
+
+  // ── Light Theme ─────────────────────────────
+  static const light = AppPalette(
+    backgroundColor: Color(0xFFF2F9FC),
+    whiteColor: Color(0xFFFFFFFF),
+    secondaryText: Color(0xFFEDF6F7),
+    bottomText: Color(0xFFB8D7D6),
+    cardBackground: Color(0xFFA9CDD2),
+    blackColor: Color(0xFF1B2135),
+  );
+
+  // ── Dark Theme ──────────────────────────────
+  static const dark = AppPalette(
+    backgroundColor: Color(0xFF1B2135),
+    whiteColor: Color(0xFFFFFFFF),
+    secondaryText: Color(0xFFEDF6F7),
+    bottomText: Color(0xFFB8D7D6),
+    cardBackground: Color(0xFF2A344D),
+    blackColor: Color(0xFFF2F9FC),
+  );
+
+  @override
+  AppPalette copyWith({
+    Color? backgroundColor,
+    Color? whiteColor,
+    Color? secondaryText,
+    Color? bottomText,
+    Color? cardBackground,
+    Color? blackColor,
+  }) {
+    return AppPalette(
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      whiteColor: whiteColor ?? this.whiteColor,
+      secondaryText: secondaryText ?? this.secondaryText,
+      bottomText: bottomText ?? this.bottomText,
+      cardBackground: cardBackground ?? this.cardBackground,
+      blackColor: blackColor ?? this.blackColor,
+    );
+  }
+
+  @override
+  ThemeExtension<AppPalette> lerp(
+    covariant ThemeExtension<AppPalette>? other,
+    double t,
+  ) {
+    if (other is! AppPalette) return this;
+
+    return AppPalette(
+      backgroundColor:
+          Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      whiteColor: Color.lerp(whiteColor, other.whiteColor, t)!,
+      secondaryText: Color.lerp(secondaryText, other.secondaryText, t)!,
+      bottomText: Color.lerp(bottomText, other.bottomText, t)!,
+      cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
+      blackColor: Color.lerp(blackColor, other.blackColor, t)!,
+    );
+  }
+}

@@ -34,6 +34,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool flag = true;
   final ScrollController _scrollControllerPage = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +78,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // ignore: deprecated_member_use
+    final colors = context.appPalette;
     return WillPopScope(
         onWillPop: () async {
           exit(0);
@@ -89,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                     data: 0,
                     onHomeDoubleTap: _scrollToTop,
                   ),
-                  backgroundColor: context.appColors.background,
+                  backgroundColor: colors.backgroundColor,
                   body: Obx(() {
                     final hasResolvedBankState =
                         bankInfoController.hasLoadedLocalData.value ||

@@ -335,9 +335,9 @@ class _PhoneField extends StatelessWidget {
                 child: TextFormField(
                   controller: controller,
                   maxLength: 10,
-                  enableInteractiveSelection: false,
+                  enableInteractiveSelection: true,
                   autocorrect: false,
-                  enableSuggestions: false,
+                  enableSuggestions: true,
                   keyboardType: TextInputType.phone,
                   autofillHints: const [AutofillHints.telephoneNumberNational],
                   inputFormatters: [

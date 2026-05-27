@@ -35,8 +35,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController =
-      TextEditingController(text: "testusernilesh@gmail.com");
+  final TextEditingController emailController = TextEditingController();
   final AuthService authService = AuthService();
   RxString isLoggedIn = "".obs;
 
@@ -107,9 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        kIsWeb
-                              ? Text(""):   containerIconSiginWith(FontAwesomeIcons.google,
-                              context.appColors.surface, context),
+                          kIsWeb
+                              ? Text("")
+                              : containerIconSiginWith(FontAwesomeIcons.google,
+                                  context.appColors.surface, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),
                           kIsWeb
@@ -208,35 +208,52 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildEmailField() {
-    return AutofillGroup(
+    return
+        //  AutofillGroup(
+        //   child: TextField(
+        //     controller: emailController,
+        //     keyboardType: TextInputType.emailAddress,
+        //     autofillHints: const [AutofillHints.email],
+        //     onChanged: (c) {
+        //       acceptReset.value = false;
+        //     },
+        //     cursorColor: context.appColors.primary,
+        //     style: TextStyle(color: context.appColors.onBackground),
+        //     decoration: InputDecoration(
+        //       enabledBorder: UnderlineInputBorder(
+        //         borderSide: BorderSide(color: context.appColors.border),
+        //       ),
+        //       focusedBorder: UnderlineInputBorder(
+        //         borderSide: BorderSide(color: context.appColors.primary),
+        //       ),
+        //       hintText: 'Enter your email',
+        //       hintStyle: FontManager().getTextStyle(context,
+        //           lWeight: FontWeight.w400,
+        //           fontSize: 14,
+        //           color: context.appColors.hintText),
+        //       contentPadding: const EdgeInsets.symmetric(
+        //         horizontal: 20,
+        //         vertical: 0,
+        //       ),
+        //     ),
+        //   ),
+        AutofillGroup(
       child: TextField(
-      controller: emailController,
-      keyboardType: TextInputType.emailAddress,
-      autofillHints: const [AutofillHints.email],
-      onChanged: (c) {
-        acceptReset.value = false;
-      },
-      cursorColor: context.appColors.primary,
-      style: TextStyle(color: context.appColors.onBackground),
-      decoration: InputDecoration(
-        // fillColor: Color.fromRGBO(255, 255, 255, 0.23),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: context.appColors.border),
+        controller: emailController,
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.done,
+        autofillHints: const [
+          AutofillHints.email,
+          AutofillHints.username,
+        ],
+        autocorrect: false,
+        enableSuggestions: true,
+        onChanged: (c) {
+          acceptReset.value = false;
+        },
+        decoration: InputDecoration(
+          hintText: 'Enter your email',
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: context.appColors.primary),
-        ),
-        hintText: 'Enter your email',
-        hintStyle: FontManager().getTextStyle(context,
-            lWeight: FontWeight.w400,
-            fontSize: 14,
-            color: context.appColors.hintText),
-
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 0,
-        ),
-      ),
       ),
     );
   }
@@ -296,11 +313,8 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Or login with',
-            style: FontManager()
-                .getTextStyle(
-                    context,
-                    color: context.appColors.secondaryText,
-                    fontSize: 14),
+            style: FontManager().getTextStyle(context,
+                color: context.appColors.secondaryText, fontSize: 14),
           ),
         ),
       ],
