@@ -964,7 +964,7 @@ class _BankscardssliderState extends State<Bankscardsslider> {
               /// 2ND CARD
               if (bankAccountLinkedList.length > 1)
                 Positioned(
-                  right: 18,
+                  right: 0,
                   top: 8,
                   bottom: 8,
                   child: miniStackCard(

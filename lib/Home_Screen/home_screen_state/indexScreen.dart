@@ -212,7 +212,7 @@ class AutoPayQuickAddButton extends StatelessWidget {
 
 Widget buildTopSection(BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
     // width: MediaQuery.of(context).size.width,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

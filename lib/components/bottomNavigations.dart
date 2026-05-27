@@ -96,26 +96,41 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   @override
   Widget build(BuildContext context) {
 
-    return
-    BottomAppBar(
-  color: context.appColors.bottomBarBackground,
-  elevation: 0,
-  child: SafeArea(
-    top: false,
-    child: SizedBox(
-      height: 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-          getContainer(NavBarIcons.home, 0),
-          getContainer(NavBarIcons.screen2, 1),
-          getContainer(NavBarIcons.community, 2),
-          getContainer(svgIconPath.bottom4, 3),
-        ],
+    return BottomAppBar(
+      color: Colors.transparent,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+              color: context.appColors.bottomBarBackground,
+              borderRadius: BorderRadius.circular(32),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.12),
+                  blurRadius: 24,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                getContainer(NavBarIcons.home, 0),
+                getContainer(NavBarIcons.screen2, 1),
+                getContainer(NavBarIcons.community, 2),
+                getContainer(svgIconPath.bottom4, 3),
+              ],
+            ),
+          ),
+        ),
       ),
-    ),
-  ),
-);
+    );
 
   }
 //   Widget build(BuildContext context) {
