@@ -1,6 +1,5 @@
 package com.stakeplot.pfa
 
-import android.accounts.AccountManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -27,7 +26,6 @@ class MainActivity : FlutterFragmentActivity() {
     private val NAV_CHANNEL = "com.stakeplot.pfa/navigation"
     private val ICON_CHANNEL = "com.stakeplot.pfa/app_icon"
     private val PHONE_HINT_CHANNEL = "com.stakeplot.pfa/phone_hint"
-    private val EMAIL_HINT_CHANNEL = "com.stakeplot.pfa/email_hint"
     private val SMS_OTP_CHANNEL = "com.stakeplot.pfa/sms_otp"
 
     // Phone hint state
@@ -54,20 +52,6 @@ class MainActivity : FlutterFragmentActivity() {
     // SMS OTP state
     private val smsReceiver = SmsBroadcastReceiver()
     private var smsReceiverRegistered = false
-
-    // Email hint state
-    private var emailHintResult: MethodChannel.Result? = null
-    private val emailHintLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val email = result.data?.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
-            emailHintResult?.success(email)
-        } else {
-            emailHintResult?.success(null) // User dismissed picker
-        }
-        emailHintResult = null
-    }
 
     // Widget prefs keys
     private val WIDGET_PREFS = "stakeplot_widget_prefs"
@@ -168,19 +152,6 @@ class MainActivity : FlutterFragmentActivity() {
                 if (call.method == "requestPhoneHint") {
                     phoneHintResult = result
                     requestPhoneNumberHint()
-                } else {
-                    result.notImplemented()
-                }
-            }
-
-        // -------------------------
-        // Email Hint channel (AccountManager account picker — no GET_ACCOUNTS permission)
-        // -------------------------
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, EMAIL_HINT_CHANNEL)
-            .setMethodCallHandler { call, result ->
-                if (call.method == "requestEmailHint") {
-                    emailHintResult = result
-                    requestEmailHint()
                 } else {
                     result.notImplemented()
                 }
