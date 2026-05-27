@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
+import 'package:flutter_application_code_stakeplot/model/salary_income_model.dart';
 import 'package:flutter_application_code_stakeplot/model/user_activity_model.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -220,6 +221,8 @@ DateTime startDateCustom = DateTime.now().subtract(const Duration(days: 7));
 DateTime endDateCustom = DateTime.now();
 List<CardData> allAutoPayData = [];
 RxBool isAutoPayFected = false.obs;
+List<SalaryIncomeSource> allSalaryIncomeData = [];
+RxBool isSalaryIncomeFetched = false.obs;
 
 RxBool isFinoraVisible = false.obs;
 UserActivity? userActivity;
