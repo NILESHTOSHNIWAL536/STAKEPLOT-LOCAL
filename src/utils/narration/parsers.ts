@@ -197,6 +197,20 @@ export const NARRATION_PARSERS: NarrationParserDef[] = [
 
   // ── RTGS / NACH ───────────────────────────────────────────────────────────
   // e.g. "RTGS-SBIN0001234-COUNTERPARTY NAME" or "NACH-00000-MERCHANT"
+  // CMS / ACH / NACH slash transfer
+  // e.g. "CMS/ CMS5679346428/META INFOTECH PRIVATE LIMITED"
+  {
+    name: 'STRUCTURED_TRANSFER_SLASH',
+    pattern: /^(CMS|ACH|NACH)\/\s*([A-Z0-9]+)\/\s*(.+)$/i,
+    extract(match): ParsedNarration {
+      return {
+        format: 'STRUCTURED_TRANSFER_SLASH',
+        ref: match[2].trim(),
+        counterpartyName: match[3].trim().replace(/\s{2,}/g, ' '),
+      };
+    },
+  },
+
   {
     name: 'RTGS_NACH',
     pattern: /^(RTGS|NACH)[/ -]([A-Z0-9]+)[/ -](.+)$/i,

@@ -59,6 +59,31 @@ const DEFAULT_CATEGORIZE_OPTIONS: Required<CategorizeOptions> = {
 };
 
 const TRANSFER_ONLY_CATEGORY_KEYS = new Set(['PersonalTransfer', 'PersonalTransferReceived']);
+const NARRATION_NOISE_TOKENS = new Set([
+  'upi',
+  'neft',
+  'imps',
+  'rtgs',
+  'ach',
+  'nach',
+  'cms',
+  'by',
+  'cr',
+  'dr',
+  'credit',
+  'txn',
+  'utr',
+  'sal',
+  'salary',
+  'payroll',
+  'transaction',
+  'payment',
+  'transfer',
+  'from',
+  'to',
+  'ref',
+  'via',
+]);
 
 const normalizeForSearch = (value: string): string =>
   value
@@ -72,6 +97,64 @@ const compactForSearch = (value: string): string =>
   value.toLowerCase().replace(/[^a-z0-9]+/g, '');
 
 const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function titleCase(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/\b[a-z0-9]/g, (char) => char.toUpperCase())
+    .replace(/\b(Pvt|Ltd|Llp|LlP)\b/g, (word) => word.toUpperCase());
+}
+
+function normalizeSourceKey(value: string): string {
+  return (value || '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9 ]+/g, ' ')
+    .replace(/\b(NEFT|IMPS|RTGS|UPI|ACH|NACH|CMS|BY|FROM|CR|DR|CREDIT|REF|TXN|UTR|SAL|SALARY|PAYROLL|PAYMENT|TRANSFER)\b/g, ' ')
+    .replace(/\b[A-Z]{2,}\d+[A-Z0-9]*\b/g, ' ')
+    .replace(/\b\d+\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ')
+    .filter((token) => token.length > 2)
+    .slice(0, 6)
+    .join('_');
+}
+
+function titleCaseFromKey(key: string): string {
+  return titleCase(key.replace(/_/g, ' '));
+}
+
+function isBankOrReferenceSegment(segment: string): boolean {
+  const value = segment.trim().toUpperCase();
+  if (!value) return true;
+  if (NARRATION_NOISE_TOKENS.has(value.toLowerCase())) return true;
+  if (/^(HDFC|ICIC|ICICI|SBI|SBIN|AXIS|KOTAK|YESB|IDFC|FDRL|FEDERAL|CNRB|BOFA)$/.test(value)) return true;
+  if (/^\d+$/.test(value)) return true;
+  if (/^[A-Z]{2,}\d+[A-Z0-9]*$/.test(value)) return true;
+  if (/^[A-Z]{3,6}$/.test(value)) return true;
+  return false;
+}
+
+function extractStructuredTransferSource(narration: string): string {
+  const parts = narration
+    .toUpperCase()
+    .split(/[-/|]/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length < 2) return '';
+
+  const firstToken = parts[0].split(/\s+/)[0];
+  if (!/^(NEFT|IMPS|RTGS|UPI|ACH|NACH|CMS)$/.test(firstToken)) return '';
+
+  const sourcePart = parts.find((part, index) => {
+    if (index === 0) return false;
+    return /[A-Z]{3,}/.test(part) && !isBankOrReferenceSegment(part);
+  });
+
+  const key = normalizeSourceKey(sourcePart || '');
+  return key ? titleCaseFromKey(key) : '';
+}
 
 function buildSearchText(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
   return [
@@ -156,6 +239,52 @@ function getCounterpartyName(
   ).trim();
 }
 
+function cleanCounterpartyLabel(value: string): string {
+  const cleaned = value
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\b(?:a\/c|acct|account)\b.*$/i, '')
+    .trim()
+    .replace(/^[^a-z0-9]+|[^a-z0-9]+$/gi, '');
+
+  return cleaned === cleaned.toUpperCase() ? titleCase(cleaned) : cleaned;
+}
+
+function isUsefulCounterpartyLabel(value: string): boolean {
+  const normalized = normalizeForSearch(value);
+  const compact = compactForSearch(value);
+
+  if (!normalized || compact.length < 3) return false;
+  if (/^\d+$/.test(compact)) return false;
+  if (/^[A-Z]{3,6}$/.test(value.trim())) return false;
+  if (NARRATION_NOISE_TOKENS.has(normalized)) return false;
+
+  return /[a-z]/i.test(value);
+}
+
+function extractFallbackCounterpartyName(rawNarration: string): string {
+  if (!rawNarration || typeof rawNarration !== 'string') return '';
+
+  const structuredSource = extractStructuredTransferSource(rawNarration);
+  if (structuredSource) return structuredSource;
+
+  const parts = rawNarration
+    .split(/[-/|:]+/)
+    .map(cleanCounterpartyLabel)
+    .filter(isUsefulCounterpartyLabel);
+
+  return parts.find((part) => hasCompanySuffix(part)) || parts[0] || '';
+}
+
+function getBestCounterpartyName(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
+  const structuredSource = extractStructuredTransferSource(transaction.narration ?? '');
+
+  return cleanCounterpartyLabel(
+    getCounterpartyName(transaction, parsed) ||
+      structuredSource ||
+      extractFallbackCounterpartyName(transaction.narration ?? ''),
+  );
+}
+
 function getP2PTransferCategory(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
   if (parsed?.direction === 'CR' || transaction.type === 'CREDIT') return 'Received';
   return 'Transfers';
@@ -182,7 +311,7 @@ function isFinancialInstitutionName(value: string): boolean {
 }
 
 function isSalaryCredit(transaction: Partial<IBankTransaction>, parsed: ParsedNarration, searchText: string): boolean {
-  const counterpartyName = getCounterpartyName(transaction, parsed);
+  const counterpartyName = getBestCounterpartyName(transaction, parsed);
   const isCredit = transaction.type === 'CREDIT' || parsed?.direction === 'CR';
   const isNeftCredit = parsed?.format === 'NEFT_DASH' && parsed.direction === 'CR';
 
@@ -196,10 +325,49 @@ function isSalaryCredit(transaction: Partial<IBankTransaction>, parsed: ParsedNa
 }
 
 function getSalarySubcategory(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
-  const counterpartyName = getCounterpartyName(transaction, parsed);
-  return counterpartyName && !/\bsalary\b/i.test(counterpartyName)
-    ? `Salary - ${counterpartyName}`
-    : 'SalaryAndPayouts';
+  const counterpartyName = getBestCounterpartyName(transaction, parsed);
+  return counterpartyName && !/\bsalary\b/i.test(counterpartyName) ? counterpartyName : 'SalaryAndPayouts';
+}
+
+function getIncomeCreditSubcategory(
+  transaction: Partial<IBankTransaction>,
+  parsed: ParsedNarration,
+  incomeMatch: CategoryMatch | null,
+): string {
+  const counterpartyName = getBestCounterpartyName(transaction, parsed);
+  if (counterpartyName && !/^bankcredits$/i.test(counterpartyName)) return counterpartyName;
+  return incomeMatch?.subcategory || 'BankCredits';
+}
+
+function getDebitFallbackCategory(
+  transaction: Partial<IBankTransaction>,
+  parsed: ParsedNarration,
+  counterpartyClass: string,
+): { category: string; subcategory: string; needsReview: boolean } | null {
+  const counterpartyName = getBestCounterpartyName(transaction, parsed);
+  if (!counterpartyName) return null;
+
+  if (counterpartyClass === 'P2P') {
+    return {
+      category: getP2PTransferCategory(transaction, parsed),
+      subcategory: counterpartyName,
+      needsReview: false,
+    };
+  }
+
+  if (counterpartyClass === 'P2M' || hasCompanySuffix(counterpartyName) || transaction.merchant) {
+    return {
+      category: 'Services',
+      subcategory: counterpartyName,
+      needsReview: true,
+    };
+  }
+
+  return {
+    category: 'Personal Transfer',
+    subcategory: counterpartyName,
+    needsReview: true,
+  };
 }
 
 
@@ -295,13 +463,13 @@ async function categorizeTransactions(
         matchedSubcategory = getSalarySubcategory(transaction, parsed);
       } else if (incomeMatch && isIncomeCreditSignal(searchText)) {
         matchedCategory = 'Income';
-        matchedSubcategory = incomeMatch.subcategory;
+        matchedSubcategory = getIncomeCreditSubcategory(transaction, parsed, incomeMatch);
       } else if (narration.startsWith('upi-cr') || narration.includes('/cr/')) {
         matchedCategory = 'Received';
-        matchedSubcategory = getCounterpartyName(transaction, parsed);
+        matchedSubcategory = getBestCounterpartyName(transaction, parsed);
       } else {
         matchedCategory = 'Income';
-        matchedSubcategory = incomeMatch?.subcategory || 'BankCredits';
+        matchedSubcategory = getIncomeCreditSubcategory(transaction, parsed, incomeMatch);
       }
     } else {
       // Build narration pattern for ruleMap lookup (legacy key format).
@@ -369,14 +537,14 @@ async function categorizeTransactions(
               needsReview = true;
             } else if (isHandleOnlyUpiTransfer(rawNarration, parsed)) {
               matchedCategory = getP2PTransferCategory(transaction, parsed);
-              matchedSubcategory = getCounterpartyName(transaction, parsed);
+              matchedSubcategory = getBestCounterpartyName(transaction, parsed);
             } else if (counterpartyClass === 'P2P') {
               matchedCategory = getP2PTransferCategory(transaction, parsed);
-              matchedSubcategory = getCounterpartyName(transaction, parsed);
+              matchedSubcategory = getBestCounterpartyName(transaction, parsed);
             } else if (narration.startsWith('upi-cr') || narration.startsWith('upi cr')) {
               matchedCategory = 'Personal Transfer Received';
               const parts = transaction.narration?.split('-');
-              if (parts && parts.length > 2) matchedSubcategory = parts[2].trim();
+              if (parts && parts.length > 2) matchedSubcategory = cleanCounterpartyLabel(parts[2]);
             }
           }
         }
@@ -410,6 +578,15 @@ async function categorizeTransactions(
           needsReview = true;
         }
       }
+
+      if (matchedCategory === 'Untagged') {
+        const fallbackResult = getDebitFallbackCategory(transaction, parsed, counterpartyClass);
+        if (fallbackResult) {
+          matchedCategory = fallbackResult.category;
+          matchedSubcategory = fallbackResult.subcategory;
+          needsReview = fallbackResult.needsReview;
+        }
+      }
     }
 
     const rawBalance = transaction.transactionalBalance ?? transaction.currentBalance ?? 0;
@@ -432,7 +609,7 @@ async function categorizeTransactions(
       needsReview,
       // Structured narration fields extracted by the parser layer (PR2).
       // Stored on the document for analytics, write-back, and future ML training.
-      counterpartyName: parsed?.counterpartyName ?? '',
+      counterpartyName: getBestCounterpartyName(transaction, parsed),
       counterpartyVPA: parsed?.counterpartyVPA ?? '',
       counterpartyBankHandle: parsed?.bankHandle ?? '',
     };
