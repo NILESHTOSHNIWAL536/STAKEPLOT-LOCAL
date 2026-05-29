@@ -232,7 +232,6 @@ export const dummyCategorizationPreview = async (req: Request, res: Response): P
       ? bodyTransactions
       : await Transaction.find(
           {
-             userId:"6a06fcf1add469ca6c86cab8"
           },
           {
             narration: 1,
