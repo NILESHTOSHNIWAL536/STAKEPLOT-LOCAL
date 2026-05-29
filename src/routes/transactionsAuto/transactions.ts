@@ -51,6 +51,8 @@ router.patch('/updateTransaction/:transactionId', AuthMiddlewares.protect, valid
 router.get('/getTransactions/:page', AuthMiddlewares.protect, validateRequestMiddleware(getSearchedTransactions), TransactionAutoController.getSearchedTransactions);
 router.get('/getTransactionsOfUser', AuthMiddlewares.protect, TransactionAutoController.getAllTransactionsOfUser);
 
+router.get('/dummy-categorize-preview', TransactionAutoController.dummyCategorizationPreview);
+router.post('/dummy-categorize-preview', TransactionAutoController.dummyCategorizationPreview);
 router.get('/categorize', AuthMiddlewares.protect, TransactionAutoController.categorizeTransactions);
 // **************************************** NEWLY ADDED APIS ****************************************
 router.post('/create', AuthMiddlewares.protect, TransactionAutoController.createTransaction);

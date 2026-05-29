@@ -94,7 +94,7 @@ function getMainCategory(subCategory: string): string {
 
   // Match with subcategories
   for (const [mainCat, subCats] of Object.entries(categories)) {
-    for (const sub of subCats) {
+    for (const sub of Object.keys(subCats)) {
       if (sub.toLowerCase() === lowerSub) {
         return mainCat;
       }

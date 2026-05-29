@@ -77,6 +77,11 @@ const MERCHANT_VPA_PATTERNS: RegExp[] = [
   /amazonpay/i,
   /phonepe\.merchant/i,
   /gpay\.merchant/i,
+  /gpay-/i,
+  /okbiz/i,
+  /rzp/i,
+  /freecharge/i,
+  /Q\d+/i,
 ];
 
 /**

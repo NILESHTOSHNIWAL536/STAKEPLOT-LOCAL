@@ -18,6 +18,10 @@ const categories = {
       'ARABIAN GRILL',
       'MAVAS KITCHEN',
       'ARABIAN',
+      'TINGLE BUDS F B',
+      'HungerBox',
+      'EatClub',
+      'SOUTH INDIAN F',
     ],
 
     FastFood: ['Bistro', 'Mcdonalds', 'kfc', 'subway', 'dominos', 'Burger King', 'Taco Bell', 'kfcrestaurants', 'burgerking'],
@@ -33,6 +37,11 @@ const categories = {
       'juice',
       'SWISS DELIGHTS',
       'FROZEN BOTTLE',
+      'SRI BALAJI JUICE CENTRE',
+      'ROYAL JUICE CENTER',
+      'Sai Tea Stall',
+      'MANAM CAFE',
+      'ABR CAFE AND BAKERS',
     ],
 
     FoodItems: [
@@ -51,11 +60,36 @@ const categories = {
       'Chinese',
       'Street Food',
       'Fast Food',
+      'Food',
     ],
 
-    GroceryAndDailyNeeds: ['kirana', 'General Store', 'Store', 'Dairy', 'Ration', 'Foods', 'FOODS'],
+    GroceryAndDailyNeeds: [
+      'kirana',
+      'General Store',
+      'Store',
+      'Dairy',
+      'Ration',
+      'Foods',
+      'FOODS',
+      'AP FOODS',
+      'OM BHAIRAVA KIRANA AND GENERAL STORES',
+      'Jagdish Kirana Bhandar',
+      'P LAXMIKANTH RAO AND SONS',
+      'NLAXMAIAH BROS',
+      'A KRISHNAIAHSONS',
+    ],
 
-    DiningPlaces: ['Dhaba', 'canteen', 'Canteen', 'Mess', 'Sweet Shop', 'BAKERS'],
+    DiningPlaces: [
+      'Dhaba',
+      'canteen',
+      'Canteen',
+      'Mess',
+      'Sweet Shop',
+      'BAKERS',
+      'SRI Venkatramana Bky',
+      'CHAPPAN BHOG SWEETS',
+      'PANCHRATAN DAIRY CONFECTIONERY',
+    ],
 
     CateringServices: ['cater', 'catering'],
 
@@ -63,7 +97,7 @@ const categories = {
   },
 
   Shopping: {
-    Ecommerce: ['Amazon', 'Flipkart', 'avenuesupermart'],
+    Ecommerce: ['Amazon', 'Flipkart', 'avenuesupermart', 'SHOPPERS P'],
 
     FashionAndLifestyle: [
       'Fashion',
@@ -82,9 +116,11 @@ const categories = {
       'Textiles',
       'trentzudio',
       'zudioaunitoftrent',
+      'South India Shopping Mall',
+      'CMRNZMTXTL',
     ],
 
-    Electronics: ['Electronics', 'Mobiles', 'THIRD EYE CCTV', 'CCTV'],
+    Electronics: ['Electronics', 'Mobiles', 'THIRD EYE CCTV', 'CCTV', 'COMPUTER PERIPHERALS'],
 
     RetailStores: [
       'Shoppers',
@@ -107,6 +143,8 @@ const categories = {
       'VISHAL MEGA',
       'MR DIY',
       'ValueZone',
+      'A 1 BAZAR',
+      'A1 BAZAR',
     ],
 
     HomeAndFurniture: ['Furniture', 'Hardware'],
@@ -125,6 +163,11 @@ const categories = {
       'ZEPTO',
       'ZEPTOONLINEybl',
       'ZeptoMarketplace',
+      'Zepto Mark',
+      'ZEPTO MARK',
+      'zeptomarketpla',
+      'ZeptoMarketpla',
+      'zptmktp',
       'cfzepto',
       'zeptopay',
       'blinkitrzp',
@@ -134,7 +177,14 @@ const categories = {
       'INSTAMART',
     ],
 
-    GroceryStores: ['SUPRDAILY', 'GROCERY', 'kirana', 'General Store', 'KANAKENTERPRISE'],
+    GroceryStores: [
+      'SUPRDAILY',
+      'GROCERY',
+      'kirana',
+      'General Store',
+      'KANAKENTERPRISE',
+      'Rice bill',
+    ],
 
     FruitsAndVegetables: ['VEGETABLE', 'FRUIT', 'Veggie'],
 
@@ -142,7 +192,23 @@ const categories = {
   },
 
   Travel: {
-    Fuel: ['Fuel', 'Petrol', 'CNG', 'Diesel', 'PETROLEUM', 'Filling', 'HP FUELS', 'FILL', 'Pump'],
+    Fuel: [
+      'Fuel',
+      'Petrol',
+      'CNG',
+      'Diesel',
+      'PETROLEUM',
+      'Filling',
+      'HP FUELS',
+      'FILL',
+      'Pump',
+      'PRAKASH FILLING STATION',
+      'BP Petrol Pump',
+      'Fuel Station',
+      'SERVICE STATION',
+      'Charminar Chou',
+      'AADHYA AUTO SE',
+    ],
 
     CabServices: ['Ola', 'Uber', 'Rapido', 'Blusmart', 'OlaCabs'],
 
@@ -160,23 +226,57 @@ const categories = {
       'IRCTCPGONLINEaxl',
       'IRCTCPGONLINEybl',
       'indianrailwaysutsb',
+      'IRCTC Rail APP',
+      'Indian Rai',
+      'Indian Railways UTS',
+      'Hyderabad Metro',
+      'MUMBAI MET',
+      'MUMBAIMETRODIG',
+      'TSRTC GHZ',
+      'TELANGANA',
+      'BZA BRK WVMS',
     ],
 
     TravelServices: ['Travels', 'Transport', 'Mobility', 'TRAVEL', 'airport', 'TRANSPORT'],
 
     ParkingAndTolls: ['Parking', 'Toll'],
 
-    VehicleMaintenance: ['puncture', 'TVS'],
+    VehicleMaintenance: ['puncture', 'TVS', 'Prakash Auto Service', 'SUBHASH AUTOMOBILES'],
 
     TrafficAndFines: ['Traffic police'],
   },
 
   Health: {
-    HospitalsAndClinics: ['Hospital', 'Clinic', 'Doctor', 'Treatment', 'Surgery', 'HOSPIT'],
+    HospitalsAndClinics: [
+      'Hospital',
+      'Clinic',
+      'Doctor',
+      'Treatment',
+      'Surgery',
+      'HOSPIT',
+      'Shalini Heart Hospital',
+    ],
 
-    Pharmacy: ['Medical', 'Pharmacy', 'Medplus', 'Medicine', 'PHARMA', 'MEDICALS', 'Pharma', 'MEDIMORE', 'MEDI'],
+    Pharmacy: [
+      'Medical',
+      'Pharmacy',
+      'Medplus',
+      'Medicine',
+      'PHARMA',
+      'MEDICALS',
+      'Pharma',
+      'MEDIMORE',
+      'MEDI',
+      'SRI DWARAKAMAI HOPE MEDICAL HALL',
+      'SHALINI MEDICAL',
+      'SHIVA GANGA MEDICAL',
+      'Priyanka Pharma',
+      'Ms Ambe Pharmacy',
+      'GANGA PARVATHI MEDICALS',
+      'VM MEDICAL',
+    ],
 
-    Diagnostics: ['Diagnostic', 'Lab', 'Test', 'Scan'],
+    Diagnostics: ['Diagnostic', 'Lab', 'Test', 'Scan', 'Prime Imaging'],
 
     Wellness: ['Therapy', 'Dental', 'Ayurveda', 'Homeopathy', 'Wellness'],
   },
@@ -184,7 +284,21 @@ const categories = {
   Bills: {
     Utilities: ['Electricity', 'Water', 'Gas'],
 
-    Telecom: ['Mobile Recharge', 'AIRTEL', 'JIO', 'IDEA', 'VI', 'BSNL', 'AIRTELPAYMENTS'],
+    Telecom: [
+      'Mobile Recharge',
+      'Recharge',
+      'AIRTEL',
+      'airtel',
+      'JIO',
+      'IDEA',
+      'VI',
+      'BSNL',
+      'AIRTELPAYMENTS',
+      'AIRTEL PAYMENTS BANK',
+      'AirtelBroadbandBillPayment',
+      'Valeasy',
+      'cars',
+    ],
 
     Internet: ['Internet', 'ACT', 'HATHWAY'],
 
@@ -210,6 +324,7 @@ const categories = {
       'BBPSBPaxl',
       'BBPSBPybl',
       'Euronet',
+      'Euronet Services',
     ],
   },
 
@@ -238,8 +353,10 @@ const categories = {
       'OpenAI',
       'openaillc',
       'Google India Digital',
+      'Google Asi',
       'Mandate',
       'MandateExecute',
+      'SPOTIFY',
     ],
 
     DeliverySubscriptions: ['Swiggy', 'Zomato', 'BLINKIT+'],
@@ -270,7 +387,7 @@ const categories = {
       'sanitary',
     ],
 
-    VehicleServices: ['Bike Service', 'Car Service', 'Bike'],
+    VehicleServices: ['Bike Service', 'Car Service', 'Bike', 'Auto Service', 'Automobiles'],
 
     RepairsAndMaintenance: ['Hardware'],
 
@@ -294,14 +411,16 @@ const categories = {
       'mpocket',
       'mpokket',
       'BDECS-IDFC FIRST BANK',
+      'IDFC FIRST BANK',
       'SMFG India Cre',
       'MONEYVIEW',
       'BRANCHONLINEaxl',
       'branchapp',
+      'Branch',
       'neokred',
     ],
 
-    LoanTypes: ['postpaid', 'loan', 'emi', 'finance', 'borrowrepayment', 'amazonpaylaterrepay'],
+    LoanTypes: ['postpaid', 'loan', 'emi', 'finance', 'borrowrepayment', 'amazonpaylaterrepay', 'MPOKKET FI'],
   },
 
   Investments: {
@@ -323,6 +442,9 @@ const categories = {
       'Bonds',
       'payout',
       'sweepout',
+      'SweepIn',
+      'AUTO SWEEPOUT TD',
+      'Principal',
       'td',
     ],
   },
@@ -334,11 +456,11 @@ const categories = {
   },
 
   Income: {
-    BankCredits: ['NEFT', 'NEFT CR', 'credit', 'credit interest'],
+    BankCredits: ['NEFT', 'NEFT CR', 'credit', 'credit interest', 'Credit Interest Capitalised', 'IntPd'],
 
     SalaryAndPayouts: ['Salary', 'PRINC PAYOUT', 'INT PAYOUT', 'payout'],
 
-    Refunds: ['refund'],
+    Refunds: ['refund', 'REVERSAL', 'REV-UPI'],
 
     MiscIncome: ['BIL', 'INF'],
   },
@@ -386,11 +508,18 @@ const categories = {
   },
 
   Education: {
-    SchoolsAndColleges: ['School', 'college', 'University', 'Institute', 'institute'],
+    SchoolsAndColleges: [
+      'School',
+      'college',
+      'University',
+      'Institute',
+      'institute',
+      'NEIL GOGTE INSTITUTE OF TECHNOLOGY',
+    ],
 
     CoachingAndTraining: ['Tuition', 'Coaching', 'Academy', 'Workshop', 'Seminar', 'NISM'],
 
-    FeesAndAdmissions: ['Fees', 'Fee', 'Admission', 'Examination'],
+    FeesAndAdmissions: ['Fees', 'Fee', 'Admission', 'Examination', 'Exam fees'],
 
     BooksAndStationery: ['Books', 'Stationary', 'Uniform', 'STUDENT XEROX'],
 
@@ -444,10 +573,15 @@ const categories = {
       'SERVICE CHARGE',
       'ANNUAL FEE',
       'SMS ALERT CHARGE',
+      'SMS ALERT',
+      'SMS Charges',
+      'CHRGS',
       'SMSChrgs',
       'Debit Card AMC',
       'Debit Interest Capitalized',
       'DCARDFE',
+      'INTER-BRN CASH CHG',
+      'Chqbk_Delv_Chgs',
     ],
 
     BankingCharges: ['CHEQUE BOOK CHARGE'],

@@ -28,6 +28,180 @@ export interface TransactionRule {
 
 type RuleMap = Map<string, TransactionRule>;
 type DirectoryMap = Map<string, { category: string; subcategory: string }>;
+type ParsedNarration = ReturnType<typeof parseNarration>;
+
+interface CategorizeOptions {
+  persistMerchantDirectory?: boolean;
+  preserveExistingSubcategory?: boolean;
+  useMerchantDirectory?: boolean;
+}
+
+interface CategoryMatch {
+  category: string;
+  subcategory: string;
+  keyword: string;
+  score: number;
+  order: number;
+}
+
+export interface CategorizationPreviewResult {
+  narration: string;
+  currentCategory: string;
+  currentSubcategory: string;
+  updatedCategory: string;
+  updatedSubcategory: string;
+}
+
+const DEFAULT_CATEGORIZE_OPTIONS: Required<CategorizeOptions> = {
+  persistMerchantDirectory: true,
+  preserveExistingSubcategory: true,
+  useMerchantDirectory: true,
+};
+
+const TRANSFER_ONLY_CATEGORY_KEYS = new Set(['PersonalTransfer', 'PersonalTransferReceived']);
+
+const normalizeForSearch = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[_+@.]/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const compactForSearch = (value: string): string =>
+  value.toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function buildSearchText(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
+  return [
+    transaction.narration,
+    transaction.merchant,
+    parsed?.counterpartyName,
+    parsed?.counterpartyVPA,
+    parsed?.remark,
+  ]
+    .filter((part): part is string => typeof part === 'string' && part.trim().length > 0)
+    .join(' ');
+}
+
+function keywordMatches(searchText: string, keyword: string): boolean {
+  const normalizedKeyword = normalizeForSearch(keyword);
+  if (!normalizedKeyword) return false;
+
+  const normalizedText = normalizeForSearch(searchText);
+  const compactText = compactForSearch(searchText);
+  const compactKeyword = compactForSearch(keyword);
+  const isShortKeyword = compactKeyword.length <= 3;
+  const hasMultipleWords = normalizedKeyword.includes(' ');
+
+  if (hasMultipleWords) {
+    return normalizedText.includes(normalizedKeyword) || compactText.includes(compactKeyword);
+  }
+
+  const tokenRegex = new RegExp(`(^|\\s)${escapeRegex(normalizedKeyword)}(\\s|$)`, 'i');
+  if (tokenRegex.test(normalizedText)) return true;
+
+  if (isShortKeyword) return false;
+
+  return compactText.includes(compactKeyword);
+}
+
+function findCategoryMatch(searchText: string): CategoryMatch | null {
+  let bestMatch: CategoryMatch | null = null;
+  let order = 0;
+
+  for (const [category, subcategories] of Object.entries(categories)) {
+    if (TRANSFER_ONLY_CATEGORY_KEYS.has(category)) continue;
+
+    for (const [subKey, keywords] of Object.entries(
+      subcategories as Record<string, string[]>,
+    )) {
+      for (const keyword of keywords) {
+        const currentOrder = order++;
+        if (!keywordMatches(searchText, keyword)) continue;
+
+        const compactKeywordLength = compactForSearch(keyword).length;
+        const score = compactKeywordLength * 10 + (keyword.trim().includes(' ') ? 25 : 0);
+        if (
+          !bestMatch ||
+          score > bestMatch.score ||
+          (score === bestMatch.score && currentOrder < bestMatch.order)
+        ) {
+          bestMatch = {
+            category,
+            subcategory: subKey,
+            keyword,
+            score,
+            order: currentOrder,
+          };
+        }
+      }
+    }
+  }
+
+  return bestMatch;
+}
+
+function getCounterpartyName(
+  transaction: Partial<IBankTransaction>,
+  parsed: ParsedNarration,
+): string {
+  return (
+    parsed?.counterpartyName ||
+    transaction.merchant ||
+    transaction.name ||
+    parsed?.counterpartyVPA ||
+    ''
+  ).trim();
+}
+
+function getP2PTransferCategory(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
+  if (parsed?.direction === 'CR' || transaction.type === 'CREDIT') return 'Received';
+  return 'Transfers';
+}
+
+function isMerchantQrPayment(searchText: string): boolean {
+  return /paytmqr|paytm-|bharatpe|gpay-|okbiz|rzp|freecharge|q\d{6,}|pinelabs|billdesk/i.test(searchText);
+}
+
+function isHandleOnlyUpiTransfer(rawNarration: string, parsed: ParsedNarration): boolean {
+  return parsed?.format === 'UPI_SLASH_REF_TIME_VPA' && /^UPI\//i.test(rawNarration);
+}
+
+function isIncomeCreditSignal(searchText: string): boolean {
+  return /salary|payout|neft\s*cr|credit interest|interest capitalised|cash deposit|refund|reversal|rev-upi|sweepin|intpd/i.test(searchText);
+}
+
+function hasCompanySuffix(value: string): boolean {
+  return /\b(pvt\.?\s*ltd\.?|private\s+limited|ltd\.?|limited|llp|solutions|technologies|systems|services|consulting)\b/i.test(value);
+}
+
+function isFinancialInstitutionName(value: string): boolean {
+  return /\b(bank|finance|financial|finserv|capital|credit|loan|loans|nbfc|insurance|securities|mutual\s*fund|asset\s+management|lending)\b/i.test(value);
+}
+
+function isSalaryCredit(transaction: Partial<IBankTransaction>, parsed: ParsedNarration, searchText: string): boolean {
+  const counterpartyName = getCounterpartyName(transaction, parsed);
+  const isCredit = transaction.type === 'CREDIT' || parsed?.direction === 'CR';
+  const isNeftCredit = parsed?.format === 'NEFT_DASH' && parsed.direction === 'CR';
+
+  if (!isCredit) return false;
+  if (/\bsalary\b/i.test(searchText)) return true;
+  if (/\b(princ|int)\s+payout\b/i.test(searchText)) return true;
+  if (!isNeftCredit || !counterpartyName) return false;
+  if (isFinancialInstitutionName(counterpartyName)) return false;
+
+  return hasCompanySuffix(counterpartyName);
+}
+
+function getSalarySubcategory(transaction: Partial<IBankTransaction>, parsed: ParsedNarration): string {
+  const counterpartyName = getCounterpartyName(transaction, parsed);
+  return counterpartyName && !/\bsalary\b/i.test(counterpartyName)
+    ? `Salary - ${counterpartyName}`
+    : 'SalaryAndPayouts';
+}
+
 
 /**
  * Pre-fetches all relevant MerchantDirectory entries for the given transaction
@@ -92,32 +266,42 @@ async function categorizeTransactions(
   bankId: string | Types.ObjectId | null,
   ruleMap: RuleMap,
   bankKey: string = 'UNKNOWN',
+  options: CategorizeOptions = {},
 ): Promise<Partial<IBankTransaction>[]> {
+  const categorizeOptions = { ...DEFAULT_CATEGORIZE_OPTIONS, ...options };
   // Layer 3 — MERCHANT DIRECTORY: single batch query for the whole ingest batch.
-  const directoryMap = await buildDirectoryMap(transactionsData);
+  const directoryMap = categorizeOptions.useMerchantDirectory
+    ? await buildDirectoryMap(transactionsData)
+    : new Map();
 
   return Promise.all(transactionsData.map(async (transaction) => {
-    const narration = transaction.narration ? transaction.narration.toLowerCase() : '';
+    const rawNarration = typeof transaction.narration === 'string' ? transaction.narration : '';
+    const narration = rawNarration.toLowerCase();
 
     // Layer 1 — PARSE: extract structured fields from the raw narration string.
     const parsed = parseNarration(transaction.narration);
+    const searchText = buildSearchText(transaction, parsed);
 
     let matchedCategory = 'Untagged';
     let matchedSubcategory = '';
     let needsReview = false;
 
     if (transaction.type === 'CREDIT') {
-      // All credits default to Income; try to extract a subcategory label.
-      matchedCategory = 'Income';
-      const narrationParts = transaction.narration?.split(/[-/]/);
-      if (narrationParts) {
-        for (const part of narrationParts) {
-          const trimmed = part.trim();
-          if (trimmed && trimmed !== 'UPI' && trimmed !== 'CR' && !/^\d+$/.test(trimmed)) {
-            matchedSubcategory = trimmed;
-            break;
-          }
-        }
+      const categoryMatch = findCategoryMatch(searchText);
+      const incomeMatch = categoryMatch?.category === 'Income' ? categoryMatch : null;
+
+      if (isSalaryCredit(transaction, parsed, searchText)) {
+        matchedCategory = 'Income';
+        matchedSubcategory = getSalarySubcategory(transaction, parsed);
+      } else if (incomeMatch && isIncomeCreditSignal(searchText)) {
+        matchedCategory = 'Income';
+        matchedSubcategory = incomeMatch.subcategory;
+      } else if (narration.startsWith('upi-cr') || narration.includes('/cr/')) {
+        matchedCategory = 'Received';
+        matchedSubcategory = getCounterpartyName(transaction, parsed);
+      } else {
+        matchedCategory = 'Income';
+        matchedSubcategory = incomeMatch?.subcategory || 'BankCredits';
       }
     } else {
       // Build narration pattern for ruleMap lookup (legacy key format).
@@ -136,11 +320,6 @@ async function categorizeTransactions(
         transaction.merchant,
         transaction.isAutoPay,
       );
-
-      if (counterpartyClass === 'P2P') {
-        matchedCategory = 'Transfers';
-        matchedSubcategory = 'Sent'; // we are in the DEBIT/TDS branch
-      }
 
       if (matchedCategory === 'Untagged') {
         // Layer 3 — MERCHANT DIRECTORY (cross-user, VPA-keyed):
@@ -162,48 +341,42 @@ async function categorizeTransactions(
           needsReview = true;
         } else {
           // Layer 5 — KEYWORD CONFIG (fixed for nested structure):
-          if (narration.startsWith('upi-cr') || narration.startsWith('upi cr')) {
-            matchedCategory = 'Personal Transfer Received';
-            const parts = transaction.narration?.split('-');
-            if (parts && parts.length > 2) matchedSubcategory = parts[2].trim();
-          } else if (
+          if (
             narration.startsWith('pos') ||
             narration.startsWith('cash wdl') ||
             narration.startsWith('atm') ||
-            narration.startsWith('to:')
+            narration.startsWith('to:') ||
+            narration.startsWith('chq paid') ||
+            (narration.startsWith('imps') && narration.includes('normal transfer'))
           ) {
             matchedCategory = 'Personal Transfer';
           } else if (narration.startsWith('neft-cr') || narration.startsWith('neft cr')) {
             // NEFT credits on a debit (e.g. reversals) — try Income keywords first.
-            const incomeSubcats = categories['Income'] as Record<string, string[]> | undefined;
-            if (incomeSubcats) {
-              outer: for (const [subKey, keywords] of Object.entries(incomeSubcats)) {
-                for (const keyword of keywords) {
-                  const regex = new RegExp(`\\b${keyword.toLowerCase()}\\b`, 'i');
-                  if (regex.test(narration)) {
-                    matchedCategory = 'Income';
-                    matchedSubcategory = subKey;
-                    break outer;
-                  }
-                }
-              }
+            const incomeMatch = findCategoryMatch(searchText);
+            if (incomeMatch?.category === 'Income') {
+              matchedCategory = 'Income';
+              matchedSubcategory = incomeMatch.subcategory;
             }
             if (matchedCategory === 'Untagged') matchedCategory = 'Income';
           } else {
-            // categories is nested: { Category: { Subcategory: [keywords] } }
-            outer: for (const [category, subcategories] of Object.entries(categories)) {
-              for (const [subKey, keywords] of Object.entries(
-                subcategories as Record<string, string[]>,
-              )) {
-                for (const keyword of keywords) {
-                  const regex = new RegExp(`\\b${keyword.toLowerCase()}\\b`, 'i');
-                  if (regex.test(narration)) {
-                    matchedCategory = category;
-                    matchedSubcategory = subKey;
-                    break outer;
-                  }
-                }
-              }
+            const categoryMatch = findCategoryMatch(searchText);
+            if (categoryMatch) {
+              matchedCategory = categoryMatch.category;
+              matchedSubcategory = categoryMatch.subcategory;
+            } else if (isMerchantQrPayment(searchText)) {
+              matchedCategory = 'Shopping';
+              matchedSubcategory = 'RetailStores';
+              needsReview = true;
+            } else if (isHandleOnlyUpiTransfer(rawNarration, parsed)) {
+              matchedCategory = getP2PTransferCategory(transaction, parsed);
+              matchedSubcategory = getCounterpartyName(transaction, parsed);
+            } else if (counterpartyClass === 'P2P') {
+              matchedCategory = getP2PTransferCategory(transaction, parsed);
+              matchedSubcategory = getCounterpartyName(transaction, parsed);
+            } else if (narration.startsWith('upi-cr') || narration.startsWith('upi cr')) {
+              matchedCategory = 'Personal Transfer Received';
+              const parts = transaction.narration?.split('-');
+              if (parts && parts.length > 2) matchedSubcategory = parts[2].trim();
             }
           }
         }
@@ -230,7 +403,7 @@ async function categorizeTransactions(
               : parsed?.counterpartyName
               ? normalizeMerchantKey(parsed.counterpartyName)
               : null;
-          if (key) {
+          if (key && categorizeOptions.persistMerchantDirectory) {
             upsertMerchantDirectory(key, llmResult.category, llmResult.subcategory, 'llm', llmResult.confidence).catch(() => {});
           }
         } else {
@@ -249,7 +422,9 @@ async function categorizeTransactions(
       transactionTimestamp: normalizeTransactionTimestamp(transaction.transactionTimestamp, bankKey),
       valueDate: normalizeTransactionTimestamp(transaction.valueDate, bankKey),
       category: matchedCategory,
-      subcategory: transaction.subcategory || matchedSubcategory,
+      subcategory: categorizeOptions.preserveExistingSubcategory
+        ? transaction.subcategory || matchedSubcategory
+        : matchedSubcategory,
       manualTransaction: transaction.manualTransaction !== undefined ? transaction.manualTransaction : false,
       accountId,
       userId,
@@ -262,6 +437,36 @@ async function categorizeTransactions(
       counterpartyBankHandle: parsed?.bankHandle ?? '',
     };
   }));
+}
+
+export async function previewTransactionCategories(
+  transactionsData: Partial<IBankTransaction>[],
+  bankKey: string = 'UNKNOWN',
+): Promise<CategorizationPreviewResult[]> {
+  const categorizedTransactions = await categorizeTransactions(
+    transactionsData,
+    null,
+    'dummy-preview-user',
+    null,
+    new Map(),
+    bankKey,
+    {
+      persistMerchantDirectory: false,
+      preserveExistingSubcategory: false,
+      useMerchantDirectory: false,
+    },
+  );
+
+  return categorizedTransactions.map((transaction, index) => {
+    const original = transactionsData[index];
+    return {
+      narration: original?.narration ?? '',
+      currentCategory: original?.category ?? '',
+      currentSubcategory: original?.subcategory ?? '',
+      updatedCategory: transaction.category ?? 'Untagged',
+      updatedSubcategory: transaction.subcategory ?? '',
+    };
+  });
 }
 
 export default categorizeTransactions;

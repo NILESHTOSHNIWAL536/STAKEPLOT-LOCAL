@@ -18,6 +18,7 @@ import Split from '@/models/collections/split.model';
 import SplitPayment from '@/models/collections/split-payment.model';
 import { runInTransaction } from '@/utils/run-in-transaction';
 import { createRecurringPaymentFromTransaction, detectAndStoreAutoPays } from '@/services/auto-service';
+import { previewTransactionCategories } from '@/utils/helpers/categorizeTransactions';
 
 /**
  * NOTE:
@@ -217,6 +218,52 @@ export const categorizeTransactions = async (req: Request, res: Response): Promi
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
+export const dummyCategorizationPreview = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const requestedLimit = Number(req.query.limit ?? 50);
+    const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 200) : 50;
+    const bankKey = typeof req.query.bankKey === 'string' ? req.query.bankKey : 'UNKNOWN';
+    const bodyTransactions = Array.isArray(req.body?.transactions) ? req.body.transactions : [];
+
+    const transactions = bodyTransactions.length
+      ? bodyTransactions
+      : await Transaction.find(
+          {
+             userId:"6a06fcf1add469ca6c86cab8"
+          },
+          {
+            narration: 1,
+            category: 1,
+            subcategory: 1,
+            type: 1,
+            amount: 1,
+            merchant: 1,
+            isAutoPay: 1,
+            transactionTimestamp: 1,
+            valueDate: 1,
+            transactionalBalance: 1,
+            currentBalance: 1,
+           
+          },
+        )
+          .sort({ transactionTimestamp: -1, _id: -1 })
+          .limit(limit)
+          .lean();
+
+    const preview = await previewTransactionCategories(transactions as any[], bankKey);
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: preview,
+    });
+  } catch (error: any) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      error: error?.message || error,
+    });
   }
 };
 
