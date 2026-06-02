@@ -92,6 +92,34 @@ export const validateScrape = (req: Request, res: Response, next: NextFunction):
   return next();
 };
 
+export const validateStatementPassword = (req: Request, res: Response, next: NextFunction): Response | void => {
+  const bodyWithoutPassword = { ...(req.body || {}), password: '' };
+  if (containsSqlInjectionPayload(req.query) || containsSqlInjectionPayload(bodyWithoutPassword)) {
+    return res.status(403).json({ success: false, error: 'Forbidden request parameter' });
+  }
+
+  const rejected = rejectUnexpectedQuery(req, res);
+  if (rejected) return rejected;
+
+  const { bankId, email, password, accountHint } = req.body || {};
+  const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+
+  if (
+    typeof bankId !== 'string' ||
+    !allowedBankIds.has(bankId) ||
+    typeof password !== 'string' ||
+    password.length === 0 ||
+    password.length > 256 ||
+    (email !== undefined && email !== null && !emailPattern.test(normalizedEmail)) ||
+    (accountHint !== undefined && accountHint !== null && typeof accountHint !== 'string')
+  ) {
+    return rejectInvalid(res);
+  }
+
+  if (normalizedEmail) req.body.email = normalizedEmail;
+  return next();
+};
+
 export const validateRemoveAccess = (req: Request, res: Response, next: NextFunction): Response | void => {
   const rejectedPayload = rejectSqlInjectionPayload(req, res);
   if (rejectedPayload) return rejectedPayload;

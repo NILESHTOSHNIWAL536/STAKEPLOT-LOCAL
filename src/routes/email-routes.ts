@@ -30,6 +30,7 @@ import {
   validateNoQuery,
   validateRemoveAccess,
   validateScrape,
+  validateStatementPassword,
 } from '../validators/email-validators';
 
 const router: Router = express.Router();
@@ -44,6 +45,7 @@ router.post('/generate-token',validateGenerateToken, EmailController.generateAcc
 
 // read emails from user's gmail account based on the bank id provided
 router.post('/scrape', validateScrape, EmailController.scrapeEmailsByBankId);
+router.post('/statement-password', validateStatementPassword, EmailController.saveStatementPassword);
 
 router.get('/unLinked-cards', validateNoQuery, EmailController.getUnlinkedCreditCards);
 // get all the scraped emails from the emailScrape collection

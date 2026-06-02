@@ -28,6 +28,17 @@ const getOAuth2Client = () => {
 const allowedBankIds = new Set((creditCards as any[]).map((card) => card.bankId));
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+type StatementPasswordInput = {
+  bankId: string;
+  password: string;
+  email?: string;
+  accountHint?: string;
+};
+
+async function publishSocketEvent(userId: string, event: string, data: any): Promise<void> {
+  await RedisClient.publish('bank_events', JSON.stringify({ userId, event, data }));
+}
+
 function assertAllowedBankId(bankId: string) {
   if (!allowedBankIds.has(bankId)) {
     throw new AppError('Invalid bank ID', StatusCodes.BAD_REQUEST);
@@ -129,11 +140,103 @@ export async function scrapeEmailsByBankId(userId: string, bankIds: string[], em
   getOAuth2Client().setCredentials({ refresh_token: decryptedRefreshToken });
   const gmailClient = google.gmail({ version: 'v1', auth: getOAuth2Client() });
 
-  const scrapeEmailsUsingParser = await emailScraperHelper(gmailClient as any, creditCard);
+  const storedPasswords = await EmailRepository.getStatementPasswords(userId, bankIds, normalizedEmail);
+  const scrapeEmailsUsingParser = await emailScraperHelper(
+    gmailClient as any,
+    creditCard,
+    'initial',
+    storedPasswords
+  );
+
+  if (scrapeEmailsUsingParser.requiresPassword) {
+    const payload = {
+      requiresPassword: true,
+      status: 'password_required',
+      message: 'PDF statement password is required for extraction.',
+      passwordRequests: scrapeEmailsUsingParser.passwordRequests || [],
+    };
+
+    await publishSocketEvent(userId, 'statementPasswordRequired', payload);
+
+    return payload;
+  }
+
+  const passwordRequests = buildPasswordRequests(scrapeEmailsUsingParser, creditCard);
+  if (passwordRequests.length > 0) {
+    const payload = {
+      requiresPassword: true,
+      status: 'password_required',
+      message: 'PDF statement password is required for extraction.',
+      passwordRequests,
+    };
+
+    await publishSocketEvent(userId, 'statementPasswordRequired', payload);
+
+    return payload;
+  }
 
   const scrapedEmails = await EmailRepository.scrapeEmailsByBankId(scrapeEmailsUsingParser, userId);
 
   return scrapedEmails;
+}
+
+function buildPasswordRequests(scrapedEmails: any, bankConfig: any[]) {
+  const results = Array.isArray(scrapedEmails?.results) ? scrapedEmails.results : [];
+  const requests = new Map<string, any>();
+
+  for (const result of results) {
+    if (!result?.sources_processed?.needs_password) continue;
+
+    const matchedBank = resolveMatchedBank(result, bankConfig);
+    const bankId = matchedBank?.bankId || '';
+    const key = `${bankId}:${result.message_id || result.messageId || result.subject || ''}`;
+
+    requests.set(key, {
+      bankId,
+      bankName: matchedBank?.name || result.matched_bank || 'Bank statement',
+      messageId: result.message_id || result.messageId || '',
+      filename: result.sources_processed?.password_file || '',
+      reason: result.sources_processed?.password_error || 'password_required',
+    });
+  }
+
+  return Array.from(requests.values());
+}
+
+function resolveMatchedBank(result: any, bankConfig: any[]) {
+  const matched = String(result?.matched_bank || '').toLowerCase();
+  return bankConfig.find((bank) => {
+    const name = String(bank.name || '').toLowerCase();
+    const bankId = String(bank.bankId || '').toLowerCase();
+    return (
+      (matched && (name.includes(matched) || matched.includes(name))) ||
+      (bankId && matched === bankId)
+    );
+  }) || bankConfig[0];
+}
+
+export async function saveStatementPassword(
+  userId: string,
+  input: StatementPasswordInput
+): Promise<{ message: string }> {
+  assertAllowedBankId(input.bankId);
+  const password = String(input.password || '');
+
+  if (!password || password.length > 256) {
+    throw new AppError('Invalid PDF password', StatusCodes.BAD_REQUEST);
+  }
+
+  const normalizedEmail = input.email ? normalizeEmail(input.email) : undefined;
+
+  await EmailRepository.upsertStatementPassword(
+    userId,
+    input.bankId,
+    password,
+    normalizedEmail,
+    input.accountHint
+  );
+
+  return { message: 'Statement password saved successfully' };
 }
 
 export async function getScrapedEmails(userId: string): Promise<any> {
@@ -180,5 +283,6 @@ export default {
   getScrapedEmails,
   getUnlinkedCreditCards,
   scrapeEmailsByBankId,
+  saveStatementPassword,
   removeAccessToken,
 };

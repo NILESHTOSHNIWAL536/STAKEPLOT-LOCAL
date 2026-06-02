@@ -2,11 +2,13 @@ import { Connection, Model } from 'mongoose';
 import { googleAuthSchema, IGoogleAuth } from './google-auth';
 import { scrapeResultSchema, IScrapeResult } from './scrape-result';
 import { IUserBankMap, userBankMapSchema } from './user-bankmap';
+import { IStatementPassword, statementPasswordSchema } from './statement-password';
 
 export interface IModels {
   GoogleAuth: Model<IGoogleAuth>;
   ScrapedEmail: Model<IScrapeResult>;
   UserBankMap: Model<IUserBankMap>;
+  StatementPassword: Model<IStatementPassword>;
 }
 
 export async function getModels(): Promise<IModels> {
@@ -23,10 +25,12 @@ export async function getModels(): Promise<IModels> {
   const ScrapedEmailModel = emailDB.models.scrapeResult || emailDB.model<IScrapeResult>('scrapeResult', scrapeResultSchema);
 
   const UserBankMap = emailDB.models.userBankMap || emailDB.model<IUserBankMap>('userBankMap', userBankMapSchema);
+  const StatementPassword = emailDB.models.statementPassword || emailDB.model<IStatementPassword>('statementPassword', statementPasswordSchema);
 
   return {
     GoogleAuth: GoogleAuthModel,
     ScrapedEmail: ScrapedEmailModel,
     UserBankMap: UserBankMap,
+    StatementPassword,
   };
 }

@@ -38,6 +38,33 @@ const scrapeEmailsByBankIdImpl = async (
 
     res.status(StatusCodes.CREATED).json({ ...SuccessResponse, data: response });
   } catch (error) {
+    console.error('Error in scrapeEmailsByBankIdImpl:', error);
+    next(error);
+  }
+};
+
+const saveStatementPasswordImpl = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { user } = req as AuthenticatedRequest;
+    const { bankId, password, email, accountHint } = req.body as {
+      bankId: string;
+      password: string;
+      email?: string;
+      accountHint?: string;
+    };
+    const response = await EmailScrapingService.saveStatementPassword(user._id, {
+      bankId,
+      password,
+      email,
+      accountHint,
+    });
+
+    res.status(StatusCodes.OK).json({ ...SuccessResponse, data: response });
+  } catch (error) {
     next(error);
   }
 };
@@ -94,6 +121,10 @@ export const generateAccessToken: RequestHandler = (req, res, next) => {
 
 export const scrapeEmailsByBankId: RequestHandler = (req, res, next) => {
   void scrapeEmailsByBankIdImpl(req, res, next);
+};
+
+export const saveStatementPassword: RequestHandler = (req, res, next) => {
+  void saveStatementPasswordImpl(req, res, next);
 };
 
 export const getScrapedEmails: RequestHandler = (req, res, next) => {

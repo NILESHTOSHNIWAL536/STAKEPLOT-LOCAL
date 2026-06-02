@@ -1,123 +1,12 @@
-// const pdfParse = require('pdf-parse');
-
-// // List emails with pagination & 90-day filter
-// const listEmails = async (gmail, labelIds, afterDate, pageToken = null) => {
-//   const nowDate = new Date();
-//   const beforeDate = `${nowDate.getFullYear()}/${nowDate.getMonth() + 1}/${nowDate.getDate()}`;
-//   const now = Math.floor(Date.now() / 1000); // current time (epoch)
-//   return gmail.users.messages.list({
-//     userId: 'me',
-//     maxResults: 100,
-//     labelIds: ['INBOX'],
-//     // labelIds: ["All emails"],
-//     q: `after:${afterDate} before:${now}`,
-//     pageToken,
-//     // includeSpamTrash: true
-//   });
-// };
-
-// // Fetch single email details
-// const getEmailDetails = async (gmail, messageId) => {
-//   return await gmail.users.messages.get({
-//     userId: 'me',
-//     id: messageId,
-//     format: 'full',
-//   });
-// };
-
-// // Decode Base64 Gmail body
-// function decodeBase64(data) {
-//   return Buffer.from(data, 'base64').toString('utf8');
-// }
-
-// // Extract body text (handles plain, html, pdf)
-// const extractEmailBody = async (gmail, msg, payload) => {
-//   let body = '';
-//   let attachments = [];
-//   try {
-//     if (payload.parts) {
-//       for (const part of payload.parts) {
-//         if ((part.mimeType === 'text/plain' || part.mimeType === 'text/html') && part.body?.attachmentId) {
-//           const attachment = await gmail.users.messages.attachments.get({
-//             userId: 'me',
-//             messageId: msg.id,
-//             id: part.body.attachmentId,
-//           });
-//           if (attachment?.data?.data) {
-//             body = decodeBase64(attachment.data.data);
-//             break;
-//           }
-//           if (part.parts) {
-//             body = await extractBody(gmail, msgId, part);
-//             if (body) break;
-//           }
-//         } else if (part.mimeType === 'text/plain' && part.body?.data) {
-//           body = decodeBase64(part.body.data);
-
-//           break;
-//         } else if (part.mimeType === 'text/html' && part.body?.data) {
-//           body = decodeBase64(part.body.data);
-//         }
-
-//         // Recursive check for nested multipart/alternative
-//         else if (part.filename && part.mimeType === 'application/pdf') {
-//           const attachId = part.body.attachmentId;
-//           const attachment = await gmail.users.messages.attachments.get({
-//             userId: 'me',
-//             messageId: msg.id,
-//             id: attachId,
-//           });
-//           const pdfBuffer = Buffer.from(attachment.data.data, 'base64');
-//           const pdfData = await pdfParse(pdfBuffer);
-//           body += '\n' + pdfData.text;
-
-//           // push image as base64 string
-//           attachments.push({
-//             filename: part.filename,
-//             mimeType: part.mimeType,
-//             data: attachment.data.data, // base64 string
-//           });
-//         } else if (part.filename && part.mimeType.startsWith('image/')) {
-//           const attachId = part.body.attachmentId;
-
-//           const attachment = await gmail.users.messages.attachments.get({
-//             userId: 'me',
-//             messageId: msg.id,
-//             id: attachId,
-//           });
-//           // push image as base64 string
-//           attachments.push({
-//             filename: part.filename,
-//             mimeType: part.mimeType,
-//             data: attachment.data.data, // base64 string
-//           });
-//         }
-//       }
-//     } else {
-//       body = decodeBase64(payload.body?.data || '');
-//     }
-//   } catch (e) {
-//    }
-
-//   return { body: body, attachments: attachments };
-// };
-
-// // 🟢 Extract headers (subject, from, etc.)
-// const extractHeaders = async (payload) => {
-//   const subject = payload.headers.find((h) => h.name === 'Subject')?.value || '';
-//   const from = payload.headers.find((h) => h.name === 'From')?.value || '';
-//   return { subject, from };
-// };
-
-// module.exports = {
-//   extractHeaders,
-//   extractEmailBody,
-//   getEmailDetails,
-//   listEmails,
-// };
-
-
 import pdfParse from 'pdf-parse';
+
+type ExtractedAttachment = {
+  filename: string;
+  mimeType: string;
+  data: string;
+  requiresPassword?: boolean;
+  passwordError?: string;
+};
 
 export const listEmails = async (
   gmail: any,
@@ -125,17 +14,26 @@ export const listEmails = async (
   afterDate: string | number,
   pageToken: string | null = null
 ): Promise<any> => {
-  const nowDate = new Date();
-  const beforeDate = `${nowDate.getFullYear()}/${nowDate.getMonth() + 1}/${
-    nowDate.getDate()
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const beforeDate = `${tomorrow.getFullYear()}/${tomorrow.getMonth() + 1}/${
+    tomorrow.getDate()
   }`;
-  const now = Math.floor(Date.now() / 1000);
+
+  const categoryFilter = [
+    'in:inbox',
+    'is:important',
+    '-category:promotions',
+    '-category:social',
+    '-category:updates',
+    '-category:forums',
+  ].join(' ');
 
   return gmail.users.messages.list({
     userId: 'me',
     maxResults: 100,
     labelIds: ['INBOX'],
-    q: `after:${afterDate} before:${now}`,
+    q: `${categoryFilter} after:${afterDate} before:${beforeDate}`,
     pageToken: pageToken || undefined,
   });
 };
@@ -152,20 +50,39 @@ export const getEmailDetails = async (
 };
 
 function decodeBase64(data: string): string {
-  return Buffer.from(data, 'base64').toString('utf8');
+  return Buffer.from(normalizeGmailBase64(data), 'base64').toString('utf8');
+}
+
+function normalizeGmailBase64(data: string): string {
+  const normalized = String(data || '').replace(/-/g, '+').replace(/_/g, '/');
+  return normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+}
+
+function isPdfPasswordError(err: unknown): boolean {
+  const message = String((err as any)?.message || err || '').toLowerCase();
+  return (
+    message.includes('password') ||
+    message.includes('encrypted') ||
+    message.includes('decrypt') ||
+    message.includes('unsupported encryption')
+  );
+}
+
+function hasPdfEncryptionMarker(pdfBuffer: Buffer): boolean {
+  return pdfBuffer.includes(Buffer.from('/Encrypt'));
 }
 
 export const extractEmailBody = async (
   gmail: any,
   msg: any,
   payload: any
-): Promise<{ body: string; attachments: any[] }> => {
+): Promise<{ body: string; attachments: ExtractedAttachment[] }> => {
   let body = '';
-  let attachments: any[] = [];
+  let attachments: ExtractedAttachment[] = [];
 
   try {
-    if (payload.parts) {
-      for (const part of payload.parts) {
+    const walkParts = async (parts: any[]): Promise<void> => {
+      for (const part of parts) {
         if (
           (part.mimeType === 'text/plain' ||
             part.mimeType === 'text/html') &&
@@ -178,23 +95,12 @@ export const extractEmailBody = async (
           });
 
           if (attachment?.data?.data) {
-            body = decodeBase64(attachment.data.data);
-            break;
-          }
-
-          if (part.parts) {
-            const nested = await extractEmailBody(gmail, msg, part);
-            if (nested.body) {
-              body = nested.body;
-              attachments = attachments.concat(nested.attachments);
-              break;
-            }
+            body += '\n' + decodeBase64(attachment.data.data);
           }
         } else if (part.mimeType === 'text/plain' && part.body?.data) {
-          body = decodeBase64(part.body.data);
-          break;
+          body += '\n' + decodeBase64(part.body.data);
         } else if (part.mimeType === 'text/html' && part.body?.data) {
-          body = decodeBase64(part.body.data);
+          body += '\n' + decodeBase64(part.body.data);
         } else if (
           part.filename &&
           part.mimeType === 'application/pdf'
@@ -206,15 +112,31 @@ export const extractEmailBody = async (
             id: attachId,
           });
 
-          const pdfBuffer = Buffer.from(attachment.data.data, 'base64');
-          const pdfData = await pdfParse(pdfBuffer);
-          body += '\n' + (pdfData as any).text;
-
-          attachments.push({
+          const pdfBuffer = Buffer.from(normalizeGmailBase64(attachment.data.data), 'base64');
+          const extractedAttachment: ExtractedAttachment = {
             filename: part.filename,
             mimeType: part.mimeType,
             data: attachment.data.data,
-          });
+          };
+
+          if (hasPdfEncryptionMarker(pdfBuffer)) {
+            extractedAttachment.requiresPassword = true;
+            extractedAttachment.passwordError = 'password_required';
+          } else {
+            try {
+              const pdfData = await pdfParse(pdfBuffer);
+              body += '\n' + (pdfData as any).text;
+            } catch (err) {
+              if (isPdfPasswordError(err)) {
+                extractedAttachment.requiresPassword = true;
+                extractedAttachment.passwordError = 'password_required';
+              } else {
+                extractedAttachment.passwordError = 'pdf_parse_failed';
+              }
+            }
+          }
+
+          attachments.push(extractedAttachment);
         } else if (
           part.filename &&
           part.mimeType &&
@@ -233,7 +155,15 @@ export const extractEmailBody = async (
             data: attachment.data.data,
           });
         }
+
+        if (part.parts) {
+          await walkParts(part.parts);
+        }
       }
+    };
+
+    if (payload.parts) {
+      await walkParts(payload.parts);
     } else {
       body = decodeBase64(payload.body?.data || '');
     }

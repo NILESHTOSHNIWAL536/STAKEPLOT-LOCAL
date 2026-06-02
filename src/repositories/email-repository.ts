@@ -104,7 +104,7 @@
 // };
 
 import mongoose from 'mongoose';
-import { decryptToken, encryptScrapeFields, decryptScrapeFields } from '../utils/encryption';
+import { decryptToken, encryptToken, encryptScrapeFields, decryptScrapeFields } from '../utils/encryption';
 import creditCards from '../utils/credit-cards.json';
 import AppError from '../utils/app-error';
 import { StatusCodes } from 'http-status-codes';
@@ -117,6 +117,13 @@ import { getModels } from '../models/index-model';
 type CreditCardConfig = {
   bankId: string;
   [key: string]: any;
+};
+
+export type StatementPasswordRecord = {
+  bankId: string;
+  email?: string;
+  accountHint?: string;
+  password: string;
 };
 
 export async function upsertGoogleToken(
@@ -271,6 +278,98 @@ export async function getDecryptedRefreshToken(email: string) {
   return decryptToken(googleAuth.refreshToken.encryptedData, googleAuth.refreshToken.iv, googleAuth.refreshToken.authTag);
 }
 
+export async function upsertStatementPassword(
+  userId: string,
+  bankId: string,
+  password: string,
+  email?: string,
+  accountHint?: string
+) {
+  const { StatementPassword } = await getModels();
+  const normalizedEmail = email ? email.trim().toLowerCase() : '';
+  const normalizedAccountHint = accountHint ? accountHint.trim() : '';
+  const encrypted = await encryptToken(password);
+
+  return StatementPassword.findOneAndUpdate(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      bankId,
+      email: normalizedEmail,
+      accountHint: normalizedAccountHint,
+    },
+    {
+      $set: {
+        password: encrypted,
+        lastStatus: 'active',
+        lastError: '',
+      },
+    },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+}
+
+export async function getStatementPasswords(
+  userId: string,
+  bankIds: string[],
+  email?: string
+): Promise<StatementPasswordRecord[]> {
+  const { StatementPassword } = await getModels();
+  const normalizedEmail = email ? email.trim().toLowerCase() : undefined;
+  const query: Record<string, any> = {
+    userId: new mongoose.Types.ObjectId(userId),
+    bankId: { $in: bankIds },
+    lastStatus: { $ne: 'invalid' },
+  };
+
+  if (normalizedEmail) {
+    query.$or = [
+      { email: normalizedEmail },
+      { email: '' },
+      { email: { $exists: false } },
+      { email: null },
+    ];
+  }
+
+  const docs = await StatementPassword.find(query).sort({ updatedAt: -1 }).lean();
+
+  return Promise.all(
+    docs.map(async (doc: any) => ({
+      bankId: doc.bankId,
+      email: doc.email,
+      accountHint: doc.accountHint,
+      password: await decryptToken(
+        doc.password.encryptedData,
+        doc.password.iv,
+        doc.password.authTag
+      ),
+    }))
+  );
+}
+
+export async function markStatementPasswordInvalid(
+  userId: string,
+  bankId: string,
+  email?: string,
+  error = 'Invalid PDF password'
+) {
+  const { StatementPassword } = await getModels();
+  const normalizedEmail = email ? email.trim().toLowerCase() : undefined;
+
+  return StatementPassword.updateMany(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      bankId,
+      ...(normalizedEmail ? { email: normalizedEmail } : {}),
+    },
+    {
+      $set: {
+        lastStatus: 'invalid',
+        lastError: error,
+      },
+    }
+  );
+}
+
 export default {
   getGoogleTokenByUserId,
   upsertGoogleToken,
@@ -281,4 +380,7 @@ export default {
   removeUserBankMapEmailMapping,
   scrapeEmailsByBankId,
   getDecryptedRefreshToken,
+  upsertStatementPassword,
+  getStatementPasswords,
+  markStatementPasswordInvalid,
 };

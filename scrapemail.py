@@ -4,6 +4,16 @@ from datetime import datetime
 import spacy
 import sys
 import traceback
+import base64
+from io import BytesIO
+
+try:
+    from pypdf import PdfReader
+except ImportError:
+    try:
+        from PyPDF2 import PdfReader
+    except ImportError:
+        PdfReader = None
 
 try:
     nlp = spacy.load("en_core_web_sm")
@@ -114,16 +124,16 @@ def classify_transaction(text: str) -> str:
     """Classify transaction type"""
     clean = text.lower()
     
-    if any(k in clean for k in TRANSACTION_KEYWORDS['loan']):
-        return "Borrow"
-    elif any(k in clean for k in ["repayment", "emi paid", "installment paid", "loan closed", "payment successful"]):
+    if any(k in clean for k in ["repayment", "emi paid", "installment paid", "loan closed", "payment successful"]):
         return "Repayment"
-    elif any(k in clean for k in TRANSACTION_KEYWORDS['statement']):
-        return "Statement"
     elif any(k in clean for k in TRANSACTION_KEYWORDS['debit']):
         return "Debit"
     elif any(k in clean for k in TRANSACTION_KEYWORDS['credit']):
         return "Credit"
+    elif any(k in clean for k in TRANSACTION_KEYWORDS['statement']):
+        return "Statement"
+    elif any(k in clean for k in TRANSACTION_KEYWORDS['loan']):
+        return "Borrow"
     elif any(k in clean for k in TRANSACTION_KEYWORDS['reward']):
         return "Reward"
     else:
@@ -351,19 +361,173 @@ def extract_details(text: str, user_banks: list = None):
     
     return details
 
-def scrape_email(email, user_banks=None, pdf_password=None):
+def _decode_attachment_data(data: str) -> bytes:
+    if not data:
+        return b""
+
+    padded = data + "=" * (-len(data) % 4)
+    try:
+        return base64.urlsafe_b64decode(padded)
+    except Exception:
+        return base64.b64decode(padded)
+
+def _password_candidates(pdf_passwords, user_banks):
+    candidates = []
+
+    if isinstance(pdf_passwords, str):
+        candidates.append(pdf_passwords)
+    elif isinstance(pdf_passwords, list):
+        candidates.extend(pdf_passwords)
+    elif isinstance(pdf_passwords, dict):
+        for bank in user_banks or []:
+            values = pdf_passwords.get(bank) or pdf_passwords.get(str(bank).lower())
+            if isinstance(values, str):
+                candidates.append(values)
+            elif isinstance(values, list):
+                candidates.extend(values)
+        for values in pdf_passwords.values():
+            if isinstance(values, str):
+                candidates.append(values)
+            elif isinstance(values, list):
+                candidates.extend(values)
+
+    seen = set()
+    unique = []
+    for password in candidates:
+        if not password or password in seen:
+            continue
+        seen.add(password)
+        unique.append(password)
+    return unique
+
+def _extract_pdf_text(attachment, password_candidates):
+    filename = attachment.get("filename") or attachment.get("name") or "statement.pdf"
+    mime_type = attachment.get("mimeType") or attachment.get("mime") or ""
+    is_pdf = filename.lower().endswith(".pdf") or mime_type.lower() == "application/pdf"
+
+    if not is_pdf:
+        return {"text": "", "processed": False}
+
+    if PdfReader is None:
+        return {
+            "text": "",
+            "processed": True,
+            "needs_password": True,
+            "password_error": "pdf_reader_unavailable",
+            "password_file": filename,
+        }
+
+    raw = _decode_attachment_data(attachment.get("data") or "")
+    if not raw:
+        return {"text": "", "processed": True}
+
+    try:
+        reader = PdfReader(BytesIO(raw))
+        if getattr(reader, "is_encrypted", False):
+            if not password_candidates:
+                return {
+                    "text": "",
+                    "processed": True,
+                    "needs_password": True,
+                    "password_error": "password_required",
+                    "password_file": filename,
+                }
+
+            decrypted = False
+            for password in password_candidates:
+                try:
+                    if reader.decrypt(password):
+                        decrypted = True
+                        break
+                except Exception:
+                    continue
+
+            if not decrypted:
+                return {
+                    "text": "",
+                    "processed": True,
+                    "needs_password": True,
+                    "password_error": "invalid_password",
+                    "password_file": filename,
+                }
+
+        text = "\n".join((page.extract_text() or "") for page in reader.pages)
+        return {"text": text, "processed": True}
+    except Exception as exc:
+        message = str(exc).lower()
+        if "password" in message or "decrypt" in message or "encrypted" in message:
+            return {
+                "text": "",
+                "processed": True,
+                "needs_password": True,
+                "password_error": "password_required",
+                "password_file": filename,
+            }
+
+        return {
+            "text": "",
+            "processed": True,
+            "needs_password": False,
+            "password_error": "pdf_parse_failed",
+            "password_file": filename,
+        }
+
+def scrape_email(email, user_banks=None, pdf_passwords=None):
     """Main email scraping function supporting multiple banks"""
     subject = email.get("subject", "") or ""
     body = email.get("body", "") or ""
-    
-    # Combine all text
-    full_text = f"{subject}\n\n{body}".strip()
     
     # Normalize user_banks to handle various input formats
     if user_banks is None:
         user_banks = []
     elif isinstance(user_banks, str):
         user_banks = [user_banks]
+
+    attachments = email.get("attachments") or []
+    password_candidates = _password_candidates(pdf_passwords, user_banks)
+    attachment_text_parts = []
+    attachment_status = {
+        "attachments_processed": 0,
+        "needs_password": False,
+        "password_error": None,
+        "password_file": None,
+    }
+
+    for attachment in attachments:
+        pdf_result = _extract_pdf_text(attachment, password_candidates)
+        if not pdf_result.get("processed"):
+            continue
+
+        attachment_status["attachments_processed"] += 1
+        if pdf_result.get("text"):
+            attachment_text_parts.append(pdf_result["text"])
+
+        if pdf_result.get("needs_password"):
+            attachment_status["needs_password"] = True
+            attachment_status["password_error"] = pdf_result.get("password_error")
+            attachment_status["password_file"] = pdf_result.get("password_file")
+            break
+        elif pdf_result.get("password_error"):
+            attachment_status["password_error"] = pdf_result.get("password_error")
+
+    # Combine all text
+    full_text = f"{subject}\n\n{body}\n\n{chr(10).join(attachment_text_parts)}".strip()
+
+    if attachment_status["needs_password"]:
+        matched_bank, _ = belongs_to_any_bank(f"{subject}\n{body}", user_banks)
+        return {
+            "category": "Other",
+            "banks_checked": user_banks,
+            "matched_bank": matched_bank or (user_banks[0] if user_banks else "unknown"),
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "confidence_score": 0,
+            "message_id": email.get("messageId", ""),
+            "sources_processed": {
+                "subject": bool(subject),
+                "body": bool(body),
+                **attachment_status,
+            }
+        }
     
     # If no text, return empty result
     if not full_text or len(full_text) < 10:
@@ -376,6 +540,7 @@ def scrape_email(email, user_banks=None, pdf_password=None):
             "sources_processed": {
                 "subject": bool(subject),
                 "body": bool(body),
+                **attachment_status,
             }
         }
     
@@ -390,10 +555,9 @@ def scrape_email(email, user_banks=None, pdf_password=None):
     details["sources_processed"] = {
         "subject": bool(subject),
         "body": bool(body),
-        "attachments_processed": 0,
-        "needs_password": False,
-        "password_error": None
+        **attachment_status,
     }
+    details["message_id"] = email.get("messageId", "")
     
     # Set matched_bank if not found
     if "matched_bank" not in details or details["matched_bank"] == "unknown":
@@ -423,7 +587,7 @@ if __name__ == "__main__":
     try:
         email_data = json.load(sys.stdin)
         user_banks = email_data.pop("user_bank", None)
-        pdf_password = email_data.pop("pdf_password", None)
+        pdf_password = email_data.pop("pdf_passwords", None) or email_data.pop("pdf_password", None)
         
         result = scrape_email(email_data, user_banks, pdf_password)
         print(json.dumps(result, indent=2, ensure_ascii=False))

@@ -30,6 +30,7 @@ import './instrument'; // Sentry MUST be initialized before any other imports
 import dotenv from 'dotenv';
 import app from './app';
 import connectDatabases from './dbConnections';
+import dns from 'dns';
 import { ServerConfig, RedisClient, Logger } from './config';
 import { loadSecrets } from './config/secrets';
 
@@ -44,6 +45,9 @@ const startServer = async (): Promise<void> => {
     app.listen(ServerConfig.PORT, '0.0.0.0', () => {
       Logger.info(`Server running on port: ${ServerConfig.PORT}`);
     });
+
+    // Force Google DNS
+    dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
     // Connect both MongoDB databases
     await connectDatabases();

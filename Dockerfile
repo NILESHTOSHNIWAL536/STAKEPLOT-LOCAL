@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Remove PEP 668 externally-managed-environment marker to allow pip installs in container
 RUN rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 
-# Install spacy and download model
-RUN pip install --no-cache-dir spacy && \
+# Install spacy/PDF parser and download model
+RUN pip install --no-cache-dir spacy pypdf && \
     python3 -m spacy download en_core_web_sm
 
 COPY --from=builder /app /app
