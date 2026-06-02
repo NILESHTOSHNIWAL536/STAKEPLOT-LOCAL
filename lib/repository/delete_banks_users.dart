@@ -68,9 +68,9 @@ void deleteBankAccount(
     getCategoryData();
     clearGraph();
     getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
-    
+
     Navigator.of(context).pop();
     bankAccountLinkedList.refresh();
-    
+
   }
 }

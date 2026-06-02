@@ -49,11 +49,11 @@
 //     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
 //     if (getFlagOfResponse(res)) {
-    
+
 //       var data = jsonDecode(res.body);
-      
+
 //        categoriesList.clear();
-     
+
 //        frequentPayments.clear();
 //        moreDrasticChange.clear();
 //        categoriesListWeek.clear();
@@ -64,16 +64,16 @@
 //        weeklyTrend.clear();
 //       // spendingsOnCategories.clear();
 //       // throw Error();
-      
-    
+
+
 //        categoriesList.addAll(
 //         (data["data"]['categorized'] as List<dynamic>)
 //             .map((e) => e as Map<String, dynamic>)
 //             .toList(),
 //       );
-      
 
-     
+
+
 
 //       // frequentPayments.addAll(data["data"]['frequentPayments']);
 //       // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
@@ -150,7 +150,6 @@ import 'dart:convert';
 
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -162,7 +161,7 @@ import '../controllers/controllerManagement.dart';
 import '../controllers/finora_controller.dart';
 
 //  void getFinoraPreviousMonthData() async {
-  
+
 //   // FinoraController finoraController = ControllerManagement.finoraController;
 //     isLoading.value = true;
 //     FinoraLoading.value = false;
@@ -199,12 +198,12 @@ Future<void> getCategoryData() async {
     // API call inside try
     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
-    if (getFlagOfResponse(res)) {    
+    if (getFlagOfResponse(res)) {
       var data = jsonDecode(res.body);
-      
+
       //  categoriesList.clear();
       controller.categoriesList.clear();
-     
+
        controller.frequentPayments.clear();
        controller.moreDrasticChange.clear();
        controller.categoriesListWeek.clear();
@@ -215,16 +214,16 @@ Future<void> getCategoryData() async {
        controller.weeklyTrend.clear();
       // spendingsOnCategories.clear();
       // throw Error();
-      
-    
+
+
        controller.categoriesList.addAll(
         (data["data"]['categorized'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
-      
 
-     
+
+
 
       // frequentPayments.addAll(data["data"]['frequentPayments']);
       // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);

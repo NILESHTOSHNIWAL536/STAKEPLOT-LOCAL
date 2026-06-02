@@ -23,7 +23,7 @@ class FontManager {
   }) {
     // Inherit text color from the ambient theme when no explicit color is given
     final resolvedColor = color ?? Theme.of(context).textTheme.bodyMedium?.color;
-    final style = GoogleFonts.roboto(
+    final style = GoogleFonts.inter(
       fontSize: fontSize.toDouble(),
       fontWeight: lWeight,
       height: lineHeight.toDouble(),

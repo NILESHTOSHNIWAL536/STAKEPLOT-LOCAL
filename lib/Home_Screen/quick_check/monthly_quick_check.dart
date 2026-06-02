@@ -11,6 +11,7 @@ import '../../constants/app_styles.dart';
 import '../../controllers/quick_check_controller.dart';
 import '../../finvu_screens/shareAccountLogin.dart';
 import '../../image_service/avatarProfile.dart';
+import '../../model/bank_model.dart';
 import '../../model/quick_check_model.dart';
 import '../../repository/bankinfo.dart';
 import 'package:intl/intl.dart';
@@ -24,369 +25,577 @@ class BalanceScreen extends StatefulWidget {
 
 class _BalanceScreenState extends State<BalanceScreen> {
   final controller = Get.find<QuickCheckController>();
-
-  final Color backgroundColor = const Color(0xFFFFF9F0);
-  // light cream
-  final Color cardColor = const Color(0xFF4B4D73);
-  // dark purple
-  final Color primaryText = Colors.white;
-
-  final Color creditedBaseColor = const Color(0xFF4B4D73);
-
-  final Color debitedBaseColor = const Color(0xFF9394B8);
-
-  final Color outstandingBaseColor = const Color(0xFF80B7C7);
-  var selectedBank = 'All'.obs;
-  final RxnString selectedInsightTab = RxnString();
-  // null initially
-
-  var hasSelectedInsight = false.obs; // 'Credited' | 'Debited' | 'Outstanding'
-  var selectedPeriod = 'Monthly'.obs; // 'Monthly' | 'Annually'
-
-// var selectedBankData = Rxn<Map<String, dynamic>>();
-  var selectedBankData = Rxn<QuickCheckBankData>();
-  var selectedYear = DateTime.now().year.obs;
-
-  // 🔹 NEW: month selection for the dropdown
-  var selectedMonth = DateFormat('MMMM').format(DateTime.now()).obs;
-  // default month
+  final RxnInt expandedBankIndex = RxnInt();
+  var isInsightsLoading = true.obs;
   final List<String> months = const [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
-  // loading state for graph data
+  var selectedMonth = DateFormat('MMMM').format(DateTime.now()).obs;
+  var selectedYear = DateTime.now().year.obs;
 
-  var isInsightsLoading = true.obs;
+  static const Color _addBankBg = Color(0xFFE5F6F5);
+  static const Color _addBankText = Color(0xFF2A9D8F);
+  static const Color _darkCard = Color(0xFF1C1C3A);
+  static const Color _tealAccent = Color(0xFF7ECECE);
+
+  final Map<int, RxnInt> _selectedBarPerBank = {};
+
   @override
   void initState() {
     super.initState();
-
-    // 🔹 initial load (Monthly, current month & year)
-    fetchMonthlyInsights(
-      year: DateTime.now().year,
-      monthName: selectedMonth.value,
-    );
-//   getQuickCheck(
-//   view: 'yearly',
-//   year: DateTime.now().year,
-// );
+    fetchMonthlyInsights(year: DateTime.now().year, monthName: selectedMonth.value);
   }
 
-  int _monthNumberFromName(String name) {
-    return months.indexOf(name) + 1;
-  }
-
-  Future<void> fetchMonthlyInsights({
-    required int year,
-    String? monthName,
-  }) async {
+  Future<void> fetchMonthlyInsights({required int year, String? monthName}) async {
     isInsightsLoading.value = true;
-
     try {
-      final int month = monthName != null
-          ? _monthNumberFromName(monthName)
-          : DateTime.now().month;
-
+      final int month =
+          monthName != null ? _monthNumberFromName(monthName) : DateTime.now().month;
       await controller.getQuickCheck(
         view: 'monthly',
         month: _monthNumberFromName(selectedMonth.value),
-        year: DateTime.now().year,
+        year: year,
       );
-      updateMonthlyPercentages(
-        credited: controller.quickCheck.value?.creditPercent ?? 0,
-        debited: controller.quickCheck.value?.debitPercent ?? 0,
-        outstanding: controller.quickCheck.value?.outstandingPercent ?? 0,
-      );
-      selectedInsightTab.value = null;
-      hasSelectedInsight.value = false;
-
       selectedMonth.value = monthName ?? months[month - 1];
     } finally {
       isInsightsLoading.value = false;
     }
   }
 
-  List<String> get availableMonths {
-    final now = DateTime.now();
-
-    // If current year → allow only past & current months
-    return months.take(now.month).toList();
-  }
-
   List<int> get availableYears {
     final currentYear = DateTime.now().year;
-
-    // show last 5 years including current
     return List.generate(5, (index) => currentYear - index);
   }
 
-  final RxMap<String, double> monthlyPercentages = <String, double>{
-    'Credited': 0,
-    'Debited': 0,
-    'Outstanding': 0,
-  }.obs;
+  int _monthNumberFromName(String name) => months.indexOf(name) + 1;
 
-  /// Percentages for ANNUAL view – will be filled from backend
-  final RxMap<String, double> annualPercentages = <String, double>{
-    'Credited': 0,
-    'Debited': 0,
-    'Outstanding': 0,
-  }.obs;
+  String _formatAmount(double amount) =>
+      NumberFormat('#,##0').format(amount.round());
 
-  // Title like: "Credited", "Debited", "Outstanding"
-  String? get currentSelectedTypeLabel => selectedInsightTab.value;
-
-  // Amount based on percentage * total balance
-  String get currentSelectedAmountString {
-    final bank = selectedBankData.value;
-
-    final data = controller.quickCheck.value;
-
-    if (bank == null) {
-      switch (selectedInsightTab.value) {
-        case 'Credited':
-          return '₹${(data?.credit ?? 0).toStringAsFixed(2)}';
-        case 'Debited':
-          return '₹${(data?.debit ?? 0).toStringAsFixed(2)}';
-        case 'Outstanding':
-          return '₹${(data?.outstanding ?? 0).toStringAsFixed(2)}';
-        default:
-          return '₹0.00';
-      }
-    }
-
-    switch (selectedInsightTab.value) {
-      case 'Credited':
-        return '₹${bank.credit.toStringAsFixed(2)}';
-      case 'Debited':
-        return '₹${bank.debit.toStringAsFixed(2)}';
-      case 'Outstanding':
-        return '₹${bank.outstanding.toStringAsFixed(2)}';
-      default:
-        return '₹0.00';
-    }
+  String _formatAmountShort(double amount) {
+    if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(1)}K';
+    return amount.toStringAsFixed(0);
   }
 
-  /// 👉 percentage for currently selected period + tab
-  double get currentSelectedPercentage {
-    return percentageFor(selectedInsightTab.value ?? 'Credited');
-  }
-
-  /// 👉 helper used by bottom tabs ("(62%)") and dot grid
-  double percentageFor(String type) {
-    final bank = selectedBankData.value;
-
-    if (bank == null) {
-      return {
-        'Credited': controller.quickCheck.value?.creditPercent ?? 0,
-        'Debited': controller.quickCheck.value?.debitPercent ?? 0,
-        'Outstanding': controller.quickCheck.value?.outstandingPercent ?? 0,
-      }[type]!;
-    }
-
-    return {
-      'Credited': bank.creditPercent,
-      'Debited': bank.debitPercent,
-      'Outstanding': bank.outstandingPercent,
-    }[type]!
-        .toDouble();
-  }
-
-  void updateMonthlyPercentages({
-    required double credited,
-    required double debited,
-    required double outstanding,
-  }) {
-    monthlyPercentages['Credited'] = credited;
-    monthlyPercentages['Debited'] = debited;
-    monthlyPercentages['Outstanding'] = outstanding;
-  }
-
-  void updateAnnualPercentages({
-    required double credited,
-    required double debited,
-    required double outstanding,
-  }) {
-    annualPercentages['Credited'] = credited;
-    annualPercentages['Debited'] = debited;
-    annualPercentages['Outstanding'] = outstanding;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
+  // ── Header ────────────────────────────────────────────────────────────────
+  Widget _buildHeader(BuildContext context) {
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Row(
           children: [
-            _buildTopCard(context),
-            const SizedBox(height: 22),
-            _buildInsightsSection(),
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              child: globalbackArrow(),
+            ),
+            const Expanded(
+              child: Text(
+                'My Accounts',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF111111),
+                ),
+              ),
+            ),
+            _downloadButton(context),
           ],
         ),
       ),
     );
   }
 
-  /// ---------------------------------------------------------
-  ///  TOP PURPLE CARD (continuous with status bar)
-  /// ---------------------------------------------------------
-  Widget _buildTopCard(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      // optional fixed height if you want it
-      height: 337,
-      decoration: BoxDecoration(
-        color: cardColor, // 👈 same as statusBarColor
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+  Widget _downloadButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        final len = bankAccountLinkedList.length;
+        if (len == 0) {
+          snackBarCalled(context, SnackbarData().noBankForLinking);
+        } else {
+          accountIdPdf.value = bankAccountLinkedList[0].accountId;
+          showModalForPdfDownloadBankUiCheckBox(context);
+        }
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: const BoxDecoration(
+          color: _tealAccent,
+          shape: BoxShape.circle,
         ),
+        child: const Icon(Icons.download, color: Colors.white, size: 20),
       ),
+    );
+  }
 
-      // 👇 This makes the Column start *below* the status bar,
-      // but the purple background still goes behind it.
-      child: SafeArea(
-        top: true,
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ---------- first row: back, title, download ----------
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: globalbackArrow()),
-                    Text(
-                      'Balance',
-                      style: FontManager().getTextStyle(context,
-                          color: primaryText,
-                          fontSize: 20,
-                          lWeight: FontWeight.w500),
+  // ── Combined Balance Card ─────────────────────────────────────────────────
+  Widget _buildCombinedBalanceCard(BuildContext context) {
+    return Obx(() {
+      final balance = controller.quickCheck.value?.currentBalance ?? 0;
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        decoration: BoxDecoration(
+          color: _darkCard,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -8,
+              top: -24,
+              child: Text(
+                '₹',
+                style: TextStyle(
+                  fontSize: 100,
+                  color: Colors.white.withOpacity(0.06),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Combined Balance',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.white.withOpacity(0.65),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _formatAmount(balance),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  // ── Year Selector ─────────────────────────────────────────────────────────
+  Widget _buildYearSelector(BuildContext context) {
+    return Obx(() => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<int>(
+              value: selectedYear.value,
+              icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+              isDense: true,
+              items: availableYears.map((y) {
+                return DropdownMenuItem(
+                  value: y,
+                  child: Text(
+                    y.toString(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF111111),
                     ),
-                    _roundIconButton(Icons.download, context),
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value == null || value == selectedYear.value) return;
+                selectedYear.value = value;
+                controller.getQuickCheck(view: 'yearly', year: value);
+              },
+            ),
+          ),
+        ));
+  }
+
+  // ── Account List (accordion) ───────────────────────────────────────────────
+  Widget _buildAccountsList(BuildContext context) {
+    return Obx(() {
+      final banks = controller.quickCheck.value?.banks ?? [];
+      return Column(
+        children: banks.asMap().entries.map((entry) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: _buildAccountRow(context, entry.value, entry.key),
+          );
+        }).toList(),
+      );
+    });
+  }
+
+  Widget _buildAccountRow(BuildContext context, QuickCheckBankData bank, int index) {
+    final linked = bankAccountLinkedList.firstWhereOrNull(
+      (a) => a.bankName.toLowerCase() == bank.bankName.toLowerCase(),
+    );
+    final logoUrl = linked?.bankLogo ?? '';
+    final maskedAcc = linked?.maskedAccNumber ?? '';
+
+    _selectedBarPerBank.putIfAbsent(index, () => RxnInt());
+    final selectedBar = _selectedBarPerBank[index]!;
+
+    return Obx(() {
+      final isExpanded = expandedBankIndex.value == index;
+
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color:  Colors.grey.shade200,
+            width: isExpanded ? 1.5 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            // ── Row header ──
+            GestureDetector(
+              onTap: () {
+                expandedBankIndex.value = isExpanded ? null : index;
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                child: Row(
+                  children: [
+                    // Real bank logo with fallback
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: logoUrl.isNotEmpty
+                          ? Image.network(
+                              logoUrl,
+                              width: 44,
+                              height: 44,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.account_balance,
+                                color: Color(0xFFE53935),
+                                size: 22,
+                              ),
+                              loadingBuilder: (_, child, progress) =>
+                                  progress == null
+                                      ? child
+                                      : const Center(
+                                          child: SizedBox(
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: _tealAccent,
+                                            ),
+                                          ),
+                                        ),
+                            )
+                          : const Icon(
+                              Icons.account_balance,
+                              color: Color(0xFFE53935),
+                              size: 22,
+                            ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            bank.bankName,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF333333),
+                            ),
+                          ),
+                          if (maskedAcc.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              maskedAcc,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Colors.black45,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    Text(
+                      _formatAmount(bank.currentBalance ?? 0),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111111),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    AnimatedRotation(
+                      turns: isExpanded ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 200),
+                      child: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.black54,
+                        size: 22,
+                      ),
+                    ),
                   ],
                 ),
               ),
+            ),
 
-              const SizedBox(height: 24),
-              // add more widgets here inside the top card
-
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Obx(() {
-                  // final banks = quickCheckBanks.value;
-                  final banks = controller.quickCheck.value?.banks ?? [];
-
-                  if (banks.isEmpty) return const SizedBox();
-
-                  return Row(
-                    children: [
-                      _bankChip('All', Icons.account_balance),
-                      ...banks.map((bank) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 6),
-                          child: _bankChip(
-                            bank.bankName,
-                            Icons.account_balance,
-                          ),
-                        );
-                      }).toList(),
-                    ],
-                  );
-                }),
+            // ── Inline chart (shown when expanded) ──
+            if (isExpanded) ...[
+              Divider(height: 1, color: Colors.grey.shade100),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 14, 12, 16),
+                child: _buildInlineBankChart(context, bank, linked: linked, selectedBar: selectedBar),
               ),
+            ],
+          ],
+        ),
+      );
+    });
+  }
 
-              const SizedBox(height: 28),
+  // ── Per-bank inline chart ─────────────────────────────────────────────────
+  Widget _buildInlineBankChart(
+    BuildContext context,
+    QuickCheckBankData bank, {
+    required BankAccountModel? linked,
+    required RxnInt selectedBar,
+  }) {
+    final List<Map<String, dynamic>> monthData =
+        (bank.months ?? []).map<Map<String, dynamic>>((m) => {
+              'month': m['month'] as int,
+              'credit': (m['credit'] ?? 0).toDouble(),
+              'debit': (m['debit'] ?? 0).toDouble(),
+              'outstanding': (m['outstanding'] ?? 0).toDouble(),
+            }).toList();
 
-              // ---------- Combined balance text ----------
-              Obx(() {
-                final bank = selectedBankData.value;
+    if (monthData.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(
+          child: Text(
+            'No data available',
+            style: TextStyle(color: Colors.black45, fontSize: 13),
+          ),
+        ),
+      );
+    }
 
-                return Text(
-                  bank == null
-                      ? 'Combined Balance'
-                      : '${bank.bankName} Balance',
-                  style: FontManager().getTextStyle(context,
-                      color: Colors.white70, fontSize: 12),
-                );
-              }),
+    final double maxVal = monthData.fold(0.0, (prev, m) {
+      final total = (m['credit'] as double) +
+          (m['debit'] as double) +
+          (m['outstanding'] as double);
+      return total > prev ? total : prev;
+    });
 
-              const SizedBox(height: 6),
-              Obx(() {
-                if (selectedBankData.value == null) {
-                  return Text(
-                    '₹${controller.quickCheck.value?.currentBalance.toStringAsFixed(2)}',
-                    style: FontManager().getTextStyle(context,
-                        color: primaryText,
-                        fontSize: 26,
-                        lWeight: FontWeight.bold),
-                  );
-                }
+    return Obx(() {
+      final selectedIdx = selectedBar.value;
 
-                return Text(
-                  '₹${(selectedBankData.value!.currentBalance ?? 0).toStringAsFixed(2)}',
-                  style: FontManager().getTextStyle(context,
-                      color: primaryText,
-                      fontSize: 26,
-                      lWeight: FontWeight.bold),
-                );
-              }),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 160,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: monthData.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final m = entry.value;
+                  final isSelected = selectedIdx == i;
+                  final isAnySelected = selectedIdx != null;
 
-              const SizedBox(height: 20),
-
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Obx(() {
-                  final banks = controller.quickCheck.value?.banks ?? [];
-
-                  if (banks.isEmpty) return const SizedBox();
-
-                  return Row(
-                    children: [
-                      ...banks.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final bank = entry.value;
-
-                        return Row(
+                  return GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      selectedBar.value = isSelected ? null : i;
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 180),
+                        opacity: !isAnySelected || isSelected ? 1.0 : 0.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            _smallAccountChip(
-                              bank.bankName,
-                              '₹${(bank.currentBalance ?? 0).toString()}',
+                            _buildBar(
+                              credited: m['credit'] as double,
+                              debited: m['debit'] as double,
+                              outstanding: m['outstanding'] as double,
+                              maxTotal: maxVal,
+                              isHighlighted: isSelected,
                             ),
-                            if (index != banks.length - 1) ...[
-                              const SizedBox(width: 6),
-                              _verticalDivider(),
-                              const SizedBox(width: 6),
-                            ],
+                            const SizedBox(height: 6),
+                            Text(
+                              DateFormat.MMM()
+                                  .format(DateTime(0, m['month'] as int)),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: isSelected ? _darkCard : Colors.black54,
+                                fontWeight: isSelected
+                                    ? FontWeight.w700
+                                    : FontWeight.normal,
+                              ),
+                            ),
                           ],
-                        );
-                      }).toList(),
-                      const SizedBox(width: 8),
-                      _addAccountButton(),
-                    ],
+                        ),
+                      ),
+                    ),
                   );
-                }),
+                }).toList(),
               ),
+            ),
+          ),
+
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _legendItem(
+                symbol: '●',
+                label: 'Credited',
+                amount: selectedIdx != null
+                    ? monthData[selectedIdx]['credit'] as double
+                    : bank.credit,
+                percent: bank.creditPercent.toDouble(),
+                dotColor: _darkCard,
+              ),
+              _legendItem(
+                symbol: '+',
+                label: 'Debited',
+                amount: selectedIdx != null
+                    ? monthData[selectedIdx]['debit'] as double
+                    : bank.debit,
+                percent: bank.debitPercent.toDouble(),
+                dotColor: _tealAccent,
+              ),
+              _legendItem(
+                symbol: '●',
+                label: 'Outstanding',
+                amount: selectedIdx != null
+                    ? monthData[selectedIdx]['outstanding'] as double
+                    : bank.outstanding,
+                percent: bank.outstandingPercent.toDouble(),
+                dotColor: Colors.grey,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Set As Primary — scoped to this account
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: linked == null
+                  ? null
+                  : () {
+                      // Implement primary account setting logic here
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _darkCard,
+                disabledBackgroundColor: Colors.grey.shade300,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'Set As Primary',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  // ── Stacked bar ───────────────────────────────────────────────────────────
+  Widget _buildBar({
+    required double credited,
+    required double debited,
+    required double outstanding,
+    required double maxTotal,
+    bool isHighlighted = false,
+  }) {
+    final double barWidth = isHighlighted ? 32 : 28;
+    const double maxBarHeight = 120;
+    final double total = credited + debited + outstanding;
+
+    if (total == 0 || maxTotal == 0) {
+      return Container(
+        height: 4,
+        width: barWidth,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      );
+    }
+
+    final double barHeight = maxBarHeight * (total / maxTotal);
+    final double creditH = barHeight * (credited / total);
+    final double debitH = barHeight * (debited / total);
+    final double outstandingH = barHeight * (outstanding / total);
+
+    return Container(
+      decoration: isHighlighted
+          ? BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: _darkCard.withOpacity(0.22),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            )
+          : null,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          height: barHeight,
+          width: barWidth,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (outstanding > 0)
+                Container(height: outstandingH, color: Colors.grey.shade300),
+              if (debited > 0)
+                Container(height: debitH, color: _tealAccent),
+              if (credited > 0)
+                Container(height: creditH, color: _darkCard),
             ],
           ),
         ),
@@ -394,127 +603,67 @@ class _BalanceScreenState extends State<BalanceScreen> {
     );
   }
 
-  Widget _roundIconButton(IconData icon, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        int len = bankAccountLinkedList.length;
-        if (len == 0) {
-          snackBarCalled(context, SnackbarData().noBankForLinking);
-        }
-
-        //   else {
-        //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
-        //     showModalForPdfDownloadBankUiCheckBox(context);
-        //   }
-        // },
-        else {
-          if (bankAccountLinkedList.isNotEmpty) {
-            accountIdPdf.value = bankAccountLinkedList[0].accountId;
-            showModalForPdfDownloadBankUiCheckBox(context);
-          }
-        }
-      },
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          color: Color(0xFF3F3D7D),
-        ),
-      ),
-    );
-  }
-
-  /// Bank filter chip (All, Axis Bank, etc.)
-  Widget _bankChip(String label, IconData icon) {
-    return GestureDetector(
-      onTap: () {
-        selectedBank.value = label;
-
-        if (label == 'All') {
-          selectedBankData.value = null; // combined mode
-        } else {
-          final bank = controller.quickCheck.value?.banks.firstWhere(
-            (b) => b.bankName == label,
-          );
-
-          selectedBankData.value = bank;
-          // final bank = quickCheckBanks.firstWhere(
-          //   (b) => b['bankName'] == label,
-          //   orElse: () => {},
-          // );
-        }
-      },
-      child: Obx(
-        () {
-          final bool isSelected = selectedBank.value == label;
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.white : Color(0xFF4B4D73),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white10, width: 2),
+  // ── Legend item ───────────────────────────────────────────────────────────
+  Widget _legendItem({
+    required String symbol,
+    required String label,
+    required double amount,
+    required double percent,
+    required Color dotColor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              symbol,
+              style: TextStyle(
+                  color: dotColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold),
             ),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 16,
-                  color: isSelected ? cardColor : Colors.white,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  label,
-                  style: FontManager().getTextStyle(context,
-                      color: isSelected ? cardColor : Colors.white,
-                      fontSize: 12,
-                      lWeight: FontWeight.w500),
-                ),
-              ],
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 11, color: Colors.black54),
             ),
-          );
-        },
-      ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Row(
+          children: [
+            Text(
+              _formatAmountShort(amount),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF111111),
+              ),
+            ),
+            const SizedBox(width: 4),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                '+${percent.toStringAsFixed(1)}%',
+                style: TextStyle(
+                    fontSize: 9, color: Colors.green.shade700),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
-  /// Small chip under balance, showing per account amount
-  Widget _smallAccountChip(String bankShortName, String amount) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-      decoration: BoxDecoration(),
-      child: Row(
-        children: [
-          Icon(Icons.account_balance, size: 14, color: Colors.white70),
-          const SizedBox(width: 6),
-
-          // const SizedBox(width: 4),
-          Text(
-            amount,
-            style: FontManager()
-                .getTextStyle(context, color: Colors.white, fontSize: 14),
-          ),
-          const SizedBox(width: 2),
-        ],
-      ),
-    );
-  }
-
-  Widget _verticalDivider() {
-    return Container(
-      width: 1.5,
-      height: 18,
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(horizontal: 1),
-    );
-  }
-
-  /// "+" button at the end of the small chips row
-  Widget _addAccountButton() {
+  // ── Add Bank Account footer ───────────────────────────────────────────────
+  Widget _buildAddAccountButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -523,665 +672,66 @@ class _BalanceScreenState extends State<BalanceScreen> {
         );
       },
       child: Container(
-        width: 18,
-        height: 18,
-        decoration: BoxDecoration(
-            color: Color(0xFF4B4D73),
-            borderRadius: BorderRadius.circular(3),
-            border: Border.all(color: Colors.white)),
-        child: const Icon(Icons.add, size: 16, color: Colors.white),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
+        decoration: const BoxDecoration(
+          color: _addBankBg,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add, color: _addBankText, size: 20),
+            SizedBox(width: 8),
+            Text(
+              'Add Bank Account',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: _addBankText,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildInsightsSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 22),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  // ──────────────────────────────────────────────────────────────────────────
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 25, right: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Obx(
-                  () => Row(
-                    children: [
-                      _periodButton('Monthly'),
-                      const SizedBox(width: 4),
-                      _periodButton('Annually'), // small typo fix
-                    ],
-                  ),
-                ),
-                _simpleDropdown(),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // ---------- DYNAMIC "MOST USED ACCOUNT / INSIGHT" AREA ----------
-          Obx(() {
-            if (selectedPeriod.value == 'Annually' ||
-                !hasSelectedInsight.value) {
-              return const SizedBox();
-            }
-
-            return Center(
-                child: Column(
-              children: [
-                Text(
-                  currentSelectedTypeLabel ?? '',
-                  style: FontManager().getTextStyle(context,
-                      fontSize: 14,
-                      lWeight: FontWeight.w600,
-                      color: Colors.black87),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  currentSelectedAmountString,
-                  style: FontManager().getTextStyle(context,
-                      fontSize: 20,
-                      lWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${currentSelectedPercentage.toStringAsFixed(2)}% of total',
-                  style: FontManager().getTextStyle(context,
-                      fontSize: 12, color: Colors.black45),
-                ),
-              ],
-            ));
-          }),
-
-          // ---------- DOT GRID ----------
-          Obx(() {
-            if (selectedPeriod.value == 'Monthly') {
-              return Center(child: _dotGrid());
-            }
-
-            // 👇 Annual view
-            return _annualBarGraph();
-          }),
-
-          const SizedBox(height: 30),
-
-          // ---------- BOTTOM TABS ----------
-          Obx(() {
-            final bank = selectedBankData.value;
-
-            final credited = bank == null
-                ? controller.quickCheck.value?.credit
-                : bank.credit;
-
-            final debited =
-                bank == null ? controller.quickCheck.value?.debit : bank.debit;
-
-            final outstanding = bank == null
-                ? controller.quickCheck.value?.outstanding
-                : bank.outstanding;
-
-            if (selectedPeriod.value == 'Annually') {
-              return Column(
+          _buildHeader(context),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  const SizedBox(height: 32),
-                  _breakdownTile(
-                    context: context,
-                    title: "Credited",
-                    amount: "₹${credited?.toStringAsFixed(1) ?? 0}",
-                    color: AppColors.creditColor,
-                    icon: AvatarProfileImageZero(
-                      url: Finance.credited,
-                      width: 10,
-                      height: 30,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCombinedBalanceCard(context),
+                        const SizedBox(height: 12),
+                        _buildYearSelector(context),
+                        const SizedBox(height: 12),
+                        _buildAccountsList(context),
+                        const SizedBox(height: 12),
+                      ],
                     ),
-                    textColor: AppColors.backgroundColor,
                   ),
-                  const SizedBox(height: 12),
-                  _breakdownTile(
-                    context: context,
-                    title: "Debited",
-                    amount: "₹${debited?.toStringAsFixed(1) ?? 0}",
-                    color: AppColors.debitedAmount,
-                    icon: AvatarProfileImageZero(
-                      url: Finance.debited,
-                      width: 10,
-                      height: 30,
-                    ),
-                    textColor: AppColors.backgroundColor,
-                  ),
-                  const SizedBox(height: 12),
-                  _breakdownTile(
-                    context: context,
-                    title: "Outstanding",
-                    amount: "₹${outstanding?.toStringAsFixed(1) ?? 0}",
-                    color: AppColors.backgroundColor,
-                    icon: AvatarProfileImageZero(
-                      url: Finance.outstanding,
-                      width: 10,
-                      height: 30,
-                    ),
-                    textColor: AppColors.bg1,
-                    titleColor: AppColors.bg1,
-                    border: true,
-                  ),
+                  _buildAddAccountButton(context),
                 ],
-              );
-            }
-
-            return Row(
-              children: [
-                Expanded(
-                  child: _insightTab(
-                    label: 'Credited',
-                    percentage:
-                        '${percentageFor('Credited').toStringAsFixed(1)}%',
-                    isSelected: selectedInsightTab.value == 'Credited',
-                    activeColor: creditedBaseColor,
-                    onTap: () {
-                      selectedInsightTab.value = 'Credited';
-                      hasSelectedInsight.value = true;
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _insightTab(
-                    label: 'Debited',
-                    percentage:
-                        '${percentageFor('Debited').toStringAsFixed(1)}%',
-                    isSelected: selectedInsightTab.value == 'Debited',
-                    activeColor: debitedBaseColor,
-                    onTap: () {
-                      selectedInsightTab.value = 'Debited';
-                      hasSelectedInsight.value = true;
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _insightTab(
-                    label: 'Outstanding',
-                    percentage:
-                        '${percentageFor('Outstanding').toStringAsFixed(1)}%',
-                    isSelected: selectedInsightTab.value == 'Outstanding',
-                    activeColor: outstandingBaseColor,
-                    onTap: () {
-                      selectedInsightTab.value = 'Outstanding';
-                      hasSelectedInsight.value = true;
-                    },
-                  ),
-                ),
-              ],
-            );
-          }),
+              ),
+            ),
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _breakdownTile({
-    required BuildContext context,
-    required String title,
-    required String amount,
-    required Color color,
-    required Widget icon,
-    required Color textColor,
-    Color? titleColor,
-    bool border = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.p16, vertical: AppSizes.p10),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8),
-        // border: border ? Border.all(color: Colors.pink) : null,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(left: AppSizes.p10),
-        child: Row(
-          children: [
-            icon,
-            const SizedBox(width: AppSizes.w20),
-            Text(
-              title,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 16,
-                color: titleColor ??
-                    AppColors.backgroundColor, // ← Use your AppColors white
-                lWeight: FontWeight.w500,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              amount,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 18,
-                color: titleColor ?? AppColors.backgroundColor,
-                lWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _periodButton(String label) {
-    final bool isSelected = selectedPeriod.value == label;
-
-    return GestureDetector(
-      onTap: isInsightsLoading.value
-          ? null
-          : () {
-              // 🛑 GUARD: same period tapped again
-              if (selectedPeriod.value == label) return;
-
-              selectedPeriod.value = label;
-
-              selectedInsightTab.value = null;
-              hasSelectedInsight.value = false;
-
-              if (label == 'Monthly') {
-                fetchMonthlyInsights(
-                  year: selectedYear.value,
-                  monthName: selectedMonth.value,
-                );
-              } else {
-                controller.getQuickCheck(
-                  view: 'yearly',
-                  year: selectedYear.value,
-                );
-              }
-            },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? cardColor : Colors.white,
-          borderRadius: BorderRadius.circular(6),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: 30,
-                    spreadRadius: 4,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : null,
-          border: Border.all(
-            color: isSelected ? cardColor : Colors.grey.shade300,
-          ),
-        ),
-        child: Text(
-          label,
-          style: FontManager().getTextStyle(context,
-              fontSize: 14,
-              lWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : cardColor),
-        ),
-      ),
-    );
-  }
-
-  Widget _simpleDropdown() {
-    return Obx(() {
-      final bool isMonthly = selectedPeriod.value == 'Monthly';
-
-      return Container(
-        height: 32,
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: const Color(0xFFE6E3DD)),
-          color: const Color(0xFFFFF9F0),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<dynamic>(
-            value: isMonthly ? selectedMonth.value : selectedYear.value,
-            icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-            isDense: true,
-            padding: EdgeInsets.zero,
-            items: isMonthly
-                ? availableMonths.map((m) {
-                    return DropdownMenuItem(
-                      value: m,
-                      child: Text(m,
-                          style: FontManager()
-                              .getTextStyle(context, fontSize: 12)),
-                    );
-                  }).toList()
-                : availableYears.map((y) {
-                    return DropdownMenuItem(
-                      value: y,
-                      child: Text(
-                        y.toString(),
-                        style:
-                            FontManager().getTextStyle(context, fontSize: 12),
-                      ),
-                    );
-                  }).toList(),
-            onChanged: (value) async {
-              if (value == null) return;
-              final start = DateTime.now();
-
-              if (isMonthly) {
-                // selectedMonth.value = value;
-
-                // 1️⃣ Guard same selection
-                if (value == selectedMonth.value) return;
-
-// 2️⃣ Update UI immediately
-                selectedMonth.value = value;
-                selectedInsightTab.value = null;
-                hasSelectedInsight.value = false;
-
-// 3️⃣ Fire API WITHOUT await
-                fetchMonthlyInsights(
-                  year: selectedYear.value,
-                  monthName: value,
-                );
-              } else {
-                if (value == selectedYear.value) return;
-
-// UI first
-                selectedYear.value = value;
-                selectedInsightTab.value = null;
-                hasSelectedInsight.value = false;
-
-// API later (no await)
-                controller.getQuickCheck(
-                  view: 'yearly',
-                  year: value,
-                );
-              }
-            },
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _dotGrid() {
-    return Obx(() {
-      const int gridSize = 10;
-      const int totalDots = gridSize * gridSize;
-
-      final double creditedPct = percentageFor('Credited');
-      final double debitedPct = percentageFor('Debited');
-
-      int creditedDots =
-          (totalDots * creditedPct / 100).round().clamp(0, totalDots);
-      int debitedDots =
-          (totalDots * debitedPct / 100).round().clamp(0, totalDots);
-
-      final String? selectedLabel = selectedInsightTab.value;
-
-      return SizedBox(
-        height: 300,
-        width: 300,
-        child: GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: totalDots,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 10, // 🔥 FIXED 10 columns
-            crossAxisSpacing: 6,
-            mainAxisSpacing: 6,
-          ),
-          itemBuilder: (context, index) {
-            late String segmentLabel;
-
-            if (index < creditedDots) {
-              segmentLabel = 'Credited';
-            } else if (index < creditedDots + debitedDots) {
-              segmentLabel = 'Debited';
-            } else {
-              segmentLabel = 'Outstanding';
-            }
-
-            Color baseColor;
-            switch (segmentLabel) {
-              case 'Credited':
-                baseColor = creditedBaseColor;
-                break;
-              case 'Debited':
-                baseColor = debitedBaseColor;
-                break;
-              default:
-                baseColor = outstandingBaseColor;
-            }
-
-            final bool isActive =
-                selectedLabel == null || selectedLabel == segmentLabel;
-
-            return GestureDetector(
-              onTap: () {
-                if (selectedInsightTab.value == segmentLabel) {
-                  selectedInsightTab.value = null;
-                  hasSelectedInsight.value = false;
-                } else {
-                  selectedInsightTab.value = segmentLabel;
-                  hasSelectedInsight.value = true;
-                }
-              },
-              child: AnimatedScale(
-                scale: 0.7,
-                duration: const Duration(milliseconds: 150),
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isActive ? baseColor : baseColor.withOpacity(0.2),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      );
-    });
-  }
-
-  Widget _insightTab({
-    required String label,
-    required String percentage,
-    required bool isSelected,
-    required Color activeColor,
-    required VoidCallback onTap, // 🔹 new
-  }) {
-    return GestureDetector(
-      onTap: onTap, // 🔹 use callback from outside
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(
-            color: isSelected ? activeColor : Colors.black26,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: FontManager().getTextStyle(context,
-                  fontSize: 10,
-                  lWeight: FontWeight.w800,
-                  color: isSelected ? activeColor : Colors.black54),
-            ),
-            const SizedBox(width: 8, height: 2),
-            Text(
-              '($percentage)',
-              style: FontManager().getTextStyle(context,
-                  fontSize: 10,
-                  lWeight: FontWeight.w800,
-                  color: isSelected ? activeColor : Colors.black45),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _annualBarGraph() {
-    return Obx(() {
-      final bank = selectedBankData.value;
-
-      // 1️⃣ Decide data source
-      List months = [];
-
-      if (bank == null) {
-        // ALL BANKS → merge months by index
-        final Map<int, Map<String, double>> merged = {};
-
-        for (final b in controller.quickCheck.value?.banks ?? []) {
-          for (final m in (b.months ?? [])) {
-            final int month = m['month'];
-
-            merged.putIfAbsent(
-                month,
-                () => {
-                      'credit': 0,
-                      'debit': 0,
-                      'outstanding': 0,
-                    });
-
-            merged[month]!['credit'] =
-                merged[month]!['credit']! + (m['credit'] ?? 0);
-            merged[month]!['debit'] =
-                merged[month]!['debit']! + (m['debit'] ?? 0);
-            merged[month]!['outstanding'] =
-                merged[month]!['outstanding']! + (m['outstanding'] ?? 0);
-          }
-        }
-
-        months = merged.entries.map((e) {
-          return {
-            'month': e.key,
-            'credit': e.value['credit'],
-            'debit': e.value['debit'],
-            'outstanding': e.value['outstanding'],
-          };
-        }).toList()
-          ..sort((a, b) => (a['month'] as int).compareTo(b['month'] as int));
-      } else {
-        months = bank.months ?? [];
-      }
-
-      // 2️⃣ Render graph
-      return SizedBox(
-        height: 220,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: months.map((m) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _stackedBar(
-                      credited: (m['credit'] ?? 0).toDouble(),
-                      debited: (m['debit'] ?? 0).toDouble(),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      DateFormat.MMM().format(
-                        DateTime(0, m['month']),
-                      ),
-                      style: FontManager().getTextStyle(context,
-                          fontSize: 12, color: Colors.black),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _stackedBar({
-    required double credited,
-    required double debited,
-  }) {
-    const double barHeight = 160;
-    const double barWidth = 40;
-
-    // Calculate outstanding
-    // final double outstanding = credited - debited;
-    final double outstanding = (credited - debited).clamp(0, double.infinity);
-
-    // Calculate total of all three values
-    final double total = credited + debited + outstanding;
-
-    // Calculate percentages
-    final double creditedPercentage = credited / total;
-    final double debitedPercentage = debited / total;
-    final double outstandingPercentage = outstanding / total;
-
-    // Calculate heights based on percentages
-    final double creditedHeight = barHeight * creditedPercentage;
-    final double debitedHeight = barHeight * debitedPercentage;
-    final double outstandingHeight = barHeight * outstandingPercentage;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        height: barHeight,
-        width: barWidth,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            /// Top portion - Credited (dark blue - 0xFF4B4D73)
-            if (credited > 0)
-              Container(
-                height: creditedHeight,
-                width: barWidth,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor, // Dark blue for credited
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-
-            /// Middle portion - Debited (medium blue - 0xFF9394B8)
-            if (debited > 0)
-              Container(
-                height: debitedHeight,
-                width: barWidth,
-                color: AppColors.debitedAmount, // Medium blue for debited
-              ),
-
-            /// Bottom portion - Outstanding (white - 0xFFFFFFFF)
-            if (outstanding > 0)
-              Container(
-                height: outstandingHeight,
-                width: barWidth,
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundColor, // White for outstanding
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }

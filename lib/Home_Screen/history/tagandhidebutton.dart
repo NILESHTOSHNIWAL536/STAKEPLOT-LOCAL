@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../routes/route_transactions.dart';
@@ -173,7 +172,7 @@ Widget getTagHideButtons(BuildContext context) {
               },
               context: context),
           //  assets/icons/Home-page/balanceout.svg
-          
+
         ],
       ),
     ),

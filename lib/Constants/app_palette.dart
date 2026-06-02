@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 
 // class AppPalette{
-  
+
 //   static const Color backgroundColor = Color(0xFFF2F9FC);
 //   static const Color whiteColor = Color(0xFFFFFFFF);
 //   static const Color secondaryText = Color(0xFFEDF6F7);
@@ -23,6 +23,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color bottomText;
   final Color cardBackground;
   final Color blackColor;
+  final Color iconFillColor;
 
   const AppPalette({
     required this.backgroundColor,
@@ -31,6 +32,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.bottomText,
     required this.cardBackground,
     required this.blackColor,
+    required this.iconFillColor,
   });
 
   // ── Light Theme ─────────────────────────────
@@ -41,6 +43,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     bottomText: Color(0xFFB8D7D6),
     cardBackground: Color(0xFFA9CDD2),
     blackColor: Color(0xFF1B2135),
+    iconFillColor: Color(0xFFA9CDD2),
   );
 
   // ── Dark Theme ──────────────────────────────
@@ -51,6 +54,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     bottomText: Color(0xFFB8D7D6),
     cardBackground: Color(0xFF2A344D),
     blackColor: Color(0xFFF2F9FC),
+    iconFillColor: Color(0xFF2A344D),
   );
 
   @override
@@ -61,6 +65,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? bottomText,
     Color? cardBackground,
     Color? blackColor,
+    Color? iconFillColor,
   }) {
     return AppPalette(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -69,6 +74,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
       bottomText: bottomText ?? this.bottomText,
       cardBackground: cardBackground ?? this.cardBackground,
       blackColor: blackColor ?? this.blackColor,
+      iconFillColor: iconFillColor ?? this.iconFillColor,
     );
   }
 
@@ -87,6 +93,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
       bottomText: Color.lerp(bottomText, other.bottomText, t)!,
       cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
       blackColor: Color.lerp(blackColor, other.blackColor, t)!,
+      iconFillColor: Color.lerp(iconFillColor, other.iconFillColor, t)!,
     );
   }
 }

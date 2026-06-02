@@ -25,9 +25,7 @@ import 'package:flutter_application_code_stakeplot/signInOut/referral_code_scree
 import '../Home_Screen/home_screen_state/home_page.dart';
 import '../Home_Screen/dummy_insight_api_screen.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-import '../budget/budget_detail_screen.dart';
-import '../budget/budget_list_screen.dart';
-import '../budget/create_budget_screen.dart';
+
 import '../email_sync/add_credit_card_bank.dart';
 import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
 import '../finance_screen/finanace_dashboard/index_finances.dart';
@@ -64,7 +62,7 @@ var routes = {
   '/creditCard': (context) => CardDueCarousel(),
   '/addcreditCard': (context) => AddCreditCardBankScreen(),
   '/AllCalculator': (context) => AllCalculatorScreen(),
-  '/create': (context) => CreateBudgetScreen(),
+ 
   '/selectBank': (context) => AddCreditCardBankScreen(),
   '/dummyInsights': (context) => const DummyInsightApiScreen(),
 };

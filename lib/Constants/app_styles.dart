@@ -25,7 +25,7 @@ class PlotFinanceIcons {
   static String calculator = "assets/icons/plotFinance/calculator.svg";
   static String foodie = "assets/icons/plotFinance/foodie.svg";
   static String creditcardcomponent = "assets/icons/plotFinance/creditComponent1.svg";
- 
+
 }
 
 class FinSpaceIcons {
@@ -288,7 +288,7 @@ class ProfileIcons {
   static String unclaimedCoupon = "assets/icons/profileScreen/unc1.svg";
   static String unclaimedCoupon2 = "assets/icons/profileScreen/unclaimed2.svg";
   static String unclaimedCoupon3 = "assets/icons/profileScreen/unc2.svg";
-  
+
 }
 
 class Sign {

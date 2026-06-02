@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
@@ -27,10 +28,11 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
     super.initState();
     getAck();
   }
- 
+
 
   @override
   Widget build(BuildContext context){
+    final colors = context.appPalette;
    return  Container(
      width: AppComponentSizes.w4,
      padding:const EdgeInsets.symmetric(horizontal: 10),
@@ -42,26 +44,27 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                      HapticFeedback.mediumImpact();
                       Navigator.pushNamed(context, '/Notifications');
                     },
-                    child: Obx(()=> !hasGetNewNotifications.value? 
-                    AvatarProfileImageZero(url: HomePageIcons.notification, width: 30, height: 30):
+                    child: Obx(()=> !hasGetNewNotifications.value?
+                    // AvatarProfileImageZero(url: HomePageIcons.notification, width: 30, height: 30):
+                    Icon(Icons.notifications, size: 30, color:colors.iconFillColor):
                      AvatarProfileImageZero(url: HomePageIcons.notificationStack, width: 30, height: 30)
                     )
-                    
+
                   ),
-                   SizedBox(width: AppSizes.w10),
-                  InkWell(
-                   onTap: (){
-                     HapticFeedback.mediumImpact();
-                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UpdatesScreen(),
-                            ),
-                          );
-                       },
-                    child: 
-                    AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30) 
-                    )                            
+                  //  SizedBox(width: AppSizes.w10),
+                  // InkWell(
+                  //  onTap: (){
+                  //    HapticFeedback.mediumImpact();
+                  //          Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => const UpdatesScreen(),
+                  //           ),
+                  //         );
+                  //      },
+                  //   child:
+                  //   AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30)
+                  //   )
                 ],
              ),
    );

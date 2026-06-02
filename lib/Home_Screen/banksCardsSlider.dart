@@ -816,6 +816,7 @@ import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/bankServices/nextFetch.dart';
 import '../components/shared_utils.dart';
 import '../model/bank_model.dart';
+import 'history/history_button.dart';
 import 'quick_check/monthly_quick_check.dart';
 
 RxInt firstDigit = 0.obs;
@@ -895,14 +896,26 @@ class _BankscardssliderState extends State<Bankscardsslider> {
       () => Random().nextInt(lock.length),
     );
   }
-
-  String _displayMaskedAccount(BankAccountModel data) {
+ String _displayMaskedAccount(BankAccountModel data) {
     final masked = data.maskedAccNumber.trim();
     final hasVisibleDigit = RegExp(r'\d').hasMatch(masked);
     final isOnlyMaskChars =
         masked.isNotEmpty && RegExp(r'^[xX*]+$').hasMatch(masked);
 
     if (masked.isNotEmpty && hasVisibleDigit && !isOnlyMaskChars) {
+      final startsWithMask = RegExp(r'^[xX*\s-]+').hasMatch(masked);
+      final visibleDigits = RegExp(r'\d')
+          .allMatches(masked)
+          .map((match) => match.group(0)!)
+          .join();
+
+      if (startsWithMask && visibleDigits.isNotEmpty) {
+        final lastDigits = visibleDigits.length > 4
+            ? visibleDigits.substring(visibleDigits.length - 4)
+            : visibleDigits;
+        return '****$lastDigits';
+      }
+
       return masked;
     }
 
@@ -912,6 +925,24 @@ class _BankscardssliderState extends State<Bankscardsslider> {
 
     return data.bankName.isNotEmpty ? data.bankName : 'Linked account';
   }
+
+  // ththi is original without stars
+  // String _displayMaskedAccount(BankAccountModel data) {
+  //   final masked = data.maskedAccNumber.trim();
+  //   final hasVisibleDigit = RegExp(r'\d').hasMatch(masked);
+  //   final isOnlyMaskChars =
+  //       masked.isNotEmpty && RegExp(r'^[xX*]+$').hasMatch(masked);
+
+  //   if (masked.isNotEmpty && hasVisibleDigit && !isOnlyMaskChars) {
+  //     return masked;
+  //   }
+
+  //   if (data.type.trim().isNotEmpty) {
+  //     return '${data.bankName} ${data.type}';
+  //   }
+
+  //   return data.bankName.isNotEmpty ? data.bankName : 'Linked account';
+  // }
 
   String _displayLastFetchDate(String lastFetch) {
     if (lastFetch.trim().isEmpty) return "--";
@@ -944,81 +975,79 @@ class _BankscardssliderState extends State<Bankscardsslider> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _newAccountFetchBanner(),
-        SizedBox(
-          height: 240,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              /// 3RD CARD
-              if (bankAccountLinkedList.length > 2)
-                Positioned(
-                  right: 0,
-                  top: 14,
-                  bottom: 14,
-                  child: miniStackCard(
-                    bankAccountLinkedList[
-                        (activeIndex + 2) % bankAccountLinkedList.length],
-                    const Color(0xFFA9C8CD),
-                  ),
-                ),
+        GestureDetector(
+          onTap: () {
+            if (bankAccountLinkedList.isEmpty) return;
 
-              /// 2ND CARD
-              if (bankAccountLinkedList.length > 1)
-                Positioned(
-                  right: 0,
-                  top: 8,
-                  bottom: 8,
-                  child: miniStackCard(
-                    bankAccountLinkedList[
-                        (activeIndex + 1) % bankAccountLinkedList.length],
-                    const Color(0xFFC4DDE1),
-                  ),
-                ),
-
-              /// MAIN CARD
-              Positioned.fill(
-                right: 40,
-                child: GestureDetector(
-                  onHorizontalDragEnd: (details) {
-                    if (details.primaryVelocity! < 0) {
-                      if (activeIndex < bankAccountLinkedList.length - 1) {
-                        setState(() => activeIndex++);
-                      }
-                    } else {
-                      if (activeIndex > 0) {
-                        setState(() => activeIndex--);
-                      }
-                    }
-
-                    _selectBank(activeIndex);
-                  },
-                  child: getListViewBankInfo(
-                    bankAccountLinkedList[activeIndex],
-                  ),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BalanceScreen(
+                  // bankAccount: bankAccountLinkedList[activeIndex],
                 ),
               ),
-            ],
+            );
+          },
+          child: SizedBox(
+            height: 200,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                /// 3RD CARD
+                if (bankAccountLinkedList.length > 2)
+                  Positioned(
+                    right: 24,
+                    top: 8,
+                    bottom: 8,
+                    child: miniStackCard(
+                      bankAccountLinkedList[
+                          (activeIndex + 2) % bankAccountLinkedList.length],
+                      const Color(0xFFA9C8CD),
+                    ),
+                  ),
+
+                /// 2ND CARD
+                if (bankAccountLinkedList.length > 1)
+                  Positioned(
+                    right: 0,
+                    top: 8,
+                    bottom: 8,
+                    child: miniStackCard(
+                      bankAccountLinkedList[
+                          (activeIndex + 1) % bankAccountLinkedList.length],
+                      const Color(0xFFC4DDE1),
+                    ),
+                  ),
+
+                /// MAIN CARD
+                Positioned.fill(
+                  right: 40,
+                  child: GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      if (details.primaryVelocity! < 0) {
+                        if (activeIndex < bankAccountLinkedList.length - 1) {
+                          setState(() => activeIndex++);
+                        }
+                      } else {
+                        if (activeIndex > 0) {
+                          setState(() => activeIndex--);
+                        }
+                      }
+
+                      _selectBank(activeIndex);
+                    },
+                    child: getListViewBankInfo(
+                      bankAccountLinkedList[activeIndex],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        SizedBox(height: AppSizes.h6),
-        Obx(() => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                bankAccountLinkedList.length,
-                (index) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  margin: const EdgeInsets.symmetric(horizontal: AppSizes.p4),
-                  height: 8,
-                  width: 8, // active dot grows
-                  decoration: BoxDecoration(
-                    color: scrollBankPage.value == index
-                        ? context.appColors.primary
-                        : context.appColors.secondaryText.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            )),
+        SizedBox(height: AppSizes.h2),
+
+
       ],
     );
   }
@@ -1027,25 +1056,38 @@ class _BankscardssliderState extends State<Bankscardsslider> {
     BankAccountModel data,
     Color color,
   ) {
-    return Container(
-      width: 30,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          bottomLeft: Radius.circular(24),
+    return GestureDetector(
+      onTap: () {
+        // Handle tap event for mini stack card
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BalanceScreen(
+              // bankAccount: data,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 40,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            bottomLeft: Radius.circular(24),
+          ),
         ),
-      ),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 18),
-          child: Image.network(
-            data.bankLogo,
-            width: 22,
-            height: 22,
-            fit: BoxFit.contain,
-            errorBuilder: getErrorBankLogo(),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 18),
+            child: Image.network(
+              data.bankLogo,
+              width: 22,
+              height: 22,
+              fit: BoxFit.contain,
+              errorBuilder: getErrorBankLogo(),
+            ),
           ),
         ),
       ),
@@ -1168,7 +1210,7 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                   SizedBox(height: AppSizes.h40), // space for top-right logos
 
                   /// NEXT FETCH
-                  Nextfetch(bankAccount: data),
+                  // Nextfetch(bankAccount: data),
 
                   // SizedBox(height: AppSizes.h10),
 
@@ -1178,8 +1220,8 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                     children: [
                       Image.network(
                         data.bankLogo,
-                        width: 28,
-                        height: 28,
+                        width: 24,
+                        height: 24,
                         fit: BoxFit.fitWidth,
                         errorBuilder: getErrorBankLogo(),
                       ),
@@ -1190,8 +1232,8 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                           overflow: TextOverflow.ellipsis,
                           style: FontManager().getTextStyle(
                             context,
-                            fontSize: 16,
-                            lWeight: FontWeight.w700,
+                            fontSize: 14,
+                            lWeight: FontWeight.w500,
                             color: colors.blackColor.withOpacity(0.6),
                           ),
                         ),
@@ -1223,17 +1265,65 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                         final double balance = data.currentBalance;
                         final bool showBalance =
                             (pin == "0" || pin == "00" || hide);
+                        final balanceText = showBalance
+                            ? formatMoneyIndian(
+                                balance.toString(),
+                                lock[randomIndex],
+                              )
+                            : lock[randomIndex];
+                        final decimalIndex = balanceText.indexOf('.');
+                        final hasDecimal =
+                            showBalance && decimalIndex != -1;
+                        final wholeBalance = hasDecimal
+                            ? balanceText.substring(0, decimalIndex)
+                            : balanceText;
+                        final decimalBalance = hasDecimal
+                            ? balanceText.substring(decimalIndex)
+                            : '';
+                        final balanceStyle = FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: colors.blackColor,
+                          lineHeight: 24 / fontSize,
+                        );
 
                         return Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              '\u{20B9} ${showBalance ? formatMoneyIndian(balance.toString(), lock[randomIndex]) : lock[randomIndex]}',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: colors.blackColor,
-                                  lineHeight: 24 / fontSize),
+                            RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(
+                                style: balanceStyle,
+                                children: [
+                                  WidgetSpan(
+                                    alignment: PlaceholderAlignment.top,
+                                    child: Transform.translate(
+                                      offset: const Offset(0, 1),
+                                      child: Text(
+                                        '\u{20B9}',
+                                        style: balanceStyle.copyWith(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const WidgetSpan(
+                                    child: SizedBox(width: 2),
+                                  ),
+                                  TextSpan(text: wholeBalance),
+                                  if (hasDecimal)
+                                    TextSpan(
+                                      text: decimalBalance,
+                                      style: balanceStyle.copyWith(
+                                        fontSize: 14,
+                                        color:
+                                            colors.blackColor.withOpacity(0.55),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                             SizedBox(width: AppSizes.w8),
                             InkWell(
@@ -1265,11 +1355,19 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                     overflow: TextOverflow.ellipsis,
                     style: FontManager().getTextStyle(
                       context,
-                      fontSize: 16,
-                      lWeight: FontWeight.w700,
+                      fontSize: 12,
+                      lWeight: FontWeight.w400,
                       color: colors.blackColor.withOpacity(0.6),
                     ),
                   ),
+                  SizedBox(height: AppSizes.h8),
+                   Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          manualTransactionButton(context),
+                            SizedBox(width: AppSizes.w12),
+                          historyButton(context)
+                        ])
                 ],
               ),
             ),

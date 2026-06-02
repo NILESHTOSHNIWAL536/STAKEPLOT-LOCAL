@@ -25,9 +25,11 @@ class QuickCheckController extends GetxController {
       if (!getFlagOfResponse(response)) return;
 
       final data = jsonDecode(response.body)['data'];
+
+
       quickCheck.value = QuickCheckModel.fromJson(data);
     } catch (e) {
-      
+
     } finally {
       isLoading.value = false;
     }

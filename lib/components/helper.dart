@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_svgs.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
@@ -24,6 +25,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week_of_year/week_of_year.dart';
+import '../Constants/app_assets.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/core/app_shadows.dart';
 import '../Constants/core/container_border.dart';
@@ -1137,7 +1139,7 @@ String getCurrentFormattedDate() {
 }
 
 Widget manualTransactionButton(BuildContext context) {
-  final colors = context.appColors;
+  final colors = context.appPalette;
   return InkWell(
     onTap: () {
       Navigator.push(
@@ -1147,23 +1149,22 @@ Widget manualTransactionButton(BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width / 2.4,
-      height: MediaQuery.sizeOf(context).height / 21,
-      padding: const EdgeInsets.symmetric(horizontal: 2),
+      // width: MediaQuery.sizeOf(context).width / 2.4,
+      // height: MediaQuery.sizeOf(context).height / 21,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: colors.background,
+        color: colors.blackColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: colors.primary, width: 1),
+        border: Border.all(color: colors.blackColor, width: 1),
         boxShadow: [AppShadows.soft],
       ),
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AvatarProfileImageZero(
-              url: HomePageIcons.cash,
-              width: 5,
-              height: 32,
+           ResponsiveSvg(
+              asset:HomeSvgs.cashTnxs,
+              widthFactor: 16,
             ),
             SizedBox(width: AppSizes.w8),
             Text(
@@ -1173,7 +1174,7 @@ Widget manualTransactionButton(BuildContext context) {
                 lWeight: FontWeight.w500,
                 fontSize: 13,
                 lineHeight: 1.0,
-                color: colors.onBackground,
+                color: colors.whiteColor,
               ),
             ),
           ],

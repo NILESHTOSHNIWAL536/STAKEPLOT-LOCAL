@@ -9,10 +9,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
+import '../../Constants/app_assets.dart';
+import '../../Constants/app_svgs.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
 import '../../Utils/homepageStrings.dart.dart';
-import '../../budget/create_budget_screen.dart';
 
 void navToHistory(context) {
   HapticFeedback.selectionClick();
@@ -42,30 +43,29 @@ void navToHistoryReplacment(context) {
 }
 
 Widget historyButton(BuildContext context) {
-  final colors = context.appColors;
+  final colors = context.appPalette;
   return InkWell(
     onTap: () {
       navToHistory(context);
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width / 2.4,
-      height: MediaQuery.sizeOf(context).height / 21,
-      padding: const EdgeInsets.symmetric(horizontal: 2),
+      // width: MediaQuery.sizeOf(context).width / 2.4,
+      // height: MediaQuery.sizeOf(context).height / 21,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: colors.background,
+        color: colors.whiteColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: colors.border, width: 1),
+        border: Border.all(color: colors.whiteColor, width: 1),
         boxShadow: [AppShadows.soft],
       ),
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AvatarProfileImageZero(
-              url: HomePageIcons.history,
-              width: 5,
-              height: 32,
+            ResponsiveSvg(
+              asset: HomeSvgs.historyIcon,
+              widthFactor: 16,
             ),
             SizedBox(width: AppSizes.w8),
             Text(
@@ -74,7 +74,7 @@ Widget historyButton(BuildContext context) {
                 context,
                 lWeight: FontWeight.w500,
                 fontSize: 13,
-                color: colors.onBackground,
+                color: colors.blackColor,
               ),
             ),
           ],

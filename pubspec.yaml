@@ -155,6 +155,8 @@ flutter:
     - assets/budget/
     - assets/
     - assets/svgs/
+    - assets/svgs/navigation/
+    - assets/svgs/home/
     - assets/app_icons/
     - assets/icons/Navigation_bar/
     - assets/icons/Home-page/
