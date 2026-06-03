@@ -128,11 +128,8 @@ export default async function emailScraperHelper(
         .map((r) => (r.status === 'fulfilled' ? r.value : null))
         .filter(Boolean)
     );
-    console.log(pageToken);
   } while (pageToken);
   
-  console.log('Total emails fetched:', mailsToProcess.length);
-
   if (!mailsToProcess.length) {
     return { results: [], bankConfig };
   }
@@ -172,17 +169,16 @@ export default async function emailScraperHelper(
   //   banksWithPassword
   // );
 
-  // if (passwordRequests.length > 0) {
-  //   return {
-  //     results: [],
-  //     bankConfig,
-  //     requiresPassword: true,
-  //     passwordRequests,
-  //   };
-  // }
+  // // if (passwordRequests.length > 0) {
+  // //   return {
+  // //     results: [],
+  // //     bankConfig,
+  // //     requiresPassword: true,
+  // //     passwordRequests,
+  // //   };
+  // // }
   
   console.log(mailsToProcess2.length, 'emails to process with Python');
-  // pdfPasswordsByBank={};
   for (const mail of mailsToProcess2) {
     console.log('Processing email with subject:', mail.body);
     const extracted = await extractWithPython(mail, bankFilters, {"HDFCLtd-FIP": ["MARU8465",'Nilesh9849',]});

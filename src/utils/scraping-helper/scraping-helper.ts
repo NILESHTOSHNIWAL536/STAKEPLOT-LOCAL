@@ -16,10 +16,8 @@ export const listEmails = async (
 ): Promise<any> => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const beforeDate = `${tomorrow.getFullYear()}/${tomorrow.getMonth() + 1}/${
-    tomorrow.getDate()
-  }`;
 
+  const beforeDate = `${tomorrow.getFullYear()}/${tomorrow.getMonth() + 1}/${tomorrow.getDate()}`;
   const categoryFilter = [
     'in:inbox',
     'is:important',
