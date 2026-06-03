@@ -2,19 +2,26 @@ import { getNinetyDaysAgo, getNHoursAgo } from './get-time-date';
 import { extractWithPython } from './extract-with-python';
 import EmailServiceHelper from './scraping-helper';
 
+type StatementPassword = {
+  bankId: string;
+  password: string;
+  email?: string;
+  accountHint?: string;
+};
+
 export default async function emailScraperHelper(
   gmailClient: any,
   creditCard: any[],
   mode: 'initial' | 'incremental' = 'initial',
-  statementPasswords: Array<{ bankId: string; password: string }> = []
+  statementPasswords: StatementPassword[] = []
 ): Promise<{ results: any[]; bankConfig: any[]; requiresPassword?: boolean; passwordRequests?: any[] }> {
   
   try{
   const gmail = gmailClient;
-  const afterDate = mode === 'initial' ? getNinetyDaysAgo(1) : getNHoursAgo(12);
+  const afterDate = mode === 'initial' ? getNinetyDaysAgo(2) : getNHoursAgo(12);
   const bankConfig = creditCard;
   const bankFilters: string[] = [];
-  const pdfPasswordsByBank: Record<string, string[]> = {"HDFCLtd-FIP": ['Nilesh9849']};
+  const pdfPasswordsByBank: Record<string, string[]> = {};
   const banksWithPassword = new Set(
     statementPasswords
       .filter((item) => item.password)
@@ -29,10 +36,9 @@ export default async function emailScraperHelper(
       .filter(Boolean);
 
     bankFilters.push(bankName);
-    pdfPasswordsByBank[bankName] = passwords;
-    pdfPasswordsByBank[element.bankId] = passwords;
+    addPasswordsForBank(pdfPasswordsByBank, element, passwords);
   });
- console.log(bankConfig);
+
   const mailsToProcess: any[] = [];
   let pageToken: string | null | undefined = null;
 
@@ -163,26 +169,36 @@ export default async function emailScraperHelper(
     }
   }
 
-  // const passwordRequests = buildPasswordRequestsForProtectedAttachments(
-  //   mailsToProcess2,
-  //   bankConfig,
-  //   banksWithPassword
-  // );
+  const missingPasswordRequests = buildPasswordRequestsForProtectedAttachments(
+    mailsToProcess2,
+    bankConfig,
+    banksWithPassword
+  );
 
-  // // if (passwordRequests.length > 0) {
-  // //   return {
-  // //     results: [],
-  // //     bankConfig,
-  // //     requiresPassword: true,
-  // //     passwordRequests,
-  // //   };
-  // // }
+  console.log("missingPasswordRequests");
+  console.log(missingPasswordRequests);
+  if (missingPasswordRequests.length > 0) {
+    return {
+      results: [],
+      bankConfig,
+      requiresPassword: true,
+      passwordRequests: missingPasswordRequests,
+    };
+  }
   
-  console.log(mailsToProcess2.length, 'emails to process with Python');
   for (const mail of mailsToProcess2) {
-    console.log('Processing email with subject:', mail.body);
-    const extracted = await extractWithPython(mail, bankFilters, {"HDFCLtd-FIP": ["MARU8465",'Nilesh9849',]});
+    const extracted = await extractWithPython(mail, bankFilters, pdfPasswordsByBank);
     results.push(extracted);
+  }
+
+  const parserPasswordRequests = buildPasswordRequestsFromParserResults(results, bankConfig);
+  if (parserPasswordRequests.length > 0) {
+    return {
+      results: [],
+      bankConfig,
+      requiresPassword: true,
+      passwordRequests: parserPasswordRequests,
+    };
   }
 
   return { results, bankConfig };
@@ -191,6 +207,34 @@ export default async function emailScraperHelper(
   throw error;
 }
 
+}
+
+function addPasswordsForBank(
+  passwordMap: Record<string, string[]>,
+  bank: any,
+  passwords: string[]
+) {
+  const aliases = new Set<string>();
+  const bankName = String(bank.name || '').trim();
+  const bankId = String(bank.bankId || '').trim();
+
+  [bankName, bankName.toLowerCase(), bankId, bankId.toLowerCase()].forEach((alias) => {
+    if (alias) aliases.add(alias);
+  });
+
+  const firstWord = bankName.split(/\s+/)[0];
+  if (firstWord) {
+    aliases.add(firstWord);
+    aliases.add(firstWord.toLowerCase());
+  }
+
+  for (const alias of aliases) {
+    passwordMap[alias] = mergeUnique(passwordMap[alias] || [], passwords);
+  }
+}
+
+function mergeUnique(existing: string[], incoming: string[]) {
+  return Array.from(new Set([...existing, ...incoming].filter(Boolean)));
 }
 
 function buildPasswordRequestsForProtectedAttachments(
@@ -230,6 +274,29 @@ function buildPasswordRequestsForProtectedAttachments(
   return Array.from(requests.values());
 }
 
+function buildPasswordRequestsFromParserResults(results: any[], bankConfig: any[]) {
+  const requests = new Map<string, any>();
+
+  for (const result of results) {
+    if (!result?.sources_processed?.needs_password) continue;
+
+    const matchedBank = resolveResultBank(result, bankConfig);
+    const bankId = matchedBank?.bankId || '';
+    const key = `${bankId}:${result.message_id || result.messageId || ''}:${result.sources_processed?.password_file || ''}`;
+
+    requests.set(key, {
+      bankId,
+      bankName: matchedBank?.name || result.matched_bank || 'Bank statement',
+      messageId: result.message_id || result.messageId || '',
+      filename: result.sources_processed?.password_file || '',
+      reason: result.sources_processed?.password_error || 'password_required',
+      accountHint: result.card_number || result.account_number || '',
+    });
+  }
+
+  return Array.from(requests.values());
+}
+
 function resolveMailBank(mail: any, bankConfig: any[]) {
   const attachmentNames = (mail.attachments || [])
     .map((attachment: any) => attachment.filename || attachment.name || '')
@@ -242,6 +309,22 @@ function resolveMailBank(mail: any, bankConfig: any[]) {
     return (
       (bankName && searchableText.includes(bankName)) ||
       (bankId && searchableText.includes(bankId))
+    );
+  }) || (bankConfig.length === 1 ? bankConfig[0] : null);
+}
+
+function resolveResultBank(result: any, bankConfig: any[]) {
+  const matched = String(result?.matched_bank || '').toLowerCase();
+
+  return bankConfig.find((bank) => {
+    const bankName = String(bank.name || '').toLowerCase();
+    const bankId = String(bank.bankId || '').toLowerCase();
+    const firstWord = bankName.split(/\s+/)[0];
+
+    return (
+      (matched && (bankName.includes(matched) || matched.includes(bankName))) ||
+      (firstWord && matched === firstWord) ||
+      (bankId && matched === bankId)
     );
   }) || (bankConfig.length === 1 ? bankConfig[0] : null);
 }

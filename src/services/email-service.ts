@@ -36,7 +36,16 @@ type StatementPasswordInput = {
 };
 
 async function publishSocketEvent(userId: string, event: string, data: any): Promise<void> {
-  await RedisClient.publish('bank_events', JSON.stringify({ userId, event, data }));
+  try {
+    const subscribers = await RedisClient.publish(
+      'email-events',
+      JSON.stringify({ userId, event, data })
+    );
+    console.log(`Published socket event '${event}' for user ${userId}. Subscribers: ${subscribers}`);
+  } catch (error: any) {
+    console.error(`Failed to publish socket event '${event}' for user ${userId}:`, error?.message || error);
+    throw error;
+  }
 }
 
 function assertAllowedBankId(bankId: string) {
@@ -147,7 +156,6 @@ export async function scrapeEmailsByBankId(userId: string, bankIds: string[], em
     'initial',
     storedPasswords
   );
-
   if (scrapeEmailsUsingParser.requiresPassword) {
     const payload = {
       requiresPassword: true,
@@ -156,12 +164,13 @@ export async function scrapeEmailsByBankId(userId: string, bankIds: string[], em
       passwordRequests: scrapeEmailsUsingParser.passwordRequests || [],
     };
 
+    await markInvalidStatementPasswordsFromRequests(userId, payload.passwordRequests, normalizedEmail);
     await publishSocketEvent(userId, 'statementPasswordRequired', payload);
-
     return payload;
   }
 
   const passwordRequests = buildPasswordRequests(scrapeEmailsUsingParser, creditCard);
+  console.log(passwordRequests);
   if (passwordRequests.length > 0) {
     const payload = {
       requiresPassword: true,
@@ -169,7 +178,8 @@ export async function scrapeEmailsByBankId(userId: string, bankIds: string[], em
       message: 'PDF statement password is required for extraction.',
       passwordRequests,
     };
-
+     console.log(payload);
+    await markInvalidStatementPasswordsFromRequests(userId, passwordRequests, normalizedEmail);
     await publishSocketEvent(userId, 'statementPasswordRequired', payload);
 
     return payload;
@@ -213,6 +223,27 @@ function resolveMatchedBank(result: any, bankConfig: any[]) {
       (bankId && matched === bankId)
     );
   }) || bankConfig[0];
+}
+
+async function markInvalidStatementPasswordsFromRequests(
+  userId: string,
+  passwordRequests: any[],
+  email: string
+) {
+  const invalidRequests = (passwordRequests || []).filter(
+    (request) => request?.bankId && request?.reason === 'invalid_password'
+  );
+
+  await Promise.all(
+    invalidRequests.map((request) =>
+      EmailRepository.markStatementPasswordInvalid(
+        userId,
+        String(request.bankId),
+        email,
+        'Invalid PDF password'
+      )
+    )
+  );
 }
 
 export async function saveStatementPassword(
