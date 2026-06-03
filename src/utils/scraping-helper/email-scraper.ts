@@ -34,7 +34,7 @@ export default async function emailScraperHelper(
       .filter((item) => item.bankId === element.bankId)
       .map((item) => item.password)
       .filter(Boolean);
-
+    console.log(passwords);
     bankFilters.push(bankName);
     addPasswordsForBank(pdfPasswordsByBank, element, passwords);
   });
@@ -175,8 +175,6 @@ export default async function emailScraperHelper(
     banksWithPassword
   );
 
-  console.log("missingPasswordRequests");
-  console.log(missingPasswordRequests);
   if (missingPasswordRequests.length > 0) {
     return {
       results: [],
@@ -262,6 +260,7 @@ function buildPasswordRequestsForProtectedAttachments(
       const key = `${bankId}:${mail.messageId || ''}:${filename}`;
 
       requests.set(key, {
+        requestId: key,
         bankId,
         bankName: matchedBank?.name || 'Bank statement',
         messageId: mail.messageId || '',
@@ -285,6 +284,7 @@ function buildPasswordRequestsFromParserResults(results: any[], bankConfig: any[
     const key = `${bankId}:${result.message_id || result.messageId || ''}:${result.sources_processed?.password_file || ''}`;
 
     requests.set(key, {
+      requestId: key,
       bankId,
       bankName: matchedBank?.name || result.matched_bank || 'Bank statement',
       messageId: result.message_id || result.messageId || '',
