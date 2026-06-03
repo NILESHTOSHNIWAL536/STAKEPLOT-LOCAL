@@ -288,22 +288,40 @@ export async function upsertStatementPassword(
   const { StatementPassword } = await getModels();
   const normalizedEmail = email ? email.trim().toLowerCase() : '';
   const normalizedAccountHint = accountHint ? accountHint.trim() : '';
-  const encrypted = await encryptToken(password);
+  const query = {
+    userId: new mongoose.Types.ObjectId(userId),
+    bankId,
+    email: normalizedEmail,
+    accountHint: normalizedAccountHint,
+  };
+
+  const existing = await StatementPassword.findOne(query);
+  const existingPasswords = existing
+    ? await decryptStatementPasswordFields(existing.toObject())
+    : [];
+
+  const update: Record<string, any> = {
+    $set: {
+      lastStatus: 'active',
+      lastError: '',
+    },
+  };
+
+  if (existing?.password?.encryptedData) {
+    const nextPasswords = Array.from(new Set([...existingPasswords, password]));
+    update.$set.passwords = await Promise.all(
+      nextPasswords.map((plainPassword) => encryptToken(plainPassword))
+    );
+    update.$unset = { password: '' };
+  } else if (!existingPasswords.includes(password)) {
+    update.$push = {
+      passwords: await encryptToken(password),
+    };
+  }
 
   return StatementPassword.findOneAndUpdate(
-    {
-      userId: new mongoose.Types.ObjectId(userId),
-      bankId,
-      email: normalizedEmail,
-      accountHint: normalizedAccountHint,
-    },
-    {
-      $set: {
-        password: encrypted,
-        lastStatus: 'active',
-        lastError: '',
-      },
-    },
+    query,
+    update,
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 }
@@ -332,18 +350,47 @@ export async function getStatementPasswords(
 
   const docs = await StatementPassword.find(query).sort({ updatedAt: -1 }).lean();
 
-  return Promise.all(
-    docs.map(async (doc: any) => ({
-      bankId: doc.bankId,
-      email: doc.email,
-      accountHint: doc.accountHint,
-      password: await decryptToken(
-        doc.password.encryptedData,
-        doc.password.iv,
-        doc.password.authTag
-      ),
-    }))
+  const records = await Promise.all(
+    docs.map(async (doc: any) => {
+      const passwords = await decryptStatementPasswordFields(doc);
+
+      return passwords.map((password) => ({
+        bankId: doc.bankId,
+        email: doc.email,
+        accountHint: doc.accountHint,
+        password,
+      }));
+    })
   );
+
+  return records.flat();
+}
+
+async function decryptStatementPasswordFields(doc: any): Promise<string[]> {
+  const encryptedPasswords = [
+    ...(Array.isArray(doc.passwords) ? doc.passwords : []),
+    ...(doc.password?.encryptedData ? [doc.password] : []),
+  ];
+
+  const decrypted = await Promise.all(
+    encryptedPasswords.map(async (encrypted) => {
+      try {
+        if (!encrypted?.encryptedData || !encrypted?.iv || !encrypted?.authTag) {
+          return '';
+        }
+
+        return await decryptToken(
+          encrypted.encryptedData,
+          encrypted.iv,
+          encrypted.authTag
+        );
+      } catch (error) {
+        return '';
+      }
+    })
+  );
+
+  return Array.from(new Set(decrypted.filter(Boolean)));
 }
 
 export async function markStatementPasswordInvalid(

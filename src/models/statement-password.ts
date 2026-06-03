@@ -6,7 +6,8 @@ export interface IStatementPassword extends Document {
   bankId: string;
   email?: string;
   accountHint?: string;
-  password: IEncryptedField;
+  password?: IEncryptedField;
+  passwords: IEncryptedField[];
   lastStatus: 'active' | 'invalid';
   lastError?: string;
 }
@@ -35,9 +36,19 @@ export const statementPasswordSchema = new Schema<IStatementPassword>(
       trim: true,
     },
     password: {
-      encryptedData: { type: String, required: true },
-      iv: { type: String, required: true },
-      authTag: { type: String, required: true },
+      encryptedData: { type: String },
+      iv: { type: String },
+      authTag: { type: String },
+    },
+    passwords: {
+      type: [
+        {
+          encryptedData: { type: String, required: true },
+          iv: { type: String, required: true },
+          authTag: { type: String, required: true },
+        },
+      ],
+      default: [],
     },
     lastStatus: {
       type: String,
