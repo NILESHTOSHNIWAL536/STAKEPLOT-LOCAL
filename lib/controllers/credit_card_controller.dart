@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
-import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';
 import '../email_sync/add_credit_card_bank.dart';
 import '../email_sync/email_loading_screen.dart';
-import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
 import '../model/credit-card-bank.dart';
 import '../model/credit_card_model.dart';
 
@@ -18,6 +15,25 @@ class CardDueController extends GetxController {
   RxString selectedBankId = "".obs;
   RxString selectedEmail = "".obs;
   RxString selectedBankName = "".obs;
+  RxBool statementPasswordRequired = false.obs;
+  RxBool statementPasswordSubmitting = false.obs;
+  RxString statementPasswordError = "".obs;
+  RxMap<String, dynamic> statementPasswordRequest = <String, dynamic>{}.obs;
+
+  void applyStatementPasswordRequest(Map requestData) {
+    final requests = requestData["passwordRequests"];
+    if (requests is! List || requests.isEmpty || requests.first is! Map) {
+      return;
+    }
+
+    statementPasswordRequest.value =
+        Map<String, dynamic>.from(requests.first as Map);
+    statementPasswordError.value =
+        statementPasswordRequest["reason"] == "invalid_password"
+            ? "The saved password did not unlock this PDF. Please enter it again."
+            : "";
+    statementPasswordRequired.value = true;
+  }
 
   Future<void> fetchCardData() async {
     try {
@@ -39,7 +55,7 @@ class CardDueController extends GetxController {
     loading.value = false;
   }
 
-  Future<void> LinkBankData(context) async {
+  Future<bool> LinkBankData(context) async {
     try {
       // API call (replace url with your actual base url)
       if (selectedBankId.value.isEmpty) {
@@ -47,7 +63,7 @@ class CardDueController extends GetxController {
         Future.delayed(const Duration(seconds: 2), () {
           pushnameToRoute(context, AddCreditCardBankScreen());
         });
-        return;
+        return false;
       }
 
       var response = await postDataApiCall("${AuthApiRoutes.scrape}/", {
@@ -57,16 +73,59 @@ class CardDueController extends GetxController {
 
       if (getFlagOfResponse(response)) {
         var data = jsonDecode(response.body);
+        final responseData = data["data"];
+
+        if (responseData is Map &&
+            responseData["requiresPassword"] == true &&
+            responseData["passwordRequests"] is List &&
+            (responseData["passwordRequests"] as List).isNotEmpty) {
+          applyStatementPasswordRequest(responseData);
+          return false;
+        }
+
+        statementPasswordRequired.value = false;
+        statementPasswordRequest.clear();
+        statementPasswordError.value = "";
         loadingBankdetails.value = true;
         selectedBankId.value = "";
-        Future.delayed(const Duration(seconds: 2), () {
-          pushnameToRoute(context, CardDueCarousel());
-        });
+        return true;
       }
     } catch (e) {
-      cardList.clear();
+      statementPasswordError.value =
+          "We could not complete statement extraction. Please try again.";
     }
-    loadingBankdetails.value = true;
+    return false;
+  }
+
+  Future<void> saveStatementPasswordAndRetry(
+      context, String password) async {
+    final requestBankId = statementPasswordRequest["bankId"]?.toString() ?? "";
+    final bankId = requestBankId.isNotEmpty ? requestBankId : selectedBankId.value;
+    if (password.trim().isEmpty || bankId.isEmpty) return;
+
+    statementPasswordSubmitting.value = true;
+    statementPasswordError.value = "";
+    try {
+      final response = await postDataApiCall(AuthApiRoutes.statementPassword, {
+        "bankId": bankId,
+        "email": selectedEmail.value,
+        "accountHint": statementPasswordRequest["accountHint"]?.toString() ?? "",
+        "password": password.trim(),
+      });
+
+      if (getFlagOfResponse(response)) {
+        statementPasswordRequired.value = false;
+        statementPasswordRequest.clear();
+        await LinkBankData(context);
+      } else {
+        statementPasswordError.value =
+            "We could not save the password. Please try again.";
+      }
+    } catch (e) {
+      statementPasswordError.value =
+          "We could not save the password. Please try again.";
+    }
+    statementPasswordSubmitting.value = false;
   }
 
   Future<void> getBanksListCrediCard() async {

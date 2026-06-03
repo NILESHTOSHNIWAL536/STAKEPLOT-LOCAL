@@ -33,6 +33,7 @@ class AuthApiRoutes {
   static String getUnLinkedCards = "$_emailPath/unLinked-cards";
   static String revokeAccessToken = "$_emailPath/remove-access";
   static String scrape = "$_emailPath/scrape";
+  static String statementPassword = "$_emailPath/statement-password";
   static String getCreditCardList = "$_emailPath/";
 }
 

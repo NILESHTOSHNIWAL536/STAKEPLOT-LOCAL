@@ -9,28 +9,49 @@ class SocketService {
 
   SocketService._internal();
 
-  late IO.Socket socket;
+  IO.Socket? _socket;
 
   void initSocket(String url) {
-    socket = IO.io(
+    if (_socket != null) {
+      if (!_socket!.connected) {
+        _socket!.connect();
+      }
+      return;
+    }
+
+    _socket = IO.io(
       url,
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .enableAutoConnect()
+          .disableAutoConnect()
           .build(),
     );
 
-    socket.connect();
-    socket.onDisconnect((_) {
-      consolelog("❌ Socket Disconnected");
+    _socket!.onConnect((_) {
+      consolelog("Socket Connected");
     });
-    
+    _socket!.onConnectError((data) {
+      consolelog("Socket Connect Error: $data");
+    });
+    _socket!.onDisconnect((_) {
+      consolelog("Socket Disconnected");
+    });
+    _socket!.connect();
   }
 
-  IO.Socket getSocket() => socket;
+  bool get isInitialized => _socket != null;
+
+  IO.Socket getSocket() {
+    final activeSocket = _socket;
+    if (activeSocket == null) {
+      throw StateError("Socket is not initialized");
+    }
+    return activeSocket;
+  }
 
   void disconnect() {
-    socket.disconnect();
-    socket.dispose();
+    _socket?.disconnect();
+    _socket?.dispose();
+    _socket = null;
   }
 }
