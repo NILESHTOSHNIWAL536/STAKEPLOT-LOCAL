@@ -21,8 +21,19 @@ const generateAccessTokenImpl = async (
     const { idToken, bankId } = req.body as { idToken: string; bankId: string };
     const result = await EmailScrapingService.generateAccessToken(user._id, idToken, bankId);
     res.status(StatusCodes.OK).json({ ...SuccessResponse, data: result });
-  } catch (error) {
-    next(error);
+  } catch (error:any) {
+    // next(error);
+    try {
+      const parsed = JSON.parse(error.message);
+
+      res.status(error.statusCode || 500).json({
+        success: false,
+        ...parsed,
+      });
+
+    } catch {
+      next(error);
+    }
   }
 };
 
@@ -137,4 +148,28 @@ export const getUnlinkedCreditCards: RequestHandler = (req, res, next) => {
 
 export const removeAccessToken: RequestHandler = (req, res, next) => {
   void removeAccessTokenImpl(req, res, next);
+};
+
+export const addBankMapping = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { email, bankId } = req.body;
+    const { user } = req as AuthenticatedRequest;
+
+    const result = await EmailScrapingService.addBankMapping(
+      email,
+      bankId,
+      user._id
+    );
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

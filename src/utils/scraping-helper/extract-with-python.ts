@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import os from 'os';
 import path from 'path';
 
-export function extractWithPython(
+function extractWithPython(
   mail: any,
   bankFilters: string[],
   pdfPasswords: Record<string, string[]> = {}
@@ -72,6 +72,6 @@ export function extractWithPython(
   });
 }
 
-export default {
+export  {
   extractWithPython,
 };

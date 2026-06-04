@@ -51,6 +51,12 @@ router.get('/unLinked-cards', validateNoQuery, EmailController.getUnlinkedCredit
 // get all the scraped emails from the emailScrape collection
 router.get('/', validateNoQuery, EmailController.getScrapedEmails);
 
+router.post(
+  '/add-bank-mapping',
+  validateNoQuery,
+  EmailController.addBankMapping
+);
+
 // get all the unlinked credit cards from the user's creditCard collection
 
 // remove the access token from the googleToken document

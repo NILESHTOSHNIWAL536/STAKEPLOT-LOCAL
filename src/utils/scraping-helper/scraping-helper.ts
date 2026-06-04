@@ -327,10 +327,7 @@ async function tryExtractEncryptedPdf(
   passwords: string[]
 ): Promise<{ text: string; password: string } | null> {
   for (const password of [...new Set(passwords)]) {
-    console.log("password");
-    console.log(password);
     const text = await tryParsePdfWithPassword(pdfBuffer, password);
-    console.log(text);
     if (text !== null) {
       return { text, password };
     }
@@ -391,7 +388,6 @@ export const extractEmailBody = async (
         
             if (passwordList.length > 0) {
               const result = await tryExtractEncryptedPdf(pdfBuffer, passwordList);
-              console.log(result);
               if (result) {
                 // A password worked — append the extracted text
                 body += '\n' + result.text;
