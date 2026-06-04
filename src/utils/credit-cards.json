@@ -2,46 +2,64 @@
   {
     "name": "HDFC Bank",
     "logo": "https://cdn.finvu.in/finvulogos/hdfcbank_logo.jpg",
-    "bankId": "HDFCLtd-FIP"
+    "bankId": "HDFCLtd-FIP",
+    "senderDomains": ["hdfcbank.com", "hdfc.com"],
+    "subjectKeywords": ["statement", "account", "transaction", "e-statement"]
   },
   {
     "name": "ICICI Bank",
     "logo": "https://cdn.finvu.in/finvulogos/icicibank_icon.jpg",
-    "bankId": "ICICI-FIP"
+    "bankId": "ICICI-FIP",
+    "senderDomains": ["icicibank.com", "icicidirect.com"],
+    "subjectKeywords": ["statement", "account", "e-statement", "transaction"]
   },
   {
     "name": "SBI Card",
     "logo": "https://cdn.finvu.in/finvulogos/sbi_logo.png",
-    "bankId": "sbi-fip"
+    "bankId": "sbi-fip",
+    "senderDomains": ["sbi.co.in", "sbicard.com"],
+    "subjectKeywords": ["statement", "account", "passbook", "transaction"]
   },
   {
     "name": "Axis Bank",
     "logo": "https://cdn.finvu.in/finvulogos/axisbank_icon.jpg",
-    "bankId": "AXIS001"
+    "bankId": "AXIS001",
+    "senderDomains": ["axisbank.com", "axisbank.net"],
+    "subjectKeywords": ["statement", "account", "transaction", "e-statement"]
   },
   {
     "name": "Kotak Mahindra Bank",
     "logo": "https://cdn.finvu.in/finvulogos/kotakbank_app_logo.png",
-    "bankId": "KotakMahindraBank-FIP"
+    "bankId": "KotakMahindraBank-FIP",
+    "senderDomains": ["kotak.com", "kotakbank.com"],
+    "subjectKeywords": ["statement", "account", "transaction", "e-statement"]
   },
   {
     "name": "Bank of Baroda",
     "logo": "https://cdn.finvu.in/finvulogos/bank_of_baroda_logo_bob.png",
-    "bankId": "BARBFIP"
+    "bankId": "BARBFIP",
+    "senderDomains": ["bankofbaroda.com", "bankofbaroda.in"],
+    "subjectKeywords": ["statement", "account", "transaction", "passbook"]
   },
   {
     "name": "Yes Bank",
     "logo": "https://cdn.finvu.in/finvulogos/yes_bank_logo.png",
-    "bankId": "YESB-FIP"
+    "bankId": "YESB-FIP",
+    "senderDomains": ["yesbank.in", "yesbank.com"],
+    "subjectKeywords": ["statement", "account", "transaction", "e-statement"]
   },
   {
     "name": "Union Bank",
     "logo": "https://cdn.finvu.in/finvulogos/union_bank_india_icon.png",
-    "bankId": "UBI-FIP"
+    "bankId": "UBI-FIP",
+    "senderDomains": ["unionbankofindia.com", "unionbankofindia.co.in"],
+    "subjectKeywords": ["statement", "account", "transaction", "passbook"]
   },
   {
     "name": "Slice",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs1-e5c-HqzxPVuT1q5ewV16V6gS8IPxWobw&s",
-    "bankId": "Slice-FIP"
+    "bankId": "Slice-FIP",
+    "senderDomains": ["sliceit.com", "slice.is"],
+    "subjectKeywords": ["statement", "account", "transaction"]
   }
 ]

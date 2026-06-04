@@ -1,6 +1,7 @@
 import { getNinetyDaysAgo, getNHoursAgo } from './get-time-date';
 import { extractWithPython } from './extract-with-python';
 import EmailServiceHelper from './scraping-helper';
+import { checkIsFromBank } from '../check-valid-email_data';
 
 type StatementPassword = {
   bankId: string;
@@ -28,13 +29,15 @@ export default async function emailScraperHelper(
       .map((item) => item.bankId)
   );
 
+  const passwordList=statementPasswords.map((e)=>e.password);
+
+
   bankConfig.map((element) => {
     const bankName = element.name.toString().toLowerCase().trim();
     const passwords = statementPasswords
       .filter((item) => item.bankId === element.bankId)
       .map((item) => item.password)
       .filter(Boolean);
-    console.log(passwords);
     bankFilters.push(bankName);
     addPasswordsForBank(pdfPasswordsByBank, element, passwords);
   });
@@ -66,10 +69,17 @@ export default async function emailScraperHelper(
           const subjectHeader =
             (headers.find((h: any) => h.name === 'Subject') || {}).value || '';
 
+
+          const bankCheck = checkIsFromBank(fromHeader, subjectHeader,bankConfig);
+          if (!bankCheck.isFromBank) return null;
+
+
+
           const { body, attachments } = await EmailServiceHelper.extractEmailBody(
             gmail,
             msg,
-            meta.data.payload
+            meta.data.payload,
+            passwordList
           );
 
           const preparedAttachments = (
