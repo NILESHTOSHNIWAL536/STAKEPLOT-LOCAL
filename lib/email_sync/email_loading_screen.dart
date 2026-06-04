@@ -66,6 +66,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
   int _currentStep = 0;
   bool _finished = false;
   bool _passwordDialogOpen = false;
+  BuildContext? _passwordDialogContext;
   late Worker _loadingWorker;
   late Worker _passwordWorker;
 
@@ -185,6 +186,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
   }
 
   void _onFinished() {
+    if (!mounted) return;
     setState(() => _finished = true);
     _pulseController.stop();
     _progressController.animateTo(1.0,
@@ -198,6 +200,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
       SocketService().getSocket().off("statementPasswordRequired");
       SocketService().getSocket().off("connect", _registerStatementPasswordSocket);
     } catch (e) {}
+    _closePasswordDialogIfOpen();
     _loadingWorker.dispose();
     _passwordWorker.dispose();
     _stepAnimController.dispose();
@@ -206,8 +209,20 @@ class _GettingDataScreenState extends State<GettingDataScreen>
     super.dispose();
   }
 
+  void _closePasswordDialogIfOpen() {
+    final dialogContext = _passwordDialogContext;
+    if (!_passwordDialogOpen || dialogContext == null) return;
+
+    try {
+      final navigator = Navigator.of(dialogContext, rootNavigator: true);
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    } catch (e) {}
+  }
+
   void _showStatementPasswordDialog() {
-    if (_passwordDialogOpen) return;
+    if (_passwordDialogOpen || !mounted) return;
     _passwordDialogOpen = true;
     final passwordController = TextEditingController();
     bool obscurePassword = true;
@@ -216,6 +231,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
+        _passwordDialogContext = dialogContext;
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
@@ -339,11 +355,15 @@ class _GettingDataScreenState extends State<GettingDataScreen>
                       onPressed: cardController.statementPasswordSubmitting.value
                           ? null
                           : () async {
-                              final navigator = Navigator.of(dialogContext);
+                              final navigator = Navigator.of(
+                                dialogContext,
+                                rootNavigator: true,
+                              );
                               await cardController.saveStatementPasswordAndRetry(
                                 dialogContext,
                                 passwordController.text,
                               );
+                              if (!mounted) return;
                               if (!cardController
                                       .statementPasswordRequired.value &&
                                   navigator.canPop()) {
@@ -384,6 +404,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
         );
       },
     ).whenComplete(() {
+      _passwordDialogContext = null;
       _passwordDialogOpen = false;
       passwordController.dispose();
     });
