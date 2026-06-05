@@ -501,7 +501,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget build(BuildContext context) {
     final colors = context.appPalette;
     return BottomAppBar(
-      // color: colors.whiteColor,
+      color: colors.whiteColor,
       elevation: 0,
       // shadowColor: Colors.white,
       // surfaceTintColor: Colors.white,

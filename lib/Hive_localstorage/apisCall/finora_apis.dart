@@ -8,8 +8,7 @@ import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../../Home_Screen/categoriseSpending.dart';
-import '../../backed_connections/apiAutomations/getTrasactions.dart';
-import '../../controllers/controllerManagement.dart';
+
 import '../../controllers/finora_controller.dart';
 import 'init_hive.dart';
 
@@ -23,13 +22,7 @@ class CategoryStorage {
     await box.clear();
     try {
       final cardInsightsData = CardInsightsModel(
-        totalDebitThisMonth:   controller.totalDebitThisMonth.value,
-        totalDebitThisWeek:   controller.totalDebitThisWeek.value,
-        moreDrasticChange:   controller.moreDrasticChange.cast<Map<String, dynamic>>(),
-        moreDrasticChangeWeek:
-              controller.moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
-        frequentPayments:   controller.frequentPayments.cast<Map<String, dynamic>>(),
-        frequentPaymentsWeek:   controller.frequentPaymentsWeek.cast<Map<String, dynamic>>(),
+
         categoriesList:   controller.categoriesList.cast<Map<String, dynamic>>(),
       );
       await box.add(cardInsightsData);
@@ -43,18 +36,7 @@ class CategoryStorage {
     if (box.isNotEmpty) {
       final latestData = box.values.last;
 
-        controller.totalDebitThisMonth.value = latestData.totalDebitThisMonth;
-        controller.totalDebitThisWeek.value = latestData.totalDebitThisWeek;
 
-        controller.moreDrasticChange.value =
-          List<Map<String, dynamic>>.from(latestData.moreDrasticChange);
-        controller.moreDrasticChangeWeek.value =
-          List<Map<String, dynamic>>.from(latestData.moreDrasticChangeWeek);
-
-        controller.frequentPayments.value =
-          List<Map<String, dynamic>>.from(latestData.frequentPayments);
-        controller.frequentPaymentsWeek.value =
-          List<Map<String, dynamic>>.from(latestData.frequentPaymentsWeek);
         controller.categoriesList.value =
           List<Map<String, dynamic>>.from(latestData.categoriesList);
 

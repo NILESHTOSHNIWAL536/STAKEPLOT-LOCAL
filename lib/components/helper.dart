@@ -957,16 +957,7 @@ List<Map<String, dynamic>> getthelist() {
   return filtered.reversed.toList().cast<Map<String, dynamic>>();
 }
 
-List<Map<String, dynamic>> getthelistAll() {
-  String lowerSearch = "";
-  return customCategoryList
-      .where((e) {
-        final name = e['name']?.toString().toLowerCase() ?? '';
-        return name.contains(lowerSearch);
-      })
-      .toList()
-      .cast<Map<String, dynamic>>();
-}
+
 
 const List<Map<String, dynamic>> reportOptions = [
   {
@@ -1038,12 +1029,7 @@ bool checkRangeofDate(BuildContext context, [bool f = true]) {
   }
 }
 
-String getCurrentMonth() {
-  DateTime now = DateTime.now();
-  String year = now.year.toString();
-  String month = now.month.toString().padLeft(2, '0'); // Ensures two digits
-  return '$year-$month';
-}
+
 
 String getCurrentWeek() {
   final now = DateTime.now().subtract(Duration(days: 7));
@@ -1052,17 +1038,8 @@ String getCurrentWeek() {
   return s;
 }
 
-String getCurrentWeekoverall() {
-  final now = DateTime.now();
-  final year = now.year;
-  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
-  return s;
-}
 
-String getFormattedDateoverall() {
-  final now = DateTime.now();
-  return "${now.year}-${now.month.toString().padLeft(2, '0')}";
-}
+
 
 final Map<String, int> monthNameToIndex = {
   'Jan': 0,
@@ -1094,12 +1071,6 @@ double getDouble(data) {
   return double.parse(data.toString());
 }
 
-String formatDateTime(String dateString) {
-  DateTime dateTime = DateTime.parse(dateString).toLocal();
-
-  String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
-  return formattedDate;
-}
 
 String getNextDay(String endDate) {
   // Parse the input date string
@@ -1132,11 +1103,7 @@ List<String> getDaysInMonth(String yearMonth) {
   return days;
 }
 
-String getCurrentFormattedDate() {
-  DateTime now = DateTime.now();
-  String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-  return formattedDate;
-}
+
 
 Widget manualTransactionButton(BuildContext context) {
   final colors = context.appPalette;
@@ -1162,11 +1129,11 @@ Widget manualTransactionButton(BuildContext context) {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-           ResponsiveSvg(
+           const ResponsiveSvg(
               asset:HomeSvgs.cashTnxs,
               widthFactor: 16,
             ),
-            SizedBox(width: AppSizes.w8),
+            const SizedBox(width: AppSizes.w8),
             Text(
               'Cash transactions',
               style: FontManager().getTextStyle(

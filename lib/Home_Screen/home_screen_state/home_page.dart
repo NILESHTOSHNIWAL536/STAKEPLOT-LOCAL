@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/repository/referral_repositor
 import 'package:get/get.dart';
 
 import '../../repository/bankinfo.dart';
+import '../../repository/finora_repository.dart';
 
 RxBool sectionReached = false.obs;
 RxString weekOfThis = "This week".obs;
@@ -56,6 +57,8 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _persistReferralCodeFromArguments();
     });
+    
+
   }
 
   Future<void> _persistReferralCodeFromArguments() async {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/collections_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
@@ -46,7 +45,7 @@ Future<void> initAllHive() async {
   await init_post();
   await initCardInsightsData(controller);
   // await initFinoraLastTwoMonthsData();
-  await init_insights();
+ 
   await init_collections();
 }
 
@@ -104,13 +103,7 @@ Future<void> init_finance() async {
   );
 }
 
-Future<void> init_insights() async {
-  await HiveHelper.initHiveBox<InsightsModel>(
-    adapter: InsightsModelAdapter(),
-    boxName: 'insightsBox',
-    onLoaded: () => InsightsLocalStorage.loadInsightsFromHive(),
-  );
-}
+
 
 Future<void> initCardInsightsData(FinoraController controller) async {
   await HiveHelper.initHiveBox<CardInsightsModel>(

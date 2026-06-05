@@ -12,17 +12,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:week_of_year/week_of_year.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import '../../Home_Screen/insightsController.dart';
 import '../../routes/route_transactions.dart';
 
 
-void updateCatAndMoneyMap(BuildContext context)
-{
-  final controller = Get.find<InsightsController>();
-  controller.getHomePageInsights(context);
-  controller.getHomePageMoneyMapInsights(context);
-  getCategoryData();
-}
+
 
 void pickCustomDateRange(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
@@ -104,7 +97,7 @@ void getAutoMationsTransactionsCustomoverall(date, context,
 
   var response = await getDataApiCall(urlPath);
 
-  
+
 
   List<String> labelsLocal = [];
   List<double> debitList = [];

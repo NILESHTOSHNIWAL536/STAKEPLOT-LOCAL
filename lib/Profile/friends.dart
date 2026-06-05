@@ -190,8 +190,7 @@ class _FriendsState extends State<Friends> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // AvatarProfileImage(
-              //     url:avaterUrlPath(data['name']), width: 15, height: 15),
+             
 
               widget.isMasked
                   ? AvatarProfile2(

@@ -8,11 +8,15 @@ class BottomNavigationSvgs {
 class HomeSvgs {
   static const String autopaysIcon = 'assets/svgs/home/autopaysIcon.svg';
   static const String monthlySpendingGraph =
-      'assets/svgs/home/monthlySpendinggraph.svg';
+      'assets/svgs/home/monthlySpendingGraph.svg';
   static const String monthlySpendingIcon =
       'assets/svgs/home/monthlySpendingIcon.svg';
   static const String mySpendings = 'assets/svgs/home/mySpendings.svg';
   static const String historyIcon = 'assets/svgs/home/historyIcon.svg';
   static const String cashTnxs = 'assets/svgs/home/cashTnxs.svg';
+  static const String lastSevenDays = 'assets/svgs/home/lastSevenDays.svg';
+  static const String expensiveDayIcon = 'assets/svgs/home/expensiveDayIcon.svg';
+  static const String expensiveDayGraph = 'assets/svgs/home/expensiveDayGraph.svg';
+
 }
 

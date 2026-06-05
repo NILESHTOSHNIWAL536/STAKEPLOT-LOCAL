@@ -27,8 +27,9 @@ import 'package:flutter_application_code_stakeplot/widget_services/widget_updati
 import 'package:get/get.dart';
 import '../../components/shared_utils.dart';
 import '../../controllers/collections_controller.dart';
+import '../../controllers/finora_controller.dart';
 import '../../controllers/user-controller.dart';
-import '../insightsController.dart';
+
 
 Future<void>? _callApiFuture;
 
@@ -45,7 +46,8 @@ Future<void> _callApi(context) async {
   contextGlobal = context;
 
   final userController = Get.find<UserController>();
-  final insightsController = Get.put(InsightsController());
+
+
   // final budgetController = Get.find<BudgetControllerScreenModel>();
 
   // ✅ STEP 1: Only CRITICAL (block minimal)
@@ -61,8 +63,7 @@ Future<void> _callApi(context) async {
         cardController.getBanksListCrediCard(),
         // budgetController.getBudget(),
         getHiddenTransactions(context),
-        insightsController.getHomePageInsights(context),
-        insightsController.getHomePageMoneyMapInsights(context),
+
         getNotifications(context),
         getAllAutoTransactions(),
         getAllContstant(context),
@@ -81,6 +82,7 @@ Future<void> _callApi(context) async {
         getRemainders(context),
         updateWidget(),
         getCategoryData(),
+        fetchFinoraOverview(),
         collectionsController.getCollections(),
         collectionsController.fetchCollectionLimitSummary()
       ]);
@@ -135,6 +137,15 @@ Future<void> _callApi(context) async {
 //   CollectionsController().getCollections();
 //   CollectionsController().fetchCollectionLimitSummary();
 // }
+
+Future<void> fetchFinoraOverview() async {
+  try {
+    final data = await FinoraRepository.getOverview();
+    Get.find<FinoraController>().populateFromOverview(data);
+  } catch (e) {
+    appLog("Finora overview error: $e");
+  }
+}
 
 void initializeData(context, mounted) {
   isLoginAlreadLogin(context, mounted);

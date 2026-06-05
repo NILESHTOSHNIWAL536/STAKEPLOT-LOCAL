@@ -56,6 +56,44 @@ class FinoraController extends GetxController {
   final RxInt selectedIndex = (-1).obs;
   final RxString selectedPeriod = 'Month'.obs;
 
+  // ── Overview API data ────────────────────────────────────────────────────────
+  final Rx<Map<String, dynamic>> overviewMonthlySpending =
+      Rx<Map<String, dynamic>>({});
+  final Rx<Map<String, dynamic>> overviewAveragePerDay =
+      Rx<Map<String, dynamic>>({});
+  final Rx<Map<String, dynamic>> overviewMostFrequentPayment =
+      Rx<Map<String, dynamic>>({});
+  final Rx<Map<String, dynamic>> overviewWeeklyTrend =
+      Rx<Map<String, dynamic>>({});
+  final Rx<Map<String, dynamic>> overviewMostExpensiveTransaction =
+      Rx<Map<String, dynamic>>({});
+  final Rx<Map<String, dynamic>> overviewDayPersonality =
+      Rx<Map<String, dynamic>>({});
+  final RxBool overviewLoaded = false.obs;
+
+  void populateFromOverview(Map<String, dynamic> data) {
+    overviewMonthlySpending.value = _castMap(data['monthlyTotalSpending']);
+    overviewAveragePerDay.value = _castMap(data['averagePerDay']);
+    overviewMostFrequentPayment.value = _castMap(data['mostFrequentPayment']);
+    overviewWeeklyTrend.value = _castMap(data['weeklyTrend']);
+    overviewMostExpensiveTransaction.value =
+        _castMap(data['mostExpensiveTransaction']);
+    overviewDayPersonality.value = _castMap(data['dayPersonality']);
+
+    final spent = overviewMonthlySpending.value['totalSpent'];
+    if (spent != null) {
+      totalDebitThisMonth.value =
+          double.tryParse(spent.toString()) ?? totalDebitThisMonth.value;
+    }
+    overviewLoaded.value = true;
+  }
+
+  Map<String, dynamic> _castMap(dynamic v) {
+    if (v is Map<String, dynamic>) return v;
+    if (v is Map) return v.cast<String, dynamic>();
+    return {};
+  }
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
   /// Clear all monthly + weekly data lists before a fresh API populate.

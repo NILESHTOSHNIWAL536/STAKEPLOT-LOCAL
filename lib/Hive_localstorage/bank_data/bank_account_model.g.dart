@@ -28,10 +28,10 @@ class BankAccountModelAdapter extends TypeAdapter<BankAccountModel> {
       lastFetch: fields[8] as String,
       nextFetch: fields[9] as String,
       fetchCount: fields[10] as String,
-      consentId: fields[11] as String? ?? '',
-      consendHandleId: fields[12] as String? ?? '',
-      sessionId: fields[13] as String? ?? '',
-      custId: fields[14] as String? ?? '',
+      consentId: fields[11] as String,
+      consendHandleId: fields[12] as String,
+      sessionId: fields[13] as String,
+      custId: fields[14] as String,
     );
   }
 

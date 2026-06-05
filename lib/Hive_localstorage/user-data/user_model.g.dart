@@ -17,7 +17,8 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserModel(
-      
+      maskedConnections: (fields[28] as List).cast<dynamic>(),
+      maskedConnected: (fields[29] as List).cast<dynamic>(),
       userId: fields[0] as String,
       userName: fields[1] as String,
       isGoogleUser: fields[2] as bool,
@@ -46,8 +47,6 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       selectedBank: fields[25] as String,
       firstFetchedDate: fields[26] as String,
       friendsList: (fields[27] as List).cast<dynamic>(),
-      maskedConnections: (fields[28] as List).cast<dynamic>(),
-      maskedConnected: (fields[29] as List).cast<dynamic>(),
     );
   }
 

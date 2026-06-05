@@ -1,10 +1,9 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
 import 'package:hive/hive.dart';
 import 'autopays_data/cards_data.dart';
 import 'bank_data/bank_account_model.dart';
-import 'bank_data/consent_detail_model.dart'; 
+import 'bank_data/consent_detail_model.dart';
 import 'fip_metric_bata/fips_metric.dart';
 import 'post_data.dart/post_hive_storage.dart';
 import 'transactions_data/transaction.dart';
@@ -48,8 +47,7 @@ class HiveStorage {
 
   static Box<CardInsightsModel> get cardInsightsBox =>
       Hive.box<CardInsightsModel>(cardInsightsBoxName);
-  static Box<FinoraLastTwoMonthsModel> get finoraLastTwoMonthsBox =>
-      Hive.box<FinoraLastTwoMonthsModel>(finoraLastTwoMonthsBoxName);
+ 
 
   static Box<PostModels> get postBoxTranding =>
       Hive.box<PostModels>(postBoxTrandingName);

@@ -225,9 +225,8 @@
 // }
 
 
-import 'package:fl_chart/fl_chart.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/autopay_detection_screen.dart';
@@ -235,22 +234,19 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStac
 import 'package:flutter_application_code_stakeplot/Home_Screen/dummy_insight_api_screen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/finora_controller.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:get/get.dart';
 import '../../Constants/app_assets.dart';
 import '../../Constants/app_svgs.dart';
 import '../../Constants/core/app_component_sizes.dart';
 import '../../Constants/core/app_padding_sizes.dart';
-import '../../components/helper.dart';
 import '../../components/shared_utils.dart';
 import '../Home/home_AppBar.dart';
 import '../Home/init_Api_Calls.dart';
+import '../finora_analytics/finora_dashboard.dart';
 
 class IndexScreen extends StatelessWidget {
   final ScrollController scrollControllerHome;
@@ -290,9 +286,9 @@ class IndexScreen extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         color: colors.whiteColor,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(36),
-                            topRight: Radius.circular(36)),
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50)),
                         border: Border.all(color: colors.whiteColor),
                       ),
                       padding: const EdgeInsets.all(14),
@@ -310,9 +306,7 @@ class IndexScreen extends StatelessWidget {
                             ),
                           ),
 
-                          Obx(() => isFinoraVisible.value
-                              ? FinoraInsightsSection()
-                              : FinoraInsightsSection()),
+
 
                           Obx(() => isAutoPayFected.value
                               ? GetAutopays(height)
@@ -350,6 +344,7 @@ class IndexScreen extends StatelessWidget {
     );
   }
 
+
   Widget _last7DaysHeader(BuildContext context) {
     final colors = context.appPalette;
     final controller = Get.find<FinoraController>();
@@ -358,7 +353,7 @@ class IndexScreen extends StatelessWidget {
       final weekDebit = controller.totalDebitThisWeek.value;
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 26),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -404,11 +399,7 @@ class IndexScreen extends StatelessWidget {
                           color: colors.blackColor,
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
+                      const SizedBox(width: 16),
                       const Icon(Icons.arrow_upward_rounded,
                           color: Colors.green, size: 16),
                       const SizedBox(width: 4),
@@ -432,10 +423,9 @@ class IndexScreen extends StatelessWidget {
                   color: colors.backgroundColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.currency_rupee_rounded,
-                  size: 36,
-                  color: colors.blackColor,
+                child: ResponsiveSvg(
+                  asset: HomeSvgs.lastSevenDays,
+                  widthFactor: 2,
                 ),
               ),
             ],
@@ -563,313 +553,3 @@ Widget buildTopSection(BuildContext context) {
   );
 }
 
-class FinanceSummaryDashboard extends StatelessWidget {
-  const FinanceSummaryDashboard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appPalette;
-    final controller = Get.find<FinoraController>();
-
-    return Obx(() {
-      final totalSpend = controller.totalDebitThisMonth.value;
-      final autopayCount = allAutoPayData.length;
-      final dayData = controller.mostSpentDayInMonth.isNotEmpty
-          ? controller.mostSpentDayInMonth[0]
-          : null;
-
-      final expensiveDayAmount = dayData != null
-          ? (double.tryParse(dayData['totalAmount']?.toString() ?? '0') ?? 0.0)
-          : 0.0;
-      final expensiveDayLabel = _formatDayLabel(dayData?['date']?.toString());
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── Top two summary cards ──────────────────────────────────────────
-          Row(
-            children: [
-              Expanded(
-                child: _SummaryTile(
-                  image: HomeSvgs.mySpendings,
-                  label: 'My spendings',
-                  value: totalSpend > 0
-                      ? '₹${formatMoneyIndian(totalSpend.toStringAsFixed(0))}'
-                      : '—',
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _SummaryTile(
-                  image: HomeSvgs.autopaysIcon,
-                  label: 'Autopays',
-                  value: '$autopayCount',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          // ── Finora card ────────────────────────────────────────────────────
-          Container(
-            decoration: BoxDecoration(
-              color: colors.backgroundColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: colors.bottomText),
-            ),
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Finora',
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 16,
-                        lWeight: FontWeight.w700,
-                        color: colors.blackColor,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const DummyInsightApiScreen(),
-                        ),
-                      ),
-                      child: Text(
-                        'View All',
-                        style: FontManager().getTextStyle(
-                          context,
-                          fontSize: 13,
-                          lWeight: FontWeight.w500,
-                          color: colors.blackColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                // Monthly Summary + Expensive Day
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              ResponsiveSvg(
-                                asset: HomeSvgs.monthlySpendingIcon,
-                                widthFactor: 18,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Monthly Summary',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  fontSize: 12,
-                                  lWeight: FontWeight.w500,
-                                  color: colors.blackColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            totalSpend > 0
-                                ? '₹${formatMoneyIndian(totalSpend.toStringAsFixed(2))}'
-                                : '—',
-                            style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 18,
-                              lWeight: FontWeight.w700,
-                              color: colors.blackColor,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Icon(Icons.trending_up,
-                                  size: 14, color: Colors.green),
-                              const SizedBox(width: 2),
-                              Text(
-                                'vs Last Month',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  fontSize: 11,
-                                  lWeight: FontWeight.w400,
-                                  color: colors.blackColor
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          ResponsiveSvg(
-                            asset: HomeSvgs.monthlySpendingGraph,
-                            widthFactor: 2,
-                            // heightFactor: 4,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 1,
-                      height: 64,
-                      color: colors.blackColor,
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.calendar_today_outlined,
-                                  size: 16, color: colors.secondaryText),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Expensive Day',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  fontSize: 12,
-                                  lWeight: FontWeight.w500,
-                                  color: colors.blackColor  ,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            expensiveDayAmount > 0
-                                ? '₹${formatMoneyIndian(expensiveDayAmount.toStringAsFixed(2))}'
-                                : '—',
-                            style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 18,
-                              lWeight: FontWeight.w700,
-                              color: colors.blackColor,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            expensiveDayLabel,
-                            style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 11,
-                              lWeight: FontWeight.w400,
-                              color: colors.blackColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                // Mini charts row
-                Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 48,
-
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: SizedBox(
-                        height: 48,
-
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
-  String _formatDayLabel(String? dateStr) {
-    if (dateStr == null || dateStr.isEmpty) return '—';
-    try {
-      final dt = DateTime.parse(dateStr);
-      const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ];
-      return '${dt.day} ${months[dt.month - 1]}';
-    } catch (_) {
-      return dateStr;
-    }
-  }
-}
-
-class _SummaryTile extends StatelessWidget {
-  const _SummaryTile({
-    required this.image,
-    required this.label,
-    required this.value,
-  });
-
-  final String image;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appPalette;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: colors.whiteColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: colors.bottomText),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ResponsiveSvg(
-                asset:image,
-                // heightFactor: 24,
-
-                widthFactor: 16,
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  label,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 12,
-                    lWeight: FontWeight.w500,
-                    color: colors.blackColor,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 20,
-              lWeight: FontWeight.w700,
-              color: colors.blackColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

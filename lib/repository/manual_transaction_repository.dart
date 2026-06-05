@@ -50,7 +50,7 @@ void addTransaction(String amount, String subCategory, String categories,
     }
     transactionsHistory.insert(0, addedTransactions);
 
-    updateCatAndMoneyMap(context);
+   
     userController.fetchUserInfo();
 
     Future.wait([

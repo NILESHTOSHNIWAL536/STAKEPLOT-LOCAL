@@ -160,7 +160,7 @@ class TransactionCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    formatWhatsAppDateWithoutTime(convertStringToDateTime(date)),
+                    formatWhatsAppDate(convertStringToDateTime(date)),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.normal,
@@ -217,9 +217,9 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
             decoration: BoxDecoration(
                color: AppColors.backgroundColor,
                borderRadius: BorderRadius.circular(16)
-          
+
             ),
-           
+
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -269,7 +269,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                     decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(6)
-          
+
                     ),
                     child: Center(
                       child: Text(
@@ -283,7 +283,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                       ),
                     ),
                   ),
-                 
+
                 ),
               ],
             ),

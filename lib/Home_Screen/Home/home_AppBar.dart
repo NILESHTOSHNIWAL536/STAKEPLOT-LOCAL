@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/components/notification_icon.dart';
+import 'package:get/get.dart';
 import '../../Constants/app_styles.dart';
+import '../../Constants/core/app_component_sizes.dart';
 import '../../Constants/core/app_padding_sizes.dart';
+import '../../backed_connections/apis_connect.dart';
+import '../../repository/notification_repository.dart';
 import '../strides/strides_screen.dart';
 
 // PreferredSizeWidget getAppBar(context) {
@@ -83,9 +87,7 @@ class TopRightIconsWidget extends StatelessWidget {
           const SizedBox(width: AppSizes.w16),
 
           /// NOTIFICATION BUTTON
-          NotificationsBudget(
-            child: const SizedBox(),
-          ),
+          const NotificationsIcon(),
         ],
       ),
     );
@@ -236,5 +238,64 @@ class _AutoHintIconState extends State<AutoHintIcon> {
         ),
       ],
     );
+  }
+}
+class NotificationsIcon extends StatefulWidget {
+// Widget child;
+ const NotificationsIcon({super.key});
+
+  @override
+  State<NotificationsIcon> createState() => _NotificationsIconState();
+}
+
+class _NotificationsIconState extends State<NotificationsIcon> {
+
+
+
+   @override
+  void initState() {
+    super.initState();
+    getAck();
+  }
+
+
+  @override
+  Widget build(BuildContext context){
+    final colors = context.appPalette;
+   return  Container(
+     width: AppComponentSizes.w4,
+     padding:const EdgeInsets.symmetric(horizontal: 10),
+     child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                   onTap: (){
+                     HapticFeedback.mediumImpact();
+                      Navigator.pushNamed(context, '/Notifications');
+                    },
+                    child: Obx(()=> !hasGetNewNotifications.value?
+                    // AvatarProfileImageZero(url: HomePageIcons.notification, width: 30, height: 30):
+                    Icon(Icons.notifications, size: 30, color:colors.iconFillColor):
+                     AvatarProfileImageZero(url: HomePageIcons.notificationStack, width: 30, height: 30)
+                    )
+
+                  ),
+                  //  SizedBox(width: AppSizes.w10),
+                  // InkWell(
+                  //  onTap: (){
+                  //    HapticFeedback.mediumImpact();
+                  //          Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => const UpdatesScreen(),
+                  //           ),
+                  //         );
+                  //      },
+                  //   child:
+                  //   AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30)
+                  //   )
+                ],
+             ),
+   );
   }
 }

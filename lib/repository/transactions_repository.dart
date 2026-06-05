@@ -201,7 +201,7 @@ Future<void> getAllTransactionHistory(
           );
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);      
+      var data = jsonDecode(response.body);
       var obj = data['data'];
       if (obj != null) {
         if (isRefreshing) {
@@ -256,7 +256,7 @@ void updateTheTagOfTransactions2(
   if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
-    updateCatAndMoneyMap(context);
+    
     budgetController.getBudget();
   } else {}
 }
@@ -394,7 +394,7 @@ Future<void> excludeCashFlowTransaction(
     if (getFlagOfResponse(response)) {
       (transactionsHistory[index]).isExcluded = isExcluded;
       transactionsHistory.refresh();
-    } 
+    }
   } catch (e) {
   }
 }
@@ -425,7 +425,7 @@ void updateTransactionsBalanceOut(context,transactionId,int index,double amount)
   {
               (transactionsHistory[index]).balanceOut = (amount).abs();
               (transactionsHistory[index]).isBalanceOut = true;
-              transactionsHistory.refresh();       
+              transactionsHistory.refresh();
   }
 }
 
@@ -435,7 +435,7 @@ Future<void> addTagToTransactions(context,transactionId,bool flag,int index)asyn
    var res =await postDataApiCall(BankTransactionRoutes.verifyPendingTransaction(transactionId: transactionId, isCorrect: flag),{
       "flag":flag
    });
-  
+
   if(getFlagOfResponse(res))
   {
     autoTransactionList.removeAt(index);
@@ -479,7 +479,7 @@ void postCustomCategory(context,name,urlPath,narr)async
     "imageUrl":urlPath,
     "narration":narr
   };
-  
+
   var res = await postDataApiCall(BankTransactionRoutes.customCategory,body);
 
   if(getFlagOfResponse(res))

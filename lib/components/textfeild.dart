@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:intl/intl.dart';
+
 
 import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/signUp.dart';
@@ -79,14 +75,14 @@ class TextFeildWidget extends StatelessWidget {
                   ],
               decoration: InputDecoration(
                   // contentPadding: EdgeInsets.all(0),
-                  
+
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   filled: true,
                   hintText: lableText,
                   // hintStyle: getStyle(context),
-                  
-                 
+
+
                  fillColor: AppColors.backgroundColor,
                     hintStyle: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
@@ -97,8 +93,8 @@ class TextFeildWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: BorderSide(color: AppColors.grey)
                     ),
-                 
-                  suffixIcon:SignupData().usernameLabel==heading?  
+
+                  suffixIcon:SignupData().usernameLabel==heading?
                       textEditingController.text.length==0?null:
                       isValidUser.value?Icon(Icons.check,size: 30,color: AppColors.green,):Container(width: 30,height: 30,child: Spinner())
                   : flag
@@ -133,281 +129,7 @@ TextStyle getStyle1(context) {
       fontSize: 14, lWeight: FontWeight.w300, color: AppColors.bg6);
 }
 
-class TextFeildWidgetPassword extends StatelessWidget {
-  TextEditingController textEditingController;
-  String lableText;
-  String heading;
-  TextInputType keyBoard;
-  bool flag;
-  IconData icon;
-  final RxBool show = true.obs;
-  TextFeildWidgetPassword(
-      {Key? key,
-      required this.textEditingController,
-      required this.heading,
-      required this.keyBoard,
-      required this.lableText,
-      this.icon = Icons.email_outlined,
-      this.flag = true})
-      : super(key: key);
 
-  
-
-  @override
-  Widget build(BuildContext context) {
-    //  return Text("data");
-    return Obx(() => Center(
-            child: Container(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          width: MediaQuery.of(context).size.width / 1.1,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 9.0),
-                  child: Text(heading,
-                      style: FontManager().getTextStyle(context,
-                          fontSize: 16, lWeight: FontWeight.w600)),
-                ),
-                 SizedBox(
-                  height: AppSizes.h10,
-                ),
-                Center(
-                  child: TextFormField(
-                    keyboardType: keyBoard,
-                    controller: textEditingController,
-                    obscureText: show.value,
-                    onChanged: (s) {
-                      acceptReset.value = false;
-                    },
-                     inputFormatters:
-                     [
-                       FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                      
-                    ],
-                    decoration: InputDecoration(
-                        // contentPadding: EdgeInsets.all(0),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        filled: true,
-                        hintText: lableText,
-                        hintStyle: getStyle(context),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                BorderSide(color: AppColors.button)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                BorderSide(color: AppColors.button)),
-                        fillColor: AppColors.button,
-                        border: InputBorder.none,
-                        prefixIcon: Icon(
-                          icon,
-                          size: 30,
-                          color: AppColors.primaryColor,
-                        ),
-                        suffixIcon: flag
-                            ? null
-                            : Obx(() => InkWell(
-                                  onTap: () {
-                                    show.value = !show.value;
-                                  },
-                                  child: Icon(
-                                    !show.value
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ))),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )));
-  }
-}
-
-class LowerCaseTextFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    return TextEditingValue(
-      text: newValue.text.toLowerCase(),
-      selection: newValue.selection,
-    );
-  }
-}
-
-class TextFeildWidget2 extends StatelessWidget {
-  String lableText;
-  String heading;
-  TextFeildWidget2({Key? key, required this.heading, required this.lableText})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    //  return Text("data");
-    return Center(
-        child: Container(
-      padding: EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width / 1.1,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 9.0),
-              child: Text(heading,
-                  style: FontManager().getTextStyle(context,
-                      fontSize: 18, lWeight: FontWeight.w600)),
-            ),
-             SizedBox(
-              height: AppSizes.h10,
-            ),
-            TextFormField(
-              keyboardType: TextInputType.name,
-              initialValue: lableText,
-              readOnly: true,
-              // controller: textEditingController,
-              onChanged: (s) {
-                acceptReset.value = false;
-              },
-
-              decoration: InputDecoration(
-                // contentPadding: EdgeInsets.all(0),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                filled: true,
-                hintText: lableText,
-                hintStyle: getStyle(context),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide: BorderSide(color: AppColors.button)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide: BorderSide(color: AppColors.button)),
-                fillColor: AppColors.button,
-                border: InputBorder.none,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ));
-  }
-}
-
-class TextFeildCalender extends StatelessWidget {
-  TextEditingController textEditingController;
-  String lableText;
-  String heading;
-  TextInputType keyBoard;
-  bool flag;
-  TextFeildCalender(
-      {Key? key,
-      required this.textEditingController,
-      required this.heading,
-      required this.keyBoard,
-      required this.lableText,
-      this.flag = true})
-      : super(key: key);
-
-  RxBool show = false.obs;
-
-  @override
-  Widget build(BuildContext context) {
-    //  return Text("data");
-    return Center(
-        child: GestureDetector(
-      onTap: () async {
-        // Removed manual entry, only allow selection through suffix icon
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5),
-        width: MediaQuery.of(context).size.width / 1.1,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 9.0),
-                child: Text(heading,
-                    style: FontManager().getTextStyle(context,
-                        fontSize: 16, lWeight: FontWeight.w600)),
-              ),
-               SizedBox(
-                height: AppSizes.h10,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.none, // Disable manual entry
-                controller: textEditingController,
-                obscureText: flag ? false : show.value,
-                readOnly: true, 
-                onChanged: (s) {
-                  // Removed manual entry handling
-                },
-                decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p12),
-                    filled: true,
-                    hintText: lableText,
-                    hintStyle: getStyle2(context),
-                    fillColor: AppColors.button,
-                     enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                BorderSide(color: AppColors.button)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                BorderSide(color: AppColors.button)),
-                    border: InputBorder.none,
-                    prefixIcon:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
-                    suffixIcon: GestureDetector(
-                      onTap: () async {
-                        DateTime? dateTime = await showDatePicker(
-                            context: context,
-                            initialDate:DateTime.now(),
-                            firstDate: DateTime(1950),
-                            lastDate: DateTime.now());
-                        if (dateTime != null) {
-                          textEditingController.text = DateFormat('yyyy-MM-dd')
-                              .format(dateTime)
-                              .toString();
-                        }
-                      },
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Colorcodes.paddingSize),
-                          decoration:
-                              BoxDecoration(color: AppColors.primaryColor,
-                              
-                                                       borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
-                       
-                           
-                           
-                              ),
-                          child: Icon(
-                            Icons.arrow_drop_down_sharp,
-                            color: AppColors.backgroundColor,
-                          )),
-                    )),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
-}
 
 class TextFeildWidgetCustom extends StatelessWidget {
   TextEditingController textEditingController;
@@ -487,7 +209,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
                     borderSide: BorderSide(color: AppColors.primaryColor),),
                 fillColor: AppColors.mt,
                 border: InputBorder.none,
-              
+
                 prefixIcon: flag
                     ? Icon(
                         icon,
@@ -588,151 +310,3 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
   }
 }
 
-
-class TextFeildWidgetUnderline extends StatefulWidget {
-  final TextEditingController textEditingController;
-  final String lableText;
-  final String heading;
-  final TextInputType keyBoard;
-  final bool flag;
-  final IconData icon;
-
-  const TextFeildWidgetUnderline({
-    Key? key,
-    required this.textEditingController,
-    required this.heading,
-    required this.keyBoard,
-    required this.lableText,
-    this.icon = Icons.email_outlined,
-    this.flag = true,
-  }) : super(key: key);
-
-  @override
-  State<TextFeildWidgetUnderline> createState() =>
-      _TextFeildWidgetUnderlineState();
-}
-
-class _TextFeildWidgetUnderlineState
-    extends State<TextFeildWidgetUnderline> {
-
-  /// UI-only state → NOT Rx
-  bool showPassword = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: AppSizes.p6),
-        width: MediaQuery.of(context).size.width / 1.1,
-        child: TextFormField(
-          controller: widget.textEditingController,
-          keyboardType: widget.keyBoard,
-          maxLength:
-              widget.heading == "PhoneNo" ? 10 : null,
-          obscureText:
-              widget.flag ? false : !showPassword,
-
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(
-              RegExp(r'\s'),
-            ),
-          ],
-
-          onChanged: (c) {
-            if (SignupData().usernameLabel ==
-                widget.heading) {
-              checkIsUserNameValid(c);
-            }
-          },
-
-          decoration: InputDecoration(
-            hintText: widget.lableText,
-            counterText: "",
-
-            /// PREFIX
-            prefixIcon: widget.heading == "tagSearch"
-                ? const Icon(Icons.search)
-                : null,
-
-            hintStyle: FontManager().getTextStyle(
-              context,
-              fontSize: 14,
-              lWeight: FontWeight.normal,
-              color: AppColors.accentColor,
-            ),
-
-            /// UNDERLINE
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color:
-                    AppColors.primaryColor.withOpacity(0.4),
-                width: 1,
-              ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.primaryColor,
-                width: 2,
-              ),
-            ),
-            errorBorder:  UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.redColor,
-              ),
-            ),
-
-            /// ✅ SUFFIX ICON (ONLY Obx HERE)
-            suffixIcon:
-                SignupData().usernameLabel ==
-                        widget.heading
-                    ? Obx(() {
-                        if (widget.textEditingController.text
-                            .isEmpty) {
-                          return const SizedBox.shrink();
-                        }
-
-                        return isValidUser.value
-                            ?  Icon(
-                                Icons.check,
-                                size: 22,
-                                color:
-                                    AppColors.green,
-                              )
-                            :  SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: Spinner(),
-                              );
-                      })
-                    : widget.flag
-                        ? null
-                        : InkWell(
-                            onTap: () {
-                              setState(() {
-                                showPassword =
-                                    !showPassword;
-                              });
-                            },
-                            child: Icon(
-                              showPassword
-                                  ? Icons
-                                      .remove_red_eye_outlined
-                                  : Icons
-                                      .do_disturb_off_outlined,
-                              color:
-                                  AppColors.primaryColor,
-                            ),
-                          ),
-          ),
-
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 16,
-            lWeight: FontWeight.w500,
-            color: AppColors.finSpaceColor,
-          ),
-        ),
-      ),
-    );
-  }
-}

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/services/secure_storage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -12,11 +13,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 void appLog(dynamic message,
     [dynamic message2, dynamic message3, dynamic message4]) {
   if (!kReleaseMode) {
-      final logs = [message, message2, message3, message4]
+    final logs = [message, message2, message3, message4]
         .where((e) => e != null)
         .map((e) => e.toString())
         .join(" | ");
-       print(logs);
+    print(logs);
   }
 }
 
@@ -68,21 +69,11 @@ String formatDateToIST(String dateStr) {
   }
 }
 
-String getFormattedDateForScreenTime() {
-  final now = DateTime.now();
-  return "${now.day.toString().padLeft(2, '0')}:${now.month.toString().padLeft(2, '0')}:${now.year}";
-}
-
 List<TextInputFormatter> allowDecimalInput({int decimalPlaces = 2}) {
   final regex = RegExp(r'^\d*\.?\d{0,' + decimalPlaces.toString() + r'}');
   return [
     FilteringTextInputFormatter.allow(regex),
   ];
-}
-
-int getDaysInCurrentMonth() {
-  final now = DateTime.now();
-  return DateTime(now.year, now.month + 1, 0).day;
 }
 
 String getMonthlyRange() {
@@ -138,11 +129,6 @@ String getFullMonthName(int month) {
   return monthNames[month - 1];
 }
 
-String avaterUrlPath(String name) {
-  if (name.isEmpty) return "assets/avatars/a.svg";
-  return "assets/avatars/" + name[0].toString().toLowerCase() + ".svg";
-}
-
 String formatMoneyIndian(String value, [String pattern = "0"]) {
   if (value.isEmpty) return pattern;
   try {
@@ -158,32 +144,6 @@ String formatMoneyIndian(String value, [String pattern = "0"]) {
     return formatter.format(number).trim();
   } catch (e) {
     return pattern;
-  }
-}
-
-Widget getProfile() {
-  return AvatarProfile(
-    fontsize: 18,
-    name: userController.userName.value,
-    width: 8,
-    height: 10,
-    background: userController.avatarBackGround.value,
-    flag: true,
-  );
-}
-
-int getRandomValue(list) {
-  return Random().nextInt(list.length);
-}
-
-String getTimeBasedGreeting() {
-  final hour = DateTime.now().hour;
-  if (hour < 12) {
-    return "Good morning";
-  } else if (hour < 16) {
-    return "Good afternoon,";
-  } else {
-    return "Good evening,";
   }
 }
 
@@ -234,60 +194,16 @@ String formatWhatsAppDate(DateTime date) {
     return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
   }
 }
-
-String formatWhatsAppDate4(DateTime date) {
-  // Remove toLocal() if not needed, or adjust properly
-  DateTime now = DateTime.now();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 7 Apr 2025, 10:30 AM
-  }
-}
-
 String formatWhatsAppDateWithoutTime(DateTime date) {
-  // Remove toLocal() if not needed, or adjust properly
-  DateTime now = DateTime.now();
+  date = date.toLocal();
+  // Adjust for 5:30 offset
+  DateTime now = DateTime.now().toLocal();
   DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
+  DateTime yesterday = today.subtract(const Duration(days: 1));
+  DateTime tomorrow = today.add(const Duration(days: 1));
+  DateTime weekStart = today.subtract( Duration(days: today.weekday));
+  DateTime weekEnd = weekStart.add(const Duration(days: 7));
 
-  // String timeFormat = DateFormat('h:mm a').format(date);
 
   // Check if the date is today
   if (date.year == today.year &&
@@ -309,60 +225,15 @@ String formatWhatsAppDateWithoutTime(DateTime date) {
   }
   // Check if the date is within the current week (past or future)
   else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEEE').format(date)}"; // Mon, 10:30 AM
+    return "${DateFormat('EEE').format(date)}"; // e.g., Mon, 10:30 AM
   }
   // Same year, different week
   else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}"; // 7 Apr, 10:30 AM
+    return "${DateFormat('d MMM').format(date)}"; // e.g., 7 Apr, 10:30 AM
   }
   // Different year
   else {
-    return "${DateFormat('d MMM y').format(date)}"; // 7 Apr 2025, 10:30 AM
-  }
-}
-
-String formatWhatsAppDate3(DateTime date) {
-  date = date.toLocal().add(Duration(hours: 5, minutes: 30));
-  ;
-  // Adjust for 5:30 offset
-  DateTime now = DateTime.now().toLocal();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // e.g., Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // e.g., 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
+    return "${DateFormat('d MMM y').format(date)}"; // e.g., 7 Apr 2025, 10:30 AM
   }
 }
 
@@ -371,96 +242,11 @@ String getFormattedDate() {
   return "${now.year}-${now.month.toString().padLeft(2, '0')}";
 }
 
-String getCurrentWeekNumber() {
-  DateTime now = DateTime.now();
-  int weekNumber = int.parse(DateFormat('w').format(now));
-  int year = now.year;
-  return '$year-W${weekNumber.toString().padLeft(2, '0')}';
-}
-
-String formatWhatsAppDate2(DateTime date) {
-  date = date.toLocal().subtract(Duration(hours: 5, minutes: 30));
-  ;
-  // Adjust for 5:30 offset
-  DateTime now = DateTime.now().toLocal();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // e.g., Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // e.g., 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
-  }
-}
-
-final Map<int, Map<String, double>> weekData = {
-  for (int i = 0; i < 5; i++)
-    i: {
-      'Mon': Random().nextInt(500).toDouble(),
-      'Tue': Random().nextInt(500).toDouble(),
-      'Wed': Random().nextInt(500).toDouble(),
-      'Thu': Random().nextInt(500).toDouble(),
-      'Fri': Random().nextInt(500).toDouble(),
-      'Sat': Random().nextInt(500).toDouble(),
-      'Sun': Random().nextInt(500).toDouble(),
-    },
-};
-
 int getDaysInMonth(int year, int month) {
   if (month == 12) {
     return DateTime(year + 1, 1, 0).day;
   }
   return DateTime(year, month + 1, 0).day;
-}
-
-double getProgressValue(String text) {
-  if (text.toLowerCase().contains("same as last month")) {
-    return 0.0;
-  }
-
-  final match = RegExp(r'([-+]?\d+)%').firstMatch(text);
-  if (match != null) {
-    final value = int.tryParse(match.group(1) ?? "0") ?? 0;
-    double v = value <= 0
-        ? 1
-        : value <= 99
-            ? value / 1.0
-            : 100;
-    return v;
-    // return (value.abs().clamp(0, 100)) / 100;
-  }
-
-  return 0.0;
 }
 
 bool isCurrentYear(String date, int y) {
@@ -556,4 +342,43 @@ class _VerticalDashPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+
+
+class RoundedWhiteContainer extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final double? width;
+  final double? height;
+  final double borderRadius;
+  final Color backgroundColor;
+
+  const RoundedWhiteContainer({
+    super.key,
+    required this.child,
+    this.padding,
+    this.margin,
+    this.width,
+    this.height,
+    this.borderRadius = 80,
+    this.backgroundColor = Colors.white,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors=context.appPalette;
+    return Container(
+      width: width,
+      height: height,
+      margin: margin,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: colors.whiteColor,
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      child: child,
+    );
+  }
 }

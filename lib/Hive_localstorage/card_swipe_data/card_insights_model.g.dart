@@ -17,20 +17,6 @@ class CardInsightsModelAdapter extends TypeAdapter<CardInsightsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CardInsightsModel(
-      totalDebitThisMonth: fields[0] as double,
-      totalDebitThisWeek: fields[1] as double,
-      moreDrasticChange: (fields[2] as List)
-          .map((dynamic e) => (e as Map).cast<String, dynamic>())
-          .toList(),
-      moreDrasticChangeWeek: (fields[3] as List)
-          .map((dynamic e) => (e as Map).cast<String, dynamic>())
-          .toList(),
-      frequentPayments: (fields[4] as List)
-          .map((dynamic e) => (e as Map).cast<String, dynamic>())
-          .toList(),
-      frequentPaymentsWeek: (fields[5] as List)
-          .map((dynamic e) => (e as Map).cast<String, dynamic>())
-          .toList(),
       categoriesList: (fields[6] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
@@ -40,19 +26,7 @@ class CardInsightsModelAdapter extends TypeAdapter<CardInsightsModel> {
   @override
   void write(BinaryWriter writer, CardInsightsModel obj) {
     writer
-      ..writeByte(7)
-      ..writeByte(0)
-      ..write(obj.totalDebitThisMonth)
       ..writeByte(1)
-      ..write(obj.totalDebitThisWeek)
-      ..writeByte(2)
-      ..write(obj.moreDrasticChange)
-      ..writeByte(3)
-      ..write(obj.moreDrasticChangeWeek)
-      ..writeByte(4)
-      ..write(obj.frequentPayments)
-      ..writeByte(5)
-      ..write(obj.frequentPaymentsWeek)
       ..writeByte(6)
       ..write(obj.categoriesList);
   }

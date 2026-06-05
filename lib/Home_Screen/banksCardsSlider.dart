@@ -1210,7 +1210,7 @@ class _BankscardssliderState extends State<Bankscardsslider> {
                   SizedBox(height: AppSizes.h40), // space for top-right logos
 
                   /// NEXT FETCH
-                  // Nextfetch(bankAccount: data),
+                  Nextfetch(bankAccount: data),
 
                   // SizedBox(height: AppSizes.h10),
 

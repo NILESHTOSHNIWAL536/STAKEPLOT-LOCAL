@@ -16,7 +16,6 @@ import 'package:get/get.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../routes/route_transactions.dart';
-import '../insightsController.dart';
 
 Widget getTab(BuildContext context) {
   return Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
@@ -290,9 +289,7 @@ void deletSelectedTransactions(BuildContext context) async {
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
   getCategoryData();
-    final InsightsController _controller = Get.put(InsightsController());
-    _controller.getHomePageInsights(context);
-  _controller.getHomePageMoneyMapInsights(context);
+
   Navigator.pop(context);
 }
 
