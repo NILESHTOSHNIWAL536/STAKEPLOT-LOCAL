@@ -48,3 +48,5 @@ app.*.map.json
 flutter_*.log
 
 .codegpt
+
+windows/flutter/ephemeral
