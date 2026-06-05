@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import '../backed_connections/apiAutomations/curd.dart';
@@ -23,30 +24,40 @@ class CardDueController extends GetxController {
   RxString auth = "".obs;
   RxMap<String, dynamic> statementPasswordRequest = <String, dynamic>{}.obs;
   RxString statementPasswordRequestId = "".obs;
+  RxList<Map<String, dynamic>> pendingStatements = <Map<String, dynamic>>[].obs;
+  RxBool pendingStatementsLoading = false.obs;
   RxList<String> connectedBankIds = <String>[].obs;
   RxList<CreditCardBank> availableBanks = <CreditCardBank>[].obs;
   RxBool bankSelectionBottomSheetOpen = false.obs;
 
   void applyStatementPasswordRequest(Map requestData) {
-    final requests = requestData["passwordRequests"];
-    if (requests is! List || requests.isEmpty || requests.first is! Map) {
-      return;
-    }
+    try {
+      final requests = requestData["passwordRequests"];
+      if (requests is! List || requests.isEmpty || requests.first is! Map) {
+        return;
+      }
 
-    final nextRequest = Map<String, dynamic>.from(requests.first as Map);
-    final nextRequestId = _statementPasswordRequestKey(nextRequest);
-    if (statementPasswordRequired.value &&
-        statementPasswordRequestId.value == nextRequestId) {
-      return;
-    }
+      final nextRequest = Map<String, dynamic>.from(requests.first as Map);
+      final nextRequestId = _statementPasswordRequestKey(nextRequest);
+      if (statementPasswordRequired.value &&
+          statementPasswordRequestId.value == nextRequestId) {
+        return;
+      }
 
-    statementPasswordRequest.value = nextRequest;
-    statementPasswordRequestId.value = nextRequestId;
-    statementPasswordError.value = statementPasswordRequest["reason"] ==
-            "invalid_password"
-        ? "The saved password did not unlock this PDF. Please enter it again."
-        : "";
-    statementPasswordRequired.value = true;
+      statementPasswordRequired.value = false;
+
+      Future.delayed(const Duration(milliseconds: 100), () {
+        statementPasswordRequired.value = true;
+      });
+      statementPasswordRequest.value = nextRequest;
+      statementPasswordRequestId.value = nextRequestId;
+      statementPasswordError.value = statementPasswordRequest["reason"] ==
+              "invalid_password"
+          ? "The saved password did not unlock this PDF. Please enter it again."
+          : "";
+    } catch (e) {
+      appLog(e);
+    }
   }
 
   String _statementPasswordRequestKey(Map<String, dynamic> request) {
@@ -73,6 +84,7 @@ class CardDueController extends GetxController {
         cardList.clear();
         cardList.addAll(
             (data as List).map((e) => CardDueModel.fromJson(e)).toList());
+        await fetchPendingStatements();
       }
     } catch (e) {
       cardList.clear();
@@ -116,7 +128,6 @@ class CardDueController extends GetxController {
         });
         return false;
       }
-
       var response = await postDataApiCall("${AuthApiRoutes.scrape}/", {
         "bankIds": [selectedBankId.value],
         "email": selectedEmail.value,
@@ -130,6 +141,11 @@ class CardDueController extends GetxController {
             responseData["requiresPassword"] == true &&
             responseData["passwordRequests"] is List &&
             (responseData["passwordRequests"] as List).isNotEmpty) {
+          pendingStatements.clear();
+          pendingStatements.assignAll(
+            List<Map<String, dynamic>>.from(responseData['passwordRequests']),
+          );
+          statementPasswordRequestId.value = "";
           applyStatementPasswordRequest(responseData);
           return false;
         }
@@ -143,7 +159,8 @@ class CardDueController extends GetxController {
         return true;
       }
     } catch (e) {
-      statementPasswordError.value ="We could not complete statement extraction. Please try again.";
+      statementPasswordError.value =
+          "We could not complete statement extraction. Please try again.";
     }
     return false;
   }
@@ -166,18 +183,139 @@ class CardDueController extends GetxController {
       });
 
       if (getFlagOfResponse(response)) {
-        statementPasswordRequired.value = false;
-        statementPasswordRequest.clear();
-        statementPasswordRequestId.value = "";
-        await LinkBankData(context);
+        final requestId = (statementPasswordRequest["requestId"] ??
+                statementPasswordRequestId.value)
+            .toString();
+
+        final processed = await processPendingStatement(requestId);
+
+        if (processed) {
+          if (pendingStatements.isNotEmpty) {
+            statementPasswordSubmitting.value = false;
+            pendingStatements.removeAt(0);
+            if (pendingStatements.length > 0) {
+              applyStatementPasswordRequest(
+                  {"passwordRequests": pendingStatements});
+              return;
+            }
+          }
+          statementPasswordRequired.value = false;
+          statementPasswordRequest.clear();
+          statementPasswordRequestId.value = "";
+          statementPasswordError.value = "";
+          loadingBankdetails.value = true;
+        }
       } else {
-        statementPasswordError.value ="We could not save the password. Please try again.";
+        statementPasswordError.value =
+            "We could not save the password. Please try again.";
       }
     } catch (e) {
       statementPasswordError.value =
           "We could not save the password. Please try again.";
     }
     statementPasswordSubmitting.value = false;
+  }
+
+  Future<void> fetchPendingStatements() async {
+    pendingStatementsLoading.value = true;
+    try {
+      final response = await getDataApiCall(AuthApiRoutes.pendingStatements);
+      if (getFlagOfResponse(response)) {
+        final decoded = jsonDecode(response.body);
+        final data = decoded["data"];
+        pendingStatements.value = data is List
+            ? data
+                .whereType<Map>()
+                .map((item) => Map<String, dynamic>.from(item))
+                .toList()
+            : <Map<String, dynamic>>[];
+      }
+    } catch (e) {
+      pendingStatements.clear();
+    }
+    pendingStatementsLoading.value = false;
+  }
+
+  Future<bool> processPendingStatement(String requestId) async {
+    if (requestId.trim().isEmpty) {
+      statementPasswordError.value =
+          "We could not find the pending statement. Please try again.";
+      return false;
+    }
+
+    final response = await postDataApiCall(
+      AuthApiRoutes.processPendingStatement,
+      {"requestId": requestId.trim()},
+    );
+
+    if (getFlagOfResponse(response)) {
+      final decoded = jsonDecode(response.body);
+      final data = decoded["data"];
+      appLog(data['pendingdocs']);
+      final bankFilterData = (data['pendingdocs'] as List)
+          .where((e) =>
+              (e['bankId'] ?? '').toString().toLowerCase().trim() ==
+              selectedBankId.value.toString().toLowerCase().trim())
+          .toList();
+
+      statementPasswordRequestId.value = "";
+      pendingStatements.clear();
+      pendingStatements.assignAll(
+        List<Map<String, dynamic>>.from(bankFilterData),
+      );
+      var res = pendingStatements.where((item) =>
+          (item["requestId"] ?? item["id"] ?? "").toString() ==
+          requestId.trim());
+      if (res.isEmpty) return true;
+      appLog(res.first['status'] == 'FAILED');
+      if (res.first['status'] == 'FAILED')
+        statementPasswordError.value =
+            "That password did not unlock the statement. Please try again.";
+      return res.first['status'] != 'FAILED';
+    }
+
+    statementPasswordError.value =
+        "That password did not unlock the statement. Please try again.";
+    return false;
+  }
+
+  Future<bool> savePasswordForPendingStatement(
+    BuildContext context,
+    Map<String, dynamic> pending,
+    String password,
+  ) async {
+    final bankId = pending["bankId"]?.toString() ?? "";
+    final requestId = (pending["requestId"] ?? pending["id"] ?? "").toString();
+    if (password.trim().isEmpty || bankId.isEmpty || requestId.isEmpty) {
+      return false;
+    }
+
+    statementPasswordSubmitting.value = true;
+    statementPasswordError.value = "";
+    try {
+      final response = await postDataApiCall(AuthApiRoutes.statementPassword, {
+        "bankId": bankId,
+        "email": selectedEmail.value.isNotEmpty
+            ? selectedEmail.value
+            : pending["email"]?.toString(),
+        "accountHint": pending["accountHint"]?.toString() ?? "",
+        "password": password.trim(),
+      });
+
+      if (getFlagOfResponse(response)) {
+        return await processPendingStatement(requestId);
+      }
+      await fetchPendingStatements();
+      statementPasswordError.value =
+          "We could not save the password. Please try again.";
+    } catch (e) {
+      statementPasswordError.value =
+          "We could not process this statement. Please try again.";
+    } finally {
+      statementPasswordSubmitting.value = false;
+    }
+
+    return false;
   }
 
   Future<void> getBanksListCrediCard() async {

@@ -34,6 +34,8 @@ class AuthApiRoutes {
   static String revokeAccessToken = "$_emailPath/remove-access";
   static String scrape = "$_emailPath/scrape";
   static String statementPassword = "$_emailPath/statement-password";
+  static String pendingStatements = "$_emailPath/pending-statements";
+  static String processPendingStatement = "$_emailPath/process-pending-statement";
   static String addbankMapping = "$_emailPath/add-bank-mapping";
   static String getCreditCardList = "$_emailPath/";
 }

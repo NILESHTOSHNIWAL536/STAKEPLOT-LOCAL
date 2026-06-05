@@ -122,8 +122,8 @@ class _GettingDataScreenState extends State<GettingDataScreen>
       }
     });
 
-    _passwordWorker = ever(cardController.statementPasswordRequired,
-        (bool required) {
+    _passwordWorker =
+        ever(cardController.statementPasswordRequired, (bool required) {
       if (required && mounted) {
         _showStatementPasswordDialog();
       }
@@ -146,6 +146,8 @@ class _GettingDataScreenState extends State<GettingDataScreen>
 
       socket.off("statementPasswordRequired");
       socket.on("statementPasswordRequired", (data) {
+        cardController.pendingStatements.clear();
+        cardController.pendingStatements = data['passwordRequests'];
         if (!mounted || data is! Map) return;
         cardController.applyStatementPasswordRequest(data);
       });
@@ -198,7 +200,9 @@ class _GettingDataScreenState extends State<GettingDataScreen>
   void dispose() {
     try {
       SocketService().getSocket().off("statementPasswordRequired");
-      SocketService().getSocket().off("connect", _registerStatementPasswordSocket);
+      SocketService()
+          .getSocket()
+          .off("connect", _registerStatementPasswordSocket);
     } catch (e) {}
     _closePasswordDialogIfOpen();
     _loadingWorker.dispose();
@@ -273,9 +277,16 @@ class _GettingDataScreenState extends State<GettingDataScreen>
                         ? request["bankName"].toString()
                         : cardController.selectedBankName.value;
                 final filename =
+                    // attachmentName
                     request["filename"]?.toString().trim().isNotEmpty == true
                         ? request["filename"].toString()
-                        : "this PDF statement";
+                        : request["attachmentName"]
+                                    ?.toString()
+                                    .trim()
+                                    .isNotEmpty ==
+                                true
+                            ? request["attachmentName"].toString()
+                            : "this PDF statement";
 
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -348,21 +359,53 @@ class _GettingDataScreenState extends State<GettingDataScreen>
                 );
               }),
               actions: [
+                SizedBox(
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      clearStackTop(dialogContext);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF37344F),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Obx(() => Text(
+                          'Skip (${cardController.pendingStatements.length})',
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 14,
+                            lWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        )),
+                  ),
+                ),
                 Obx(
                   () => SizedBox(
                     height: 44,
                     child: ElevatedButton(
-                      onPressed: cardController.statementPasswordSubmitting.value
+                      onPressed: cardController
+                              .statementPasswordSubmitting.value
                           ? null
                           : () async {
                               final navigator = Navigator.of(
                                 dialogContext,
                                 rootNavigator: true,
                               );
-                              await cardController.saveStatementPasswordAndRetry(
+
+                              await cardController
+                                  .saveStatementPasswordAndRetry(
                                 dialogContext,
                                 passwordController.text,
                               );
+
+                              if (cardController.pendingStatements.isNotEmpty) {
+                                clearStackTop(dialogContext, false);
+                                return;
+                              }
+
                               if (!mounted) return;
                               if (!cardController
                                       .statementPasswordRequired.value &&
@@ -406,8 +449,33 @@ class _GettingDataScreenState extends State<GettingDataScreen>
     ).whenComplete(() {
       _passwordDialogContext = null;
       _passwordDialogOpen = false;
-      passwordController.dispose();
+      // passwordController.dispose();
     });
+  }
+
+  void clearStackTop(BuildContext dialogContext, [bool f = true]) {
+    if (cardController.pendingStatements.isNotEmpty) {
+      if (f) cardController.pendingStatements.removeAt(0);
+      if (cardController.pendingStatements.length > 0) {
+        cardController.statementPasswordRequestId.value = "";
+        cardController.applyStatementPasswordRequest(
+            {"passwordRequests": cardController.pendingStatements});
+      }
+    } else {
+      final navigator = Navigator.of(
+        dialogContext,
+        rootNavigator: true,
+      );
+      cardController.statementPasswordRequired.value = false;
+      cardController.statementPasswordRequest.clear();
+      cardController.statementPasswordRequestId.value = "";
+      cardController.statementPasswordError.value = "";
+      cardController.selectedBankId.value = "";
+      loadingBankdetails.value = true;
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    }
   }
 
   @override
