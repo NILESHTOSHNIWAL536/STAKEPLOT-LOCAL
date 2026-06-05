@@ -64,6 +64,220 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
     // setState(() {});
   }
 
+  Future<void> _showPendingStatements() async {
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          "Pending Statements",
+          style: FontManager().getTextStyle(context,
+              fontSize: 17,
+              lWeight: FontWeight.w700,
+              color: AppColors.primaryColor),
+        ),
+        content: Obx(() {
+          if (cardController.pendingStatementsLoading.value) {
+            return const SizedBox(
+              height: 80,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (cardController.pendingStatements.isEmpty) {
+            return Text(
+              "No statements are waiting for a password.",
+              style: FontManager().getTextStyle(context,
+                  fontSize: 13, color: Colors.grey.shade600),
+            );
+          }
+
+          return SizedBox(
+            width: double.maxFinite,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: cardController.pendingStatements.length,
+              separatorBuilder: (_, __) => Divider(
+                color: Colors.grey.shade200,
+                height: 1,
+              ),
+              itemBuilder: (_, index) {
+                final pending = cardController.pendingStatements[index];
+                final title = pending["bankName"]?.toString().isNotEmpty == true
+                    ? pending["bankName"].toString()
+                    : "Bank statement";
+                final subtitle =
+                    pending["filename"]?.toString().isNotEmpty == true
+                        ? pending["filename"].toString()
+                        : pending["accountHint"]?.toString() ?? "";
+
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.lock_outline_rounded,
+                      color: Color(0xFF37344F)),
+                  title: Text(
+                    title,
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: const Color(0xFF37344F)),
+                  ),
+                  subtitle: subtitle.isEmpty
+                      ? null
+                      : Text(
+                          subtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: FontManager().getTextStyle(context,
+                              fontSize: 12, color: Colors.grey.shade500),
+                        ),
+                  onTap: () {
+                    Navigator.of(dialogContext).pop();
+                    _showPendingPasswordDialog(pending);
+                  },
+                );
+              },
+            ),
+          );
+        }),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(
+              "Close",
+              style: FontManager().getTextStyle(context,
+                  fontSize: 14,
+                  lWeight: FontWeight.w600,
+                  color: AppColors.primaryColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPendingPasswordDialog(Map<String, dynamic> pending) {
+    final passwordController = TextEditingController();
+    bool obscurePassword = true;
+    cardController.statementPasswordError.value = "";
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final bankName = pending["bankName"]?.toString().isNotEmpty == true
+              ? pending["bankName"].toString()
+              : "Bank statement";
+          final accountHint = pending["accountHint"]?.toString() ?? "";
+
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Text(
+              bankName,
+              style: FontManager().getTextStyle(context,
+                  fontSize: 17,
+                  lWeight: FontWeight.w700,
+                  color: AppColors.primaryColor),
+            ),
+            content: Obx(
+              () => Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (accountHint.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        accountHint,
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12, color: Colors.grey.shade600),
+                      ),
+                    ),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: obscurePassword,
+                    decoration: InputDecoration(
+                      hintText: "PDF password",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(obscurePassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined),
+                        onPressed: () => setDialogState(
+                            () => obscurePassword = !obscurePassword),
+                      ),
+                    ),
+                  ),
+                  if (cardController.statementPasswordError.value.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        cardController.statementPasswordError.value,
+                        style: FontManager().getTextStyle(context,
+                            fontSize: 12, color: Colors.red.shade600),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: cardController.statementPasswordSubmitting.value
+                    ? null
+                    : () => Navigator.of(dialogContext).pop(),
+                child: const Text("Cancel"),
+              ),
+              Obx(
+                () => ElevatedButton(
+                  onPressed: cardController.statementPasswordSubmitting.value
+                      ? null
+                      : () async {
+                          final ok = await cardController
+                              .savePasswordForPendingStatement(
+                            context,
+                            pending,
+                            passwordController.text,
+                          );
+                          if (ok && mounted) {
+                            Navigator.of(dialogContext).pop();
+                            snackBarCalled(
+                              context,
+                              "Statement processed successfully",
+                            );
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF37344F),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: cardController.statementPasswordSubmitting.value
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text("Process"),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
@@ -210,6 +424,39 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
             ),
 
             SizedBox(height: AppSizes.h14),
+
+            Obx(
+              () => cardController.pendingStatements.isEmpty
+                  ? const SizedBox.shrink()
+                  : SizedBox(
+                      width: double.infinity,
+                      height: 46,
+                      child: OutlinedButton.icon(
+                        onPressed: _showPendingStatements,
+                        icon: const Icon(Icons.lock_clock_rounded, size: 18),
+                        label: Text(
+                          "Pending Statements",
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 14,
+                            lWeight: FontWeight.w600,
+                            color: const Color(0xFF37344F),
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF37344F),
+                          side: BorderSide(
+                            color: const Color(0xFF37344F).withOpacity(0.35),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+            ),
+
+            SizedBox(height: AppSizes.h10),
 
             // ── CTA ───────────────────────────────────────────────────────
             SizedBox(

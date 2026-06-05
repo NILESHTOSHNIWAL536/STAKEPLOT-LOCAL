@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/collections/create_collection_pages/create_collection_flow.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -8,9 +6,9 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../Constants/colors.dart';
 import '../Constants/core/app_padding_sizes.dart';
-import '../controllers/credit_card_controller.dart';
-import '../finance_screen/Budgets/Budget.dart';
+import '../Utils/socket_connect.dart';
 import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
+import '../routes/index_route.dart';
 import 'add_credit_card_bank.dart';
 
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -67,6 +65,20 @@ class _GettingDataScreenState extends State<GettingDataScreen>
 
   int _currentStep = 0;
   bool _finished = false;
+  bool _passwordDialogOpen = false;
+  BuildContext? _passwordDialogContext;
+  late Worker _loadingWorker;
+  late Worker _passwordWorker;
+
+  void _registerStatementPasswordSocket([dynamic _]) {
+    if (userController.userId.value.isEmpty) return;
+
+    try {
+      SocketService()
+          .getSocket()
+          .emit("addUserToSocket", userController.userId.value);
+    } catch (e) {}
+  }
 
   @override
   void initState() {
@@ -103,15 +115,52 @@ class _GettingDataScreenState extends State<GettingDataScreen>
     _stepAnimController.forward();
     _startStepCycle();
 
-    loadingBankdetails.value = false;
-    cardController.LinkBankData(context);
-
     // Watch for completion
-    ever(loadingBankdetails, (bool done) {
+    _loadingWorker = ever(loadingBankdetails, (bool done) {
       if (done && mounted) {
         _onFinished();
       }
     });
+
+    _passwordWorker =
+        ever(cardController.statementPasswordRequired, (bool required) {
+      if (required && mounted) {
+        _showStatementPasswordDialog();
+      }
+    });
+
+    _setupStatementPasswordSocket();
+
+    loadingBankdetails.value = false;
+    cardController.LinkBankData(context);
+  }
+
+  void _setupStatementPasswordSocket() {
+    try {
+      final socketService = SocketService();
+      if (!socketService.isInitialized) {
+        socketService.initSocket(API.urlWithLocallHost);
+      }
+
+      final socket = socketService.getSocket();
+
+      socket.off("statementPasswordRequired");
+      socket.on("statementPasswordRequired", (data) {
+        cardController.pendingStatements.clear();
+        cardController.pendingStatements = data['passwordRequests'];
+        if (!mounted || data is! Map) return;
+        cardController.applyStatementPasswordRequest(data);
+      });
+
+      socket.off("connect", _registerStatementPasswordSocket);
+      socket.on("connect", _registerStatementPasswordSocket);
+
+      if (socket.connected) {
+        _registerStatementPasswordSocket();
+      } else {
+        socket.connect();
+      }
+    } catch (e) {}
   }
 
   void _startStepCycle() {
@@ -139,6 +188,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
   }
 
   void _onFinished() {
+    if (!mounted) return;
     setState(() => _finished = true);
     _pulseController.stop();
     _progressController.animateTo(1.0,
@@ -148,10 +198,284 @@ class _GettingDataScreenState extends State<GettingDataScreen>
 
   @override
   void dispose() {
+    try {
+      SocketService().getSocket().off("statementPasswordRequired");
+      SocketService()
+          .getSocket()
+          .off("connect", _registerStatementPasswordSocket);
+    } catch (e) {}
+    _closePasswordDialogIfOpen();
+    _loadingWorker.dispose();
+    _passwordWorker.dispose();
     _stepAnimController.dispose();
     _pulseController.dispose();
     _progressController.dispose();
     super.dispose();
+  }
+
+  void _closePasswordDialogIfOpen() {
+    final dialogContext = _passwordDialogContext;
+    if (!_passwordDialogOpen || dialogContext == null) return;
+
+    try {
+      final navigator = Navigator.of(dialogContext, rootNavigator: true);
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    } catch (e) {}
+  }
+
+  void _showStatementPasswordDialog() {
+    if (_passwordDialogOpen || !mounted) return;
+    _passwordDialogOpen = true;
+    final passwordController = TextEditingController();
+    bool obscurePassword = true;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        _passwordDialogContext = dialogContext;
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF37344F).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.lock_outline_rounded,
+                      color: Color(0xFF37344F),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Statement password required',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 17,
+                        lWeight: FontWeight.w700,
+                        color: const Color(0xFF37344F),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              content: Obx(() {
+                final request = cardController.statementPasswordRequest;
+                final bankName =
+                    request["bankName"]?.toString().trim().isNotEmpty == true
+                        ? request["bankName"].toString()
+                        : cardController.selectedBankName.value;
+                final filename =
+                    // attachmentName
+                    request["filename"]?.toString().trim().isNotEmpty == true
+                        ? request["filename"].toString()
+                        : request["attachmentName"]
+                                    ?.toString()
+                                    .trim()
+                                    .isNotEmpty ==
+                                true
+                            ? request["attachmentName"].toString()
+                            : "this PDF statement";
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$bankName sent a password-protected statement. Enter the PDF password so we can extract your transactions.',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 13,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Used only for statement extraction and stored securely for future cron syncs.',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 12,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      filename,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 12,
+                        color: const Color(0xFF37344F),
+                        lWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: passwordController,
+                      obscureText: obscurePassword,
+                      decoration: InputDecoration(
+                        hintText: 'PDF password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                          onPressed: () {
+                            setDialogState(
+                                () => obscurePassword = !obscurePassword);
+                          },
+                        ),
+                      ),
+                    ),
+                    if (cardController.statementPasswordError.value.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          cardController.statementPasswordError.value,
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 12,
+                            color: Colors.red.shade600,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              }),
+              actions: [
+                SizedBox(
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      clearStackTop(dialogContext);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF37344F),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Obx(() => Text(
+                          'Skip (${cardController.pendingStatements.length})',
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 14,
+                            lWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        )),
+                  ),
+                ),
+                Obx(
+                  () => SizedBox(
+                    height: 44,
+                    child: ElevatedButton(
+                      onPressed: cardController
+                              .statementPasswordSubmitting.value
+                          ? null
+                          : () async {
+                              final navigator = Navigator.of(
+                                dialogContext,
+                                rootNavigator: true,
+                              );
+
+                              await cardController
+                                  .saveStatementPasswordAndRetry(
+                                dialogContext,
+                                passwordController.text,
+                              );
+
+                              if (cardController.pendingStatements.isNotEmpty) {
+                                clearStackTop(dialogContext, false);
+                                return;
+                              }
+
+                              if (!mounted) return;
+                              if (!cardController
+                                      .statementPasswordRequired.value &&
+                                  navigator.canPop()) {
+                                navigator.pop();
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF37344F),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: cardController.statementPasswordSubmitting.value
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : Text(
+                              'Continue',
+                              style: FontManager().getTextStyle(
+                                context,
+                                fontSize: 14,
+                                lWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).whenComplete(() {
+      _passwordDialogContext = null;
+      _passwordDialogOpen = false;
+      // passwordController.dispose();
+    });
+  }
+
+  void clearStackTop(BuildContext dialogContext, [bool f = true]) {
+    if (cardController.pendingStatements.isNotEmpty) {
+      if (f) cardController.pendingStatements.removeAt(0);
+      if (cardController.pendingStatements.length > 0) {
+        cardController.statementPasswordRequestId.value = "";
+        cardController.applyStatementPasswordRequest(
+            {"passwordRequests": cardController.pendingStatements});
+      }
+    } else {
+      final navigator = Navigator.of(
+        dialogContext,
+        rootNavigator: true,
+      );
+      cardController.statementPasswordRequired.value = false;
+      cardController.statementPasswordRequest.clear();
+      cardController.statementPasswordRequestId.value = "";
+      cardController.statementPasswordError.value = "";
+      cardController.selectedBankId.value = "";
+      loadingBankdetails.value = true;
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+    }
   }
 
   @override

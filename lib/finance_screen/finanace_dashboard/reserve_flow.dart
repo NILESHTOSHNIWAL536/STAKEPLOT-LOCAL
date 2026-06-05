@@ -582,8 +582,6 @@ class _Screen2State extends State<Screen2> {
                     widget.onChange();
 
                     // ✅ DEBUG (very important)
-                    print("Duration days = ${widget.state.selectedDays}");
-
                     // ✅ CALL API (only duration goes)
                     await _fetchSuggestion();
                   },

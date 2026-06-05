@@ -86,6 +86,18 @@ class BankTransactionRoutes {
   static String deleteRecurringPayment({required String id}) =>
       "$_urlPath/recurring-payments/$id";
 
+  // Salary income detection
+  static final String _salaryPath = "${API.BankApiUrl}/salary-income";
+  static String salarySuggestions = "$_salaryPath/suggestions";
+  static String salaryAccounts = "$_salaryPath/accounts";
+  static String recalculateSalaryIncome = "$_salaryPath/recalculate";
+  static String confirmSalaryIncome({required String id}) =>
+      "$_salaryPath/$id/confirm";
+  static String ignoreSalaryIncome({required String id}) =>
+      "$_salaryPath/$id/ignore";
+  static String updateSalaryIncome({required String id}) => "$_salaryPath/$id";
+  static String deleteSalaryIncome({required String id}) => "$_salaryPath/$id";
+
   // Loan calculation
   static String getLoanCalculation = "$_urlPath/get-loan-calculation";
 

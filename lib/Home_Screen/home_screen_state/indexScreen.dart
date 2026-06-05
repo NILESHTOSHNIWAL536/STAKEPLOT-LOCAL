@@ -234,6 +234,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStac
 import 'package:flutter_application_code_stakeplot/Home_Screen/dummy_insight_api_screen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/salary_income/salary_income_screen.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -250,8 +252,7 @@ import '../finora_analytics/finora_dashboard.dart';
 
 class IndexScreen extends StatelessWidget {
   final ScrollController scrollControllerHome;
-  IndexScreen({Key? key, required this.scrollControllerHome})
-      : super(key: key) {}
+  const IndexScreen({super.key, required this.scrollControllerHome});
 //  FinoraController finoraController = ControllerManagement.finoraController;
   @override
   Widget build(BuildContext context) {
@@ -269,7 +270,7 @@ class IndexScreen extends StatelessWidget {
           onRefresh: () async {
             // Keep refresh indicator visible for at least 2 seconds
             await Future.delayed(const Duration(seconds: 1));
-            callApi(context);
+            if (context.mounted) callApi(context);
           },
           child: SingleChildScrollView(
             controller: scrollControllerHome,
@@ -523,6 +524,62 @@ class AutoPayQuickAddButton extends StatelessWidget {
             Expanded(
               child: Text(
                 "Autopay & repeating transactions",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 14,
+                  lWeight: FontWeight.w700,
+                  color: colors.onBackground,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: colors.secondaryText),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SalaryIncomeButton extends StatelessWidget {
+  const SalaryIncomeButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const SalaryIncomeScreen(),
+          ),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colors.border),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: colors.credit.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child:
+                  Icon(Icons.payments_outlined, color: colors.credit, size: 21),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                "Salary income prediction",
                 style: FontManager().getTextStyle(
                   context,
                   fontSize: 14,

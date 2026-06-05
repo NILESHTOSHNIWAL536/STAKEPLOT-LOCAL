@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,7 +16,8 @@ class AuthService {
       {bool flag = true, bool isEmail = false}) async {
     try {
       // Trigger Google Sign-In
-      if (isEmail)_googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
+      if (isEmail)
+        _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail: isEmail);
       await _googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -31,18 +33,15 @@ class AuthService {
       //don't remove this code
       final String? authCode = await googleUser.serverAuthCode;
       if (authCode != null) {
-        final response = await postDataApiCall(AuthApiRoutes.generateToken, {
-          'idToken': authCode,
-          "bankId": cardController.selectedBankId.value.isEmpty
-              ? "HDFCLtd-FIP"
-              : cardController.selectedBankId.value,
-        });
-        if(getFlagOfResponse(response)){
-            if (!flag) return {};
-        }else {
-          var data = jsonDecode(response.body);
-          snackBarCalledfail(context, data['message'] ?? data['error'] ?? "Failed to generate token");
+        final isSuccess = await cardController.generateTokenApi(
+          context,
+          authCode,
+        );
+        if (!isSuccess) {
           return null;
+        }
+        if (!flag) {
+          return {};
         }
       }
 
@@ -53,7 +52,7 @@ class AuthService {
       });
 
       if (getFlagOfResponse(response)) return json.decode(response.body);
-    } catch (e) {}
+      } catch (e) {}
 
     return null;
   }
