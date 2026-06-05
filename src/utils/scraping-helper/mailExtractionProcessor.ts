@@ -12,39 +12,66 @@ export async function processFilteredEmails(
 
   const mailsToProcess2 = filterRelevantEmails(mailsToProcess, config.bankConfig);
   
-  const missingPasswordRequests = buildPasswordRequestsForProtectedAttachments(
+  const protectedPasswordRequests = buildPasswordRequestsForProtectedAttachments(
     mailsToProcess2,
     config.bankConfig,
     config.banksWithPassword
   );
 
-  if (missingPasswordRequests.length > 0) {
-    return {
-      requiresPassword: true,
-      passwordRequests: missingPasswordRequests,
-    };
-  }
+  const protectedRequestKeys = new Set(
+    protectedPasswordRequests.map((request) => request.requestId)
+  );
 
   const results: any[] = [];
+  const pendingStatements: any[] = [];
 
   for (const mail of mailsToProcess2) {
+    const mailProtectedRequests = protectedPasswordRequests.filter(
+      (request) => request.messageId === (mail.messageId || '')
+    );
+
+    if (mailProtectedRequests.length > 0) {
+      pendingStatements.push(
+        ...mailProtectedRequests.map((request) => ({
+          ...request,
+          mail,
+        }))
+      );
+      continue;
+    }
+
     const extracted = await extractWithPython(mail, config.bankFilters, config.pdfPasswordsByBank);
 
     results.push(extracted);
+
+    const parserRequests = buildPasswordRequestsFromParserResults(
+      [extracted],
+      config.bankConfig
+    );
+
+    if (parserRequests.length > 0) {
+      pendingStatements.push(
+        ...parserRequests
+          .filter((request) => !protectedRequestKeys.has(request.requestId))
+          .map((request) => ({
+            ...request,
+            mail,
+          }))
+      );
+    }
   }
 
   const parserPasswordRequests = buildPasswordRequestsFromParserResults(results, config.bankConfig);
-
-  if (parserPasswordRequests.length > 0) {
-    return {
-      requiresPassword: true,
-      passwordRequests: parserPasswordRequests,
-    };
-  }
+  const passwordRequests = mergeRequests([
+    ...protectedPasswordRequests,
+    ...parserPasswordRequests,
+  ]);
 
   return {
-    requiresPassword: false,
-    results,
+    requiresPassword: passwordRequests.length > 0,
+    results: results.filter((result) => !result?.sources_processed?.needs_password),
+    passwordRequests,
+    pendingStatements,
   };
 }
 
@@ -84,6 +111,20 @@ function buildPasswordRequestsForProtectedAttachments(
   }
 
   return Array.from(requests.values());
+}
+
+function mergeRequests(requests: any[]) {
+  const merged = new Map<string, any>();
+
+  for (const request of requests) {
+    const key =
+      request.requestId ||
+      `${request.bankId || ''}:${request.messageId || ''}:${request.filename || ''}`;
+    if (!key || merged.has(key)) continue;
+    merged.set(key, request);
+  }
+
+  return Array.from(merged.values());
 }
 
 export function buildPasswordRequestsFromParserResults(results: any[], bankConfig: any[]) {

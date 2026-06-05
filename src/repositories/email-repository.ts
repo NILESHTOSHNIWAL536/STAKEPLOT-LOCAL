@@ -21,6 +21,19 @@ export type StatementPasswordRecord = {
   password: string;
 };
 
+export type PendingStatementInput = {
+  requestId: string;
+  email: string;
+  bankId: string;
+  bankName?: string;
+  accountHint?: string;
+  messageId?: string;
+  attachmentName?: string;
+  reason?: string;
+  mail: any;
+  bankConfig: any[];
+};
+
 export async function upsertGoogleToken(
   userId: string,
   email: string, // not used currently, kept for signature
@@ -260,6 +273,216 @@ export async function getStatementPasswords(
   return records.flat();
 }
 
+export async function upsertPendingStatementExtraction(
+  userId: string,
+  input: PendingStatementInput
+) {
+  const { PendingStatementExtraction } = await getModels();
+
+  const encryptedMailPayload = await encryptToken(JSON.stringify(input.mail || {}));
+  const normalizedEmail = input.email ? input.email.trim().toLowerCase() : '';
+
+  return PendingStatementExtraction.findOneAndUpdate(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      requestId: input.requestId,
+    },
+    {
+      $set: {
+        email: normalizedEmail,
+        bankId: input.bankId,
+        bankName: input.bankName || 'Bank statement',
+        accountHint: input.accountHint || '',
+        messageId: input.messageId || '',
+        attachmentName: input.attachmentName || '',
+        reason: input.reason || 'password_required',
+        status: 'PENDING_PASSWORD',
+        encryptedMailPayload,
+        bankConfig: input.bankConfig || [],
+        lastError: '',
+      },
+      $unset: {
+        completedAt: '',
+      },
+    },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+}
+
+export async function getPendingStatementExtractions(userId: string) {
+  const { PendingStatementExtraction } = await getModels();
+
+  const docs = await PendingStatementExtraction.find({
+    userId: new mongoose.Types.ObjectId(userId),
+    status: { $in: ['PENDING_PASSWORD', 'FAILED'] },
+  })
+    .sort({ updatedAt: -1 })
+    .lean();
+
+  return docs.map((doc: any) => ({
+    id: doc.requestId,
+    requestId: doc.requestId,
+    email: doc.email || '',
+    bankId: doc.bankId,
+    bankName: doc.bankName,
+    accountHint: doc.accountHint || '',
+    messageId: doc.messageId || '',
+    filename: doc.attachmentName || '',
+    reason: doc.reason || 'password_required',
+    status: doc.status,
+    lastError: doc.lastError || '',
+    updatedAt: doc.updatedAt,
+  }));
+}
+
+// export async function getPendingStatementExtractionForProcessing(
+//   userId: string,
+//   requestId: string
+// ) {
+//   const { PendingStatementExtraction } = await getModels();
+
+//   const doc = await PendingStatementExtraction.findOne({
+//     userId: new mongoose.Types.ObjectId(userId),
+//     requestId,
+//     status: { $in: ['PENDING_PASSWORD', 'FAILED'] },
+//   });
+
+//   if (!doc) {
+//     throw new AppError('Pending statement not found', StatusCodes.NOT_FOUND);
+//   }
+
+//   const payload = doc.encryptedMailPayload;
+//   if (!payload?.encryptedData || !payload.iv || !payload.authTag) {
+//     throw new AppError('Pending statement content is not available', StatusCodes.BAD_REQUEST);
+//   }
+
+//   const mail = JSON.parse(
+//     await decryptToken(payload.encryptedData, payload.iv, payload.authTag)
+//   );
+
+//   return { doc, mail };
+// }
+
+
+
+export async function getPendingStatementExtractionForProcessing(
+  userId: string
+) {
+  const { PendingStatementExtraction } = await getModels();
+
+  const docs = await PendingStatementExtraction.find({
+    userId: new mongoose.Types.ObjectId(userId),
+    status: { $in: ['PENDING_PASSWORD', 'FAILED'] },
+  }).lean();
+
+  if (!docs.length) {
+    return [];
+  }
+
+  const results = await Promise.all(
+    docs.map(async (doc) => {
+      const payload = doc.encryptedMailPayload;
+
+      if (
+        !payload?.encryptedData ||
+        !payload.iv ||
+        !payload.authTag
+      ) {
+        return {
+          ...doc,
+          mail: null,
+        };
+      }
+
+      const mail = JSON.parse(
+        await decryptToken(
+          payload.encryptedData,
+          payload.iv,
+          payload.authTag
+        )
+      );
+
+      return {
+        ...doc,
+        mail,
+      };
+    })
+  );
+
+  return results;
+}
+
+
+export async function markPendingStatementProcessing(userId: string, requestId: string) {
+  const { PendingStatementExtraction } = await getModels();
+
+  return PendingStatementExtraction.updateOne(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      requestId,
+    },
+    {
+      $set: {
+        status: 'PROCESSING',
+        lastError: '',
+      },
+    }
+  );
+}
+
+export async function markPendingStatementCompleted(userId: string, requestId: string) {
+  const { PendingStatementExtraction } = await getModels();
+
+  return PendingStatementExtraction.updateOne(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      requestId,
+    },
+    {
+      $set: {
+        status: 'COMPLETED',
+        lastError: '',
+        completedAt: new Date(),
+      },
+      $unset: {
+        encryptedMailPayload: '',
+      },
+    }
+  );
+}
+
+export async function deletePendingStatement(userId: string, requestId: string) {
+  const { PendingStatementExtraction } = await getModels();
+
+  return PendingStatementExtraction.deleteOne(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      requestId,
+    },
+  );
+}
+
+export async function markPendingStatementFailed(
+  userId: string,
+  requestId: string,
+  error: string
+) {
+  const { PendingStatementExtraction } = await getModels();
+
+  return PendingStatementExtraction.updateOne(
+    {
+      userId: new mongoose.Types.ObjectId(userId),
+      requestId,
+    },
+    {
+      $set: {
+        status: 'FAILED',
+        lastError: error,
+      },
+    }
+  );
+}
+
 async function decryptStatementPasswordFields(doc: any): Promise<string[]> {
   const encryptedPasswords = [
     ...(Array.isArray(doc.passwords) ? doc.passwords : []),
@@ -324,4 +547,11 @@ export default {
   upsertStatementPassword,
   getStatementPasswords,
   markStatementPasswordInvalid,
+  upsertPendingStatementExtraction,
+  getPendingStatementExtractions,
+  getPendingStatementExtractionForProcessing,
+  markPendingStatementProcessing,
+  markPendingStatementCompleted,
+  markPendingStatementFailed,
+  deletePendingStatement
 };

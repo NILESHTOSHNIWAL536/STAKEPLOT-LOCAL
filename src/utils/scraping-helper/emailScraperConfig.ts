@@ -10,7 +10,7 @@ export function buildEmailScraperConfig(
 ) {
   const afterDate =
     mode === 'initial'
-      ? getNinetyDaysAgo(2)
+      ? getNinetyDaysAgo(4)
       : getNHoursAgo(12);
 
   const bankConfig = creditCard;

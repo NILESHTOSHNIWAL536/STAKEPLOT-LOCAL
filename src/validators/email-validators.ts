@@ -120,6 +120,26 @@ export const validateStatementPassword = (req: Request, res: Response, next: Nex
   return next();
 };
 
+export const validateProcessPendingStatement = (req: Request, res: Response, next: NextFunction): Response | void => {
+  const rejectedPayload = rejectSqlInjectionPayload(req, res);
+  if (rejectedPayload) return rejectedPayload;
+
+  const rejected = rejectUnexpectedQuery(req, res);
+  if (rejected) return rejected;
+
+  const { requestId } = req.body || {};
+  if (
+    typeof requestId !== 'string' ||
+    requestId.trim().length === 0 ||
+    requestId.length > 512
+  ) {
+    return rejectInvalid(res);
+  }
+
+  req.body.requestId = requestId.trim();
+  return next();
+};
+
 export const validateRemoveAccess = (req: Request, res: Response, next: NextFunction): Response | void => {
   const rejectedPayload = rejectSqlInjectionPayload(req, res);
   if (rejectedPayload) return rejectedPayload;

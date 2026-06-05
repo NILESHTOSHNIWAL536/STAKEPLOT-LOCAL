@@ -18,6 +18,8 @@ import {
 } from './email-scraper.helper';
 import { buildPasswordRequests, StatementPasswordInput } from './email-password-request';
 import { emailScraperHelper } from '../utils/scraping-helper/email-scraper';
+import { extractWithPython } from '../utils/scraping-helper/extract-with-python';
+import { buildEmailScraperConfig } from '../utils/scraping-helper/emailScraperConfig';
 
 function assertAllowedBankId(bankId: string) {
   if (!allowedBankIds.has(bankId)) {
@@ -104,17 +106,30 @@ export async function scrapeEmailsByBankId(
     storedPasswords
   );
 
-  if (scraperResult.requiresPassword) {
-    return sendPasswordRequiredEvent(userId, scraperResult.passwordRequests || []);
+  const passwordRequests = [
+    ...(scraperResult.passwordRequests || []),
+    ...buildPasswordRequests(scraperResult, creditCardConfigs),
+  ];
+
+  const uniquePasswordRequests = dedupePasswordRequests(passwordRequests);
+
+  if (uniquePasswordRequests.length > 0) {
+    await storePendingStatements(
+      userId,
+      normalizedEmail,
+      scraperResult.pendingStatements || [],
+      creditCardConfigs
+    );
+    await sendPasswordRequiredEvent(userId, uniquePasswordRequests);
   }
 
-  const passwordRequests = buildPasswordRequests(scraperResult, creditCardConfigs);
+  const saved = await EmailRepository.scrapeEmailsByBankId(scraperResult, userId);
 
-  if (passwordRequests.length > 0) {
-    return sendPasswordRequiredEvent(userId, passwordRequests);
-  }
-
-  return EmailRepository.scrapeEmailsByBankId(scraperResult, userId);
+  return {
+    saved,
+    requiresPassword: uniquePasswordRequests.length > 0,
+    passwordRequests: uniquePasswordRequests,
+  };
 }
 
 export async function saveStatementPassword(
@@ -140,6 +155,186 @@ export async function saveStatementPassword(
 
   return { message: 'Statement password saved successfully' };
 }
+
+export async function getPendingStatements(userId: string) {
+  return EmailRepository.getPendingStatementExtractions(userId);
+}
+
+
+export async function processAllPendingStatements(
+  userId: string,
+  requestId: string
+): Promise<any[]> {
+
+  const pendingDocs = await EmailRepository.getPendingStatementExtractionForProcessing(userId);
+
+  if (!pendingDocs.length) {
+    return [];
+  }
+
+  const results = [];
+
+  for (const item of pendingDocs) {
+    const doc = item;
+    const mail = item.mail;
+    const requestId = String(doc.requestId);
+
+    try {
+      await EmailRepository.markPendingStatementProcessing(
+        userId,
+        requestId
+      );
+
+      const bankId = String(doc.bankId || '');
+      const email = String(doc.email || '');
+
+      const bankConfig = Array.isArray(doc.bankConfig)
+        ? doc.bankConfig
+        : [];
+
+      const storedPasswords =
+        await EmailRepository.getStatementPasswords(
+          userId,
+          bankId ? [bankId] : [],
+          email || undefined
+        );
+
+      const config = buildEmailScraperConfig(
+        bankConfig,
+        'initial',
+        storedPasswords
+      );
+
+      const extracted = await extractWithPython(
+        mail,
+        config.bankFilters,
+        config.pdfPasswordsByBank
+      );
+
+      if (extracted?.sources_processed?.needs_password) {
+        await EmailRepository.markPendingStatementFailed(
+          userId,
+          requestId,
+          extracted.sources_processed?.password_error ||
+            'Invalid PDF password'
+        );
+
+        results.push({
+          requestId,
+          success: false,
+          error: 'Invalid PDF password',
+        });
+
+        continue;
+      }
+
+      const records =await EmailRepository.scrapeEmailsByBankId(
+          {
+            results: [extracted],
+            bankConfig,
+          },
+          userId
+        );
+
+      await EmailRepository.deletePendingStatement(
+        userId,
+        requestId
+      );
+
+      results.push({
+        requestId,
+        success: true,
+        records,
+      });
+    } catch (error: any) {
+      await EmailRepository.markPendingStatementFailed(
+        userId,
+        requestId,
+        error?.message || 'Statement extraction failed'
+      );
+
+      results.push({
+        requestId,
+        success: false,
+        error: error?.message,
+      });
+    }
+  }
+   const pendingdocs = await EmailRepository.getPendingStatementExtractionForProcessing(userId);
+
+  return { results,pendingdocs};
+}
+
+
+// export async function processPendingStatement(
+//   userId: string,
+//   requestId: string
+// ): Promise<{ message: string; records: any }> {
+//   const normalizedRequestId = String(requestId || '').trim();
+//   if (!normalizedRequestId) {
+//     throw new AppError('Invalid pending statement request', StatusCodes.BAD_REQUEST);
+//   }
+
+//   const { doc, mail } =
+//     await EmailRepository.getPendingStatementExtractionForProcessing(
+//       userId,
+//       // normalizedRequestId
+//     );
+
+//   await EmailRepository.markPendingStatementProcessing(userId, normalizedRequestId);
+
+//   try {
+//     const bankId = String((doc as any).bankId || '');
+//     const email = String((doc as any).email || '');
+//     const bankConfig = Array.isArray((doc as any).bankConfig)
+//       ? (doc as any).bankConfig
+//       : [];
+//     const storedPasswords = await EmailRepository.getStatementPasswords(
+//       userId,
+//       bankId ? [bankId] : [],
+//       email || undefined
+//     );
+//     const config = buildEmailScraperConfig(bankConfig, 'initial', storedPasswords);
+//     const extracted = await extractWithPython(
+//       mail,
+//       config.bankFilters,
+//       config.pdfPasswordsByBank
+//     );
+
+//     if (extracted?.sources_processed?.needs_password) {
+//       await EmailRepository.markPendingStatementFailed(
+//         userId,
+//         normalizedRequestId,
+//         extracted.sources_processed?.password_error || 'Invalid PDF password'
+//       );
+//       throw new AppError('Invalid PDF password', StatusCodes.BAD_REQUEST);
+//     }
+
+//     const records = await EmailRepository.scrapeEmailsByBankId(
+//       {
+//         results: [extracted],
+//         bankConfig,
+//       },
+//       userId
+//     );
+
+//     await EmailRepository.markPendingStatementCompleted(userId, normalizedRequestId);
+
+//     return {
+//       message: 'Pending statement processed successfully',
+//       records,
+//     };
+//   } catch (error: any) {
+//     if (!(error instanceof AppError)) {
+//       await EmailRepository.markPendingStatementFailed(
+//         userId,
+//         normalizedRequestId,
+//         error?.message || 'Statement extraction failed'
+//       );
+//     }
+//     throw error;
+//   }
+// }
 
 export async function getScrapedEmails(userId: string): Promise<any> {
   const emails = await EmailRepository.getScrapedEmailsByUserId(userId);
@@ -211,12 +406,52 @@ export async function removeAccessToken(
   };
 };
 
+function dedupePasswordRequests(requests: any[]) {
+  const deduped = new Map<string, any>();
+
+  for (const request of requests) {
+    const key =
+      request?.requestId ||
+      `${request?.bankId || ''}:${request?.messageId || ''}:${request?.filename || ''}`;
+    if (!key || deduped.has(key)) continue;
+    deduped.set(key, request);
+  }
+
+  return Array.from(deduped.values());
+}
+
+async function storePendingStatements(
+  userId: string,
+  email: string,
+  pendingStatements: any[],
+  fallbackBankConfig: any[]
+) {
+  for (const pending of pendingStatements) {
+    if (!pending?.mail || !pending?.bankId || !pending?.requestId) continue;
+
+    await EmailRepository.upsertPendingStatementExtraction(userId, {
+      requestId: pending.requestId,
+      email,
+      bankId: pending.bankId,
+      bankName: pending.bankName,
+      accountHint: pending.accountHint,
+      messageId: pending.messageId,
+      attachmentName: pending.filename,
+      reason: pending.reason,
+      mail: pending.mail,
+      bankConfig: fallbackBankConfig,
+    });
+  }
+}
+
 export default {
   generateAccessToken,
   getScrapedEmails,
   getUnlinkedCreditCards,
   scrapeEmailsByBankId,
   saveStatementPassword,
+  getPendingStatements,
+  processPendingStatement:processAllPendingStatements,
   removeAccessToken,
   addBankMapping
 };
