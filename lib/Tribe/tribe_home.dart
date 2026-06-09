@@ -10,7 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,6 +20,7 @@ import "package:flutter_application_code_stakeplot/Constants/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 List postListIds = [];
 bool findData = true;

@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/cashout_d
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
@@ -15,6 +15,7 @@ import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
 
 import '../../Constants/core/app_padding_sizes.dart';
+import '../../components/shared_utils.dart';
 
 
 class BalanceOutDialog extends StatelessWidget {
@@ -23,7 +24,7 @@ class BalanceOutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
+
     final width = MediaQuery.of(context).size.width;
 
     return Dialog(
@@ -35,7 +36,7 @@ class BalanceOutDialog extends StatelessWidget {
            borderRadius: BorderRadius.circular(16)
 
         ),
-       
+
         width:  width/1.1,
         padding: const EdgeInsets.all(AppSizes.p16),
         child: Obx(() {
@@ -61,7 +62,7 @@ class BalanceOutDialog extends StatelessWidget {
 
             double netAmount = creditSum - debitSum;
             bool isValid = netAmount.abs() < max;
-           
+
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -157,7 +158,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
            isValid?  isAlreadyIncluded?Container(
             // width: MediaQuery.of(context).size.width/1.1,
             child: textStyleImage(iswrap: true,context: context,text: "Some of these transactions are already balanced out.",c: AppColors.redColor)) :ElevatedButton(
-                onPressed: () 
+                onPressed: ()
                 {
                   // Trigger balance logic
                   updateTheGroupTransactions(context, true,id,netAmount);
@@ -258,9 +259,9 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                     ),
                                   ),
                                 ),
-                    
+
                                 SizedBox(width: AppSizes.w4),
-                    
+
                                 // Logo or Lottie
                                 SizedBox(
                                  width: MediaQuery.sizeOf(context).width/9,
@@ -282,14 +283,14 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                           },
                                         )),
                                 ),
-                    
+
                                 SizedBox(width: AppSizes.w4),
-                    
+
                                 // Amount
                                 SizedBox(
                                  width: MediaQuery.sizeOf(context).width/4.3,
                                   child: Text(
-                                    
+
                                     "${isPositive ? '+' : '-'} ₹ ${tx.amount.toStringAsFixed(0)}",
                                     style: FontManager().getTextStyle(
                                       context,
@@ -299,7 +300,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                     ),
                                     textAlign: TextAlign.end,
                                   ),
-                                  
+
                                 ),
                                  SizedBox(width: AppSizes.w8),
                                 InkWell(
@@ -314,7 +315,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                   ),
                                 ),
 
-                                
+
                               ],
                             ),
                           ),

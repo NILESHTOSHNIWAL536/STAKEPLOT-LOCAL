@@ -11,12 +11,13 @@ import "package:flutter_application_code_stakeplot/repository/friends_apis.dart"
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/Constants/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
-import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
+
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
 import "../Constants/core/app_padding_sizes.dart";
+import "../components/shared_utils.dart";
 RxList globalFriendsList = [].obs;
 class Friends extends StatefulWidget {
   bool isMasked = false;
@@ -190,7 +191,7 @@ class _FriendsState extends State<Friends> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-             
+
 
               widget.isMasked
                   ? AvatarProfile2(

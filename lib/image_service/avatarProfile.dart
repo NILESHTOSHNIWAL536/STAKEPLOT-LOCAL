@@ -4,11 +4,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 
 
@@ -51,7 +52,7 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
         ):Container(
            width: MediaQuery.of(context).size.width /width,
            height: MediaQuery.of(context).size.height/height,
-          child: GFImageOverlay(     
+          child: GFImageOverlay(
                                 shape: BoxShape.circle,
                                 boxFit: BoxFit.contain,
                                 image: NetworkImage(url),
@@ -60,7 +61,7 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
                         ),
                  ),
         )
-        
+
     );
   }
 }
@@ -98,7 +99,7 @@ AvatarProfileImageNextFetch({ Key? key,required this.url,required this.width,req
         ):Container(
            width: MediaQuery.of(context).size.width /width,
            height: MediaQuery.of(context).size.height/height,
-          child: GFImageOverlay(     
+          child: GFImageOverlay(
                                 shape: BoxShape.circle,
                                 boxFit: BoxFit.contain,
                                 image: NetworkImage(url),
@@ -107,7 +108,7 @@ AvatarProfileImageNextFetch({ Key? key,required this.url,required this.width,req
                         ),
                  ),
         )
-        
+
     );
   }
 }
@@ -126,7 +127,7 @@ chatAvatartImage({ Key? key,required this.url,required this.width,required this.
               width: MediaQuery.of(context).size.width/ width,
               height: MediaQuery.of(context).size.height/ height,
         )
-        
+
     );
   }
 }

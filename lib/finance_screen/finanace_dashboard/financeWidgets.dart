@@ -6,7 +6,6 @@ import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/cardBuilders.dart';
 import 'package:get/get.dart';
 
@@ -167,64 +166,7 @@ class FinanceWidgets {
     );
   }
 
-  static Widget debtsPicture(
-      BuildContext context, RxList<Debt> debts, Function(Debt) onDebtTap) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSingleDebt = debts.length == 1;
-
-    return Obx(() => debts.isEmpty
-        ? SizedBox.shrink()
-        : Center(
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: debts.length,
-                  itemBuilder: (context, index) {
-                    final debt = debts[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
-                      child: SizedBox(
-                        width: isSingleDebt
-                            ? screenWidth * 0.4
-                            : screenWidth * 0.4,
-                        child: CardBuilders.debtCard(context, debt, onDebtTap),
-                      ),
-                    );
-                  },
-                )),
-          ));
-  }
-
-  static Widget debtsPicture2(
-      BuildContext context, RxList<Debt> debts, Function(Debt) onDebtTap) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSingleDebt = debts.length == 1;
-
-    return Obx(() => debts.isEmpty
-        ? SizedBox.shrink()
-        : Center(
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.74,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: debts.length,
-                  itemBuilder: (context, index) {
-                    final debt = debts[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
-                      child: SizedBox(
-                        width: isSingleDebt
-                            ? screenWidth * 0.9
-                            : screenWidth * 0.8,
-                        child: CardBuilders.debtCard2(context, debt, onDebtTap),
-                      ),
-                    );
-                  },
-                )),
-          ));
-  }
-
+  
   static Widget budgetHorizontalList(BuildContext context) {
     return Obx(() {
       final sortedBudgets = budgetList.toList()

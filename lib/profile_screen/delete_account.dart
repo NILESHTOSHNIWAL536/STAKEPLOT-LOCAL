@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/emailVerifyDeletion.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 import '../repository/delete_banks_users.dart';
 
 class DeleteAccountScreen extends StatefulWidget {

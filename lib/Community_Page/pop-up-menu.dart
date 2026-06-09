@@ -7,12 +7,12 @@ import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribeOne) {
-     
+
     return PopupMenuButton(
       initialValue: 2,
       color: AppColors.backgroundColor,
@@ -35,14 +35,14 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
         else if (value == 1) {
           BuildContext c=context;
           showModalBottomSheet(
-            
+
             context: context,
             builder: (contextBuild) {
               return showModel(c, id, flag2,index,isTribeOne);
             },
           );
 
-           
+
 
         } else {
           reportPost(context, id, "hide post", "hide",index);
@@ -53,8 +53,8 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
             Navigator.pop(context);
           }
         }
-      
-    
+
+
       },
       itemBuilder: (context) {
         return userId == ControllerManagement.userController. userName.value
@@ -77,7 +77,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
                   value: 1,
                   child: getTextMenuItemForReport(context: context, text: "Report"),
                 ),
-                
+
               ];
       },
     );
@@ -94,7 +94,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
      return Row(
       children: [
         text=="Hide"?
-        Icon(Icons.visibility_off, color: AppColors.accentColor,size: 20,): 
+        Icon(Icons.visibility_off, color: AppColors.accentColor,size: 20,):
         Icon(text=="Delete" ?Icons.delete: Icons.warning_rounded, color: AppColors.redColor,size: 20,),
         SizedBox(width: AppSizes.w12,),
         textStyle(

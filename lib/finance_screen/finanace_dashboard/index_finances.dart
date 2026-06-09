@@ -5,14 +5,12 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/credit_cards.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
+
 import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -194,7 +192,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       await Future.wait([
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
-        DebtService.fetchDebts(),
+
       ]);
     } catch (_) {
     } finally {
@@ -206,12 +204,12 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     }
   }
 
-  void _navigateToDebtDetailsScreen(Debt debt) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => DebtDetailsScreen(debt: debt)),
-    );
-  }
+  // void _navigateToDebtDetailsScreen(Debt debt) async {
+  //   await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (_) => DebtDetailsScreen(debt: debt)),
+  //   );
+  // }
 
   void _closeTopPanel() {
     _panelController.animateTo(0.0, curve: Curves.easeOutCubic);
@@ -607,7 +605,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
         boxShadow: [AppShadows.soft],
       ),
       child: SliderAdddingFinances(
-        onDebtTap: _navigateToDebtDetailsScreen,
+        // onDebtTap: _navigateToDebtDetailsScreen,
       ),
     );
   }
@@ -929,8 +927,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               ),
               SizedBox(height: AppSizes.h20),
               GestureDetector(
-                onTap: () => Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => const Budget())),
+               
                 child: AvatarProfileImageZero(
                     url: PlotFinanceIcons.budgetPlanner, height: 6, width: 4),
               ),
@@ -1035,10 +1032,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                 SizedBox(height: AppSizes.h24),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => CreateDebtScreen()),
-                    );
+
                   },
                   child: AvatarProfileImageZero(
                     url: PlotFinanceIcons.goalCreation,

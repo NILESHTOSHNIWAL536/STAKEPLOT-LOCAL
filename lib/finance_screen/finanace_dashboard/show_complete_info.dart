@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/financeWidgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -87,12 +85,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
         ));
   }
 
-  void _navigateToDebtDetailsScreen(Debt debt) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => DebtDetailsScreen(debt: debt)),
-    );
-  }
+
 
   Widget getCardContent() {
     switch (selectedIndex) {
@@ -105,11 +98,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
         return Center(
           child: FinanceWidgets.budgetHorizontalList2(context),
         );
-      case 2:
-        return Center(
-          child: FinanceWidgets.debtsPicture2(
-              context, debts, _navigateToDebtDetailsScreen),
-        );
+
       default:
         return Center(child: Text("Unknown Content"));
     }
@@ -128,7 +117,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
           InkWell(
             borderRadius: BorderRadius.circular(9),
             onTap: () {
-              setState(() => selectedIndex = i);  
+              setState(() => selectedIndex = i);
               // Navigator.pushNamed(context, routes[i]);
             },
             child: Container(

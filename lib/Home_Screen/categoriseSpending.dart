@@ -11,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.da
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:get/get.dart';
 
@@ -43,7 +42,7 @@ class CategoriseSpending extends StatefulWidget {
 
 class _CategoriseSpendingState extends State<CategoriseSpending> {
    final controller = Get.find<FinoraController>();
-  
+
   @override
   void initState() {
     super.initState();

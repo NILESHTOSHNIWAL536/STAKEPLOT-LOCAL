@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/model/bank_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
@@ -22,6 +22,7 @@ import 'package:get/get.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/credit_card.dart';
 import '../backed_connections/bankServices/share_data.dart';
+import '../components/shared_utils.dart';
 import '../image_service/avatarProfile.dart';
 import '../loginservices/login.dart';
 import '../repository/bankinfo.dart';
@@ -30,7 +31,7 @@ import '../show_modal/theme_modal.dart';
 
 late BuildContext showSnackBarContext;
 
-class EditDetails extends StatefulWidget 
+class EditDetails extends StatefulWidget
 {
   const EditDetails({super.key});
   @override

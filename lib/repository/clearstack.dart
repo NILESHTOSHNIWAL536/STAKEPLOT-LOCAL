@@ -32,7 +32,7 @@ import '../controllers/theme_controller.dart';
 import '../loginservices/screenTime.dart';
 import '../services/secure_storage.dart';
 import '../loginservices/login.dart';
-import 'budget_apis.dart';
+
 import 'delete_banks_users.dart';
 
 void clearStack(BuildContext context) {
@@ -447,7 +447,5 @@ void initGetControllersIfisRegistered() {
     Get.put(BankInfoController(), permanent: true);
   }
 
-  if (!Get.isRegistered<BudgetControllerScreenModel>()) {
-    Get.put(BudgetControllerScreenModel());
-  }
+  
 }

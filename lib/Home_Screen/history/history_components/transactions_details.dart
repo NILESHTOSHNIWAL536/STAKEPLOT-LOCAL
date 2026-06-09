@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/core/app_shadows.dart';
 import '../../../Constants/theme_helper.dart';
+import '../../../components/shared_utils.dart';
 import 'icon_split_hide.dart';
 
 class TransactionDetails extends StatelessWidget {

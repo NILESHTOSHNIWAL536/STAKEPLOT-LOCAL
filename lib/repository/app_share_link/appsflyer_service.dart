@@ -11,7 +11,7 @@ import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../Home_Screen/history/transactionHistoryScreen.dart';
 import '../../Home_Screen/home_screen_state/home_page.dart';
 import '../../backed_connections/apiAutomations/install_apk_api.dart';
-import '../../finance_screen/Budgets/Budget.dart';
+
 import '../../finance_screen/Calculators/veg_nonveg.dart';
 import '../../main.dart';
 import '../../signInOut/referral_code_screen.dart';
@@ -226,8 +226,7 @@ class AppsflyerService {
       case "home":
       case "signup":
         return HomePage();
-      case "budget":
-        return Budget();
+    
       case "calculator":
       case "veg_nonveg":
         return VegNonVegCalculator();

@@ -9,7 +9,6 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/controllers/collections_controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:flutter_application_code_stakeplot/model/salary_income_model.dart';
@@ -156,7 +155,7 @@ List<String> account = [];
 RxBool acceptReset = false.obs;
 RxBool LoadTag = false.obs;
 RxList budgetList = [].obs;
-final RxList<Debt> debts = <Debt>[].obs;
+
 RxList historyListData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData = false.obs;

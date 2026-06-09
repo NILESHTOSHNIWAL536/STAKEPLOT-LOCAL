@@ -8,10 +8,11 @@ import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 class CommunityProfileScreen extends StatefulWidget {
   String id;
@@ -31,7 +32,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-  
+
     return Scaffold(
       body: SafeArea(
         child: Container(

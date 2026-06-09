@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
@@ -19,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 class emailUpdation extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -187,7 +188,7 @@ class _emailUpdationState extends State<emailUpdation> {
 
               if (getFlagOfResponse(response)) {
                 // Call PATCH API to update email
-                
+
                 final updateResponse = await updateDataApiCall2(UserRoutes.update, {'email': widget.data['email']}
                 );
 
