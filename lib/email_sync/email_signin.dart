@@ -72,23 +72,22 @@ class SignInScreen extends StatelessWidget {
               height: 52,
               child: OutlinedButton(
                 onPressed: () async {
-                  // if (googleSignInBool.value) return;
-                  // googleSignInBool.value = true;
-                  // try {
-                  //   final userdata = await AuthService().signInWithGoogle(
-                  //     context,
-                  //     flag: false,
-                  //     isEmail: true,
-                  //   );
-                  //   if (userdata != null) {
-                  //     pushnameToRoute(context, GettingDataScreen());
-                  //   }
-                  // } finally {
-                  //   googleSignInBool.value = false;
-                  // }
-                  cardController.selectedEmail.value =
-                      "nileshtoshniwal743@gmail.com";
-                  pushnameToRoute(context, GettingDataScreen());
+                  if (googleSignInBool.value) return;
+                  googleSignInBool.value = true;
+                  try {
+                    final userdata = await AuthService().signInWithGoogle(
+                      context,
+                      flag: false,
+                      isEmail: true,
+                    );
+                    if (userdata != null) {
+                      pushnameToRoute(context, GettingDataScreen());
+                    }
+                  } finally {
+                    googleSignInBool.value = false;
+                  }
+                  // cardController.selectedEmail.value ="nileshtoshniwal743@gmail.com";
+                  // pushnameToRoute(context, GettingDataScreen());
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: const Color(0xFF37344F), width: 1.5),
