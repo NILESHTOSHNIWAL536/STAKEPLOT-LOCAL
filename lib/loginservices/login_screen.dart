@@ -209,51 +209,40 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildEmailField() {
-    return
-        //  AutofillGroup(
-        //   child: TextField(
-        //     controller: emailController,
-        //     keyboardType: TextInputType.emailAddress,
-        //     autofillHints: const [AutofillHints.email],
-        //     onChanged: (c) {
-        //       acceptReset.value = false;
-        //     },
-        //     cursorColor: context.appColors.primary,
-        //     style: TextStyle(color: context.appColors.onBackground),
-        //     decoration: InputDecoration(
-        //       enabledBorder: UnderlineInputBorder(
-        //         borderSide: BorderSide(color: context.appColors.border),
-        //       ),
-        //       focusedBorder: UnderlineInputBorder(
-        //         borderSide: BorderSide(color: context.appColors.primary),
-        //       ),
-        //       hintText: 'Enter your email',
-        //       hintStyle: FontManager().getTextStyle(context,
-        //           lWeight: FontWeight.w400,
-        //           fontSize: 14,
-        //           color: context.appColors.hintText),
-        //       contentPadding: const EdgeInsets.symmetric(
-        //         horizontal: 20,
-        //         vertical: 0,
-        //       ),
-        //     ),
-        //   ),
-        AutofillGroup(
+    return AutofillGroup(
+      onDisposeAction: AutofillContextAction.commit,
       child: TextField(
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.done,
-        autofillHints: const [
-          AutofillHints.email,
-          AutofillHints.username,
-        ],
+        autofillHints: const [AutofillHints.email],
         autocorrect: false,
         enableSuggestions: true,
+        cursorColor: context.appColors.primary,
+        style: TextStyle(color: context.appColors.onBackground),
         onChanged: (c) {
           acceptReset.value = false;
         },
+        onEditingComplete: () {
+          TextInput.finishAutofillContext();
+          FocusScope.of(context).unfocus();
+        },
         decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: context.appColors.border),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: context.appColors.primary),
+          ),
           hintText: 'Enter your email',
+          hintStyle: FontManager().getTextStyle(context,
+              lWeight: FontWeight.w400,
+              fontSize: 14,
+              color: context.appColors.hintText),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 0,
+          ),
         ),
       ),
     );
@@ -263,8 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Obx(() {
       return GestureDetector(
         onTap: () async {
-          // IMPORTANT: Remove keyboard focus so first tap works
-
+          TextInput.finishAutofillContext();
           FocusScope.of(context).unfocus();
 
           if (acceptReset.value) return;
