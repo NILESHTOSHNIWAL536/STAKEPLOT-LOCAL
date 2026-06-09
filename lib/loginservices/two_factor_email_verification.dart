@@ -6,7 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -14,6 +14,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/theme_helper.dart';
+import '../components/shared_utils.dart';
 import '../image_service/avatarProfile.dart';
 import '../repository/auth_service/otp_service.dart';
 

@@ -7,7 +7,6 @@ import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/coupons/infoScreen.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 import '../repository/reward_repository.dart';
 
 late BuildContext dialofBoxContext;

@@ -6,7 +6,6 @@ import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/app_init/splashScreen.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/cr
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -34,17 +32,17 @@ import '../onboarding_screens/onboarding_screen.dart';
 var routes = {
   '/splash': (context) => const SplashScreen(),
   '/': (context) => const LoginScreen(),
-  '/home': (context) => HomePage(),
+  '/home': (context) => const HomePage(),
   '/Notifications': (context) => const Notifications(),
-  '/comment': (context) => Notifications(),
+  '/comment': (context) => const Notifications(),
   '/TribeSearch': (context) => TribeSearch(),
   '/post': (context) => const Community(),
   '/Friends': (context) => Friends(),
   '/TribeChats': (context) => const TribeChats(),
-  '/discover': (context) => DiscoverAccount(),
+  '/discover': (context) => const DiscoverAccount(),
   '/ShareAccountLogin': (context) => ShareAccountLogin(),
-  '/Budget': (context) => const Budget(),
-  '/debt': (context) => CreateDebtScreen(),
+  
+
   '/CreditCard': (context) => const CreditCard(),
   '/emi': (context) => const Emi(),
   '/rent_buy': (context) => const RentBuy(),
@@ -62,7 +60,7 @@ var routes = {
   '/creditCard': (context) => CardDueCarousel(),
   '/addcreditCard': (context) => AddCreditCardBankScreen(),
   '/AllCalculator': (context) => AllCalculatorScreen(),
- 
+
   '/selectBank': (context) => AddCreditCardBankScreen(),
   '/dummyInsights': (context) => const DummyInsightApiScreen(),
 };

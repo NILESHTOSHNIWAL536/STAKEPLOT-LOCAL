@@ -7,13 +7,13 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_c
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:flutter/services.dart';
 
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/theme_helper.dart';
+import '../../../components/shared_utils.dart';
 import '../../autoPays/CreateAutoPayFromTransactionScreen.dart';
 
 class TransactionContainer extends StatelessWidget {

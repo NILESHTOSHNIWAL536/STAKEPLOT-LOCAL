@@ -6,11 +6,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Bo
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-
 import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../components/shared_utils.dart';
 
 
 class RewardsScreen extends StatelessWidget {
@@ -38,7 +38,7 @@ class RewardsScreen extends StatelessWidget {
                     context: context,
                     text: "What's New ?",
                     fontWeight: FontWeight.bold,
-                    fontsize: 16,  
+                    fontsize: 16,
                   ),
                 ),
                 Center(
@@ -55,7 +55,7 @@ class RewardsScreen extends StatelessWidget {
                               final index = entry.key;
                               final data = entry.value;
                               final curve = MediaQuery.of(context).size.height / 4.2 / 2;
-                              
+
                               return Padding(
                                 padding: const EdgeInsets.only(top: AppSizes.p55,bottom: AppSizes.p10),
                                 child: Stack(
@@ -67,7 +67,7 @@ class RewardsScreen extends StatelessWidget {
                                            snackBarCalled(context,"Scroll To Bottom");
 
                                         }
-                                         
+
                                       },
                                       child: getRewardCard(context, data, curve)),
                                     getBorderDotted(curve, context),
@@ -96,7 +96,7 @@ class RewardsScreen extends StatelessWidget {
 
   Widget getRewardCard(context,data,curve){
     return   CouponCard(
-      
+
                                 height: MediaQuery.of(context).size.height/3.5,
                                 backgroundColor: Colorcodes.appBarColor,
                                 curveAxis: Axis.horizontal,

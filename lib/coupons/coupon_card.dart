@@ -9,10 +9,10 @@ import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/repository/reward_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 class CouponCardWidget extends StatelessWidget {
   final CouponModel coupon;

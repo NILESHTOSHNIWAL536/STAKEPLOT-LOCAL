@@ -5,12 +5,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
+import '../../../components/shared_utils.dart';
 import 'predictions_category_icon.dart';
 
 
@@ -73,8 +73,8 @@ class CategoryAndSplitIcons extends StatelessWidget {
                       padding:const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 5),
                       decoration: BoxDecoration(
-                        
-                        color:  AppColors.primaryColor.withOpacity(0.10), 
+
+                        color:  AppColors.primaryColor.withOpacity(0.10),
     // Border Radius: 2px
     borderRadius: BorderRadius.circular(2.0),
                       ),

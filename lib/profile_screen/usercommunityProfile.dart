@@ -10,7 +10,7 @@ import 'package:flutter_application_code_stakeplot/repository/friends_apis.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 import 'dart:io';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 import '../routes/route_post.dart';
 
 class CommunityUserProfile extends StatefulWidget {

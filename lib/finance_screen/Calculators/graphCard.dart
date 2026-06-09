@@ -2,11 +2,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
 
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
+import '../../components/shared_utils.dart';
 
 double cardBalance = 300.0;
 double totalInterestPaid = 130.0;

@@ -7,7 +7,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
@@ -64,7 +63,7 @@ Widget getRightSidePart(String category, BuildContext context, bool isManual,
               },
               errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 22),
             ),
-   
+
     ],
   );
 }

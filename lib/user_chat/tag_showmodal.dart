@@ -8,10 +8,9 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
@@ -284,13 +283,13 @@ class _TagShowmodalState extends State<TagShowmodal>
                       context,
                        nameController,
                        transactionsHistory[widget.index].narration,
-                       callBack    
+                       callBack
                     );
                 },
                 child:Obx(()=> Container(
                   padding: EdgeInsets.all(AppSizes.p2),
-                 
-                   
+
+
                             decoration:  BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(5),
@@ -313,7 +312,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     snackBarCalledfail(
                       context,
                       "Please select a subcategory.",
-                     
+
                     );
                     tagBool.value = false;
                     return;
@@ -324,7 +323,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     snackBarCalledfail(
                       context,
                       SnackbarData().selectCategoryAndSubcategory,
-                    
+
                     );
                     tagBool.value = false;
                     return;
@@ -409,8 +408,8 @@ class _TagShowmodalState extends State<TagShowmodal>
                       )
                     : Container(
                        padding: EdgeInsets.all(AppSizes.p2),
-                 
-                   
+
+
                             decoration:  BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(5),
@@ -662,7 +661,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   child: Container(
                     margin: const EdgeInsets.all(AppSizes.p10),
                      decoration:  BoxDecoration(
-                        
+
                         borderRadius: BorderRadius.circular(5),
                         color: AppColors.backgroundColor,
                         border: AppBorders.soft

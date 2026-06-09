@@ -16,7 +16,6 @@ import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:get/get.dart';
@@ -26,6 +25,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);

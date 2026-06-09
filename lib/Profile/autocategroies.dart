@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
@@ -94,7 +94,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
             fontsize: 20,
             fontWeight: FontWeight.bold,
           ),
-          
+
         ],
       ),
     );
@@ -113,7 +113,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
       padding: const EdgeInsets.all(AppSizes.p16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(16),  
+        borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: [
             AppColors.backgroundColor.withOpacity(0.05),
@@ -137,7 +137,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
           Row(
             children: [
                getIconAvtar(48,category, 40),
-            
+
               SizedBox(width: AppSizes.w16),
               // Text details
               Container(
@@ -173,7 +173,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                     //   fontsize: 12,
                     // ),
                     SizedBox(height: AppSizes.h6),
-    
+
                     textStyle(
                       context: context,
                       text: '₹${formatMoneyIndian(totalAmount)}',
@@ -181,14 +181,14 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                       fontsize: 12,
                       fontWeight: FontWeight.bold,
                     ),
-    
+
                   ],
                 ),
               ),
-            
-            
+
+
                SizedBox(width: AppSizes.w4),
-    
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -215,7 +215,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                     ),
                 ],
               )
-            
+
             ],
           ),
         //  const SizedBox(width: 16),
@@ -437,7 +437,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                         ),
                       ),
 // ... existing code ...
-                      
+
                           SizedBox(height: AppSizes.h6),
                           textStyle(
                             context: context,
@@ -445,7 +445,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                             c: AppColors.accentColor.withOpacity(0.7),
                             fontsize: 12,
                           ),
-                         
+
                           SizedBox(height: AppSizes.h4),
                           Row(
                             children: [

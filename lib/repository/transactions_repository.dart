@@ -9,12 +9,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
-import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
+
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
@@ -248,7 +247,7 @@ Future<void> getAllTransactionHistory(
 void updateTheTagOfTransactions2(
     category, subCategory, transactionId, context, index) async {
   String urlPath = BankTransactionRoutes.updateTransaction(transactionId: transactionId);
-  final budgetController = Get.find<BudgetControllerScreenModel>();
+
   var response = await updateDataApiCall2(urlPath, {
     'category': category,
     'subcategory': subCategory,
@@ -256,8 +255,8 @@ void updateTheTagOfTransactions2(
   if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
-    
-    budgetController.getBudget();
+
+   
   } else {}
 }
 

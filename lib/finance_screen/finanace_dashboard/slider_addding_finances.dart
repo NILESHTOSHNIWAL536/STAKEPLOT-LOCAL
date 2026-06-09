@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/credit_card_controller.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/credit_card_transactions.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/cardBuilders.dart';
 import 'package:get/get.dart';
 import '../../Constants/core/app_padding_sizes.dart';
@@ -14,11 +13,11 @@ import 'select_card_options.dart';
 
 class SliderAdddingFinances extends StatelessWidget {
   // final bool hasData;
-  final Function(Debt) onDebtTap;
+  // final Function(Debt) onDebtTap;
   const SliderAdddingFinances({
     Key? key,
     // required this.hasData,
-    required this.onDebtTap,
+    // required this.onDebtTap,
   }) : super(key: key);
 
   @override
@@ -39,7 +38,7 @@ class SliderAdddingFinances extends StatelessWidget {
       height: cardHeight,
       child: Obx(() {
         // Ensure at least one observable is used
-        final totalItems = creditCards.length + budgets.length + debts.length;
+        final totalItems = creditCards.length + budgets.length;
         return ListView(
           scrollDirection: Axis.horizontal,
           children: [
@@ -118,14 +117,14 @@ class SliderAdddingFinances extends StatelessWidget {
                   )),
 
               // Display Debts
-              ...debts.take(2).toList().map((debt) => Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
-                    child: SizedBox(
-                      width: containerWidth - 95,
-                      child: CardBuilders.debtCard2(context, debt, onDebtTap),
-                    ),
-                  )),
+              // ...debts.take(2).toList().map((debt) => Padding(
+              //       padding:
+              //           const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+              //       child: SizedBox(
+              //         width: containerWidth - 95,
+              //         child: CardBuilders.debtCard2(context, debt, onDebtTap),
+              //       ),
+              //     )),
             ],
           ],
         );

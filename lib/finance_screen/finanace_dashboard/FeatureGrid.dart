@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
 import '../../Constants/colors.dart';
 import '../../Constants/core/app_padding_sizes.dart';
-import '../Budgets/Budget.dart'; // for icons
+import '../../components/shared_utils.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});

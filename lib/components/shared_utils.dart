@@ -10,6 +10,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/font_manager.dart';
+
 void appLog(dynamic message,
     [dynamic message2, dynamic message3, dynamic message4]) {
   if (!kReleaseMode) {
@@ -381,4 +384,114 @@ class RoundedWhiteContainer extends StatelessWidget {
       child: child,
     );
   }
+}
+
+
+Widget textStyle({
+  required BuildContext context,
+  text,
+  double fontsize = 12,
+  Color? c,
+  FontWeight fontWeight = FontWeight.w500,
+  bool iswrap = false,
+  double lineHeight = 1.0,
+}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(width: AppSizes.w8),
+      Text(
+        text.toString(),
+        style: FontManager().getTextStyle(context,
+            lWeight: fontWeight,
+            fontSize: fontsize,
+            color: c ?? context.appColors.onBackground,
+            lineHeight: lineHeight),
+        overflow: iswrap ? TextOverflow.visible : TextOverflow.ellipsis,
+      ),
+    ],
+  );
+}
+
+Widget textStyleImage({
+  required BuildContext context,
+  text,
+  double fontsize = 12,
+  Color? c,
+  FontWeight fontWeight = FontWeight.w500,
+  bool iswrap = false,
+  bool isCenter = false,
+  double lineHeight = 1.0,
+}) {
+  return Text(
+    text.toString(),
+    style: FontManager().getTextStyle(context,
+        lWeight: fontWeight,
+        fontSize: fontsize,
+        color: c ?? context.appColors.onBackground,
+        lineHeight: lineHeight,
+        textAlign: isCenter ? TextAlign.center : TextAlign.start),
+    overflow: iswrap ? TextOverflow.visible : TextOverflow.ellipsis,
+  );
+}
+
+Widget textStyleAnimated({
+  required BuildContext context,
+  text,
+  double fontsize = 12,
+  Color? c,
+  FontWeight fontWeight = FontWeight.w500,
+}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(width: AppSizes.w8),
+      Text(
+        text.toString(),
+        style: FontManager().getTextStyle(context,
+            lWeight: fontWeight,
+            fontSize: fontsize,
+            color: c ?? context.appColors.onBackground),
+        overflow: TextOverflow.ellipsis,
+      ),
+    ],
+  );
+}
+
+Widget textStyleOnly({
+  required BuildContext context,
+  text,
+  double fontsize = 12,
+  Color? c,
+  FontWeight fontWeight = FontWeight.w500,
+}) {
+  return Text(
+    text.toString(),
+    style: FontManager().getTextStyle(context,
+        lWeight: fontWeight,
+        fontSize: fontsize,
+        color: c ?? context.appColors.onBackground),
+    overflow: TextOverflow.ellipsis,
+  );
+}
+
+Widget textStyleOnly2({
+  required BuildContext context,
+  required String text,
+  required double fontsize,
+  required Color color,
+  required FontWeight fontWeight,
+}) {
+  return Text(
+    text,
+    style: FontManager().getTextStyle(
+      context,
+      lWeight: fontWeight,
+      fontSize: fontsize,
+      color: color,
+    ),
+    overflow: TextOverflow.visible,
+  );
 }

@@ -6,8 +6,7 @@ import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
+
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -15,192 +14,6 @@ import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class CardBuilders {
-  static Widget debtCard(
-      BuildContext context, Debt debt, Function(Debt) onTap) {
-    return GestureDetector(
-      onTap: () => onTap(debt),
-      child: Container(
-        // margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
-        height: MediaQuery.sizeOf(context).height / 5,
-        width: MediaQuery.sizeOf(context).width / 4,
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Color(0xFFF3F4F6),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.05),
-              offset: Offset(0, 1),
-              blurRadius: 2,
-            ),
-          ],
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () => onTap(debt),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.p16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AvatarProfileImageZero(
-                    url: Finance.debtIcon, width: 1, height: 26),
-                globalText(
-                  context: context,
-                  text: debt.name,
-                  fontWeight: FontWeight.w600,
-                  fontsize: 16,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  color: AppColors.primaryColor,
-                ),
-                SizedBox(height: AppSizes.h6),
-                // globalText(
-                //   context: context,
-                //   text:  PlotFinanceStaticData().amountLabel,
-                //   fontWeight: FontWeight.w500,
-                //   fontsize: 13,
-                //   color: Colors.grey[600]!,
-                //   overflow: TextOverflow.ellipsis,
-                //   maxLines: 1,
-                // ),
-                // const SizedBox(height: 10),
-                Row(
-                  children: [
-                    globalText(
-                        context: context,
-                        text: PlotFinanceStaticData().debtPrefix,
-                        fontWeight: FontWeight.w600,
-                        fontsize: 14,
-                        color: AppColors.grey),
-                    Flexible(
-                      child: globalText(
-                        context: context,
-                        text:
-                            '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
-                        fontWeight: FontWeight.w600,
-                        fontsize: 14,
-                        color: AppColors.primaryColor,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: AppSizes.h4),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  static Widget debtCard2(
-    BuildContext context,
-    Debt debt,
-    Function(Debt) onTap,
-  ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
-      constraints: BoxConstraints(
-        minHeight: 140,
-        maxWidth: MediaQuery.of(context).size.width * 0.85,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFF3F4F6),
-          width: 1,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
-            offset: Offset(0, 1),
-            blurRadius: 2,
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () => onTap(debt), // Only one tap handler
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.p16),
-            child: Row(
-              children: [
-                Expanded(
-                  // <-- Added to prevent overflow
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      globalText(
-                        context: context,
-                        text: debt.name,
-                        fontWeight: FontWeight.w700,
-                        fontsize: 18,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        color: AppColors.accentColor,
-                      ),
-                      SizedBox(height: AppSizes.h6),
-                      globalText(
-                        context: context,
-                        text: PlotFinanceStaticData().amountLabel,
-                        fontWeight: FontWeight.w500,
-                        fontsize: 13,
-                        color: Colors.grey[600]!,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                      SizedBox(height: AppSizes.h10),
-                      Row(
-                        children: [
-                          globalText(
-                            context: context,
-                            text: PlotFinanceStaticData().debtPrefix,
-                            fontWeight: FontWeight.w600,
-                            fontsize: 14,
-                            color: AppColors.accentColor.withOpacity(0.9),
-                          ),
-                          Flexible(
-                            child: globalText(
-                              context: context,
-                              text:
-                                  '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
-                              fontWeight: FontWeight.w600,
-                              fontsize: 14,
-                              color: AppColors.primaryColor,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: AppSizes.w12),
-                AvatarProfileImageZero(
-                  url: Finance.debtIcon,
-                  width: 1,
-                  height: 12,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   static Widget budgetCard(BuildContext context, dynamic data) {
     double budgetAmount =
@@ -220,12 +33,7 @@ class CardBuilders {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyBudgetScreen(data: data),
-          ),
-        );
+
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
@@ -254,12 +62,7 @@ class CardBuilders {
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyBudgetScreen(data: data),
-                ),
-              );
+
             },
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.p16),
@@ -589,13 +392,7 @@ class CardBuilders {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyBudgetScreen(
-                    data: data,
-                  )),
-        );
+
       },
       child: Container(
         // margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
@@ -624,11 +421,7 @@ class CardBuilders {
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyBudgetScreen(data: data)),
-              );
+           
             },
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.p16),

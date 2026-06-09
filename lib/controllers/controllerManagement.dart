@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/controllers/theme_controller.
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:get/get.dart';
 
-import '../repository/budget_apis.dart';
 
 class ControllerManagement {
   static UserController get userController {
@@ -28,11 +27,7 @@ class ControllerManagement {
     return Get.put(ThemeController());
   }
 
-  static BudgetControllerScreenModel get budgetController =>
-      Get.isRegistered<BudgetControllerScreenModel>()
-          ? Get.find<BudgetControllerScreenModel>()
-          : Get.put(BudgetControllerScreenModel());
-
+ 
   static FinoraController get finoraController {
     if (Get.isRegistered<FinoraController>()) {
       return Get.find<FinoraController>();

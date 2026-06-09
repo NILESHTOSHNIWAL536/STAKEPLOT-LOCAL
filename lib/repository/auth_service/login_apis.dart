@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Utils/snackBar.dart';
 import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../Home_Screen/home_screen_state/home_page.dart';
-import '../../finance_screen/Budgets/Budget.dart';
+
 import '../../finance_screen/Calculators/veg_nonveg.dart';
 import '../../model/device_model.dart';
 import '../../services/secure_storage.dart';
@@ -344,12 +344,10 @@ Future<Widget> checkAuthAndNavigate() async {
       : LoginScreen();
 }
 
-Widget navigatePath(String navigate) 
+Widget navigatePath(String navigate)
 {
   if (navigate == "home" || navigate == "/home" || navigate == "signup") {
     return HomePage();
-  } else if (navigate == "budget") {
-    return Budget();
   } else if (navigate == "calculator" || navigate == "veg_nonveg") {
     return VegNonVegCalculator();
   } else if (navigate == "code") {

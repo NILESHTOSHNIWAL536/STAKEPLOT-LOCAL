@@ -3,11 +3,11 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
+import '../components/shared_utils.dart';
 
 void resetCupertinoPin(BuildContext context) async {
   final LocalAuthentication auth = LocalAuthentication();
@@ -16,7 +16,7 @@ void resetCupertinoPin(BuildContext context) async {
     // Check if the device supports biometrics or authentication
     bool canCheckBiometrics = await auth.canCheckBiometrics;
     bool isDeviceSupported = await auth.isDeviceSupported();
-  
+
     if (canCheckBiometrics || isDeviceSupported) {
       // Check if any biometrics are enrolled
       List<BiometricType> availableBiometrics =
@@ -38,7 +38,7 @@ void resetCupertinoPin(BuildContext context) async {
       );
     } else {
       // Device does not support biometrics or authentication, bypass authentication
-     
+
 
       snackBarCalledfail(context,
           "No authentication methods available. Proceeding to reset PIN.");
@@ -46,8 +46,8 @@ void resetCupertinoPin(BuildContext context) async {
     }
   } catch (e) {
     // Log the error for debugging and show error message
-  
-   
+
+
     snackBarCalledfail(
         context, "Authentication failed or canceled. Please try again.");
 
@@ -136,7 +136,7 @@ void resetCupertinoPin(BuildContext context) async {
                       context, "Failed to reset PIN. Please try again.");
                 }
               } catch (e) {
-                
+
                 snackBarCalledfail(
                     context, "An error occurred. Please try again.");
               }

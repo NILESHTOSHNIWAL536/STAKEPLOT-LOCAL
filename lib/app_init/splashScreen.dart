@@ -20,7 +20,6 @@ import '../Hive_localstorage/apisCall/init_hive.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../Home_Screen/home_screen_state/home_page.dart';
 import '../Utils/credit_card.dart';
-import '../finance_screen/Budgets/Budget.dart';
 import '../finance_screen/Calculators/veg_nonveg.dart';
 import '../loginservices/login_screen.dart';
 import '../main.dart';
@@ -153,8 +152,7 @@ Widget navigatePath(String navigate) {
     case "/home":
     case "signup":
       return const HomePage();
-    case "budget":
-      return const Budget();
+   
     case "calculator":
     case "veg_nonveg":
       return const VegNonVegCalculator();
