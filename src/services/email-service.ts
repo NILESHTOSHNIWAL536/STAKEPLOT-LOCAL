@@ -106,22 +106,21 @@ export async function scrapeEmailsByBankId(
     storedPasswords
   );
 
-  // const passwordRequests = [
-  //   ...(scraperResult.passwordRequests || []),
-  //   ...buildPasswordRequests(scraperResult, creditCardConfigs),
-  // ];
+  const passwordRequests = [
+    ...(scraperResult.passwordRequests || []),
+    ...buildPasswordRequests(scraperResult, creditCardConfigs),
+  ];
 
-  // const uniquePasswordRequests = dedupePasswordRequests(passwordRequests);
-
-  // if (uniquePasswordRequests.length > 0) {
-  //   await storePendingStatements(
-  //     userId,
-  //     normalizedEmail,
-  //     scraperResult.pendingStatements || [],
-  //     creditCardConfigs
-  //   );
-  //   await sendPasswordRequiredEvent(userId, uniquePasswordRequests);
-  // }
+  const uniquePasswordRequests = dedupePasswordRequests(passwordRequests);
+  if (uniquePasswordRequests.length > 0) {
+    await storePendingStatements(
+      userId,
+      normalizedEmail,
+      scraperResult.pendingStatements || [],
+      creditCardConfigs
+    );
+    await sendPasswordRequiredEvent(userId, uniquePasswordRequests);
+  }
 
   // const statementTransactions = await EmailRepository.processStatements(
   //   scraperResult.statements || [],
@@ -137,8 +136,6 @@ export async function scrapeEmailsByBankId(
   //   },
   //   userId
   // );
-
-  // const saved = await EmailRepository.scrapeEmailsByBankId(scraperResult, userId);
 
   return {
     scraperResult,

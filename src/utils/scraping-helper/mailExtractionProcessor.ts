@@ -1,23 +1,25 @@
 import { extractWithPython } from './extract-with-python';
+import fs from 'fs/promises';
 
 export async function processFilteredEmails(
   mailsToProcess: any[],
+  mailsToProcessPassword:any[],
   config: {
     bankConfig: any[];
     banksWithPassword: Set<string>;
     bankFilters: string[];
     pdfPasswordsByBank: Record<string, string[]>;
-  }
+  },
 ) {
-
-  const mailsToProcess2 = filterRelevantEmails(mailsToProcess, config.bankConfig);
   
+  mailsToProcess = filterRelevantEmails(mailsToProcess, config.bankConfig);
+  mailsToProcessPassword = filterRelevantEmails(mailsToProcessPassword, config.bankConfig);
+
   const protectedPasswordRequests = buildPasswordRequestsForProtectedAttachments(
-    mailsToProcess2,
+    mailsToProcessPassword,
     config.bankConfig,
     config.banksWithPassword
   );
-
   const protectedRequestKeys = new Set(
     protectedPasswordRequests.map((request) => request.requestId)
   );
@@ -25,47 +27,32 @@ export async function processFilteredEmails(
   const results: any[] = [];
   const pendingStatements: any[] = [];
 
-  for (const mail of mailsToProcess2) {
-    const mailProtectedRequests = protectedPasswordRequests.filter(
-      (request) => request.messageId === (mail.messageId || '')
-    );
+      try{
+        const extracted = await extractWithPython(mailsToProcess, config.bankFilters,config.pdfPasswordsByBank);
+        results.push(extracted);
+        await fs.appendFile('mail-debug.txt',`\n========== MAIL ARRAY ==========\n${JSON.stringify(mailsToProcessPassword, null, 2)}\n`,'utf8');
+      }catch(e){
+        console.log("errr",e);
+      }
 
-    if (mailProtectedRequests.length > 0) {
-      pendingStatements.push(
-        ...mailProtectedRequests.map((request) => ({
-          ...request,
-          mail,
-        }))
-      );
-      continue;
-    }
-
-    const extracted = await extractWithPython(mail, config.bankFilters, config.pdfPasswordsByBank);
-
-    results.push(extracted);
-
-    const parserRequests = buildPasswordRequestsFromParserResults(
-      [extracted],
-      config.bankConfig
-    );
-
-    if (parserRequests.length > 0) {
-      pendingStatements.push(
-        ...parserRequests
-          .filter((request) => !protectedRequestKeys.has(request.requestId))
-          .map((request) => ({
-            ...request,
-            mail,
-          }))
-      );
-    }
+    for (const mail of mailsToProcessPassword) {
+          const mailProtectedRequests = protectedPasswordRequests.filter((request) => request.messageId === (mail.messageId || ''));
+          if (mailProtectedRequests.length > 0) {
+            pendingStatements.push(
+              ...mailProtectedRequests.map((request) => ({
+                ...request,
+                mail,
+              }))
+            );
+          }
   }
-
   const parserPasswordRequests = buildPasswordRequestsFromParserResults(results, config.bankConfig);
   const passwordRequests = mergeRequests([
     ...protectedPasswordRequests,
     ...parserPasswordRequests,
   ]);
+
+
 
   return {
     requiresPassword: passwordRequests.length > 0,
@@ -73,7 +60,12 @@ export async function processFilteredEmails(
     passwordRequests,
     pendingStatements,
   };
+
 }
+
+
+
+
 
 function buildPasswordRequestsForProtectedAttachments(
   mails: any[],
@@ -211,11 +203,11 @@ function filterRelevantEmails(mailsToProcess: any[], bankConfig: any[]): any[] {
         .join('\n');
 
       const searchableText = `
-${subject}
-${from}
-${body}
-${attachmentNames}
-`;
+          ${subject}
+          ${from}
+          ${body}
+          ${attachmentNames}
+          `;
 
       const hasBank = bankConfig.some((bank) =>
         searchableText.toLowerCase().includes(bank.name.toLowerCase())
@@ -229,3 +221,46 @@ ${attachmentNames}
 
   return mailsToProcess2;
 }
+
+
+
+  // for (const mail of mailsToProcess2) {
+   
+  //   const mailProtectedRequests = protectedPasswordRequests.filter(
+  //     (request) => request.messageId === (mail.messageId || '')
+  //   );
+
+  //   if (mailProtectedRequests.length > 0) {
+  //     pendingStatements.push(
+  //       ...mailProtectedRequests.map((request) => ({
+  //         ...request,
+  //         mail,
+  //       }))
+  //     );
+  //     continue;
+  //   }
+    
+  //   try{
+  //   const extracted = await extractWithPython(mail, config.bankFilters, config.pdfPasswordsByBank);
+
+  //   results.push(extracted);
+
+  //   const parserRequests = buildPasswordRequestsFromParserResults(
+  //     [extracted],
+  //     config.bankConfig
+  //   );
+
+  //   if (parserRequests.length > 0) {
+  //     pendingStatements.push(
+  //       ...parserRequests
+  //         .filter((request) => !protectedRequestKeys.has(request.requestId))
+  //         .map((request) => ({
+  //           ...request,
+  //           mail,
+  //         }))
+  //     );
+  //   }
+  //   }catch(e){
+  //      console.log(e);
+  //   } 
+  // }
