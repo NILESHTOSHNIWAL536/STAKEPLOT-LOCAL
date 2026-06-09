@@ -1,3 +1,7 @@
+import crypto from 'crypto';
+import { IScrapeResult } from '../models/scrape-result';
+
+
  type StatementPasswordInput = {
   bankId: string;
   password: string;
@@ -45,4 +49,22 @@ function buildPasswordRequests(scrapedEmails: any, bankConfig: any[]) {
 }
 
 
-export {StatementPasswordInput,buildPasswordRequests,resolveMatchedBank};
+function generateTransactionHash(record: IScrapeResult): string {
+  return crypto
+    .createHash('sha256')
+    .update(
+      [
+        record.userId,
+        record.matched_bank || '',
+        record.transaction_id || '',
+        record.amount || '',
+        record.date || '',
+        record.card_number || '',
+        record.total_due || '',
+      ].join('|')
+    )
+    .digest('hex');
+}
+
+
+export {StatementPasswordInput,buildPasswordRequests,resolveMatchedBank,generateTransactionHash};

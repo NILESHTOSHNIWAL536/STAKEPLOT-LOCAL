@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
-import { decryptToken, encryptToken, encryptScrapeFields, decryptScrapeFields } from '../utils/encryption';
+import {
+  decryptToken,
+  encryptToken,
+  encryptScrapeFields,
+  decryptScrapeFields,
+} from '../utils/encryption';
 import creditCards from '../utils/credit-cards.json';
 import AppError from '../utils/app-error';
 import { StatusCodes } from 'http-status-codes';
@@ -7,6 +12,7 @@ import { ServerConfig } from '../config';
 import jwt from 'jsonwebtoken';
 import { googleAuthSchema } from '../models/google-auth';
 import { getModels } from '../models/index-model';
+import { generateTransactionHash } from '../services/email-password-request';
 
 // If you want, you can define a type for creditCards
 type CreditCardConfig = {
@@ -60,7 +66,7 @@ export async function getGoogleTokenByUserId(userId: string) {
   return await emailDB.model('googleAuth').findOne({ userId: new mongoose.Types.ObjectId(userId) });
 }
 
-export async function scrapeEmailsByBankId(scrapedEmails: any, userId: string) {
+export async function scrapeEmailsByBankIdw(scrapedEmails: any, userId: string) {
   try {
     if (!Array.isArray(scrapedEmails?.results) || scrapedEmails.results.length === 0) {
       return {};
@@ -69,7 +75,11 @@ export async function scrapeEmailsByBankId(scrapedEmails: any, userId: string) {
     const records = scrapedEmails.results
       .filter((obj: any) => obj.matched_bank != null)
       .map((obj: any) => {
-        const matchedBank = scrapedEmails.bankConfig && scrapedEmails.bankConfig.find((b: any) => b.name.toLowerCase().includes(obj.matched_bank.toLowerCase()));
+        const matchedBank =
+          scrapedEmails.bankConfig &&
+          scrapedEmails.bankConfig.find((b: any) =>
+            b.name.toLowerCase().includes(obj.matched_bank.toLowerCase())
+          );
 
         const bankInfo = matchedBank || { name: obj.matched_bank, logo: '', bankId: '' };
 
@@ -90,13 +100,248 @@ export async function scrapeEmailsByBankId(scrapedEmails: any, userId: string) {
     if (scrapedEmails.bankConfig && scrapedEmails.bankConfig.bankId) {
       try {
         const payload = { bankId: scrapedEmails.bankConfig.bankId };
-        const internalToken = jwt.sign({ sub: userId, aud: 'mobile-backend' }, ServerConfig.SERVICE_JWT_SECRET, { expiresIn: '1m' });
+        const internalToken = jwt.sign(
+          { sub: userId, aud: 'mobile-backend' },
+          ServerConfig.SERVICE_JWT_SECRET,
+          { expiresIn: '1m' }
+        );
 
-        await require('axios').post(`${ServerConfig.MOBILE_BACKEND_URL || 'http://localhost:5000'}/api/v1/user/internal/update-banks`, payload, {
-          headers: {
-            authorization: `Bearer ${internalToken}`,
+        await require('axios').post(
+          `${ServerConfig.MOBILE_BACKEND_URL || 'http://localhost:5000'}/api/v1/user/internal/update-banks`,
+          payload,
+          {
+            headers: {
+              authorization: `Bearer ${internalToken}`,
+            },
+          }
+        );
+      } catch (err: any) {
+        console.error('Failed to update CreditCardLinkedBanks in gateway:', err.message);
+      }
+    }
+
+    return records;
+  } catch (err) {
+    console.error('Error in scrapeEmailsByBankId:', err);
+    throw err;
+  }
+}
+
+export async function processStatements(statements: any[], userId: string) {
+  const emailDB = (global as any).emailDB;
+
+  const statementTransactions: any[] = [];
+
+  for (const statement of statements) {
+    const statementHash = `${statement.card_number}_${statement.statement_date}`;
+
+    const savedStatement = await emailDB.model('creditCardStatement').findOneAndUpdate(
+      {
+        statementHash,
+      },
+      {
+        $setOnInsert: {
+          userId,
+          statementHash,
+
+          cardNumber: statement.card_number,
+
+          cardLast4: statement.card_last4,
+
+          statementDate: statement.statement_date,
+
+          billingPeriod: statement.billing_period,
+
+          paymentDue: statement.payment_due,
+
+          creditLimits: statement.credit_limits,
+
+          billingCycle: statement.billing_cycle,
+
+          transactionCount: statement.transaction_count,
+        },
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
+
+    for (const txn of statement.transactions) {
+      statementTransactions.push({
+        userId,
+
+        category: txn.type === 'DEBIT' ? 'Debit' : 'Credit',
+
+        mode: 'CREDITCARD',
+
+        type: txn.type,
+
+        amount: txn.amount,
+
+        date: txn.date,
+
+        matched_bank: statement.bankName || '',
+
+        bankName: statement.bankName || '',
+
+        bankId: statement.bankId || '',
+
+        logo: statement.logo || '',
+
+        card_number: statement.card_number,
+
+        transaction_id: '',
+
+        total_due: statement.payment_due?.total_amount_due,
+
+        statementId: savedStatement._id,
+
+        statementMatched: true,
+
+        statementDescription: txn.description,
+
+        banks_checked: [statement.bankName || ''],
+      });
+    }
+  }
+
+  return statementTransactions;
+}
+
+export async function scrapeEmailsByBankId(scrapedEmails: any, userId: string) {
+  try {
+    if (!Array.isArray(scrapedEmails?.results) || scrapedEmails.results.length === 0) {
+      return {};
+    }
+
+    const records = scrapedEmails.results
+      .filter((obj: any) => obj.matched_bank != null)
+      .map((obj: any) => {
+        const matchedBank =
+          scrapedEmails.bankConfig &&
+          scrapedEmails.bankConfig.find((b: any) =>
+            b.name.toLowerCase().includes(obj.matched_bank.toLowerCase())
+          );
+
+        const bankInfo = matchedBank || {
+          name: obj.matched_bank,
+          logo: '',
+          bankId: '',
+        };
+
+        return {
+          ...obj,
+          userId,
+          logo: bankInfo.logo,
+          bankName: bankInfo.name,
+          bankId: bankInfo.bankId,
+        };
+      });
+
+    const emailDB = (global as any).emailDB;
+
+    const encryptedRecords = await Promise.all(
+      records.map(async (record: any) => {
+        const encrypted = await encryptScrapeFields(record);
+
+        return {
+          ...encrypted,
+          transactionHash: generateTransactionHash(record),
+        };
+      })
+    );
+
+    // await emailDB.model('scrapeResult').bulkWrite(
+    //   encryptedRecords.map((record: any) => ({
+    //     updateOne: {
+    //       filter: {
+    //         transactionHash: record.transactionHash,
+    //       },
+    //       update: {
+    //         $setOnInsert: record,
+    //           $set: {
+    //   statementId:
+    //     record.statementId,
+
+    //   statementMatched:
+    //     record.statementMatched,
+
+    //   statementDescription:
+    //     record.statementDescription
+    //       ? await encryptField(
+    //           record.statementDescription
+    //         )
+    //       : undefined,
+    //     },
+    //       },
+    //       upsert: true,
+    //     },
+    //   })),
+    //   {
+    //     ordered: false,
+    //   }
+    // );
+
+    await emailDB.model('scrapeResult').bulkWrite(
+      encryptedRecords.map((record: any) => ({
+        updateOne: {
+          filter: {
+            transactionHash: record.transactionHash,
           },
-        });
+          update: {
+            $setOnInsert: record,
+
+            $set: {
+              ...(record.statementId && {
+                statementId: record.statementId,
+              }),
+
+              ...(record.statementMatched !== undefined && {
+                statementMatched: record.statementMatched,
+              }),
+
+              ...(record.statementDescription && {
+                statementDescription: record.statementDescription,
+              }),
+            },
+          },
+          upsert: true,
+        },
+      })),
+      {
+        ordered: false,
+      }
+    );
+
+    if (scrapedEmails.bankConfig && scrapedEmails.bankConfig.bankId) {
+      try {
+        const payload = {
+          bankId: scrapedEmails.bankConfig.bankId,
+        };
+
+        const internalToken = jwt.sign(
+          {
+            sub: userId,
+            aud: 'mobile-backend',
+          },
+          ServerConfig.SERVICE_JWT_SECRET,
+          {
+            expiresIn: '1m',
+          }
+        );
+
+        await require('axios').post(
+          `${
+            ServerConfig.MOBILE_BACKEND_URL || 'http://localhost:5000'
+          }/api/v1/user/internal/update-banks`,
+          payload,
+          {
+            headers: {
+              authorization: `Bearer ${internalToken}`,
+            },
+          }
+        );
       } catch (err: any) {
         console.error('Failed to update CreditCardLinkedBanks in gateway:', err.message);
       }
@@ -125,10 +370,7 @@ export async function getUserEmailById(userId: string): Promise<string> {
   const mainDB = (global as any).mainDB;
   const user = await mainDB
     .collection('users')
-    .findOne(
-      { _id: new mongoose.Types.ObjectId(userId) },
-      { projection: { email: 1 } }
-    );
+    .findOne({ _id: new mongoose.Types.ObjectId(userId) }, { projection: { email: 1 } });
 
   if (!user?.email) {
     throw new AppError('User email not found', StatusCodes.BAD_REQUEST);
@@ -144,7 +386,9 @@ export async function getUserEmailById(userId: string): Promise<string> {
 async function getUnlinkedCreditCards(userId: string) {
   try {
     const mainDB = (global as any).mainDB;
-    const user = await mainDB.collection('User').findOne({ _id: new mongoose.Types.ObjectId(userId) });
+    const user = await mainDB
+      .collection('User')
+      .findOne({ _id: new mongoose.Types.ObjectId(userId) });
     if (!user) {
       throw new Error('User not found');
     }
@@ -175,15 +419,19 @@ export async function removeUserBankMapEmailMapping(userId: string, email: strin
 export async function getDecryptedRefreshToken(email: string) {
   const emailDB = (global as any).emailDB;
 
-    // ✅ Get model safely (no overwrite error)
+  // ✅ Get model safely (no overwrite error)
   const GoogleAuth = emailDB.models.googleAuth || emailDB.model('googleAuth', googleAuthSchema);
-  
+
   const googleAuth = await GoogleAuth.findOne({ email });
   if (!googleAuth?.refreshToken?.encryptedData) {
     throw new AppError('No refresh token found', StatusCodes.NOT_FOUND);
   }
 
-  return decryptToken(googleAuth.refreshToken.encryptedData, googleAuth.refreshToken.iv, googleAuth.refreshToken.authTag);
+  return decryptToken(
+    googleAuth.refreshToken.encryptedData,
+    googleAuth.refreshToken.iv,
+    googleAuth.refreshToken.authTag
+  );
 }
 
 export async function upsertStatementPassword(
@@ -227,11 +475,11 @@ export async function upsertStatementPassword(
     };
   }
 
-  return StatementPassword.findOneAndUpdate(
-    query,
-    update,
-    { upsert: true, new: true, setDefaultsOnInsert: true }
-  );
+  return StatementPassword.findOneAndUpdate(query, update, {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true,
+  });
 }
 
 export async function getStatementPasswords(
@@ -363,11 +611,7 @@ export async function getPendingStatementExtractions(userId: string) {
 //   return { doc, mail };
 // }
 
-
-
-export async function getPendingStatementExtractionForProcessing(
-  userId: string
-) {
+export async function getPendingStatementExtractionForProcessing(userId: string) {
   const { PendingStatementExtraction } = await getModels();
 
   const docs = await PendingStatementExtraction.find({
@@ -383,11 +627,7 @@ export async function getPendingStatementExtractionForProcessing(
     docs.map(async (doc) => {
       const payload = doc.encryptedMailPayload;
 
-      if (
-        !payload?.encryptedData ||
-        !payload.iv ||
-        !payload.authTag
-      ) {
+      if (!payload?.encryptedData || !payload.iv || !payload.authTag) {
         return {
           ...doc,
           mail: null,
@@ -395,11 +635,7 @@ export async function getPendingStatementExtractionForProcessing(
       }
 
       const mail = JSON.parse(
-        await decryptToken(
-          payload.encryptedData,
-          payload.iv,
-          payload.authTag
-        )
+        await decryptToken(payload.encryptedData, payload.iv, payload.authTag)
       );
 
       return {
@@ -411,7 +647,6 @@ export async function getPendingStatementExtractionForProcessing(
 
   return results;
 }
-
 
 export async function markPendingStatementProcessing(userId: string, requestId: string) {
   const { PendingStatementExtraction } = await getModels();
@@ -454,19 +689,13 @@ export async function markPendingStatementCompleted(userId: string, requestId: s
 export async function deletePendingStatement(userId: string, requestId: string) {
   const { PendingStatementExtraction } = await getModels();
 
-  return PendingStatementExtraction.deleteOne(
-    {
-      userId: new mongoose.Types.ObjectId(userId),
-      requestId,
-    },
-  );
+  return PendingStatementExtraction.deleteOne({
+    userId: new mongoose.Types.ObjectId(userId),
+    requestId,
+  });
 }
 
-export async function markPendingStatementFailed(
-  userId: string,
-  requestId: string,
-  error: string
-) {
+export async function markPendingStatementFailed(userId: string, requestId: string, error: string) {
   const { PendingStatementExtraction } = await getModels();
 
   return PendingStatementExtraction.updateOne(
@@ -496,11 +725,7 @@ async function decryptStatementPasswordFields(doc: any): Promise<string[]> {
           return '';
         }
 
-        return await decryptToken(
-          encrypted.encryptedData,
-          encrypted.iv,
-          encrypted.authTag
-        );
+        return await decryptToken(encrypted.encryptedData, encrypted.iv, encrypted.authTag);
       } catch (error) {
         return '';
       }
@@ -535,6 +760,7 @@ export async function markStatementPasswordInvalid(
 }
 
 export default {
+  processStatements,
   getGoogleTokenByUserId,
   upsertGoogleToken,
   getScrapedEmailsByUserId,
@@ -553,5 +779,5 @@ export default {
   markPendingStatementProcessing,
   markPendingStatementCompleted,
   markPendingStatementFailed,
-  deletePendingStatement
+  deletePendingStatement,
 };

@@ -1,4 +1,3 @@
-
 import { Schema, model, Types, Document } from 'mongoose';
 
 export interface IEncryptedField {
@@ -9,6 +8,7 @@ export interface IEncryptedField {
 
 export interface IScrapeResult extends Document {
   userId: Types.ObjectId;
+  transactionHash: String;
   // all payload fields stored as AES-256-GCM ciphertext
   category: IEncryptedField;
   mode: IEncryptedField;
@@ -22,6 +22,9 @@ export interface IScrapeResult extends Document {
   card_number: IEncryptedField;
   transaction_id: IEncryptedField;
   total_due: IEncryptedField;
+  statementId?: Types.ObjectId;
+  statementMatched?: boolean;
+  statementDescription?: IEncryptedField;
 }
 
 const encryptedFieldSchema = {
@@ -36,18 +39,79 @@ const scrapeResultSchema = new Schema<IScrapeResult>(
       type: Schema.Types.ObjectId,
       required: true,
     },
-    category: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    mode: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    type: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    matched_bank: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    logo: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    bankName: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    banks_checked: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    amount: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    date: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    card_number: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    transaction_id: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
-    total_due: { type: encryptedFieldSchema, default: () => ({ encryptedData: '', iv: '', authTag: '' }) },
+    transactionHash: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+    category: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    mode: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    type: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    matched_bank: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    logo: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    bankName: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    banks_checked: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    amount: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    date: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    card_number: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    transaction_id: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    total_due: {
+      type: encryptedFieldSchema,
+      default: () => ({ encryptedData: '', iv: '', authTag: '' }),
+    },
+    statementId: {
+      type: Schema.Types.ObjectId,
+      ref: 'creditCardStatement',
+      default: null,
+    },
+
+    statementMatched: {
+      type: Boolean,
+      default: false,
+    },
+
+    statementDescription: {
+      type: encryptedFieldSchema,
+      default: () => ({
+        encryptedData: '',
+        iv: '',
+        authTag: '',
+      }),
+    },
   },
   { timestamps: true }
 );

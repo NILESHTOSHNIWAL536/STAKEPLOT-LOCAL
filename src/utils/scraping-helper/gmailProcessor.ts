@@ -1,7 +1,9 @@
 import { checkIsFromBank } from '../check-valid-email_data';
 import EmailServiceHelper from './scraping-helper';
+import EmailServiceHelper2 from './scraping-helper2';
 
 export async function fetchAndPrepareEmails(
+  flag: boolean,
   gmail: any,
   afterDate: string | number,
   bankConfig: any[],
@@ -40,7 +42,12 @@ export async function fetchAndPrepareEmails(
             return null;
           }
 
-          const { body, attachments } = await EmailServiceHelper.extractEmailBody(
+          const { body, attachments } = flag? await EmailServiceHelper.extractEmailBody(
+            gmail,
+            msg,
+            meta.data.payload,
+            passwordList
+          ):await EmailServiceHelper2.extractEmailBody(
             gmail,
             msg,
             meta.data.payload,

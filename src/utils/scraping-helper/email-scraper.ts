@@ -13,7 +13,9 @@ export async function emailScraperHelper(
   statementPasswords: StatementPasswordInput[] = []
 ): Promise<{
   results: any[];
+  statements: any[];
   bankConfig: any[];
+  transactions: any[];
   requiresPassword?: boolean;
   passwordRequests?: any[];
   pendingStatements?: any[];
@@ -24,6 +26,15 @@ export async function emailScraperHelper(
     const config = buildEmailScraperConfig(creditCard, mode, statementPasswords);
 
     const mailsToProcess = await fetchAndPrepareEmails(
+      true,
+      gmail,
+      config.afterDate,
+      config.bankConfig,
+      config.passwordList
+    );
+
+    const mailsToProcessPassword = await fetchAndPrepareEmails(
+      false,
       gmail,
       config.afterDate,
       config.bankConfig,
@@ -33,14 +44,18 @@ export async function emailScraperHelper(
     if (!mailsToProcess.length) {
       return {
         results: [],
+         statements:[],
+         transactions:[],
         bankConfig: config.bankConfig,
       };
     }
 
-    const processed = await processFilteredEmails(mailsToProcess, config);
+    const processed = await processFilteredEmails(mailsToProcess,mailsToProcessPassword,config);
 
     return {
       results: processed.results || [],
+      statements:[],
+      transactions:[],
       bankConfig: config.bankConfig,
       requiresPassword: processed.requiresPassword,
       passwordRequests: processed.passwordRequests || [],

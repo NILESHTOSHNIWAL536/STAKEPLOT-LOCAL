@@ -106,29 +106,44 @@ export async function scrapeEmailsByBankId(
     storedPasswords
   );
 
-  const passwordRequests = [
-    ...(scraperResult.passwordRequests || []),
-    ...buildPasswordRequests(scraperResult, creditCardConfigs),
-  ];
+  // const passwordRequests = [
+  //   ...(scraperResult.passwordRequests || []),
+  //   ...buildPasswordRequests(scraperResult, creditCardConfigs),
+  // ];
 
-  const uniquePasswordRequests = dedupePasswordRequests(passwordRequests);
+  // const uniquePasswordRequests = dedupePasswordRequests(passwordRequests);
 
-  if (uniquePasswordRequests.length > 0) {
-    await storePendingStatements(
-      userId,
-      normalizedEmail,
-      scraperResult.pendingStatements || [],
-      creditCardConfigs
-    );
-    await sendPasswordRequiredEvent(userId, uniquePasswordRequests);
-  }
+  // if (uniquePasswordRequests.length > 0) {
+  //   await storePendingStatements(
+  //     userId,
+  //     normalizedEmail,
+  //     scraperResult.pendingStatements || [],
+  //     creditCardConfigs
+  //   );
+  //   await sendPasswordRequiredEvent(userId, uniquePasswordRequests);
+  // }
 
-  const saved = await EmailRepository.scrapeEmailsByBankId(scraperResult, userId);
+  // const statementTransactions = await EmailRepository.processStatements(
+  //   scraperResult.statements || [],
+  //   userId
+  // );
+
+  // const allTransactions = [...(scraperResult.transactions || []), ...statementTransactions];
+
+  // const saved = await EmailRepository.scrapeEmailsByBankId(
+  //   {
+  //     ...scraperResult,
+  //     results: allTransactions,
+  //   },
+  //   userId
+  // );
+
+  // const saved = await EmailRepository.scrapeEmailsByBankId(scraperResult, userId);
 
   return {
-    saved,
-    requiresPassword: uniquePasswordRequests.length > 0,
-    passwordRequests: uniquePasswordRequests,
+    scraperResult,
+    requiresPassword: [].length > 0,
+    passwordRequests: [],
   };
 }
 
@@ -160,12 +175,10 @@ export async function getPendingStatements(userId: string) {
   return EmailRepository.getPendingStatementExtractions(userId);
 }
 
-
 export async function processAllPendingStatements(
   userId: string,
   requestId: string
-): Promise<any[]> {
-
+){
   const pendingDocs = await EmailRepository.getPendingStatementExtractionForProcessing(userId);
 
   if (!pendingDocs.length) {
@@ -180,30 +193,19 @@ export async function processAllPendingStatements(
     const requestId = String(doc.requestId);
 
     try {
-      await EmailRepository.markPendingStatementProcessing(
-        userId,
-        requestId
-      );
+      await EmailRepository.markPendingStatementProcessing(userId, requestId);
 
       const bankId = String(doc.bankId || '');
       const email = String(doc.email || '');
 
-      const bankConfig = Array.isArray(doc.bankConfig)
-        ? doc.bankConfig
-        : [];
+      const bankConfig = Array.isArray(doc.bankConfig) ? doc.bankConfig : [];
 
-      const storedPasswords =
-        await EmailRepository.getStatementPasswords(
-          userId,
-          bankId ? [bankId] : [],
-          email || undefined
-        );
-
-      const config = buildEmailScraperConfig(
-        bankConfig,
-        'initial',
-        storedPasswords
+      const storedPasswords = await EmailRepository.getStatementPasswords(
+        userId,
+        bankId ? [bankId] : [],
+        email || undefined
       );
+      const config = buildEmailScraperConfig(bankConfig, 'initial', storedPasswords);
 
       const extracted = await extractWithPython(
         mail,
@@ -215,8 +217,7 @@ export async function processAllPendingStatements(
         await EmailRepository.markPendingStatementFailed(
           userId,
           requestId,
-          extracted.sources_processed?.password_error ||
-            'Invalid PDF password'
+          extracted.sources_processed?.password_error || 'Invalid PDF password'
         );
 
         results.push({
@@ -228,18 +229,15 @@ export async function processAllPendingStatements(
         continue;
       }
 
-      const records =await EmailRepository.scrapeEmailsByBankId(
-          {
-            results: [extracted],
-            bankConfig,
-          },
-          userId
-        );
-
-      await EmailRepository.deletePendingStatement(
-        userId,
-        requestId
+      const records = await EmailRepository.scrapeEmailsByBankId(
+        {
+          results: [extracted],
+          bankConfig,
+        },
+        userId
       );
+
+      await EmailRepository.deletePendingStatement(userId, requestId);
 
       results.push({
         requestId,
@@ -260,11 +258,10 @@ export async function processAllPendingStatements(
       });
     }
   }
-   const pendingdocs = await EmailRepository.getPendingStatementExtractionForProcessing(userId);
+  const pendingdocs = await EmailRepository.getPendingStatementExtractionForProcessing(userId);
 
-  return { results,pendingdocs};
+  return { results, pendingdocs };
 }
-
 
 // export async function processPendingStatement(
 //   userId: string,
@@ -378,9 +375,9 @@ export async function removeAccessToken(
   return { message: 'Access token removed successfully' };
 }
 
- const addBankMapping = async (email: string, bankId: string,userId:string) => {
+const addBankMapping = async (email: string, bankId: string, userId: string) => {
   // const map = await EmailBankMapping.findOne();
-    const { UserBankMap } = await getModels();
+  const { UserBankMap } = await getModels();
   let map = await UserBankMap.findOne({ userId });
 
   if (!map) {
@@ -451,7 +448,7 @@ export default {
   scrapeEmailsByBankId,
   saveStatementPassword,
   getPendingStatements,
-  processPendingStatement:processAllPendingStatements,
+  processPendingStatement: processAllPendingStatements,
   removeAccessToken,
-  addBankMapping
+  addBankMapping,
 };
