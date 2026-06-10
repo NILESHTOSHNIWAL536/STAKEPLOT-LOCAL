@@ -122,24 +122,24 @@ export async function scrapeEmailsByBankId(
     await sendPasswordRequiredEvent(userId, uniquePasswordRequests);
   }
 
-  // const statementTransactions = await EmailRepository.processStatements(
-  //   scraperResult.statements || [],
-  //   userId
-  // );
+  const statementTransactions = await EmailRepository.processStatements(
+    scraperResult.statements || [],
+    userId
+  );
 
-  // const allTransactions = [...(scraperResult.transactions || []), ...statementTransactions];
+  const allTransactions = [...(scraperResult.transactions || []), ...statementTransactions];
 
-  // const saved = await EmailRepository.scrapeEmailsByBankId(
-  //   {
-  //     ...scraperResult,
-  //     results: allTransactions,
-  //   },
-  //   userId
-  // );
+  const saved = await EmailRepository.scrapeEmailsByBankId(
+    {
+      ...scraperResult,
+      results: allTransactions,
+    },
+    userId
+  );
 
   return {
     scraperResult,
-    requiresPassword: [].length > 0,
+    requiresPassword: scraperResult.statements.length > 0,
     passwordRequests: [],
   };
 }
