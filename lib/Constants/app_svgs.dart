@@ -1,10 +1,9 @@
-
 class BottomNavigationSvgs {
   static const String homeIcon = 'assets/svgs/navigation/homeIcon.svg';
   static const String financeIcon = 'assets/svgs/navigation/financeIcon.svg';
-  static const String investmentIcon = 'assets/svgs/navigation/investmentIcon.svg';
+  static const String investmentIcon =
+      'assets/svgs/navigation/investmentIcon.svg';
 }
-
 class HomeSvgs {
   static const String autopaysIcon = 'assets/svgs/home/autopaysIcon.svg';
   static const String monthlySpendingGraph =
@@ -15,8 +14,13 @@ class HomeSvgs {
   static const String historyIcon = 'assets/svgs/home/historyIcon.svg';
   static const String cashTnxs = 'assets/svgs/home/cashTnxs.svg';
   static const String lastSevenDays = 'assets/svgs/home/lastSevenDays.svg';
-  static const String expensiveDayIcon = 'assets/svgs/home/expensiveDayIcon.svg';
-  static const String expensiveDayGraph = 'assets/svgs/home/expensiveDayGraph.svg';
-
+  static const String expensiveDayIcon =
+      'assets/svgs/home/expensiveDayIcon.svg';
+  static const String expensiveDayGraph =
+      'assets/svgs/home/expensiveDayGraph.svg';
 }
 
+
+class Finvu {
+  static const String exit = 'assets/svgs/finvu/exit.svg';
+}

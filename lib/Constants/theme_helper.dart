@@ -16,19 +16,13 @@ extension ThemeHelper on BuildContext {
   Color get themedBorder => appColors.border;
   Color get themedPrimaryText => appColors.onBackground;
   Color get themedSecondaryText => appColors.secondaryText;
-
-
-
   
 }
-
-
 
 extension ThemeColorPalette on BuildContext {
   /// Shorthand for the current theme's semantic color tokens.
   /// Falls back to light tokens if the extension is somehow not registered.
-  AppPalette get appPalette =>
-      Theme.of(this).extension<AppPalette>() ?? AppPalette.light;
+  AppPalette get appPalette => Theme.of(this).extension<AppPalette>() ?? AppPalette.light;
 
   bool get isDarkTheme => Theme.of(this).brightness == Brightness.dark;
 

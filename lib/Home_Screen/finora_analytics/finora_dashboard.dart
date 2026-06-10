@@ -173,7 +173,7 @@ class _MonthlySummaryCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _iconBox(colors, HomeSvgs.monthlySpendingIcon),
+                    iconBox(colors, HomeSvgs.monthlySpendingIcon),
                     const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,7 +247,7 @@ class _WeeklyTrendCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _iconBox(colors, HomeSvgs.lastSevenDays),
+                    iconBox(colors, HomeSvgs.lastSevenDays),
                     const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,7 +330,7 @@ class _AvgPerDayCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _iconBox(colors, HomeSvgs.historyIcon),
+                    iconBox(colors, HomeSvgs.historyIcon),
                     const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +402,7 @@ class _FrequentPaymentCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _iconBox(colors, HomeSvgs.autopaysIcon),
+                    iconBox(colors, HomeSvgs.autopaysIcon),
                     const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,7 +470,7 @@ class _MostExpensiveCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _iconBox(colors, HomeSvgs.expensiveDayIcon),
+                    iconBox(colors, HomeSvgs.expensiveDayIcon),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
@@ -519,15 +519,15 @@ class _MostExpensiveCard extends StatelessWidget {
 
   }
 }
-Widget _iconBox(dynamic colors, String asset) => Container(
-      width: 36,
-      height: 36,
+Widget iconBox(dynamic colors, String asset,{double height=36,double width=36,double widthFactor=18}) => Container(
+      width: height,
+      height: width,
       decoration: BoxDecoration(
         color: colors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
-        child: ResponsiveSvg(asset: asset, widthFactor: 18),
+        child: ResponsiveSvg(asset: asset, widthFactor: widthFactor),
       ),
     );
 

@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import '../Constants/theme_helper.dart';
 import '../controllers/fipmetrics-controller.dart';
 import '../loginservices/login.dart';
+import 'appbar_widget.dart';
 import 'integration.dart';
 
 enum _StatusFilter { all, live, slow, down }
@@ -69,7 +70,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   final TextEditingController _search = TextEditingController();
   final Rx<_StatusFilter> _activeFilter = _StatusFilter.all.obs;
 
-  static const _kPopularIds = ['SBI', 'HDFC', 'ICICI', 'AXIS'];
+  static const _kPopularIds = ['sbi-fip', 'HDFCLtd-FIP', 'BARBFIP', 'AXIS001'];
 
   FipMetricsController? get _metrics =>
       Get.isRegistered<FipMetricsController>() ? FipMetricsController.to : null;
@@ -86,8 +87,8 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   }
 
   List<FinvuFIPInfo> get _popularBanks => fipDis
-      .where(
-          (b) => _kPopularIds.any((id) => b.fipId.toUpperCase().contains(id)))
+      .where((b) => _kPopularIds
+          .any((id) => b.fipId.toLowerCase().contains(id.toLowerCase())))
       .take(4)
       .toList();
 
@@ -155,23 +156,13 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.appColors.background,
+      appBar: const CustomAppBar(
+        title: 'Select Account',
+      ),
       bottomNavigationBar: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Obx(() {
-              addBank.value;
-              final n = isSeletedBankAccout.length;
-              return n > 0
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 6, bottom: 2),
-                      child: Text('$n bank${n > 1 ? 's' : ''} selected',
-                          style: FontManager().getTextStyle(context,
-                              fontSize: 12,
-                              color: context.appColors.secondaryText)),
-                    )
-                  : const SizedBox(height: 6);
-            }),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
               child: GestureDetector(
@@ -201,29 +192,28 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top bar
-            _TopBar(onBack: () {
-              logoutAndDisconnect();
-              Navigator.pop(context);
-            }),
+            // _TopBar(onBack: () {
+            //   logoutAndDisconnect();
+            //   Navigator.pop(context);
+            // }),
 
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 14, 20, 2),
-              child: Text('Select the banks you use most frequently',
+              child: Text('Select the bank you use most frequently',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: 13,
                       color: context.appColors.onBackground)),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 2, 20, 12),
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
               child: Row(children: [
                 Icon(Icons.info_outline_rounded,
                     size: 13, color: context.appColors.secondaryText),
                 SizedBox(width: 4),
                 Text('Unable to support joint account holders',
                     style: FontManager().getTextStyle(context,
-                        fontSize: 12,
-                        color: context.appColors.secondaryText)),
+                        fontSize: 12, color: context.appColors.secondaryText)),
               ]),
             ),
 
@@ -234,7 +224,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   controller: _search, onChanged: (_) => setState(() {})),
             ),
             const SizedBox(height: 14),
-
             // List
             Expanded(
               child: Obx(() {
@@ -256,7 +245,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                 fontSize: 14,
                                 lWeight: FontWeight.w600,
                                 color: context.appColors.primary)),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         Row(
                           children: List.generate(
                               _popularBanks.length.clamp(0, 4), (i) {
@@ -269,7 +258,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                   duration: const Duration(milliseconds: 150),
                                   margin: EdgeInsets.only(right: i < 3 ? 8 : 0),
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
+                                      const EdgeInsets.symmetric(vertical: 6),
                                   decoration: BoxDecoration(
                                     color: sel
                                         ? context.appColors.primary
@@ -283,15 +272,15 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                         width: sel ? 1.5 : 0.8),
                                   ),
                                   child: Column(children: [
-                                    _BankLogo(bankData: b, size: 34),
-                                    const SizedBox(height: 5),
+                                    _BankLogo(bankData: b, size: 30),
+                                    const SizedBox(height: 2.5),
                                     Text(
                                       _shortName(b),
                                       textAlign: TextAlign.center,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: FontManager().getTextStyle(context,
-                                          fontSize: 11,
+                                          fontSize: 8,
                                           lWeight: FontWeight.w500,
                                           color: sel
                                               ? context.appColors.primary
@@ -303,7 +292,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                             );
                           }),
                         ),
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 5),
                       ],
 
                       // Filter pills
@@ -322,7 +311,8 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                                 child: Text('No banks found',
                                     style: FontManager().getTextStyle(context,
                                         fontSize: 14,
-                                        color: context.appColors.secondaryText))))
+                                        color:
+                                            context.appColors.secondaryText))))
                       else
                         Container(
                           decoration: BoxDecoration(
@@ -375,10 +365,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     return n.length > 8 ? '${n.substring(0, 7)}…' : n;
   }
 }
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Bank row — health badge + expandable warning messages
-// ══════════════════════════════════════════════════════════════════════════════
 
 class _BankRow extends StatefulWidget {
   final FinvuFIPInfo bankData;
@@ -496,7 +482,7 @@ class _BankRowState extends State<_BankRow> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                _CheckBox(
+                _CircleCheck(
                     value: widget.isSelected, onChanged: widget.onCheckChanged),
               ],
             ),
@@ -513,9 +499,7 @@ class _BankRowState extends State<_BankRow> {
             if (_expanded && widget.messages.isNotEmpty) ...[
               const SizedBox(height: 8),
               Divider(
-                  height: 1,
-                  thickness: 0.5,
-                  color: context.appColors.divider),
+                  height: 1, thickness: 0.5, color: context.appColors.divider),
               const SizedBox(height: 8),
               ...widget.messages.map((m) => Padding(
                     padding: const EdgeInsets.only(bottom: 6),
@@ -790,42 +774,114 @@ class _TopBar extends StatelessWidget {
   }
 }
 
+// class _SearchField extends StatelessWidget {
+//   final TextEditingController controller;
+//   final ValueChanged<String> onChanged;
+//   const _SearchField({required this.controller, required this.onChanged});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 46,
+//       decoration: BoxDecoration(
+//         color: context.appColors.inputBackground,
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(color: context.appColors.border, width: 0.8),
+//       ),
+//       child: Row(
+//         children: [
+//           const SizedBox(width: 14),
+//           Icon(Icons.search_rounded,
+//               size: 20, color: context.appColors.secondaryText),
+//           const SizedBox(width: 8),
+//           Expanded(
+//             child: TextField(
+//               controller: controller,
+//               onChanged: onChanged,
+//               style: TextStyle(
+//                 fontSize: 14,
+//                 color: context.appColors.onSurface,
+//               ),
+//               decoration: InputDecoration(
+//                 hintText: 'Search banks...',
+//                 hintStyle: TextStyle(
+//                   fontSize: 14,
+//                   color: context.appColors.hintText,
+//                 ),
+//                 border: InputBorder.none,
+//                 enabledBorder: InputBorder.none,
+//                 focusedBorder: InputBorder.none,
+//                 disabledBorder: InputBorder.none,
+//                 errorBorder: InputBorder.none,
+//                 focusedErrorBorder: InputBorder.none,
+//                 isDense: true,
+//                 contentPadding: EdgeInsets.zero,
+//               ),
+//             ),
+//           ),
+//           const SizedBox(width: 14),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 class _SearchField extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  const _SearchField({required this.controller, required this.onChanged});
+
+  const _SearchField({
+    required this.controller,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 46,
+      height: 40,
       decoration: BoxDecoration(
         color: context.appColors.inputBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.appColors.border, width: 0.8),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: context.appColors.border,
+          width: 0.8,
+        ),
       ),
       child: Row(
         children: [
-          const SizedBox(width: 14),
-          Icon(Icons.search_rounded,
-              size: 20, color: context.appColors.secondaryText),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
+          Icon(
+            Icons.search_rounded,
+            size: 18,
+            color: context.appColors.secondaryText,
+          ),
+          const SizedBox(width: 6),
           Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              style: TextStyle(fontSize: 14, color: context.appColors.onSurface),
+              style: TextStyle(
+                fontSize: 13,
+                color: context.appColors.onSurface,
+              ),
               decoration: InputDecoration(
                 hintText: 'Search banks...',
-                hintStyle:
-                    TextStyle(fontSize: 14, color: context.appColors.hintText),
+                hintStyle: TextStyle(
+                  fontSize: 13,
+                  color: context.appColors.hintText,
+                ),
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
               ),
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 10),
         ],
       ),
     );
@@ -849,11 +905,51 @@ class _CheckBox extends StatelessWidget {
           color: value ? context.appColors.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-              color: value ? context.appColors.primary : context.appColors.border,
+              color:
+                  value ? context.appColors.primary : context.appColors.border,
               width: 1.5),
         ),
         child: value
             ? const Icon(Icons.check_rounded, size: 15, color: Colors.white)
+            : null,
+      ),
+    );
+  }
+}
+
+class _CircleCheck extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool?> onChanged;
+
+  const _CircleCheck({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appPalette;
+
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        width: 26,
+        height: 26,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: value ? colors.cardBackground : Colors.transparent,
+          border: Border.all(
+            color: value ? colors.cardBackground : colors.bottomText,
+            width: 1.5,
+          ),
+        ),
+        child: value
+            ? Icon(
+                Icons.check_rounded,
+                size: 15,
+                color: colors.whiteColor,
+              )
             : null,
       ),
     );

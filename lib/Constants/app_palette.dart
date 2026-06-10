@@ -1,17 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class AppPalette{
-
-//   static const Color backgroundColor = Color(0xFFF2F9FC);
-//   static const Color whiteColor = Color(0xFFFFFFFF);
-//   static const Color secondaryText = Color(0xFFEDF6F7);
-//   static const Color bottomtext = Color(0xFFB8D7D6);
-//   static const Color cardBackground= Color(0xFFA9CDD2);
-//   static const Color blackColor= Color(0xFF1B2135);
-
-// }
-
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
