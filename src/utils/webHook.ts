@@ -184,9 +184,6 @@ async function webHook(req: Request, res: Response): Promise<Response> {
     // ✅ 6. Fetch final data
     // console.locs('Final data fetched and stored in DB');
     const finalData = await FinvuController.fetchFinalData(token, finvuData.custId, finvuData.consentId, finvuData.sessionId);
-    
-   console.log('Final data fetched and stored in DB');
-   console.log(finalData);
 
     if (finalData !== 'Account data not found.') {
       await Finvu.findOneAndUpdate({ sessionId: finvuData.sessionId }, { $set: { data: finalData } }, { new: true });

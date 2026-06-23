@@ -16,7 +16,7 @@ const redisClient = new Proxy({} as RedisClientType, {
             port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
             reconnectStrategy: (retries: number) => Math.min(retries * 50, 2000),
           },
-          password: process.env.REDIS_PASSWORD || undefined,
+          // password: process.env.REDIS_PASSWORD || undefined,
         });
         _instance.on("error", (err: Error) => logger.error("Redis Error:", err));
         _instance.on("connect", () => logger.info("Redis Connected!"));

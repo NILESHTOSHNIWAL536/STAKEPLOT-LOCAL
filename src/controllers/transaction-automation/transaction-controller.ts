@@ -92,7 +92,6 @@ export const createRecurringPaymentFromTransactionController = async (req: Reque
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
-    console.log(error);
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
@@ -232,6 +231,7 @@ export const dummyCategorizationPreview = async (req: Request, res: Response): P
       ? bodyTransactions
       : await Transaction.find(
           {
+            userId:"69e339e4265f52c80ec5d69b"
           },
           {
             narration: 1,
@@ -327,7 +327,6 @@ export const getCategoryWiseSpendings = async (req: Request, res: Response): Pro
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
-    console.log('error:', error);
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
