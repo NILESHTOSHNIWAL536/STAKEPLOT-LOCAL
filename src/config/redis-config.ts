@@ -29,17 +29,19 @@ const redisClient = new Proxy({} as RedisClientType, {
   get(_target, prop: string) {
     if (prop === 'connect') {
       return async () => {
+        if (_instance?.isOpen) return;
+
         _instance = createClient({
           socket: {
-            host: ServerConfig.REDIS_HOST || '127.0.0.1',
-            port: Number(ServerConfig.REDIS_PORT) || 6379,
+            host: '127.0.0.1',
+            port:  6379,
             reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
           },
-          password: ServerConfig.REDIS_PASSWORD || undefined,
+          // password: ServerConfig.REDIS_PASSWORD || undefined,
         });
-        _instance.on('error', () => {});
-        _instance.on('connect', () => {});
-        _instance.on('reconnecting', () => {});
+        _instance.on('error', (err) => console.error(`Redis Error: ${err.message}`));
+        _instance.on('connect', () => console.log('Redis Connected!'));
+        _instance.on('reconnecting', () => console.log('Redis Reconnecting...'));
         await _instance.connect();
       };
     }
