@@ -358,6 +358,10 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     );
   }
 
+
+
+
+
   String _shortName(FinvuFIPInfo b) {
     final n = b.productName?.toString() ?? b.fipId;
     final w = n.trim().split(RegExp(r'\s+'));

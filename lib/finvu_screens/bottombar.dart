@@ -8,6 +8,11 @@ import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 
+
+
+
+
+
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
 
