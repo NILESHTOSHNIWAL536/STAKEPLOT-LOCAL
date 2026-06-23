@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Stakeplot Mobile Project Documentation - Finvu and Bank Transactions</title>
+  <style>
+    @page { size: A4; margin: 16mm 14mm; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #17202a; line-height: 1.45; font-size: 12px; }
+    h1 { font-size: 26px; margin: 0 0 10px; color: #0b3d4f; }
+    h2 { font-size: 18px; margin-top: 24px; padding-bottom: 4px; border-bottom: 1px solid #d8dee4; color: #17475c; break-after: avoid; }
+    h3 { font-size: 14px; margin-top: 16px; color: #273746; break-after: avoid; }
+    p { margin: 7px 0; }
+    code { font-family: Consolas, "Courier New", monospace; background: #f4f6f8; padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+    pre { background: #f4f6f8; border: 1px solid #d8dee4; padding: 10px; border-radius: 6px; overflow-wrap: anywhere; white-space: pre-wrap; font-size: 11px; }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; page-break-inside: auto; }
+    tr { page-break-inside: avoid; page-break-after: auto; }
+    th, td { border: 1px solid #d8dee4; padding: 6px 7px; vertical-align: top; overflow-wrap: anywhere; }
+    th { background: #eef6f8; color: #143642; text-align: left; font-weight: 700; }
+    .subtitle { color: #586069; margin-bottom: 18px; }
+    .note { border-left: 4px solid #2d7d8f; padding: 8px 10px; background: #f2f9fb; margin: 10px 0; }
+    ol, ul { margin-top: 6px; }
+    li { margin: 3px 0; }
+  </style>
+</head>
+<body>
+  <h1>Stakeplot Mobile Project Documentation</h1>
+  <p class="subtitle">Generated: 2026-06-11<br>Scope: Finvu account-linking flow and bank transaction APIs, with a project-wide map.</p>
+
+  <h2>1. Project Map</h2>
+  <table><thead><tr><th>Area</th><th>Path</th><th>Main responsibility</th></tr></thead><tbody>
+  <tr><td>Flutter mobile frontend</td><td><code>mobile-frontend/</code></td><td>Screens, app navigation, API route constants, Finvu SDK integration, bank dashboards, transaction history, collections, community, rewards, auth.</td></tr>
+  <tr><td>Main backend</td><td><code>mobile-backend/mobile-backend/</code></td><td>Core app APIs under <code>/api/v1</code>: auth, user, community, chat, budget, bill, notifications, bank proxy, email proxy.</td></tr>
+  <tr><td>Bank service</td><td><code>mobile-backend/bank-service/</code></td><td>Bank/Finvu APIs, transaction automation, bank account storage, categorization, insights, collections, reserve, referral, webhooks.</td></tr>
+  <tr><td>Email service</td><td><code>mobile-backend/email-service/</code></td><td>Gmail/email token handling, email scraping, statement passwords, pending statement processing, credit card statement extraction.</td></tr>
+  </tbody></table>
+
+  <h2>2. API Base URLs From Flutter</h2>
+  <p>Defined in <code>mobile-frontend/lib/routes/index_route.dart</code>.</p>
+  <table><thead><tr><th>Constant</th><th>Value pattern</th><th>Used for</th></tr></thead><tbody>
+  <tr><td><code>API.mainBackendUrl</code></td><td><code>${Credentials.LIVE_API_TEST or LIVE_API}api/v1</code></td><td>Main backend modules like auth, user, budget, chat, post, split.</td></tr>
+  <tr><td><code>API.EmailUrl</code></td><td><code>${base}api/v1/email</code></td><td>Email service proxy endpoints.</td></tr>
+  <tr><td><code>API.BankApiUrl</code></td><td><code>${base}api/v1/bank</code></td><td>Bank service proxy endpoints.</td></tr>
+  <tr><td><code>BackendApiEndPoints.finvu</code></td><td><code>${API.BankApiUrl}/finvu</code></td><td>Finvu consent and fetch APIs.</td></tr>
+  <tr><td><code>BackendApiEndPoints.transactionauto</code></td><td><code>${API.BankApiUrl}/transactionauto</code></td><td>Automated bank transaction APIs.</td></tr>
+  <tr><td><code>BackendApiEndPoints.transaction</code></td><td><code>${API.BankApiUrl}/transaction</code></td><td>Older/manual transaction APIs.</td></tr>
+  </tbody></table>
+  <p class="note">Backend note: the bank service itself mounts routes at <code>/api</code>, while the public mobile app calls them through the main backend proxy at <code>/api/v1/bank/...</code>.</p>
+
+  <h2>3. Mobile Page Routes</h2>
+  <p>Defined in <code>mobile-frontend/lib/routes/routes.dart</code>.</p>
+  <table><thead><tr><th>App route</th><th>Screen class</th><th>File</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td><code>/discover</code></td><td><code>DiscoverAccount</code></td><td><code>finvu_screens/discoverAccount.dart</code></td><td>Shows Finvu-supported banks/FIPs and starts account discovery/linking.</td></tr>
+  <tr><td><code>/ShareAccountLogin</code></td><td><code>ShareAccountLogin</code></td><td><code>finvu_screens/shareAccountLogin.dart</code></td><td>Entry page for sharing account data with Finvu.</td></tr>
+  <tr><td><code>/FetchTransaction</code></td><td><code>FetchTransaction</code></td><td><code>finvu_screens/FetchTransaction.dart</code></td><td>Screen shown while fetching linked account transactions.</td></tr>
+  <tr><td><code>/OnboardingScreen</code></td><td><code>OnboardingScreen</code></td><td><code>onboarding_screens/onboarding_screen.dart</code></td><td>Onboarding destination after linking/fetch flow for new users.</td></tr>
+  <tr><td><code>/FinanceDashboard</code></td><td><code>FinanceDashboard</code></td><td><code>finance_screen/finanace_dashboard/index_finances.dart</code></td><td>Main finance dashboard after bank data exists.</td></tr>
+  <tr><td><code>/home</code></td><td><code>HomePage</code></td><td><code>Home_Screen/home_screen_state/home_page.dart</code></td><td>Home page, includes bank-linked state and finance widgets.</td></tr>
+  </tbody></table>
+
+  <h2>4. Finvu Frontend API Routes</h2>
+  <p>Defined in <code>mobile-frontend/lib/routes/route_finvu.dart</code>.</p>
+  <table><thead><tr><th>Flutter route field</th><th>Public endpoint</th><th>Method</th><th>Auth</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td><code>FinvuRoutes.login</code></td><td><code>/api/v1/bank/finvu/login</code></td><td>POST</td><td>Yes</td><td>Create a Finvu consent request and return <code>consentHandleId</code>.</td></tr>
+  <tr><td><code>FinvuRoutes.fetchData</code></td><td><code>/api/v1/bank/finvu/fetchData</code></td><td>POST</td><td>Yes</td><td>Poll consent, create FI request, queue final transaction fetch.</td></tr>
+  <tr><td><code>FinvuRoutes.fetchWeekly</code></td><td><code>/api/v1/bank/finvu/fetchWeekly</code></td><td>POST</td><td>Yes</td><td>Re-fetch/update bank data for an existing consent/account.</td></tr>
+  <tr><td><code>FinvuRoutes.getFipsMetric</code></td><td><code>/api/v1/bank/finvu/fipsmetric</code></td><td>GET</td><td>No backend middleware</td><td>Fetch and store latest FIP metrics.</td></tr>
+  <tr><td><code>FinvuRoutes.getStatus(id)</code></td><td><code>/api/v1/bank/finvu/status/:id</code></td><td>GET</td><td>No backend middleware</td><td>Check consent status using stored handle record id.</td></tr>
+  <tr><td><code>FinvuRoutes.getFipDetails</code></td><td><code>/api/v1/bank/finvu/fip-details</code></td><td>POST</td><td>Yes</td><td>Get latest metrics for selected FIP ids.</td></tr>
+  <tr><td><code>FinvuRoutes.addFinvuData</code></td><td><code>/api/v1/bank/finvu/add</code></td><td>N/A</td><td>N/A</td><td>Frontend constant exists, but no matching backend route was found.</td></tr>
+  </tbody></table>
+
+  <h2>5. Finvu Backend Routes</h2>
+  <p>Defined in <code>mobile-backend/bank-service/src/routes/finvu-routes.ts</code>.</p>
+  <table><thead><tr><th>Method</th><th>Public mobile route</th><th>Controller</th><th>Request body / params</th><th>Response notes</th></tr></thead><tbody>
+  <tr><td>POST</td><td><code>/api/v1/bank/finvu/login</code></td><td><code>loginAndGetHandleId</code></td><td><code>custId</code>, <code>number</code></td><td>Returns <code>consentHandleId</code> and <code>metric</code>. Creates Finvu consent via <code>/ConsentRequestPlus</code>.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/finvu/fetchData</code></td><td><code>fetchTransactions</code></td><td><code>handleId</code>, <code>custId</code></td><td>Polls consent, creates FI request, writes Redis/Mongo fetch state, returns <code>sessionId</code>.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/finvu/fetchWeekly</code></td><td><code>fetchTransactionsWeekly</code></td><td><code>custId</code>, <code>userId</code>, <code>consentId</code>, <code>handleId</code>, <code>FROM</code>, optional metadata</td><td>Starts update FI request for existing consent and returns fetch progress data.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/finvu/fip-details</code></td><td><code>getFipsDetails</code></td><td><code>{ "fipIds": ["..."] }</code></td><td>Returns latest metric rows for selected FIPs.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/finvu/fipsmetric</code></td><td><code>getFipsLatestMetricsAll</code></td><td>None</td><td>Calls Finvu <code>/fips/latest-metrics-all</code>, drops and reinserts metric collection.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/finvu/status/:id</code></td><td><code>getStatus</code></td><td><code>id</code> = <code>ConsentHandleId</code> Mongo id</td><td>Loads stored handle and checks Finvu consent status.</td></tr>
+  </tbody></table>
+
+  <h2>6. Finvu Controller Flow</h2>
+  <h3>Initial consent flow</h3>
+  <ol>
+    <li>Flutter calls <code>getConsentHandleId(context)</code> in <code>finvu_screens/integration.dart</code>.</li>
+    <li>The function posts to <code>FinvuRoutes.login</code> with <code>custId</code> and <code>number</code>.</li>
+    <li>Backend <code>loginAndGetHandleId</code> generates a Finvu token, calls <code>ConsentRequestPlus</code>, stores the handle, fetches FIP metrics, and returns <code>consentHandleId</code>.</li>
+  </ol>
+  <pre>{
+  "custId": "&lt;mobile&gt;@finvu",
+  "number": "&lt;mobile&gt;"
+}</pre>
+
+  <h3>Finvu SDK login and account linking</h3>
+  <ol>
+    <li>Flutter initializes <code>finvuManager</code> in <code>initFinvuManager</code>.</li>
+    <li>Flutter calls <code>finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle</code>.</li>
+    <li>OTP reference is stored in <code>otpReference</code>.</li>
+    <li><code>verify(otp, context)</code> calls <code>finvuManager.verifyLoginOtp</code>.</li>
+    <li>After OTP success, Flutter fetches linked accounts and navigates to <code>DiscoverAccount</code>.</li>
+  </ol>
+
+  <h3>Transaction fetch flow</h3>
+  <ol>
+    <li>Flutter calls <code>FetchTransactionFromFinvuApi(context)</code>.</li>
+    <li>It marks the user fetch state using <code>UserRoutes.updateFetchStatus</code>.</li>
+    <li>It posts to <code>FinvuRoutes.fetchData</code>.</li>
+    <li>Backend polls consent status, gets consent details, initiates FI request, stores <code>finvu:&lt;sessionId&gt;</code> in Redis, stores <code>Finvu</code> in Mongo, queues the fetch in non-production, and returns <code>sessionId</code>.</li>
+  </ol>
+  <pre>{
+  "token": "",
+  "handleId": "&lt;consentHandleId&gt;",
+  "custId": "&lt;mobile&gt;@finvu"
+}</pre>
+
+  <h3>Final data fetch / webhook path</h3>
+  <table><thead><tr><th>Trigger</th><th>Location</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td>Finvu webhook</td><td><code>POST /api/FI/Notification</code> to <code>webHook</code></td><td>Production data-ready notification path.</td></tr>
+  <tr><td>Bull queue fallback</td><td><code>services/bull-queue-service/finvu-fetch-queue.ts</code></td><td>Non-production delayed final fetch path.</td></tr>
+  <tr><td>Manual queue trigger</td><td><code>/api/finvu-queue/trigger</code></td><td>Staging test route.</td></tr>
+  </tbody></table>
+
+  <h2>7. Bank Transaction Frontend Routes</h2>
+  <p>Defined in <code>mobile-frontend/lib/routes/route_transactions.dart</code>. Base: <code>/api/v1/bank/transactionauto</code>.</p>
+  <table><thead><tr><th>Flutter route field</th><th>Endpoint</th><th>Backend match</th></tr></thead><tbody>
+  <tr><td><code>getAutoPays</code></td><td><code>GET /autopays</code></td><td>Yes</td></tr>
+  <tr><td><code>createRecurringPaymentFromTransaction</code></td><td><code>POST /recurring-payments/from-transaction/:transactionId</code></td><td>Yes</td></tr>
+  <tr><td><code>categorizeGroupedTransaction</code></td><td><code>POST /grouped/:groupId/categorize</code></td><td>Yes</td></tr>
+  <tr><td><code>verifyPendingTransaction</code></td><td><code>POST /verify-pending-transaction/:transactionId/:isCorrect</code></td><td>Yes</td></tr>
+  <tr><td><code>updateTransaction</code></td><td><code>PATCH /updateTransaction/:transactionId</code></td><td>Yes</td></tr>
+  <tr><td><code>getSearchedTransactions</code></td><td><code>GET /getTransactions/:page</code></td><td>Yes</td></tr>
+  <tr><td><code>getTransactionsOfUser</code></td><td><code>GET /getTransactionsOfUser</code></td><td>Yes</td></tr>
+  <tr><td><code>categorizeTransactions</code></td><td><code>GET /categorize</code></td><td>Yes</td></tr>
+  <tr><td><code>getGroupedTransactions</code></td><td><code>GET /get-grouped-transactions</code></td><td>Yes</td></tr>
+  <tr><td><code>getPendingForReviewTransactions</code></td><td><code>GET /pending-for-review-transactions</code></td><td>Yes</td></tr>
+  <tr><td><code>getDayWiseTransactionsSummary</code></td><td><code>GET /get-day-wise-transactions</code></td><td>Yes</td></tr>
+  <tr><td><code>getTransactionsByDate</code></td><td><code>GET /get-day-wise-transactions/:date</code></td><td>Yes</td></tr>
+  <tr><td><code>getRecurringPayments</code></td><td><code>GET /get-recurring-payments/:isActive</code></td><td>Yes</td></tr>
+  <tr><td><code>updateRecurringPayment</code></td><td><code>PATCH /recurring-payments/:id</code></td><td>Yes</td></tr>
+  <tr><td><code>deleteRecurringPayment</code></td><td><code>DELETE /recurring-payments/:id</code></td><td>Yes</td></tr>
+  <tr><td><code>getLoanCalculation</code></td><td><code>POST /get-loan-calculation</code></td><td>Yes</td></tr>
+  <tr><td><code>getAllCustomTransactions</code></td><td><code>GET /getAllCustomTransactions/:accountId/:type/:value</code></td><td>Yes</td></tr>
+  <tr><td><code>getWholeTransactionsGraph</code></td><td><code>GET /getWholeTransactionsGraph/:type/:value</code></td><td>Yes</td></tr>
+  <tr><td><code>getBanksLinkedAndAccounts</code></td><td><code>GET /get-banks-linked</code></td><td>Yes</td></tr>
+  <tr><td><code>getQuickCheck</code></td><td><code>GET /get-banksdebitcredit</code></td><td>Yes</td></tr>
+  <tr><td><code>getMonthlyTransactionsHistory</code></td><td><code>GET /get-monthly-transactions-history/:accountId/:type/:page</code></td><td>Yes</td></tr>
+  <tr><td><code>getPreviousTransactions</code></td><td><code>GET /get-previous-transactions/:date/:accountId</code></td><td>Yes</td></tr>
+  <tr><td><code>getTopThreeTransactionsOfWeek</code></td><td><code>GET /top-three-transactions-of-week</code></td><td>Yes</td></tr>
+  <tr><td><code>getIncomeAndCategorySpent</code></td><td><code>GET /get-income-average-monthly-category-expenses</code></td><td>Yes</td></tr>
+  <tr><td><code>deleteBankAccount</code></td><td><code>DELETE /:bankId/:accountId</code></td><td>Yes</td></tr>
+  <tr><td><code>deleteTransactions</code></td><td><code>POST /delete</code></td><td>Yes</td></tr>
+  </tbody></table>
+  <p class="note">Known mismatches: <code>get-hide-transactions</code>, <code>getTransactionsForAccount</code>, month/week routes, heads-up/money-map routes, and <code>FinvuRoutes.addFinvuData</code> are present in frontend constants but not in the referenced backend route files.</p>
+
+  <h2>8. Bank Transaction Backend Routes</h2>
+  <p>Defined in <code>mobile-backend/bank-service/src/routes/transactionsAuto/transactions.ts</code>. All routes use auth unless marked as unauthenticated.</p>
+  <table><thead><tr><th>Method</th><th>Public mobile endpoint</th><th>Controller</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/autopays</code></td><td><code>getAutoPays</code></td><td>Fetch detected auto-pay/recurring debit groups.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transactionauto/recurring-payments/from-transaction/:transactionId</code></td><td><code>createRecurringPaymentFromTransactionController</code></td><td>Create recurring payment record from a transaction.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transactionauto/grouped/:groupId/categorize</code></td><td><code>categorizeGroupedTransaction</code></td><td>Categorize a grouped set of transactions.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transactionauto/verify-pending-transaction/:transactionId/:isCorrect</code></td><td><code>verifyPendingTransaction</code></td><td>Mark auto/pending transaction prediction as correct or incorrect.</td></tr>
+  <tr><td>PATCH</td><td><code>/api/v1/bank/transactionauto/updateTransaction/:transactionId</code></td><td><code>updateTransaction</code></td><td>Update category, subcategory, hidden/excluded fields, etc.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/getTransactions/:page</code></td><td><code>getSearchedTransactions</code></td><td>Fetch paginated searched/filtered transactions.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/getTransactionsOfUser</code></td><td><code>getAllTransactionsOfUser</code></td><td>Fetch all transactions for current user.</td></tr>
+  <tr><td>GET/POST</td><td><code>/api/v1/bank/transactionauto/dummy-categorize-preview</code></td><td><code>dummyCategorizationPreview</code></td><td>Unauthenticated categorization preview.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/categorize</code></td><td><code>categorizeTransactions</code></td><td>Run or fetch categorization logic for transactions.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transactionauto/create</code></td><td><code>createTransaction</code></td><td>Create a transaction manually/custom.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/top-five-categories</code></td><td><code>getTopFiveCategories</code></td><td>Top spend categories.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/category-wise-spendings</code></td><td><code>getCategoryWiseSpendings</code></td><td>Category-wise spending summary.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/budget-transactions</code></td><td><code>getBudgetTransactions</code></td><td>Transactions related to budgets.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-budget-spents</code></td><td><code>getBudgetSpents</code></td><td>Budget spending totals.</td></tr>
+  <tr><td>PUT</td><td><code>/api/v1/bank/transactionauto/:transactionId</code></td><td><code>updateTransaction</code></td><td>Alternate transaction update route.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/getUserMonthlySpending</code></td><td><code>getUserMonthlySpending</code></td><td>Monthly spending summary.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-grouped-transactions</code></td><td><code>getGroupedTransactions</code></td><td>Group similar transactions.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/pending-for-review-transactions</code></td><td><code>getPendingForReviewTransactions</code></td><td>Transactions awaiting user review.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-day-wise-transactions</code></td><td><code>getDayWiseTransactionsSummary</code></td><td>Day-wise summary for calendar/dashboard.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-day-wise-transactions/:date</code></td><td><code>getTransactionsByDate</code></td><td>Transactions for a selected date.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-recurring-payments/:isActive</code></td><td><code>getRecurringPayments</code></td><td>Active/inactive recurring payment list.</td></tr>
+  <tr><td>PATCH</td><td><code>/api/v1/bank/transactionauto/recurring-payments/:id</code></td><td><code>updateRecurringPayment</code></td><td>Update recurring payment.</td></tr>
+  <tr><td>DELETE</td><td><code>/api/v1/bank/transactionauto/recurring-payments/:id</code></td><td><code>deleteRecurringPayment</code></td><td>Delete recurring payment.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transactionauto/get-loan-calculation</code></td><td><code>getLoanCalculation</code></td><td>Loan calculation based on income/spend.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/getAllCustomTransactions/:accountId/:type/:value</code></td><td><code>getAllCustomTransactions</code></td><td>Account-specific graph/custom-date transactions.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/getWholeTransactionsGraph/:type/:value</code></td><td><code>getWholeTransactionsGraph</code></td><td>Overall graph data.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/user-details</code></td><td><code>getUser</code></td><td>Current user detail from bank context.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-banks-linked</code></td><td><code>getBanksLinkedAndAccounts</code></td><td>Linked banks and account details.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-banksdebitcredit</code></td><td><code>getBankBalanceAndDebitSummary</code></td><td>Bank balance/debit/credit summary.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-monthly-transactions-history/:accountId/:type/:page</code></td><td><code>getMonthlyTransactionsHistory</code></td><td>Paginated monthly/yearly/custom transaction history.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-previous-transactions/:date/:accountId</code></td><td><code>getPreviousTransactions</code></td><td>Previous transactions from selected date/account.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/top-three-transactions-of-week</code></td><td><code>getTopThreeTransactionsOfWeek</code></td><td>Top three weekly transactions.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transactionauto/get-income-average-monthly-category-expenses</code></td><td><code>getIncomeAndCategorySpent</code></td><td>Income and average monthly category expenses.</td></tr>
+  <tr><td>DELETE</td><td><code>/api/v1/bank/transactionauto/:bankId/:accountId</code></td><td><code>deleteBankAccount</code></td><td>Delete one bank account and related data.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transactionauto/delete</code></td><td><code>deleteTransactions</code></td><td>Bulk delete transactions.</td></tr>
+  </tbody></table>
+
+  <h2>9. Other Bank Routes Used By Transaction Code</h2>
+  <h3>Manual/legacy transaction routes</h3>
+  <table><thead><tr><th>Method</th><th>Endpoint</th><th>Controller</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td>POST</td><td><code>/api/v1/bank/transaction/add</code></td><td><code>enterTransaction</code></td><td>Add manual transaction.</td></tr>
+  <tr><td>POST</td><td><code>/api/v1/bank/transaction/updateGroupTransactions/:id</code></td><td><code>updateGroupTransaction</code></td><td>Update group transaction amount.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/transaction/all</code></td><td><code>getAllTransactions</code></td><td>Fetch old transaction list.</td></tr>
+  <tr><td>DELETE</td><td><code>/api/v1/bank/transaction/:id</code></td><td><code>deleteSpecificTransaction</code></td><td>Delete a specific old transaction.</td></tr>
+  </tbody></table>
+  <h3>Custom category routes</h3>
+  <table><thead><tr><th>Method</th><th>Endpoint</th><th>Controller</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td>POST</td><td><code>/api/v1/bank/custom/custom-category</code></td><td><code>addCustomCategory</code></td><td>Add user custom category.</td></tr>
+  <tr><td>GET</td><td><code>/api/v1/bank/custom/custom-category</code></td><td><code>getCustomCategories</code></td><td>Fetch user custom categories.</td></tr>
+  </tbody></table>
+
+  <h2>10. Screen / Repository To API Mapping</h2>
+  <table><thead><tr><th>Frontend file</th><th>Functions/classes</th><th>API routes used</th></tr></thead><tbody>
+  <tr><td><code>finvu_screens/integration.dart</code></td><td><code>getConsentHandleId</code>, <code>FetchTransactionFromFinvuApi</code>, <code>login</code>, <code>verify</code></td><td><code>FinvuRoutes.login</code>, <code>FinvuRoutes.fetchData</code>, <code>UserRoutes.updateFetchStatus</code>, Finvu SDK login/OTP APIs.</td></tr>
+  <tr><td><code>repository/bankinfo.dart</code></td><td><code>getBankAccounts</code></td><td><code>BankTransactionRoutes.getBanksLinkedAndAccounts</code>.</td></tr>
+  <tr><td><code>repository/bankinfo.dart</code></td><td><code>getWeeklyfetchData</code></td><td><code>FinvuRoutes.fetchWeekly</code>, <code>UserRoutes.updateFetchStatus</code>.</td></tr>
+  <tr><td><code>repository/bankinfo.dart</code></td><td><code>getFipAccountInfo</code></td><td><code>FinvuRoutes.getFipDetails</code>.</td></tr>
+  <tr><td><code>repository/transactions_repository.dart</code></td><td>transaction history and filters</td><td><code>getSearchedTransactions</code>, <code>getMonthlyTransactionsHistory</code>, <code>getDayWiseTransactionsSummary</code>, <code>getTransactionsByDate</code>.</td></tr>
+  <tr><td><code>repository/transactions_repository.dart</code></td><td>update/tag/hide/exclude</td><td><code>updateTransaction</code>, <code>categorizeGroupedTransaction</code>, <code>verifyPendingTransaction</code>, <code>deleteTransactions</code>.</td></tr>
+  <tr><td><code>repository/autopay_repository.dart</code></td><td>auto-pay CRUD</td><td><code>getAutoPays</code>, <code>createRecurringPaymentFromTransaction</code>, <code>updateRecurringPayment</code>, <code>deleteRecurringPayment</code>.</td></tr>
+  <tr><td><code>repository/delete_banks_users.dart</code></td><td>bank deletion</td><td><code>deleteBankAccount</code>.</td></tr>
+  <tr><td><code>finance_repository.dart</code>, <code>expanded_finance_repository.dart</code></td><td>graphs/custom finance views</td><td><code>getAllCustomTransactions</code>.</td></tr>
+  <tr><td><code>finance_screen/Calculators/loan_calculator.dart</code></td><td>loan/income calculation</td><td><code>getIncomeAndCategorySpent</code>, <code>getLoanCalculation</code>.</td></tr>
+  </tbody></table>
+
+  <h2>11. Important Data Models / Storage</h2>
+  <table><thead><tr><th>Model/storage</th><th>Used for</th></tr></thead><tbody>
+  <tr><td><code>ConsentHandleId</code></td><td>Stores <code>custId</code>, consent handle id, user id, expiry for Finvu consent status lookup.</td></tr>
+  <tr><td><code>Finvu</code></td><td>Stores FI fetch sessions and metadata for async processing.</td></tr>
+  <tr><td><code>FipsMetric</code></td><td>Stores latest FIP metrics fetched from Finvu.</td></tr>
+  <tr><td><code>Bank</code>, <code>Account</code>, <code>Profile</code>, <code>Summary</code>, <code>Transaction</code></td><td>Persist linked bank, account, profile, balance summary, and transaction records.</td></tr>
+  <tr><td>Redis key <code>auth_token</code></td><td>Finvu auth token used by fetch/status calls.</td></tr>
+  <tr><td>Redis key <code>finvu:&lt;sessionId&gt;</code></td><td>Temporary FI request metadata for queue/webhook final fetch.</td></tr>
+  <tr><td>Redis pubsub channel <code>bank_events</code></td><td>Publishes websocket events for fetch success/failure.</td></tr>
+  </tbody></table>
+
+  <h2>12. Environment Variables Used By Finvu</h2>
+  <table><thead><tr><th>Variable</th><th>Purpose</th></tr></thead><tbody>
+  <tr><td><code>FINVU_URL</code></td><td>Base Finvu API URL.</td></tr>
+  <tr><td><code>FINVU_RID</code></td><td>Finvu request header <code>rid</code>.</td></tr>
+  <tr><td><code>FINVU_TS</code></td><td>Finvu request header <code>ts</code>.</td></tr>
+  <tr><td><code>FINVU_CHANNEL_ID</code></td><td>Finvu request header <code>channelId</code>.</td></tr>
+  <tr><td><code>FINVU_CONSENT_DESCRIPTION</code></td><td>Consent request description.</td></tr>
+  <tr><td><code>FINVU_TEMPLATE_NAME</code></td><td>Finvu consent template.</td></tr>
+  <tr><td><code>FINVU_USER_SESSION_ID</code></td><td>User session id included in consent request.</td></tr>
+  <tr><td><code>NODE_ENV</code></td><td>Controls whether fallback Bull queue is triggered for non-production.</td></tr>
+  </tbody></table>
+
+  <h2>13. Known Gaps / Follow-up Items</h2>
+  <table><thead><tr><th>Item</th><th>Why it matters</th></tr></thead><tbody>
+  <tr><td><code>FinvuRoutes.addFinvuData</code> has no backend route.</td><td>Remove the unused frontend constant or add the missing backend endpoint.</td></tr>
+  <tr><td><code>fipsmetric</code> and <code>status/:id</code> are unauthenticated in <code>finvu-routes.ts</code>.</td><td>Consider adding auth if these expose sensitive operational or user-specific data.</td></tr>
+  <tr><td>Several frontend <code>BankTransactionRoutes</code> constants do not match current backend routes.</td><td>Causes runtime 404s if screens call them.</td></tr>
+  <tr><td><code>customCategory</code> frontend base points to <code>API.mainBackendUrl</code>, but backend route is in bank service under <code>/custom</code>.</td><td>Verify the main backend proxy supports <code>/api/v1/custom</code>; otherwise change to <code>API.BankApiUrl</code>.</td></tr>
+  <tr><td>Public mobile path goes through <code>/api/v1/bank</code>, while bank service internal mount is <code>/api</code>.</td><td>Keep docs and route constants explicit to avoid confusing service-local paths with public app paths.</td></tr>
+  </tbody></table>
+
+  <h2>14. Quick End-to-End Sequence</h2>
+  <ol>
+    <li>User opens Finvu sharing flow from <code>ShareAccountLogin</code>.</li>
+    <li>User enters mobile number in <code>MobileNumber</code>.</li>
+    <li>Flutter calls backend <code>POST /api/v1/bank/finvu/login</code>.</li>
+    <li>Backend creates Finvu consent and returns <code>consentHandleId</code>.</li>
+    <li>Flutter uses Finvu SDK to login with mobile number and handle id.</li>
+    <li>User verifies OTP in <code>FinvuVerifyOtpScreen</code>.</li>
+    <li>Flutter discovers and links accounts through Finvu SDK screens.</li>
+    <li>User confirms access in <code>Access</code>.</li>
+    <li>Flutter calls <code>POST /api/v1/bank/finvu/fetchData</code>.</li>
+    <li>Backend creates FI request and stores <code>sessionId</code>.</li>
+    <li>Webhook or Bull queue fetches final FI data.</li>
+    <li>Bank service stores bank/account/profile/summary/transactions.</li>
+    <li>Flutter finance/dashboard/history screens call <code>transactionauto</code> endpoints to show the data.</li>
+  </ol>
+</body>
+</html>

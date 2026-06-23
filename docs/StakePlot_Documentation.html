@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StakePlot – Technical Architecture & API Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+:root{--primary:#1a237e;--accent:#3949ab;--highlight:#5c6bc0;--bg:#f5f6fa;--card:#ffffff;--text:#212121;--muted:#616161;--border:#e0e0e0;--code-bg:#1e1e2e;--code-text:#cdd6f4;--success:#2e7d32;--warning:#f57f17;--danger:#c62828}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+@media print{
+  .sidebar{display:none!important}
+  .content{margin-left:0!important}
+  .page-break{page-break-before:always}
+  body{background:white;font-size:12px}
+  pre{white-space:pre-wrap}
+  .cover{page-break-after:always}
+}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;overflow-y:auto;background:var(--primary);color:#fff;padding:20px 0;z-index:100}
+.sidebar h2{padding:10px 20px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#9fa8da;border-bottom:1px solid #283593;margin-bottom:8px}
+.sidebar a{display:block;padding:6px 20px;color:#c5cae9;text-decoration:none;font-size:12.5px;transition:background 0.2s}
+.sidebar a:hover,.sidebar a.active{background:#283593;color:#fff}
+.sidebar .section-header{padding:10px 20px 4px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#7986cb;margin-top:8px}
+.content{margin-left:260px;padding:40px 48px;max-width:1200px}
+h1{font-size:28px;color:var(--primary);border-bottom:3px solid var(--accent);padding-bottom:10px;margin:32px 0 16px}
+h2{font-size:22px;color:var(--accent);border-left:4px solid var(--highlight);padding-left:12px;margin:28px 0 12px}
+h3{font-size:17px;color:var(--primary);margin:20px 0 8px}
+h4{font-size:14px;color:var(--highlight);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+p{margin:8px 0 12px;color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:var(--card);border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+th{background:var(--primary);color:#fff;padding:10px 14px;text-align:left;font-size:12.5px;font-weight:600}
+td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f0f2ff}
+code{background:var(--code-bg);color:var(--code-text);padding:2px 6px;border-radius:3px;font-family:'Cascadia Code','Consolas',monospace;font-size:12.5px}
+pre{background:var(--code-bg);color:var(--code-text);padding:18px 20px;border-radius:8px;overflow-x:auto;margin:12px 0;font-family:'Cascadia Code','Consolas',monospace;font-size:12.5px;line-height:1.7}
+pre code{background:transparent;padding:0}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;margin-right:4px}
+.badge-get{background:#e8f5e9;color:#2e7d32}
+.badge-post{background:#fff3e0;color:#e65100}
+.badge-put{background:#e3f2fd;color:#0277bd}
+.badge-delete{background:#fce4ec;color:#c62828}
+.badge-patch{background:#f3e5f5;color:#6a1b9a}
+.badge-auth{background:#e8eaf6;color:#283593}
+.badge-opt{background:#fafafa;color:#757575;border:1px solid #e0e0e0}
+.card{background:var(--card);border-radius:8px;padding:20px 24px;margin:16px 0;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid var(--highlight)}
+.card-info{border-left-color:#0277bd}
+.card-warn{border-left-color:#f57f17}
+.card-success{border-left-color:#2e7d32}
+.card-danger{border-left-color:#c62828}
+.endpoint-block{background:var(--card);border:1px solid var(--border);border-radius:8px;margin:20px 0;overflow:hidden}
+.endpoint-header{background:#e8eaf6;padding:12px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.endpoint-header h4{margin:0;font-size:14px;color:var(--primary)}
+.endpoint-body{padding:16px 18px}
+.endpoint-body table{box-shadow:none;border:1px solid var(--border)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:16px 0}
+.cover{background:linear-gradient(135deg,var(--primary) 0%,#303f9f 50%,#3949ab 100%);color:white;padding:80px 60px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.cover h1{font-size:42px;color:white;border:none;padding:0}
+.cover .subtitle{font-size:20px;color:#9fa8da;margin:12px 0}
+.cover .meta{margin-top:40px;padding-top:30px;border-top:1px solid #3949ab}
+.cover .meta p{color:#c5cae9;margin:4px 0}
+.toc{background:var(--card);border-radius:8px;padding:24px 32px;margin:20px 0;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.toc ol{margin:0;padding-left:20px}
+.toc li{margin:5px 0}
+.toc a{color:var(--accent);text-decoration:none}
+.toc a:hover{text-decoration:underline}
+.mermaid{margin:24px 0;text-align:center;background:white;padding:20px;border-radius:8px;border:1px solid var(--border);overflow-x:auto}
+.field-table th{background:#3949ab}
+ul,ol{margin:8px 0 12px 22px}
+li{margin:4px 0}
+.section-divider{border:none;border-top:2px dashed var(--border);margin:40px 0}
+.highlight-box{background:#e8eaf6;border:1px solid #c5cae9;border-radius:6px;padding:14px 18px;margin:12px 0}
+.warn-box{background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:14px 18px;margin:12px 0}
+.screen-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:16px 0}
+.screen-card h3{margin:0 0 10px;color:var(--primary);border-bottom:1px solid var(--border);padding-bottom:8px}
+</style>
+</head>
+<body>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',flowchart:{useMaxWidth:true},sequence:{useMaxWidth:true}});</script>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+<h2>StakePlot Docs</h2>
+<a href="#cover">Cover</a>
+<a href="#toc">Table of Contents</a>
+<a href="#executive">Executive Summary</a>
+<div class="section-header">Architecture</div>
+<a href="#arch">System Architecture</a>
+<a href="#tech-stack">Technology Stack</a>
+<div class="section-header">Frontend</div>
+<a href="#flutter">Flutter Overview</a>
+<a href="#hive">Hive Local Storage</a>
+<a href="#state">State Management</a>
+<a href="#api-connections">API Connections</a>
+<a href="#routes">Route Navigation</a>
+<div class="section-header">Finvu</div>
+<a href="#finvu-overview">Finvu Overview</a>
+<a href="#finvu-api">Finvu API Endpoints</a>
+<a href="#finvu-screens">Finvu Screens</a>
+<a href="#finvu-flow">Consent Flow</a>
+<div class="section-header">Transactions</div>
+<a href="#txn-overview">Transaction Overview</a>
+<a href="#txn-endpoints">Transaction Endpoints</a>
+<a href="#txn-flow">Transaction Flow</a>
+<div class="section-header">Collections</div>
+<a href="#collections-overview">Collections Overview</a>
+<a href="#collections-api">Collections API</a>
+<a href="#collections-frontend">Frontend Screens</a>
+<a href="#collections-flow">Collections Flow</a>
+<div class="section-header">Email Service</div>
+<a href="#email-overview">Email Overview</a>
+<a href="#email-api">Email Endpoints</a>
+<a href="#email-flow">Processing Flow</a>
+<div class="section-header">Backend</div>
+<a href="#backend-arch">Backend Architecture</a>
+<a href="#middleware">Middleware</a>
+<a href="#auth">Authentication</a>
+<div class="section-header">Reference</div>
+<a href="#api-ref">Complete API Reference</a>
+<a href="#database">Database Schemas</a>
+<a href="#sequence">Sequence Diagrams</a>
+<a href="#env">Environment Variables</a>
+<a href="#security">Security</a>
+<a href="#error-handling">Error Handling</a>
+<a href="#deployment">Deployment</a>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- COVER -->
+<div class="cover" id="cover">
+<div>
+<div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#7986cb;margin-bottom:16px">Technical Documentation v1.0</div>
+<h1>StakePlot</h1>
+<p class="subtitle">Mobile Banking Application<br>Technical Architecture &amp; API Documentation</p>
+<p style="color:#9fa8da;margin-top:20px;max-width:500px">Comprehensive documentation covering Flutter frontend, Finvu open-banking integration, transaction processing, email statement scraping, and backend microservices.</p>
+<div class="meta">
+<p><strong>Generated:</strong> June 12, 2026</p>
+<p><strong>Version:</strong> 1.0.0</p>
+<p><strong>Status:</strong> Production</p>
+<p><strong>Audience:</strong> Engineers · Product Managers · QA · Stakeholders</p>
+</div>
+</div>
+</div>
+
+<!-- TOC -->
+<div class="page-break"></div>
+<h1 id="toc">Table of Contents</h1>
+<div class="toc">
+<ol>
+<li><a href="#executive">Executive Summary</a></li>
+<li><a href="#arch">System Architecture Overview</a></li>
+<li><a href="#tech-stack">Technology Stack</a></li>
+<li><a href="#flutter">Flutter Frontend Documentation</a>
+  <ol>
+  <li><a href="#hive">Hive Local Storage</a></li>
+  <li><a href="#state">State Management (GetX)</a></li>
+  <li><a href="#api-connections">API Connections &amp; Base URLs</a></li>
+  <li><a href="#routes">Route Navigation Map</a></li>
+  </ol>
+</li>
+<li><a href="#finvu-overview">Finvu Integration Documentation</a>
+  <ol>
+  <li><a href="#finvu-api">API Endpoint Reference</a></li>
+  <li><a href="#finvu-screens">Screen-by-Screen Documentation</a></li>
+  <li><a href="#finvu-flow">Consent &amp; Bank Linking Flow</a></li>
+  </ol>
+</li>
+<li><a href="#txn-overview">Transaction Module Documentation</a>
+  <ol>
+  <li><a href="#txn-endpoints">All Transaction Endpoints</a></li>
+  <li><a href="#txn-flow">Transaction Processing Flow</a></li>
+  <li><a href="#txn-logic">Categorization &amp; Dedup Logic</a></li>
+  </ol>
+</li>
+<li><a href="#collections-overview">Collections Module Documentation</a>
+  <ol>
+  <li><a href="#collections-api">Collections API Endpoint Reference</a></li>
+  <li><a href="#collections-frontend">Frontend Screens &amp; Controller</a></li>
+  <li><a href="#collections-flow">Collection Creation, Split &amp; Settlement Flow</a></li>
+  </ol>
+</li>
+<li><a href="#email-overview">Email Service Documentation</a>
+  <ol>
+  <li><a href="#email-api">Email Endpoints</a></li>
+  <li><a href="#email-flow">Statement Processing Flow</a></li>
+  </ol>
+</li>
+<li><a href="#backend-arch">Backend Services Architecture</a>
+  <ol>
+  <li><a href="#middleware">Middleware Stack</a></li>
+  <li><a href="#auth">Authentication Mechanisms</a></li>
+  </ol>
+</li>
+<li><a href="#api-ref">Complete API Reference Table</a></li>
+<li><a href="#database">Database Documentation</a></li>
+<li><a href="#sequence">Sequence Diagrams</a></li>
+<li><a href="#env">Environment Variables</a></li>
+<li><a href="#security">Security Considerations</a></li>
+<li><a href="#error-handling">Error Handling Strategy</a></li>
+<li><a href="#deployment">Deployment Overview</a></li>
+</ol>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="page-break"></div>
+<h1 id="executive">1. Executive Summary</h1>
+<p>StakePlot is a full-stack fintech mobile application that enables Indian users to aggregate their bank accounts, credit cards, and financial data in one place via the <strong>Finvu Account Aggregator</strong> (RBI-approved open banking framework).</p>
+<div class="two-col">
+<div class="card card-info">
+<h4>Core Capabilities</h4>
+<ul>
+<li>Bank account linking via Finvu AA</li>
+<li>Automated transaction sync &amp; categorization</li>
+<li>Credit card statement scraping from Gmail</li>
+<li>Recurring payment &amp; auto-pay detection</li>
+<li>Personal and shared collections with expense splitting</li>
+<li>Budgeting, analytics &amp; financial calculators</li>
+<li>Community social features</li>
+</ul>
+</div>
+<div class="card card-success">
+<h4>Architecture Highlights</h4>
+<ul>
+<li>Flutter cross-platform mobile app</li>
+<li>Node.js/TypeScript microservices</li>
+<li>MongoDB (document store)</li>
+<li>Redis (cache + pub-sub)</li>
+<li>Bull queue (async jobs)</li>
+<li>AWS (S3, KMS, Secrets Manager)</li>
+</ul>
+</div>
+</div>
+<div class="card card-warn">
+<h4>Key Integration Partners</h4>
+<p><strong>Finvu:</strong> RBI-approved Account Aggregator for open banking. Handles consent, bank discovery, and encrypted FI data delivery.</p>
+<p><strong>Gmail API (Google OAuth 2.0):</strong> Scrapes credit card statements directly from user's inbox with permission.</p>
+<p><strong>Firebase:</strong> Authentication, crash reporting (Crashlytics), and push messaging (FCM).</p>
+<p><strong>OneSignal:</strong> Cross-platform push notification delivery.</p>
+</div>
+
+<!-- SYSTEM ARCHITECTURE -->
+<div class="page-break"></div>
+<h1 id="arch">2. System Architecture Overview</h1>
+
+<div class="mermaid">
+graph TB
+  subgraph Mobile["📱 Mobile Frontend (Flutter)"]
+    A[User Interface]
+    B[GetX State Management]
+    C[Hive Local Storage]
+    D[Finvu Flutter SDK]
+  end
+  subgraph BE["☁️ Backend Services (Node.js/TypeScript)"]
+    E[Mobile Backend<br/>User · Auth · Social]
+    F[Bank Service<br/>Finvu · Transactions]
+    G[Email Service<br/>Gmail Scraping]
+  end
+  subgraph Data["🗄️ Data Layer"]
+    H[(MongoDB)]
+    I[(Redis Cache)]
+    J[Bull Job Queue]
+  end
+  subgraph Ext["🌐 External Services"]
+    K[Finvu AA API]
+    L[Gmail API]
+    M[Firebase / FCM]
+    N[AWS KMS / S3]
+    O[OneSignal]
+  end
+  A --> E
+  A --> F
+  A --> G
+  D --> K
+  F --> K
+  G --> L
+  E --> H
+  F --> H
+  G --> H
+  F --> I
+  F --> J
+  E --> M
+  E --> O
+  F --> N
+</div>
+
+<h2>Service Responsibilities</h2>
+<table>
+<tr><th>Service</th><th>Path</th><th>Port</th><th>Responsibilities</th></tr>
+<tr><td><strong>Mobile Backend</strong></td><td><code>mobile-backend/mobile-backend/</code></td><td>configurable</td><td>User registration/login, JWT issuing, social posts, notifications, finance calculators</td></tr>
+<tr><td><strong>Bank Service</strong></td><td><code>mobile-backend/bank-service/</code></td><td>configurable</td><td>Finvu integration, consent management, bank account linking, transaction fetching &amp; categorization, FIP metrics</td></tr>
+<tr><td><strong>Email Service</strong></td><td><code>mobile-backend/email-service/</code></td><td>configurable</td><td>Gmail OAuth, email scraping, PDF statement parsing, credit card transaction extraction</td></tr>
+</table>
+
+<h2>Inter-Service Communication</h2>
+<div class="card">
+<ul>
+<li><strong>Frontend → Backend:</strong> HTTPS REST API with JWT Bearer tokens</li>
+<li><strong>Bank Service → Finvu:</strong> HTTPS API calls (axios) using Finvu credentials</li>
+<li><strong>Email Service → Gmail:</strong> Google OAuth2 + Gmail REST API</li>
+<li><strong>Real-time updates:</strong> Redis Pub/Sub → Socket.IO WebSocket to Flutter client</li>
+<li><strong>Async jobs:</strong> Bull queue (Redis-backed) for long-running tasks</li>
+<li><strong>Secrets:</strong> AWS Secrets Manager for production credentials</li>
+</ul>
+</div>
+
+<!-- TECHNOLOGY STACK -->
+<h1 id="tech-stack">3. Technology Stack</h1>
+<table>
+<tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+<tr><td>Mobile UI</td><td>Flutter / Dart</td><td>3.x</td><td>Cross-platform iOS &amp; Android</td></tr>
+<tr><td>State Management</td><td>GetX</td><td>4.6.6</td><td>Reactive state, DI, routing</td></tr>
+<tr><td>Local Database</td><td>Hive</td><td>2.2.3</td><td>Offline-first key-value store</td></tr>
+<tr><td>Bank SDK</td><td>finvu_flutter_sdk</td><td>1.0.3</td><td>Finvu AA SDK (consent, OTP, discovery)</td></tr>
+<tr><td>HTTP Client (Flutter)</td><td>http</td><td>1.3.0</td><td>REST calls from Flutter</td></tr>
+<tr><td>Real-time (Flutter)</td><td>socket_io_client</td><td>3.0.0-beta</td><td>WebSocket connection to backend</td></tr>
+<tr><td>Charts</td><td>fl_chart, syncfusion_flutter_charts</td><td>latest</td><td>Transaction analytics graphs</td></tr>
+<tr><td>Auth (Flutter)</td><td>firebase_auth, google_sign_in</td><td>latest</td><td>Firebase &amp; Google login</td></tr>
+<tr><td>Backend Runtime</td><td>Node.js / Express</td><td>4.18.2</td><td>REST API framework</td></tr>
+<tr><td>Language</td><td>TypeScript</td><td>5.x</td><td>Type-safe backend</td></tr>
+<tr><td>Database</td><td>MongoDB / Mongoose</td><td>7.6.3</td><td>Document store</td></tr>
+<tr><td>Cache</td><td>Redis / ioredis</td><td>4.7.0 / 5.8.2</td><td>API response cache, pub-sub</td></tr>
+<tr><td>Job Queue</td><td>Bull</td><td>4.16.5</td><td>Async transaction fetch jobs</td></tr>
+<tr><td>Auth (Backend)</td><td>jsonwebtoken</td><td>9.0.2</td><td>JWT signing &amp; verification</td></tr>
+<tr><td>Validation</td><td>Joi</td><td>18.0.1</td><td>Request body validation</td></tr>
+<tr><td>Email Parsing</td><td>mailparser</td><td>3.7.4</td><td>MIME email parsing</td></tr>
+<tr><td>PDF Parsing</td><td>pdfjs-dist</td><td>3.11.174</td><td>Credit card PDF statement reading</td></tr>
+<tr><td>Gmail API</td><td>googleapis</td><td>149.0.0</td><td>Gmail read access</td></tr>
+<tr><td>Logging</td><td>Winston + Sentry</td><td>latest</td><td>Structured logging &amp; error tracking</td></tr>
+<tr><td>Security</td><td>Helmet, HPP, CORS</td><td>latest</td><td>HTTP header security, rate limiting</td></tr>
+<tr><td>Cloud</td><td>AWS (KMS, S3, Secrets)</td><td>latest</td><td>Key management, file storage, secrets</td></tr>
+<tr><td>Push Notifications</td><td>OneSignal</td><td>5.2.9</td><td>Cross-platform push delivery</td></tr>
+<tr><td>Crash Reporting</td><td>Firebase Crashlytics</td><td>latest</td><td>Flutter crash tracking</td></tr>
+</table>
+
+<!-- FLUTTER FRONTEND -->
+<div class="page-break"></div>
+<h1 id="flutter">4. Flutter Frontend Documentation</h1>
+
+<h2>Project Structure</h2>
+<pre>mobile-frontend/
+├── lib/
+│   ├── main.dart                    # App entry point
+│   ├── routes/
+│   │   ├── index_route.dart         # Base URL config &amp; API endpoints
+│   │   ├── route_finvu.dart         # Finvu API routes
+│   │   ├── route_transaction.dart   # Transaction API routes
+│   │   ├── route_email.dart         # Email service routes
+│   │   └── app_routes.dart          # Flutter named screen routes
+│   ├── finvu_screens/               # Bank linking flow (10 screens)
+│   ├── Home_Screen/                 # Dashboard &amp; main navigation
+│   ├── finance_screen/              # EMI, loan calculators
+│   ├── Community_Page/              # Social features
+│   ├── email_sync/                  # Gmail statement sync UI
+│   ├── controllers/                 # GetX controllers
+│   ├── model/                       # Dart data models
+│   ├── backed_connections/          # HTTP service layer
+│   ├── Hive_localstorage/           # Hive box definitions
+│   └── repository/                  # Repository pattern layer
+├── pubspec.yaml
+├── android/
+└── ios/</pre>
+
+<!-- HIVE -->
+<h2 id="hive">4.1 Hive Local Storage</h2>
+<p>Hive is used as the offline-first local database in Flutter. It provides encrypted key-value boxes that persist data between app sessions.</p>
+<div class="card card-info">
+<h4>Why Hive?</h4>
+<p>Hive offers native Dart performance (no platform channels), AES-256 encryption support, and works seamlessly with GetX reactive state. It is used to cache user tokens, bank account info, and fetched transactions so the app loads instantly even without internet.</p>
+</div>
+<table>
+<tr><th>Box Name</th><th>Key Type</th><th>Stored Data</th><th>Purpose</th></tr>
+<tr><td><code>userBox</code></td><td>String</td><td>User profile, JWT token, Firebase UID</td><td>Auth persistence</td></tr>
+<tr><td><code>bankBox</code></td><td>String</td><td>Linked bank accounts, FIP IDs</td><td>Offline bank list</td></tr>
+<tr><td><code>transactionBox</code></td><td>String</td><td>Recent transactions (paginated)</td><td>Offline transaction view</td></tr>
+<tr><td><code>consentBox</code></td><td>String</td><td>Consent handle ID, session data</td><td>Finvu flow resumption</td></tr>
+<tr><td><code>settingsBox</code></td><td>String</td><td>Theme, notifications preferences</td><td>App preferences</td></tr>
+<tr><td><code>categoryBox</code></td><td>String</td><td>Transaction categories cache</td><td>Fast category display</td></tr>
+</table>
+<pre>// Example: Reading user token from Hive
+final userBox = Hive.box('userBox');
+final token = userBox.get('jwt_token');
+
+// Example: Writing linked bank accounts
+final bankBox = Hive.box('bankBox');
+bankBox.put('linked_accounts', jsonEncode(accountList));</pre>
+
+<!-- STATE MANAGEMENT -->
+<h2 id="state">4.2 State Management (GetX)</h2>
+<p>The app uses <strong>GetX</strong> for reactive state management, dependency injection, and navigation. Controllers extend <code>GetxController</code> and expose <code>.obs</code> observables.</p>
+<table>
+<tr><th>Controller</th><th>File</th><th>Manages</th></tr>
+<tr><td><code>FinvuController</code></td><td><code>controllers/finvu_controller.dart</code></td><td>Finvu SDK state, consent handle, linked accounts list, OTP flow</td></tr>
+<tr><td><code>TransactionController</code></td><td><code>controllers/transaction_controller.dart</code></td><td>Transaction list, pagination, categories, filters</td></tr>
+<tr><td><code>AuthController</code></td><td><code>controllers/auth_controller.dart</code></td><td>Firebase auth state, JWT token, user profile</td></tr>
+<tr><td><code>EmailSyncController</code></td><td><code>controllers/email_sync_controller.dart</code></td><td>Gmail OAuth state, scraping status, pending statements</td></tr>
+<tr><td><code>HomeController</code></td><td><code>controllers/home_controller.dart</code></td><td>Dashboard data, balance summary, recent activity</td></tr>
+<tr><td><code>BankController</code></td><td><code>controllers/bank_controller.dart</code></td><td>Bank list, account details, FIP metrics</td></tr>
+</table>
+<pre>// Reactive state example (GetX)
+class FinvuController extends GetxController {
+  var listofLinkedAccount = [].obs;       // Reactive list
+  var bankAccountLinkedList = [].obs;
+  var fetchedTransactionList = [].obs;
+  var isLoading = false.obs;
+  var consentHandleId = ''.obs;
+
+  void updateLinkedAccounts(List accounts) {
+    listofLinkedAccount.value = accounts;  // Auto-notifies UI
+  }
+}</pre>
+
+<!-- API CONNECTIONS -->
+<h2 id="api-connections">4.3 API Connections &amp; Base URLs</h2>
+<p>All API base URLs are configured in <code>lib/routes/index_route.dart</code>.</p>
+<pre>// lib/routes/index_route.dart
+const String urlWithLocallHost = "https://api.stakeplot.com/";
+
+// Service base URLs
+const String BankApiUrl    = "${urlWithLocallHost}api/v1/bank";
+const String EmailApiUrl   = "${urlWithLocallHost}api/v1/email";
+const String BackendApiUrl = "${urlWithLocallHost}api/v1";
+
+// Finvu SDK endpoint
+const String FinvuBaseUrl  = "https://webfinvu.stakeplot.com";</pre>
+
+<h3>HTTP Service Layer (backed_connections/)</h3>
+<p>All API calls go through a centralized HTTP service that automatically attaches JWT headers from Hive storage:</p>
+<pre>class ApiService {
+  static Future&lt;dynamic&gt; post(String url, Map body) async {
+    final token = Hive.box('userBox').get('jwt_token');
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+    return jsonDecode(response.body);
+  }
+}</pre>
+
+<!-- ROUTES -->
+<h2 id="routes">4.4 Route Navigation Map</h2>
+<table>
+<tr><th>Route Name</th><th>Screen</th><th>Dart File</th><th>Purpose</th><th>Auth Required</th></tr>
+<tr><td><code>/</code></td><td>Splash Screen</td><td><code>main.dart</code></td><td>App entry, auth check</td><td>No</td></tr>
+<tr><td><code>/login</code></td><td>Login Screen</td><td><code>auth/login_screen.dart</code></td><td>Firebase / Google login</td><td>No</td></tr>
+<tr><td><code>/home</code></td><td>Home Dashboard</td><td><code>Home_Screen/home.dart</code></td><td>Main dashboard</td><td>Yes</td></tr>
+<tr><td><code>/finvu/mobile</code></td><td>Mobile Number</td><td><code>finvu_screens/mobileNumber.dart</code></td><td>Enter phone for Finvu consent</td><td>Yes</td></tr>
+<tr><td><code>/finvu/otp</code></td><td>OTP Verification</td><td><code>finvu_screens/finvu_otp_screen.dart</code></td><td>Verify Finvu OTP</td><td>Yes</td></tr>
+<tr><td><code>/finvu/discover</code></td><td>Discover Banks</td><td><code>finvu_screens/discoverAccount.dart</code></td><td>Browse available FIPs</td><td>Yes</td></tr>
+<tr><td><code>/finvu/link</code></td><td>Link Account</td><td><code>finvu_screens/LinkingAccount.dart</code></td><td>Select accounts to link</td><td>Yes</td></tr>
+<tr><td><code>/finvu/access</code></td><td>Consent Details</td><td><code>finvu_screens/access.dart</code></td><td>Review consent permissions</td><td>Yes</td></tr>
+<tr><td><code>/finvu/fetch</code></td><td>Fetch Transactions</td><td><code>finvu_screens/FetchTransaction.dart</code></td><td>Trigger data fetch</td><td>Yes</td></tr>
+<tr><td><code>/finvu/skip</code></td><td>Skip Finvu</td><td><code>finvu_screens/skipFInvuProcess.dart</code></td><td>Bypass bank linking</td><td>Yes</td></tr>
+<tr><td><code>/transactions</code></td><td>Transactions List</td><td><code>Home_Screen/transactions.dart</code></td><td>Paginated transaction feed</td><td>Yes</td></tr>
+<tr><td><code>/analytics</code></td><td>Analytics</td><td><code>Home_Screen/analytics.dart</code></td><td>Spend graphs &amp; insights</td><td>Yes</td></tr>
+<tr><td><code>/email-sync</code></td><td>Email Sync</td><td><code>email_sync/email_sync_screen.dart</code></td><td>Gmail credit card sync</td><td>Yes</td></tr>
+<tr><td><code>/community</code></td><td>Community</td><td><code>Community_Page/community.dart</code></td><td>Social feed</td><td>Yes</td></tr>
+<tr><td><code>/finance</code></td><td>Finance Tools</td><td><code>finance_screen/finance.dart</code></td><td>EMI / loan calculators</td><td>Yes</td></tr>
+</table>
+
+<div class="mermaid">
+flowchart LR
+  A[Splash] --> B{Logged In?}
+  B -->|No| C[Login]
+  B -->|Yes| D[Home Dashboard]
+  C --> D
+  D --> E[Transactions]
+  D --> F[Analytics]
+  D --> G[Community]
+  D --> H[Finance Tools]
+  D --> I[Email Sync]
+  D --> J[Bank Linking]
+  J --> K[Mobile Number]
+  K --> L[OTP Screen]
+  L --> M[Discover Banks]
+  M --> N[Link Account]
+  N --> O[Consent Review]
+  O --> P[Fetch Transactions]
+  P --> D
+</div>
+
+<!-- FINVU INTEGRATION -->
+<div class="page-break"></div>
+<h1 id="finvu-overview">5. Finvu Integration Documentation</h1>
+
+<div class="card card-info">
+<h4>What is Finvu?</h4>
+<p>Finvu is an RBI-licensed Account Aggregator (AA) that enables users to share their financial data from banks with applications in a secure, consent-based manner. StakePlot uses Finvu to link bank accounts and fetch transaction history without storing raw banking credentials.</p>
+<p><strong>Regulatory:</strong> Compliant with RBI's Account Aggregator Framework (2021)<br>
+<strong>Data Security:</strong> All financial data is end-to-end encrypted between the bank (FIP) and the application (FIU)</p>
+</div>
+
+<h2>High-Level Architecture</h2>
+<div class="mermaid">
+graph LR
+  U[User] --> APP[StakePlot App]
+  APP --> BS[Bank Service]
+  BS --> FA[Finvu AA API]
+  FA --> BANK[Bank / FIP]
+  BANK --> FA
+  FA --> BS
+  BS --> MDB[(MongoDB)]
+  BS --> RD[(Redis)]
+  BS --> Q[Bull Queue]
+  Q --> BS
+  APP -. WebSocket .-> BS
+</div>
+
+<h2>User Journey Overview</h2>
+<div class="mermaid">
+flowchart TD
+  S1[User enters mobile number] --> S2[Backend creates consent via Finvu API]
+  S2 --> S3[Finvu SDK initialised with consentHandleId]
+  S3 --> S4[OTP sent to user's phone by Finvu]
+  S4 --> S5[User enters OTP → SDK verifies]
+  S5 --> S6[Discover Banks screen shows available FIPs]
+  S6 --> S7[User selects bank → SDK discovers accounts]
+  S7 --> S8[User selects accounts to link]
+  S8 --> S9[User approves consent on Finvu AA]
+  S9 --> S10[Backend initiates FI data request]
+  S10 --> S11[Bull job fetches encrypted transactions]
+  S11 --> S12[Backend decrypts → stores transactions]
+  S12 --> S13[WebSocket notifies Flutter app]
+  S13 --> S14[Transactions displayed to user]
+</div>
+
+<!-- FINVU API ENDPOINTS -->
+<h2 id="finvu-api">5.1 Finvu API Endpoint Reference</h2>
+<p>Base path: <code>/api/v1/bank/finvu</code> — All endpoints require <span class="badge badge-auth">JWT Auth</span></p>
+
+<div class="endpoint-block">
+<div class="endpoint-header">
+  <span class="badge badge-post">POST</span>
+  <h4>/finvu/login</h4>
+</div>
+<div class="endpoint-body">
+<p><strong>Controller:</strong> <code>finvu-controller.ts → loginAndGetHandleId()</code></p>
+<p><strong>Purpose:</strong> Initiates a consent request with Finvu for a user. Returns a <code>consentHandleId</code> that the Flutter Finvu SDK uses to start the consent flow (OTP, account discovery, linking).</p>
+<table>
+<tr><th colspan="3">Request Body</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>custId</code></td><td>string <span class="badge badge-post">required</span></td><td>Customer ID in Finvu format (e.g., <code>user@finvu</code>)</td></tr>
+<tr><td><code>number</code></td><td>string <span class="badge badge-post">required</span></td><td>10-digit mobile number of the user</td></tr>
+</table>
+<table style="margin-top:12px">
+<tr><th colspan="3">Response (200 OK)</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>success</code></td><td>boolean</td><td><code>true</code></td></tr>
+<tr><td><code>consentHandleId</code></td><td>string</td><td>Handle ID to pass to Finvu SDK; stored in MongoDB with 24h TTL</td></tr>
+</table>
+<table style="margin-top:12px">
+<tr><th colspan="2">Error Responses</th></tr>
+<tr><th>Status</th><th>Meaning</th></tr>
+<tr><td>400</td><td>Invalid custId or number format</td></tr>
+<tr><td>502</td><td>Finvu API unreachable</td></tr>
+</table>
+<h4>Sequence of Operations</h4>
+<ol>
+<li>Validate request body (Joi schema)</li>
+<li>Call Finvu API: <code>POST /v2/consent/request</code> with consent template payload</li>
+<li>Receive <code>consentHandle</code> from Finvu</li>
+<li>Store in <code>ConsentHandleId</code> collection with <code>userId</code>, 24h TTL</li>
+<li>Return <code>consentHandleId</code> to Flutter app</li>
+</ol>
+<pre>// Success response example
+{
+  "success": true,
+  "consentHandleId": "fcd8e93a-1234-4abc-8765-abcdef012345"
+}</pre>
+</div>
+</div>
+
+<div class="endpoint-block">
+<div class="endpoint-header">
+  <span class="badge badge-post">POST</span>
+  <h4>/finvu/fetchData</h4>
+</div>
+<div class="endpoint-body">
+<p><strong>Controller:</strong> <code>finvu-controller.ts → fetchTransactions()</code></p>
+<p><strong>Purpose:</strong> Main data fetch endpoint. Polls consent status, gets consent details (date range), initiates FI request, and enqueues an async Bull job to fetch and decrypt transactions.</p>
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>handleId</code></td><td>string <span class="badge badge-post">required</span></td><td>Consent handle ID returned from <code>/login</code></td></tr>
+<tr><td><code>custId</code></td><td>string <span class="badge badge-post">required</span></td><td>User's Finvu customer ID</td></tr>
+</table>
+<table style="margin-top:12px">
+<tr><th colspan="3">Response (200 OK)</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>success</code></td><td>boolean</td><td><code>true</code></td></tr>
+<tr><td><code>sessionId</code></td><td>string</td><td>FI session ID for tracking job</td></tr>
+<tr><td><code>message</code></td><td>string</td><td>Status message</td></tr>
+</table>
+<h4>Sequence of Operations</h4>
+<ol>
+<li>Call <code>fetchConsentStatus(handleId)</code> — poll up to 2 times (5s gap)</li>
+<li>Extract <code>consentId</code> from status response</li>
+<li>Call <code>fetchConsentDetails(consentId)</code> — get allowed date range</li>
+<li>Call Finvu: <code>POST /v2/FI/request</code> — get <code>sessionId</code></li>
+<li>Cache <code>sessionId</code> in Redis (TTL: 600s)</li>
+<li>Store in <code>Finvu</code> model (MongoDB, 24h TTL)</li>
+<li><strong>Staging:</strong> Enqueue Bull job <code>fetch-transactions</code></li>
+<li><strong>Production:</strong> Wait for Finvu webhook notification</li>
+<li>Return <code>sessionId</code> to client</li>
+</ol>
+</div>
+</div>
+
+<div class="endpoint-block">
+<div class="endpoint-header">
+  <span class="badge badge-post">POST</span>
+  <h4>/finvu/fetchWeekly</h4>
+</div>
+<div class="endpoint-body">
+<p><strong>Controller:</strong> <code>finvu-controller.ts → fetchTransactionsWeekly()</code></p>
+<p><strong>Purpose:</strong> Lightweight weekly sync for already-linked bank accounts. Reuses existing consent to fetch the last 7 days of transactions without requiring user interaction.</p>
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>userId</code></td><td>string <span class="badge badge-post">required</span></td><td>User's MongoDB ID</td></tr>
+</table>
+<p><strong>Auth:</strong> Service-to-service call (can be triggered by cron or user). Uses existing <code>Bank</code> model records to re-initiate FI request without new consent.</p>
+</div>
+</div>
+
+<div class="endpoint-block">
+<div class="endpoint-header">
+  <span class="badge badge-post">POST</span>
+  <h4>/finvu/fip-details/</h4>
+</div>
+<div class="endpoint-body">
+<p><strong>Controller:</strong> <code>finvu-controller.ts → getFipDetails()</code></p>
+<p><strong>Purpose:</strong> Fetches details of a specific Financial Information Provider (FIP/bank) from Finvu. Used to display bank logos, names, and supported account types.</p>
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>fipId</code></td><td>string <span class="badge badge-post">required</span></td><td>FIP identifier (e.g., <code>sbi-fip</code>, <code>HDFCLtd-FIP</code>)</td></tr>
+</table>
+</div>
+</div>
+
+<div class="endpoint-block">
+<div class="endpoint-header">
+  <span class="badge badge-get">GET</span>
+  <h4>/finvu/fipsmetric</h4>
+</div>
+<div class="endpoint-body">
+<p><strong>Controller:</strong> <code>finvu-controller.ts → fetchAndStoreFipsMetrics()</code></p>
+<p><strong>Purpose:</strong> Returns health metrics for all FIPs (banks). Used by the Discover Banks screen to show Live / Slow / Down status for each bank. Metrics are stored in the <code>FipsMetric</code> collection and refreshed periodically.</p>
+<table>
+<tr><th colspan="3">Response (200 OK)</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>metrics</code></td><td>array</td><td>Array of FIP metric objects</td></tr>
+<tr><td><code>metrics[].fip_id</code></td><td>string</td><td>Bank identifier (e.g., <code>sbi-fip</code>)</td></tr>
+<tr><td><code>metrics[].success_percent</code></td><td>number</td><td>% of successful requests in last window</td></tr>
+<tr><td><code>metrics[].latency_avg_ms</code></td><td>number</td><td>Average response latency (ms)</td></tr>
+<tr><td><code>metrics[].event_name</code></td><td>string</td><td>Event type measured</td></tr>
+</table>
+</div>
+</div>
+
+<div class="endpoint-block">
+<div class="endpoint-header">
+  <span class="badge badge-get">GET</span>
+  <h4>/finvu/status/:id</h4>
+</div>
+<div class="endpoint-body">
+<p><strong>Purpose:</strong> Check consent approval status for a given consent handle ID. Called by frontend to poll whether the user has approved consent in the Finvu AA.</p>
+<table>
+<tr><th>Param</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>:id</code></td><td>string</td><td>Consent handle ID</td></tr>
+</table>
+<table style="margin-top:12px">
+<tr><th>Status Value</th><th>Meaning</th></tr>
+<tr><td><code>PENDING</code></td><td>User has not yet approved consent</td></tr>
+<tr><td><code>APPROVED</code></td><td>User approved — proceed with data fetch</td></tr>
+<tr><td><code>REJECTED</code></td><td>User rejected consent</td></tr>
+<tr><td><code>EXPIRED</code></td><td>Consent handle expired (5-day TTL)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- FINVU SCREENS -->
+<h2 id="finvu-screens">5.2 Finvu Screen Documentation</h2>
+
+<div class="screen-card">
+<h3>1. Mobile Number Screen</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/mobileNumber.dart</code></td></tr>
+<tr><td>Route</td><td><code>/finvu/mobile</code></td></tr>
+<tr><td>Purpose</td><td>Collects user's mobile number to initiate Finvu consent request</td></tr>
+<tr><td>State</td><td>GetX — <code>FinvuController</code></td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>UI Component</th><th>Purpose</th></tr>
+<tr><td>TextFormField (10-digit)</td><td>Phone number input</td></tr>
+<tr><td>ElevatedButton "Proceed"</td><td>Triggers consent creation</td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>Action</th><th>API Called</th><th>On Success</th></tr>
+<tr><td>Tap "Proceed"</td><td><code>POST /finvu/login</code></td><td>Store <code>consentHandleId</code>, init SDK, navigate to OTP screen</td></tr>
+</table>
+<p><strong>Validations:</strong> Exactly 10 digits, numeric only, non-empty</p>
+<p><strong>Error Handling:</strong> Shows Snackbar on API failure; disables button during loading</p>
+</div>
+
+<div class="screen-card">
+<h3>2. OTP Verification Screen</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/finvu_otp_screen.dart</code></td></tr>
+<tr><td>Route</td><td><code>/finvu/otp</code></td></tr>
+<tr><td>Purpose</td><td>Verifies user identity via OTP sent by Finvu to the registered mobile number</td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>Action</th><th>SDK Call</th><th>On Success</th></tr>
+<tr><td>Enter OTP + Submit</td><td><code>finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(otp, handle)</code></td><td>Navigate to Discover Banks</td></tr>
+<tr><td>Resend OTP</td><td><code>finvuManager.resendOtp()</code></td><td>Show "OTP sent" toast</td></tr>
+</table>
+<p><strong>Validations:</strong> 6-digit OTP, expires in 10 minutes</p>
+</div>
+
+<div class="screen-card">
+<h3>3. Discover Banks Screen</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/discoverAccount.dart</code></td></tr>
+<tr><td>Route</td><td><code>/finvu/discover</code></td></tr>
+<tr><td>Purpose</td><td>Shows all available banks (FIPs) with live health status. User picks their bank.</td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>Feature</th><th>Implementation</th></tr>
+<tr><td>Bank list</td><td>Fetched from Finvu SDK + health from <code>GET /finvu/fipsmetric</code></td></tr>
+<tr><td>Status badge</td><td>Live (green) / Slow (orange) / Down (red) based on <code>success_percent</code></td></tr>
+<tr><td>Search</td><td>Client-side filter on bank name</td></tr>
+<tr><td>Popular banks</td><td>SBI, HDFC, Axis, Barclays pinned to top</td></tr>
+</table>
+<p><strong>State Variables:</strong> <code>bankImageAndId</code> map (fip_id → logo), <code>fipsMetrics</code> list</p>
+</div>
+
+<div class="screen-card">
+<h3>4. Link Account Screen</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/LinkingAccount.dart</code></td></tr>
+<tr><td>Route</td><td><code>/finvu/link</code></td></tr>
+<tr><td>Purpose</td><td>Discovers accounts at the selected bank and lets user select which to link</td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>Action</th><th>SDK Call</th></tr>
+<tr><td>Screen loads</td><td><code>finvuManager.discoverAccounts(fipId)</code></td></tr>
+<tr><td>Select account</td><td>Added to <code>listOfAccountAdded</code> map</td></tr>
+<tr><td>Confirm linking</td><td><code>finvuManager.linkAccounts(selectedAccounts)</code></td></tr>
+</table>
+<p><strong>Data:</strong> Receives <code>FinvuDiscoveredAccountInfo</code> objects from SDK containing masked account numbers</p>
+<p><strong>UI:</strong> Swipe animation to reveal account; checkmark selection</p>
+</div>
+
+<div class="screen-card">
+<h3>5. Consent Details Screen (access.dart)</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/access.dart</code></td></tr>
+<tr><td>Route</td><td><code>/finvu/access</code></td></tr>
+<tr><td>Purpose</td><td>Displays what data StakePlot will access (date range, data types). User approves or rejects.</td></tr>
+</table>
+<p>Shows: Data type (TRANSACTIONS, PROFILE), date range, purpose (wealth management), data life period</p>
+</div>
+
+<div class="screen-card">
+<h3>6. Fetch Transactions Screen</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/FetchTransaction.dart</code></td></tr>
+<tr><td>Route</td><td><code>/finvu/fetch</code></td></tr>
+<tr><td>Purpose</td><td>Triggers backend transaction fetch. Shows animated progress while data is being fetched.</td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>Action</th><th>API/Event</th></tr>
+<tr><td>Screen loads</td><td><code>POST /finvu/fetchData</code> → gets sessionId</td></tr>
+<tr><td>Data ready</td><td>WebSocket event <code>fetchedApiCall</code> received via Socket.IO</td></tr>
+<tr><td>Complete</td><td>Transactions stored; navigate to Home Dashboard</td></tr>
+</table>
+</div>
+
+<div class="screen-card">
+<h3>7. Integration Helper (integration.dart)</h3>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>File</td><td><code>finvu_screens/integration.dart</code></td></tr>
+<tr><td>Purpose</td><td>Central utility class for Finvu SDK initialization and all SDK-backend bridge calls</td></tr>
+</table>
+<table style="margin-top:8px">
+<tr><th>Method</th><th>Purpose</th></tr>
+<tr><td><code>initFinvuManager()</code></td><td>Initializes SDK with Finvu endpoint URL and API key</td></tr>
+<tr><td><code>getConsentHandleId(phone, custId)</code></td><td>Calls backend <code>POST /finvu/login</code>, stores handle in GetX state</td></tr>
+<tr><td><code>FetchTransactionFromFinvuApi(handleId)</code></td><td>Calls backend <code>POST /finvu/fetchData</code></td></tr>
+<tr><td><code>getLinkedAccountInfo()</code></td><td>Fetches linked accounts from Finvu SDK, updates GetX state</td></tr>
+<tr><td><code>verify(otp)</code></td><td>Calls SDK OTP verification method</td></tr>
+</table>
+</div>
+
+<!-- FINVU FLOW DIAGRAM -->
+<h2 id="finvu-flow">5.3 Complete Finvu Consent Flow</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant F as Flutter App
+  participant BS as Bank Service
+  participant FA as Finvu API
+  participant BANK as Bank (FIP)
+  participant MDB as MongoDB
+  participant Q as Bull Queue
+
+  U->>F: Enter mobile number
+  F->>BS: POST /finvu/login {custId, number}
+  BS->>FA: POST /v2/consent/request
+  FA-->>BS: consentHandle
+  BS->>MDB: Store ConsentHandleId (24h TTL)
+  BS-->>F: {consentHandleId}
+  F->>F: Init Finvu SDK with consentHandleId
+  FA->>U: Send OTP to mobile
+  U->>F: Enter OTP
+  F->>FA: SDK.verifyOTP(otp, handle)
+  FA-->>F: OTP verified
+  F->>FA: SDK.discoverAccounts(fipId)
+  FA->>BANK: Discover accounts for user
+  BANK-->>FA: Account list
+  FA-->>F: FinvuDiscoveredAccountInfo[]
+  U->>F: Select accounts + Approve consent
+  F->>FA: SDK.linkAccounts(selected)
+  FA-->>F: Accounts linked, consent approved
+  F->>BS: POST /finvu/fetchData {handleId, custId}
+  BS->>FA: GET /v2/consent/status
+  FA-->>BS: {consentId, status: APPROVED}
+  BS->>FA: GET /v2/consent/details
+  FA-->>BS: Date range, data types
+  BS->>FA: POST /v2/FI/request
+  FA-->>BS: {sessionId}
+  BS->>MDB: Store Finvu session
+  BS->>Q: Enqueue fetch-transactions job
+  BS-->>F: {sessionId, success}
+  Q->>FA: Fetch encrypted FI data
+  FA->>BANK: Request financial data
+  BANK-->>FA: Encrypted transactions
+  FA-->>Q: Encrypted data bundle
+  Q->>Q: Decrypt using DEK (AWS KMS)
+  Q->>MDB: Store transactions + account info
+  Q->>F: WebSocket: fetchedApiCall event
+  F->>U: Show transactions
+</div>
+
+<!-- TRANSACTION MODULE -->
+<div class="page-break"></div>
+<h1 id="txn-overview">6. Transaction Module Documentation</h1>
+<p>Base path: <code>/api/v1/bank/transactions</code> — All endpoints require <span class="badge badge-auth">JWT Auth</span></p>
+<div class="card card-info">
+<h4>Module Overview</h4>
+<p>The transaction module handles the complete lifecycle of financial transactions: ingestion from Finvu, parsing &amp; normalization, AI-powered categorization, grouping, recurring payment detection, budgeting, and display analytics.</p>
+</div>
+
+<h2 id="txn-endpoints">6.1 All Transaction Endpoints</h2>
+<table>
+<tr><th>Method</th><th>Endpoint</th><th>Controller Method</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/getTransactions/:page</code></td><td><code>getTransactions</code></td><td>Paginated transaction list (20/page)</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/autopays</code></td><td><code>getAutoPays</code></td><td>List detected auto-pay transactions</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/top-five-categories</code></td><td><code>getTopFiveCategories</code></td><td>Top 5 spending categories this month</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/budget-transactions</code></td><td><code>getBudgetTransactions</code></td><td>Transactions for active budget period</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/graph</code></td><td><code>getWholeTransactionsGraph</code></td><td>Monthly spend graph data (12 months)</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/recurring-payments</code></td><td><code>getRecurringPayments</code></td><td>List all detected subscriptions</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/loan-calculation</code></td><td><code>getLoanCalculation</code></td><td>EMI breakdown from transactions</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/create</code></td><td><code>createTransaction</code></td><td>Manual transaction entry</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/categorize/:txnId</code></td><td><code>categorizeTransaction</code></td><td>Re-categorize a single transaction</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/verify/:txnId</code></td><td><code>verifyPendingTransaction</code></td><td>Mark transaction as verified by user</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/grouped/:groupId/categorize</code></td><td><code>categorizeGroupedTransaction</code></td><td>Categorize all transactions in a group</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/recurring-payments/from-transaction/:txnId</code></td><td><code>createRecurringFromTransaction</code></td><td>Flag transaction as recurring payment</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/search</code></td><td><code>searchTransactions</code></td><td>Full-text search + filters</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/update/:txnId</code></td><td><code>updateTransaction</code></td><td>Update name, category, notes</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/hide/:txnId</code></td><td><code>toggleHideTransaction</code></td><td>Hide/unhide from feed</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/exclude/:txnId</code></td><td><code>toggleExcludeTransaction</code></td><td>Exclude from analytics</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/recurring-payments/:id</code></td><td><code>deleteRecurringPayment</code></td><td>Remove recurring payment tracking</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/:txnId</code></td><td><code>deleteTransaction</code></td><td>Delete manual transaction</td></tr>
+</table>
+
+<h3>Endpoint Detail: GET /getTransactions/:page</h3>
+<div class="endpoint-block">
+<div class="endpoint-header"><span class="badge badge-get">GET</span><h4>/getTransactions/:page</h4></div>
+<div class="endpoint-body">
+<table>
+<tr><th>Param</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>:page</code></td><td>integer</td><td>Page number starting from 1 (20 items per page)</td></tr>
+<tr><td><code>startDate</code></td><td>string (query)</td><td>ISO date filter start <span class="badge badge-opt">optional</span></td></tr>
+<tr><td><code>endDate</code></td><td>string (query)</td><td>ISO date filter end <span class="badge badge-opt">optional</span></td></tr>
+<tr><td><code>category</code></td><td>string (query)</td><td>Filter by category <span class="badge badge-opt">optional</span></td></tr>
+<tr><td><code>type</code></td><td>string (query)</td><td>DEBIT | CREDIT | TDS <span class="badge badge-opt">optional</span></td></tr>
+</table>
+<pre>// Response shape
+{
+  "success": true,
+  "transactions": [
+    {
+      "_id": "64abc...",
+      "type": "DEBIT",
+      "mode": "UPI",
+      "name": "Swiggy",
+      "amount": 450.00,
+      "transactionTimestamp": "2026-06-10T18:32:00Z",
+      "category": "Food &amp; Dining",
+      "subcategory": "Food Delivery",
+      "narration": "UPI/SWIGGY/P2M/payment",
+      "needsReview": false,
+      "isAutoPay": false
+    }
+  ],
+  "totalCount": 245,
+  "page": 1,
+  "totalPages": 13
+}</pre>
+</div>
+</div>
+
+<h3>Endpoint Detail: POST /search</h3>
+<div class="endpoint-block">
+<div class="endpoint-header"><span class="badge badge-post">POST</span><h4>/search</h4></div>
+<div class="endpoint-body">
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>query</code></td><td>string</td><td>Full-text search term (searches name, narration, merchant)</td></tr>
+<tr><td><code>startDate</code></td><td>string</td><td>ISO date range start</td></tr>
+<tr><td><code>endDate</code></td><td>string</td><td>ISO date range end</td></tr>
+<tr><td><code>minAmount</code></td><td>number</td><td>Minimum transaction amount filter</td></tr>
+<tr><td><code>maxAmount</code></td><td>number</td><td>Maximum transaction amount filter</td></tr>
+<tr><td><code>categories</code></td><td>string[]</td><td>Array of categories to include</td></tr>
+<tr><td><code>type</code></td><td>string</td><td>DEBIT | CREDIT</td></tr>
+</table>
+</div>
+</div>
+
+<!-- TRANSACTION FLOW -->
+<h2 id="txn-flow">6.2 Transaction Processing Flow</h2>
+<div class="mermaid">
+flowchart TD
+  A[Finvu Encrypted Data] --> B[Decrypt with DEK / AWS KMS]
+  B --> C[Parse raw FI schema XML/JSON]
+  C --> D[Normalize to Transaction model]
+  D --> E{Duplicate check}
+  E -->|Duplicate| F[Skip / Update count]
+  E -->|New| G[Narration parsing]
+  G --> H[Extract: merchant name, VPA, bank handle]
+  H --> I[AI Categorization service]
+  I --> J[Assign category + subcategory]
+  J --> K[Store in MongoDB]
+  K --> L[Recurring payment detection]
+  L --> M{Is recurring?}
+  M -->|Yes| N[Create/update RecurringPayment record]
+  M -->|No| O[Mark needsReview if uncertain]
+  N --> P[Update analytics aggregates]
+  O --> P
+  P --> Q[WebSocket notify client]
+  Q --> R[Flutter displays transactions]
+</div>
+
+<h2 id="txn-logic">6.3 Transaction Logic Details</h2>
+<div class="two-col">
+<div class="card">
+<h4>Categorization Logic</h4>
+<ul>
+<li>ML model analyzes <code>narration</code> + <code>name</code> fields</li>
+<li>Keywords matched against category taxonomy</li>
+<li>Examples: "SWIGGY" → Food &amp; Dining / Food Delivery</li>
+<li>Examples: "NETFLIX" → Entertainment / Streaming</li>
+<li>Low-confidence predictions set <code>needsReview: true</code></li>
+<li>User corrections feed back into model</li>
+</ul>
+</div>
+<div class="card">
+<h4>Deduplication Logic</h4>
+<ul>
+<li>Compound check: <code>txnId</code> + <code>transactionTimestamp</code> + <code>amount</code></li>
+<li>If exact match exists → skip insertion</li>
+<li>Soft dedup: near-identical narrations within 1min window flagged</li>
+<li>Manual transactions never deduped</li>
+</ul>
+</div>
+</div>
+<div class="two-col">
+<div class="card">
+<h4>Recurring Payment Detection</h4>
+<ul>
+<li>Groups transactions by <code>counterpartyName</code> or <code>merchant</code></li>
+<li>Checks for consistent amount ± 5% tolerance</li>
+<li>Checks for regular time intervals (7/14/30/365 days)</li>
+<li>High-confidence recurring → auto creates <code>RecurringPayment</code></li>
+<li>Assigns <code>expectedFrequency</code>: weekly/monthly/yearly</li>
+</ul>
+</div>
+<div class="card">
+<h4>Transaction Grouping</h4>
+<ul>
+<li>Similar transactions clustered by merchant + category</li>
+<li>User can bulk-categorize an entire group</li>
+<li>Groups visible in analytics view</li>
+<li><code>grouped/:groupId/categorize</code> updates all in group</li>
+</ul>
+</div>
+</div>
+
+<!-- COLLECTIONS MODULE -->
+<div class="page-break"></div>
+<h1 id="collections-overview">7. Collections Module Documentation</h1>
+<p>Base path: <code>/api/v1/bank/collections</code> - All endpoints require <span class="badge badge-auth">JWT Auth</span></p>
+<div class="card card-info">
+<h4>Module Overview</h4>
+<p>The Collections module lets users create personal or shared spending buckets from their existing bank transactions. Personal collections group selected transactions for tracking, while shared collections add members, split expenses equally or manually, track who paid, calculate balances, and record partial or complete settlements.</p>
+</div>
+
+<div class="two-col">
+<div class="card">
+<h4>Frontend Ownership</h4>
+<ul>
+<li><code>mobile-frontend/lib/Home_Screen/history/collections/</code> contains the collection home, list, settings, invitations, personal collection, group collection, creation pages, and shared trip/dashboard screens.</li>
+<li><code>mobile-frontend/lib/controllers/collections_controller.dart</code> owns GetX state, API calls, Hive cache hydration, socket updates, split actions, balances, invitations, and member limits.</li>
+<li><code>mobile-frontend/lib/routes/route_collections.dart</code> centralizes all mobile collection API URLs.</li>
+<li><code>mobile-frontend/lib/Hive_localstorage/apisCall/collections_apis.dart</code> persists collection list, details, splits, balances, and limit summary locally.</li>
+</ul>
+</div>
+<div class="card">
+<h4>Backend Ownership</h4>
+<ul>
+<li><code>mobile-backend/bank-service/src/routes/collection-routes.ts</code> registers protected Express routes for collections, invitations, members, transactions, splits, payments, and balances.</li>
+<li><code>mobile-backend/bank-service/src/controllers/collection-controller.ts</code> extracts authenticated user context, validates simple request requirements, calls services, formats success responses, and publishes socket events.</li>
+<li><code>mobile-backend/bank-service/src/services/collection-service.ts</code> contains core business rules for collection limits, membership permissions, transaction attachment, split generation, payment records, balances, member limits, close/delete/exit, and transaction-safe writes.</li>
+<li><code>collection-invitation-service.ts</code> manages invitation lifecycle for pending, accept, reject, cancel, and collection-level invitation views.</li>
+</ul>
+</div>
+</div>
+
+<h2 id="collections-api">7.1 Collections API Endpoint Reference</h2>
+<table>
+<tr><th>Method</th><th>Endpoint</th><th>Controller Method</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections</code></td><td><code>createCollection</code></td><td>Create PERSONAL or SHARED collection. Owner is added as CONTRIBUTE member.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections</code></td><td><code>getUserCollections</code></td><td>List all collections where current user is a member.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/limit-summary</code></td><td><code>getCollectionLimitSummary</code></td><td>Return base limit, referral bonus, used active count, total limit, and remaining count.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/invitations/pending</code></td><td><code>getPendingInvitations</code></td><td>Fetch pending invitations for the current user.</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/invitations/:invitationId/accept</code></td><td><code>acceptInvitation</code></td><td>Accept an invitation and add the user as a collection member.</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/invitations/:invitationId/reject</code></td><td><code>rejectInvitation</code></td><td>Reject a pending collection invitation.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id</code></td><td><code>getCollectionById</code></td><td>Fetch hydrated collection details, members, transactions, splits, totals, and outstanding amount.</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/updateCollections</code></td><td><code>updateCollection</code></td><td>Update name, description, expiry date, or reactivate collection.</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/collections/:id</code></td><td><code>deleteCollection</code></td><td>Owner deletes collection and cascades split payments, splits, collection transactions, and members.</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/closeCollection</code></td><td><code>closeCollection</code></td><td>Owner marks collection as CLOSED.</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/collections/:id/exit</code></td><td><code>exitCollection</code></td><td>Member exits the collection by removing own membership.</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/members</code></td><td><code>addMembers</code></td><td>Send invitations to selected friends instead of adding members directly.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/invitations</code></td><td><code>getCollectionInvitations</code></td><td>List invitations for a collection, optionally filtered by status.</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/collections/:id/invitations/:invitationId</code></td><td><code>cancelInvitation</code></td><td>Cancel a collection invitation.</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/members/limits</code></td><td><code>setMemberLimits</code></td><td>Owner bulk-updates member spending limits.</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/members/:memberId</code></td><td><code>updateCollectionMember</code></td><td>Update member role or individual limit.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/available-transactions</code></td><td><code>getAvailableTransactions</code></td><td>Paginated bank transactions not yet attached to this collection.</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/transactions</code></td><td><code>addTransaction</code></td><td>Add one or more transactions and create split document for SHARED collections.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/all-transactions</code></td><td><code>getAllTransactions</code></td><td>Return transactions already attached to a collection with totals and pagination.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/splits</code></td><td><code>getCollectionSplits</code></td><td>Fetch hydrated split records and member breakdown.</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/collections/:id/splits/:splitId</code></td><td><code>updateSplit</code></td><td>Convert/update a split using custom member amounts.</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/splits/:splitId/pay</code></td><td><code>recordPayment</code></td><td>Debtor records a partial or full payment to the creditor.</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/splits/:splitId/clear</code></td><td><code>clearPayment</code></td><td>Creditor confirms or clears a debtor payment.</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/balances</code></td><td><code>getBalances</code></td><td>Calculate current user's total to pay, total to receive, and itemized settlement status.</td></tr>
+</table>
+
+<h3>Endpoint Detail: POST /collections</h3>
+<div class="endpoint-block">
+<div class="endpoint-header"><span class="badge badge-post">POST</span><h4>/collections</h4></div>
+<div class="endpoint-body">
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>name</code></td><td>string</td><td>Collection display name</td></tr>
+<tr><td><code>type</code></td><td>PERSONAL | SHARED</td><td>Personal grouping or shared expense split collection</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>Optional description</td></tr>
+<tr><td><code>expiryAt</code></td><td>ISO date</td><td>Optional expiry date normalized to end-of-day on backend</td></tr>
+<tr><td><code>friends</code></td><td>array</td><td>Optional friends list used by the frontend creation flow</td></tr>
+</table>
+<pre>// Example request
+{
+  "name": "Goa Trip",
+  "type": "SHARED",
+  "description": "Trip expenses",
+  "expiryAt": "2026-07-31T00:00:00.000Z",
+  "friends": [
+    { "friendId": "665f...", "role": "VIEW" }
+  ]
+}</pre>
+<h4>Business Rules</h4>
+<ol>
+<li>Authenticated user must be below their active collection limit.</li>
+<li>Potential member limits are checked before collection creation.</li>
+<li>Collection is created in a MongoDB transaction.</li>
+<li>Owner is inserted into <code>CollectionMember</code> with <code>CONTRIBUTE</code> role.</li>
+<li>Creation awards Strides once for personal or shared collection milestones.</li>
+</ol>
+</div>
+</div>
+
+<h3>Endpoint Detail: POST /collections/:id/transactions</h3>
+<div class="endpoint-block">
+<div class="endpoint-header"><span class="badge badge-post">POST</span><h4>/collections/:id/transactions</h4></div>
+<div class="endpoint-body">
+<table>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>transactionIds</code></td><td>string[]</td><td>Bank transaction IDs selected by the user</td></tr>
+<tr><td><code>splitType</code></td><td>EQUAL | CUSTOM</td><td>Required for SHARED collections</td></tr>
+<tr><td><code>customSplits</code></td><td>array</td><td>Required when splitType is CUSTOM. Sum must equal transaction total.</td></tr>
+</table>
+<pre>// Equal split request
+{
+  "transactionIds": ["666a...", "666b..."],
+  "splitType": "EQUAL"
+}
+
+// Custom split request
+{
+  "transactionIds": ["666a..."],
+  "splitType": "CUSTOM",
+  "customSplits": [
+    { "userId": "111...", "amount": 1200 },
+    { "userId": "222...", "amount": 800 }
+  ]
+}</pre>
+<h4>Sequence of Operations</h4>
+<ol>
+<li>Verify requester is a collection member with <code>CONTRIBUTE</code> role.</li>
+<li>Verify every transaction exists and is not already attached to this collection.</li>
+<li>Create <code>CollectionTransaction</code> rows and increment <code>Collection.totalAmount</code>.</li>
+<li>For PERSONAL collections, return without creating splits.</li>
+<li>For SHARED collections, create a <code>Split</code> using equal distribution or validated custom amounts.</li>
+<li>Publish <code>splitUpdate</code> socket event so all collection clients refresh splits and balances.</li>
+</ol>
+</div>
+</div>
+
+<h2 id="collections-frontend">7.2 Frontend Screens, Controller &amp; Cache</h2>
+<div class="screen-card">
+<h3>Screen Folder: <code>mobile-frontend/lib/Home_Screen/history/collections/</code></h3>
+<table>
+<tr><th>File/Folder</th><th>Responsibility</th></tr>
+<tr><td><code>collections_HomePage.dart</code></td><td>Main collection landing/detail entry point used from transaction history.</td></tr>
+<tr><td><code>collections_list_widget.dart</code></td><td>Reusable list cards for collection summaries.</td></tr>
+<tr><td><code>personal-collections.dart</code></td><td>Personal collection view for grouped transactions without member splitting.</td></tr>
+<tr><td><code>group_collections_page.dart</code></td><td>Shared collection/member-focused page.</td></tr>
+<tr><td><code>collection_setting.dart</code></td><td>Settings actions such as rename, expiry update, close/delete/exit, and member administration.</td></tr>
+<tr><td><code>invitations_list.dart</code></td><td>Pending invitation UI with accept/reject actions.</td></tr>
+<tr><td><code>colletion_personal_limit.dart</code></td><td>Collection/member limit UI and guard rails.</td></tr>
+<tr><td><code>create_collection_pages/</code></td><td>Multi-step creation flow, member selection, duration/details, and confirmation screens.</td></tr>
+<tr><td><code>trip/screens/</code></td><td>Shared dashboard, member spend analysis, transaction selection, split amount entry, and split confirmation views.</td></tr>
+<tr><td><code>trip/widgets/</code></td><td>Shared UI widgets used by trip/collection screens.</td></tr>
+</table>
+</div>
+
+<div class="two-col">
+<div class="card">
+<h4>CollectionsController Responsibilities</h4>
+<ul>
+<li>Maintains <code>collectionsList</code>, <code>selectedCollection</code>, <code>collectionDetails</code>, <code>splitsList</code>, <code>balancesListPay</code>, <code>balancesListReceive</code>, and selected transaction state.</li>
+<li>Loads cached collections, collection details, splits, balances, and limits from Hive before refreshing from network.</li>
+<li>Creates collections, sends member invitations, accepts/rejects invitations, updates collection metadata, closes/deletes/exits collections, and updates member role or limit.</li>
+<li>Adds personal/shared transactions, supports equal/custom/manual splits, refreshes dashboard data, and calculates displayed balance totals from backend responses.</li>
+<li>Handles socket messages such as <code>splitUpdate</code>, <code>AcceptInvitation</code>, <code>updatedMember</code>, <code>nameUpdate</code>, <code>descriptionUpdate</code>, <code>expiryUpdate</code>, and fallback <code>update</code>.</li>
+</ul>
+</div>
+<div class="card">
+<h4>Hive Cache Keys</h4>
+<ul>
+<li><code>collections</code> - collection list.</li>
+<li><code>limitSummary</code> - base limit, referral bonus, total limit, used count, and remaining count.</li>
+<li><code>collectionDetails_&lt;collectionId&gt;</code> - hydrated collection detail payload.</li>
+<li><code>splits_&lt;collectionId&gt;</code> - split list for a collection.</li>
+<li><code>balances_&lt;collectionId&gt;</code> - to-pay/to-receive balance summary.</li>
+<li><code>clearCollection(collectionId)</code> removes detail, split, and balance cache after delete/exit.</li>
+</ul>
+</div>
+</div>
+
+<h3>Frontend API Mapping</h3>
+<p><code>CollectionsRoute</code> maps the Flutter calls to the backend collection routes. Examples:</p>
+<table>
+<tr><th>Controller Method</th><th>Route Helper</th><th>Backend Endpoint</th></tr>
+<tr><td><code>getCollections()</code></td><td><code>CollectionsRoute.getCollections</code></td><td><code>GET /collections</code></td></tr>
+<tr><td><code>fetchCollectionLimitSummary()</code></td><td><code>getCollectionLimitSummary</code></td><td><code>GET /collections/limit-summary</code></td></tr>
+<tr><td><code>getCollectionById(id)</code></td><td><code>getCollectionById(id)</code></td><td><code>GET /collections/:id</code></td></tr>
+<tr><td><code>createCollectionWithMembers()</code></td><td><code>createCollection</code>, then <code>addMember(id)</code></td><td><code>POST /collections</code>, then <code>POST /collections/:id/members</code></td></tr>
+<tr><td><code>getAllCollectionsTransactions()</code></td><td><code>getAvailableTransactions(id)</code></td><td><code>GET /collections/:id/available-transactions</code></td></tr>
+<tr><td><code>addTransaction()</code></td><td><code>addTransaction(id)</code></td><td><code>POST /collections/:id/transactions</code></td></tr>
+<tr><td><code>getSplits(id)</code></td><td><code>getSplits(id)</code></td><td><code>GET /collections/:id/splits</code></td></tr>
+<tr><td><code>getBalances(id)</code></td><td><code>getBalances(id)</code></td><td><code>GET /collections/:id/balances</code></td></tr>
+<tr><td><code>clearSplit()</code></td><td><code>paySplit(id, splitId)</code></td><td><code>POST /collections/:id/splits/:splitId/pay</code></td></tr>
+<tr><td><code>clearSplitAmountComplete()</code></td><td><code>clearPayment(id, splitId)</code></td><td><code>POST /collections/:id/splits/:splitId/clear</code></td></tr>
+</table>
+
+<h2 id="collections-flow">7.3 Collection Creation, Split &amp; Settlement Flow</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant F as Flutter Collections UI
+  participant C as CollectionsController
+  participant BS as Bank Service
+  participant CS as CollectionService
+  participant IS as InvitationService
+  participant MDB as MongoDB
+  participant WS as Socket
+
+  U->>F: Create shared collection
+  F->>C: createCollectionWithMembers(name, type, friends)
+  C->>BS: POST /collections
+  BS->>CS: createCollection(userId, data, friends)
+  CS->>MDB: Check limits, create Collection + owner member
+  BS-->>C: Created collection
+  C->>BS: POST /collections/:id/members
+  BS->>IS: sendInvitations(collectionId, friends)
+  IS->>MDB: Store pending invitations
+  BS-->>C: Invitations sent
+  C->>C: Refresh list and cache collections
+
+  U->>F: Select transactions and split
+  F->>C: addTransaction(transactionIds, splitType)
+  C->>BS: POST /collections/:id/transactions
+  BS->>CS: addTransactions(collectionId, userId, transactionIds, splitType)
+  CS->>MDB: Create CollectionTransaction rows
+  alt Shared collection
+    CS->>MDB: Create Split with EQUAL or CUSTOM amounts
+  else Personal collection
+    CS-->>BS: No split document
+  end
+  BS->>WS: publish splitUpdate
+  BS-->>C: Added successfully
+  C->>BS: GET /splits + GET /balances
+  C->>F: Update dashboard
+
+  U->>F: Record or clear payment
+  F->>C: clearSplit / clearSplitAmountComplete
+  C->>BS: POST /splits/:splitId/pay or /clear
+  BS->>CS: recordPayment / clearPayment
+  CS->>MDB: Insert SplitPayment
+  BS->>WS: publish splitUpdate
+  C->>BS: GET /balances
+  C->>F: Show updated to-pay/to-receive totals
+</div>
+
+<h3>Permission &amp; Limit Rules</h3>
+<div class="two-col">
+<div class="card">
+<h4>Permissions</h4>
+<ul>
+<li>Every collection route uses <code>protect</code>, so <code>req.user._id</code> comes from a verified JWT.</li>
+<li>Only collection members can fetch details, splits, balances, and collection transactions.</li>
+<li><code>CONTRIBUTE</code> members can add transactions, update splits, add/invite members, and update collection details.</li>
+<li>Only the owner can delete, close, and bulk-set member limits.</li>
+<li>Members can exit a collection by deleting only their membership.</li>
+</ul>
+</div>
+<div class="card">
+<h4>Limit &amp; Balance Logic</h4>
+<ul>
+<li>User collection limits come from <code>UserConfigService.getUserCollectionLimit()</code>.</li>
+<li>Active collection usage is counted through <code>CollectionMember</code> joined with ACTIVE <code>Collection</code> rows.</li>
+<li>Available transactions exclude already-attached <code>CollectionTransaction</code> documents.</li>
+<li>Balances are calculated from <code>Split</code> minus aggregated <code>SplitPayment</code> records.</li>
+<li>Settlement statuses are <code>PENDING</code>, <code>PARTIAL</code>, or <code>SETTLED</code>.</li>
+</ul>
+</div>
+</div>
+
+
+
+<!-- BACKEND ARCHITECTURE -->
+<div class="page-break"></div>
+<h1 id="backend-arch">9. Backend Services Architecture</h1>
+
+<h2>Folder Structure (Bank Service — primary)</h2>
+<pre>mobile-backend/bank-service/
+├── src/
+│   ├── index.ts                          # Server entry point
+│   ├── app.ts                            # Express app + middleware registration
+│   ├── config/
+│   │   ├── server-config.ts              # Environment variable accessors
+│   │   ├── secrets.ts                    # AWS Secrets Manager integration
+│   │   └── redis-config.ts               # Redis client (lazy connect)
+│   ├── controllers/
+│   │   ├── finvu-controller.ts           # Finvu API orchestration
+│   │   └── transaction-automation/
+│   │       └── transaction-controller.ts # Transaction CRUD + analytics
+│   ├── routes/
+│   │   ├── finvu-routes.ts               # /finvu/* route definitions
+│   │   └── transactionsAuto/
+│   │       └── transactions.ts           # /transactions/* route definitions
+│   ├── models/
+│   │   ├── transactions-automation/
+│   │   │   ├── bank.ts                   # Bank (FIP) model
+│   │   │   ├── account.ts                # Bank account model
+│   │   │   ├── transaction.ts            # Transaction model
+│   │   │   ├── finvu.ts                  # Finvu session model
+│   │   │   └── consent-handle_model.ts   # Consent handle model
+│   │   └── fips-metric.ts                # FIP health metrics model
+│   ├── middlewares/
+│   │   ├── auth-middleware.ts            # JWT verification
+│   │   ├── validateRequest.ts            # Joi validation wrapper
+│   │   ├── notification-middleware.ts    # Push notification hooks
+│   │   └── security/
+│   │       ├── cors.ts                   # CORS policy
+│   │       ├── errorHandlers.ts          # Global error handler
+│   │       ├── security.ts               # Helmet + rate limiter
+│   │       └── metrics.ts                # Request metrics
+│   ├── services/                         # Business logic layer
+│   └── utils/                            # Helpers</pre>
+
+<h2>Collections Backend Files</h2>
+<table>
+<tr><th>File</th><th>Purpose</th></tr>
+<tr><td><code>controllers/collection-controller.ts</code></td><td>HTTP handlers for create/list/detail, invitations, members, transactions, splits, balances, settlement payments, and socket publishing.</td></tr>
+<tr><td><code>routes/collection-routes.ts</code></td><td>Express route map for <code>/collections</code>. Applies <code>protect</code> to every collection endpoint.</td></tr>
+<tr><td><code>services/collection-service.ts</code></td><td>Core business logic for limits, permissions, transactions, equal/custom splits, payment records, balances, close/delete/exit, and member limits.</td></tr>
+<tr><td><code>services/collection-invitation-service.ts</code></td><td>Invitation send, pending list, accept, reject, cancel, and collection invitation queries.</td></tr>
+<tr><td><code>models/collections/*.ts</code></td><td>Mongoose schemas for collections, members, invitations, collection transactions, splits, and split payments.</td></tr>
+</table>
+
+<h2 id="middleware">9.1 Middleware Stack</h2>
+<p>Applied in order in <code>app.ts</code>:</p>
+<table>
+<tr><th>Order</th><th>Middleware</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>helmet()</code></td><td>Sets secure HTTP headers (CSP, HSTS, X-Frame-Options)</td></tr>
+<tr><td>2</td><td><code>hpp()</code></td><td>Prevent HTTP Parameter Pollution attacks</td></tr>
+<tr><td>3</td><td>CORS</td><td>Whitelist allowed origins; preflight handling</td></tr>
+<tr><td>4</td><td>Rate limiter</td><td>200 requests / 15 minutes per IP (global)</td></tr>
+<tr><td>5</td><td><code>express.json()</code></td><td>Parse JSON request bodies</td></tr>
+<tr><td>6</td><td>Request metrics</td><td>Track latency per route in Redis</td></tr>
+<tr><td>7</td><td><code>protect</code> (auth)</td><td>JWT verification on protected routes</td></tr>
+<tr><td>8</td><td><code>validateRequest</code></td><td>Joi schema validation per route</td></tr>
+<tr><td>9</td><td>Route handlers</td><td>Controller logic</td></tr>
+<tr><td>10</td><td>Error handler</td><td>Global catch-all, formats error response</td></tr>
+</table>
+
+<h2 id="auth">9.2 Authentication Mechanisms</h2>
+<div class="card">
+<h4>JWT Flow</h4>
+<ol>
+<li>User authenticates via Firebase Auth (mobile app) → gets Firebase ID token</li>
+<li>Flutter sends Firebase ID token to Main Backend</li>
+<li>Main Backend verifies with Firebase Admin SDK → issues its own JWT (signed with <code>JWT_SECRET</code>)</li>
+<li>JWT payload: <code>{userId, email, aud: 'bank-service'}</code></li>
+<li>All subsequent requests include: <code>Authorization: Bearer &lt;jwt&gt;</code></li>
+<li>Bank Service verifies JWT with <code>SERVICE_JWT_SECRET</code>, checks <code>aud === 'bank-service'</code></li>
+</ol>
+</div>
+<pre>// auth-middleware.ts (simplified)
+export const protect = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'No token' });
+
+  const decoded = jwt.verify(token, process.env.SERVICE_JWT_SECRET!, {
+    audience: 'bank-service'
+  });
+  req.user = { _id: decoded.userId };
+  Sentry.setUser({ id: decoded.userId });
+  next();
+};</pre>
+
+<!-- API REFERENCE TABLE -->
+<div class="page-break"></div>
+<h1 id="api-ref">10. Complete API Reference</h1>
+<table>
+<tr><th>Module</th><th>Method</th><th>Endpoint</th><th>Purpose</th><th>Auth</th></tr>
+<tr><td rowspan="6"><strong>Finvu</strong></td><td><span class="badge badge-post">POST</span></td><td><code>/finvu/login</code></td><td>Create consent request, get handle ID</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/finvu/fetchData</code></td><td>Fetch &amp; process transactions</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/finvu/fetchWeekly</code></td><td>Weekly auto-sync</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/finvu/fip-details/</code></td><td>FIP details by ID</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/finvu/fipsmetric</code></td><td>All FIP health metrics</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/finvu/status/:id</code></td><td>Consent status check</td><td>JWT</td></tr>
+<tr><td rowspan="18"><strong>Transactions</strong></td><td><span class="badge badge-get">GET</span></td><td><code>/transactions/getTransactions/:page</code></td><td>Paginated transaction list</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/transactions/autopays</code></td><td>Auto-pay detections</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/transactions/top-five-categories</code></td><td>Top spend categories</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/transactions/budget-transactions</code></td><td>Budget period transactions</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/transactions/graph</code></td><td>Monthly spend graph data</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/transactions/recurring-payments</code></td><td>Subscription list</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/transactions/loan-calculation</code></td><td>EMI/loan analysis</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/transactions/create</code></td><td>Manual transaction</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/transactions/categorize/:id</code></td><td>Re-categorize transaction</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/transactions/verify/:id</code></td><td>Verify pending transaction</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/transactions/grouped/:groupId/categorize</code></td><td>Bulk group categorize</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/transactions/recurring-payments/from-transaction/:id</code></td><td>Flag as recurring</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/transactions/search</code></td><td>Search + filter</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/transactions/update/:id</code></td><td>Edit transaction</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/transactions/hide/:id</code></td><td>Hide/show transaction</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/transactions/exclude/:id</code></td><td>Exclude from analytics</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/transactions/recurring-payments/:id</code></td><td>Delete recurring</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/transactions/:id</code></td><td>Delete transaction</td><td>JWT</td></tr>
+<tr><td rowspan="24"><strong>Collections</strong></td><td><span class="badge badge-post">POST</span></td><td><code>/collections</code></td><td>Create personal/shared collection</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections</code></td><td>User collection list</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/limit-summary</code></td><td>User collection limit summary</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/invitations/pending</code></td><td>Pending collection invitations</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/invitations/:invitationId/accept</code></td><td>Accept invitation</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/invitations/:invitationId/reject</code></td><td>Reject invitation</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id</code></td><td>Collection details</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/updateCollections</code></td><td>Update collection metadata</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/collections/:id</code></td><td>Delete collection</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/closeCollection</code></td><td>Close collection</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/collections/:id/exit</code></td><td>Exit collection</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/members</code></td><td>Invite members</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/invitations</code></td><td>Collection invitations</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/collections/:id/invitations/:invitationId</code></td><td>Cancel invitation</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/members/limits</code></td><td>Bulk member limits</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/collections/:id/members/:memberId</code></td><td>Update member role/limit</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/available-transactions</code></td><td>Transactions not yet added</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/transactions</code></td><td>Add transactions and create split</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/all-transactions</code></td><td>Collection transactions</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/splits</code></td><td>Collection splits</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-put">PUT</span></td><td><code>/collections/:id/splits/:splitId</code></td><td>Update split</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/splits/:splitId/pay</code></td><td>Record debtor payment</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/collections/:id/splits/:splitId/clear</code></td><td>Creditor clears payment</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/collections/:id/balances</code></td><td>To-pay/to-receive balances</td><td>JWT</td></tr>
+<tr><td rowspan="8"><strong>Email</strong></td><td><span class="badge badge-post">POST</span></td><td><code>/email/generate-token</code></td><td>Gmail OAuth token exchange</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/email/scrape</code></td><td>Scrape emails for bank</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/email/statement-password</code></td><td>Save PDF password</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/email/pending-statements</code></td><td>Pending parse queue</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-post">POST</span></td><td><code>/email/process-pending-statement</code></td><td>Process queued statement</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/email/scraped-emails</code></td><td>Scraped transaction data</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-get">GET</span></td><td><code>/email/unLinked-cards</code></td><td>Unlinked credit cards</td><td>JWT</td></tr>
+<tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/email/remove-access</code></td><td>Revoke Gmail access</td><td>JWT</td></tr>
+</table>
+
+<!-- DATABASE DOCUMENTATION -->
+<div class="page-break"></div>
+<h1 id="database">11. Database Documentation</h1>
+<p>Database: <strong>MongoDB</strong> (hosted on MongoDB Atlas). All sensitive fields are encrypted at-rest using <strong>Field-Level Encryption</strong> with DEKs managed by <strong>AWS KMS</strong>.</p>
+
+<h2>Collection: ConsentHandleId</h2>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>custId</code></td><td>String</td><td>Yes</td><td>Finvu customer ID (e.g., user@finvu)</td></tr>
+<tr><td><code>handleId</code></td><td>String</td><td>Yes</td><td>Consent handle returned from Finvu</td></tr>
+<tr><td><code>userId</code></td><td>ObjectId</td><td>Yes</td><td>Reference to user document</td></tr>
+<tr><td><code>expiresAt</code></td><td>Date</td><td>Yes</td><td>TTL index — auto-deletes after 5 days</td></tr>
+<tr><td><code>createdAt</code></td><td>Date</td><td>Auto</td><td>Timestamp</td></tr>
+</table>
+
+<h2>Collection: FinvuSession</h2>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>sessionId</code></td><td>String (unique)</td><td>Yes</td><td>FI session ID from Finvu</td></tr>
+<tr><td><code>custId</code></td><td>String</td><td>Yes</td><td>Finvu customer ID</td></tr>
+<tr><td><code>consentId</code></td><td>String</td><td>Yes</td><td>Consent ID from Finvu</td></tr>
+<tr><td><code>handleId</code></td><td>String</td><td>Yes</td><td>Original consent handle</td></tr>
+<tr><td><code>isUpdate</code></td><td>Boolean</td><td>Yes</td><td>Whether this is a re-fetch</td></tr>
+<tr><td><code>data</code></td><td>Mixed</td><td>No</td><td>Raw encrypted FI data (if fetched)</td></tr>
+<tr><td><code>userId</code></td><td>ObjectId</td><td>Yes</td><td>Owner user</td></tr>
+<tr><td><code>expiresAt</code></td><td>Date</td><td>Yes</td><td>TTL — auto-deletes after 24h</td></tr>
+</table>
+
+<h2>Collection: Bank</h2>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Encrypted</th><th>Description</th></tr>
+<tr><td><code>fipId</code></td><td>String</td><td>Yes</td><td>FIP identifier (e.g., sbi-fip)</td></tr>
+<tr><td><code>fipName</code></td><td>String</td><td>Yes</td><td>Human-readable bank name</td></tr>
+<tr><td><code>custId</code></td><td>String</td><td>Yes</td><td>User's Finvu customer ID</td></tr>
+<tr><td><code>consentId</code></td><td>String</td><td>Yes</td><td>Active consent ID</td></tr>
+<tr><td><code>consentHandleId</code></td><td>String</td><td>Yes</td><td>Original consent handle</td></tr>
+<tr><td><code>sessionId</code></td><td>String</td><td>Yes</td><td>Latest FI session ID</td></tr>
+<tr><td><code>fiAccountInfo</code></td><td>Array</td><td>Yes</td><td>Account ref numbers &amp; link ref numbers</td></tr>
+<tr><td><code>userId</code></td><td>ObjectId</td><td>No</td><td>Owner user</td></tr>
+<tr><td><code>encryptedDEK</code></td><td>String</td><td>—</td><td>Encrypted Data Encryption Key (AWS KMS)</td></tr>
+</table>
+<p><strong>Unique Index:</strong> <code>(fipId, consentHandleId, userId)</code></p>
+
+<h2>Collection: Account</h2>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Encrypted</th><th>Description</th></tr>
+<tr><td><code>linkedAccRef</code></td><td>String (unique)</td><td>Yes</td><td>Account reference number from Finvu</td></tr>
+<tr><td><code>type</code></td><td>Enum</td><td>No</td><td>term_deposit / recurring_deposit / deposit</td></tr>
+<tr><td><code>maskedAccNumber</code></td><td>String</td><td>Yes</td><td>Masked account number (e.g., XXXX1234)</td></tr>
+<tr><td><code>version</code></td><td>String</td><td>Yes</td><td>FI schema version</td></tr>
+<tr><td><code>startDate</code></td><td>Date</td><td>No</td><td>Account start date</td></tr>
+<tr><td><code>endDate</code></td><td>Date</td><td>No</td><td>Account end date / maturity</td></tr>
+<tr><td><code>bankId</code></td><td>ObjectId</td><td>No</td><td>Reference to Bank collection</td></tr>
+<tr><td><code>userId</code></td><td>ObjectId</td><td>No</td><td>Owner user</td></tr>
+<tr><td><code>fetchCount</code></td><td>Number</td><td>No</td><td>Total data fetch attempts</td></tr>
+<tr><td><code>nextFetch</code></td><td>Date</td><td>No</td><td>Scheduled next fetch time</td></tr>
+<tr><td><code>lastFetch</code></td><td>Date</td><td>No</td><td>Last successful fetch time</td></tr>
+<tr><td><code>encryptedDEK</code></td><td>String</td><td>—</td><td>Per-account encryption key</td></tr>
+</table>
+<p><strong>Compound Index:</strong> <code>(userId, accountId, bankId, transactionTimestamp DESC)</code></p>
+
+<h2>Collection: Transaction</h2>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>type</code></td><td>Enum: DEBIT/CREDIT/TDS</td><td>Transaction direction</td></tr>
+<tr><td><code>mode</code></td><td>String</td><td>Payment mode: UPI, NEFT, IMPS, RTGS, CHEQUE, ATM</td></tr>
+<tr><td><code>name</code></td><td>String</td><td>Merchant / counterparty display name</td></tr>
+<tr><td><code>amount</code></td><td>Number</td><td>Transaction amount (INR)</td></tr>
+<tr><td><code>transactionalBalance</code></td><td>Number</td><td>Account balance after transaction</td></tr>
+<tr><td><code>transactionTimestamp</code></td><td>Date</td><td>When transaction occurred</td></tr>
+<tr><td><code>txnId</code></td><td>String</td><td>Bank-assigned transaction ID</td></tr>
+<tr><td><code>narration</code></td><td>String</td><td>Raw bank narration text</td></tr>
+<tr><td><code>category</code></td><td>String</td><td>AI-assigned category</td></tr>
+<tr><td><code>subcategory</code></td><td>String</td><td>AI-assigned subcategory</td></tr>
+<tr><td><code>counterpartyName</code></td><td>String</td><td>Extracted from narration</td></tr>
+<tr><td><code>counterpartyVPA</code></td><td>String</td><td>UPI VPA of counterparty</td></tr>
+<tr><td><code>counterpartyBankHandle</code></td><td>String</td><td>Bank handle (e.g., @oksbi)</td></tr>
+<tr><td><code>expectedFrequency</code></td><td>String</td><td>weekly/monthly/yearly (recurring)</td></tr>
+<tr><td><code>needsReview</code></td><td>Boolean</td><td>Low-confidence categorization flag</td></tr>
+<tr><td><code>isAutoPay</code></td><td>Boolean</td><td>Detected as auto-pay</td></tr>
+<tr><td><code>isExcluded</code></td><td>Boolean</td><td>Excluded from analytics</td></tr>
+<tr><td><code>Hidden</code></td><td>Boolean</td><td>Hidden from transaction feed</td></tr>
+<tr><td><code>manualTransaction</code></td><td>Boolean</td><td>User-entered manually</td></tr>
+<tr><td><code>accountId</code></td><td>ObjectId</td><td>Reference to Account</td></tr>
+<tr><td><code>userId</code></td><td>ObjectId</td><td>Owner user</td></tr>
+<tr><td><code>bankId</code></td><td>ObjectId</td><td>Reference to Bank</td></tr>
+</table>
+
+<h2>Collection: FipsMetric</h2>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>timestamp</code></td><td>Date</td><td>Metric measurement time</td></tr>
+<tr><td><code>fip_id</code></td><td>String</td><td>Bank FIP identifier</td></tr>
+<tr><td><code>event_name</code></td><td>String</td><td>Measured event type</td></tr>
+<tr><td><code>latency_avg_ms</code></td><td>Number</td><td>Average response latency</td></tr>
+<tr><td><code>success_percent</code></td><td>Number</td><td>Success rate (0–100)</td></tr>
+<tr><td><code>timeout_percent</code></td><td>Number</td><td>Timeout rate</td></tr>
+<tr><td><code>latencyP99_ms</code></td><td>Number</td><td>99th percentile latency</td></tr>
+<tr><td><code>latencyP95_ms</code></td><td>Number</td><td>95th percentile latency</td></tr>
+<tr><td><code>latencyP50_ms</code></td><td>Number</td><td>Median latency</td></tr>
+</table>
+
+<h2>Collections Module Collections</h2>
+<table class="field-table">
+<tr><th>Collection</th><th>Key Fields</th><th>Purpose</th></tr>
+<tr><td><code>Collection</code></td><td>name, type, ownerId, description, expiryAt, status, totalAmount</td><td>Top-level personal/shared collection header. Status is ACTIVE or CLOSED.</td></tr>
+<tr><td><code>CollectionMember</code></td><td>collectionId, userId, role, limitAmount, joinedAt</td><td>Membership and permission record. Unique index on collectionId + userId.</td></tr>
+<tr><td><code>CollectionTransaction</code></td><td>collectionId, transactionId, addedBy, amount</td><td>Join table between collection and bank transactions selected by users.</td></tr>
+<tr><td><code>CollectionInvitation</code></td><td>collectionId, invitedBy, invitedUserId/friendId, status, expiresAt</td><td>Invitation lifecycle for adding friends to shared collections.</td></tr>
+<tr><td><code>Split</code></td><td>collectionId, transactionIds, paidBy, splits[], splitType</td><td>Expense split record. Supports EQUAL and CUSTOM splits.</td></tr>
+<tr><td><code>SplitPayment</code></td><td>collectionId, splitId, payerId, receiverId, splitAmount, paidAmount, initiatedBy, note</td><td>Partial/full settlement records used to calculate remaining balances.</td></tr>
+</table>
+
+<h3>Collection Model Fields</h3>
+<table class="field-table">
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>name</code></td><td>String</td><td>Display name.</td></tr>
+<tr><td><code>type</code></td><td>Enum: PERSONAL/SHARED</td><td>Controls whether split records are created.</td></tr>
+<tr><td><code>ownerId</code></td><td>ObjectId</td><td>User who owns the collection.</td></tr>
+<tr><td><code>description</code></td><td>String</td><td>Optional description.</td></tr>
+<tr><td><code>expiryAt</code></td><td>Date</td><td>Optional expiry date, normalized to end of day.</td></tr>
+<tr><td><code>status</code></td><td>ACTIVE/CLOSED</td><td>Controls whether collection can be updated or receive transactions.</td></tr>
+<tr><td><code>totalAmount</code></td><td>Number</td><td>Quick summary of attached transaction amount.</td></tr>
+</table>
+
+<h3>Split &amp; Settlement Fields</h3>
+<table class="field-table">
+<tr><th>Model</th><th>Field</th><th>Description</th></tr>
+<tr><td><code>Split</code></td><td><code>paidBy</code></td><td>Creditor user. In add-transaction flow this is derived from the first selected bank transaction owner.</td></tr>
+<tr><td><code>Split</code></td><td><code>splits[]</code></td><td>Array of <code>{ userId, amount }</code> shares owed by members.</td></tr>
+<tr><td><code>Split</code></td><td><code>splitType</code></td><td><code>EQUAL</code> or <code>CUSTOM</code>.</td></tr>
+<tr><td><code>SplitPayment</code></td><td><code>payerId</code></td><td>Debtor who owes money for a split.</td></tr>
+<tr><td><code>SplitPayment</code></td><td><code>receiverId</code></td><td>Creditor who originally paid the split.</td></tr>
+<tr><td><code>SplitPayment</code></td><td><code>paidAmount</code></td><td>One settlement entry amount. Multiple entries are summed for partial payments.</td></tr>
+</table>
+
+<h2>Email Service Collections</h2>
+<table class="field-table">
+<tr><th>Collection</th><th>Key Fields</th><th>Purpose</th></tr>
+<tr><td><code>GoogleAuth</code></td><td>userId, email, accessToken, refreshToken, expiresAt</td><td>Gmail OAuth tokens per user</td></tr>
+<tr><td><code>ScrapeResult</code></td><td>userId, bankId, emailId, rawData, processedAt</td><td>Raw scraped email data</td></tr>
+<tr><td><code>StatementPassword</code></td><td>userId, bankId, password (encrypted)</td><td>PDF password per bank</td></tr>
+<tr><td><code>PendingStatementExtraction</code></td><td>userId, bankId, attachmentUrl, status, attempts</td><td>PDF processing job queue</td></tr>
+<tr><td><code>CreditCardStatement</code></td><td>userId, bankId, statementDate, transactions[]</td><td>Parsed CC statement data</td></tr>
+<tr><td><code>UserBankMap</code></td><td>userId, email, bankId, cardLast4</td><td>Email → bank account mapping</td></tr>
+</table>
+
+<h2>Entity Relationship Diagram</h2>
+<div class="mermaid">
+erDiagram
+  USER ||--o{ BANK : "links"
+  USER ||--o{ FINVUSESSION : "creates"
+  USER ||--o{ CONSENTHANDLE : "requests"
+  USER ||--o{ GOOGLEAUTH : "connects"
+  BANK ||--o{ ACCOUNT : "has"
+  ACCOUNT ||--o{ TRANSACTION : "contains"
+  USER ||--o{ COLLECTION : "owns"
+  USER ||--o{ COLLECTIONMEMBER : "joins"
+  COLLECTION ||--o{ COLLECTIONMEMBER : "has"
+  COLLECTION ||--o{ COLLECTIONTRANSACTION : "contains"
+  TRANSACTION ||--o{ COLLECTIONTRANSACTION : "selected"
+  COLLECTION ||--o{ COLLECTIONINVITATION : "invites"
+  COLLECTION ||--o{ SPLIT : "splits"
+  SPLIT ||--o{ SPLITPAYMENT : "settles"
+  BANK ||--|| CONSENTHANDLE : "references"
+  USER ||--o{ CREDITCARDSTATEMENT : "has"
+  USER ||--o{ STATEMENTPASSWORD : "stores"
+  FIPSMETRIC }o--|| BANK : "measures"
+</div>
+
+<!-- SEQUENCE DIAGRAMS -->
+<div class="page-break"></div>
+<h1 id="sequence">12. Sequence Diagrams</h1>
+
+<h2>12.1 User Registration &amp; Login Flow</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant F as Flutter App
+  participant FB as Firebase Auth
+  participant MB as Main Backend
+  participant MDB as MongoDB
+
+  U->>F: Enter email/password or tap Google Sign-In
+  F->>FB: signInWithGoogle() / signInWithEmailPassword()
+  FB-->>F: Firebase ID Token
+  F->>MB: POST /auth/verify {firebaseToken}
+  MB->>FB: verifyIdToken(firebaseToken)
+  FB-->>MB: Decoded Firebase user
+  MB->>MDB: Find or create User document
+  MDB-->>MB: User record
+  MB->>MB: Sign JWT {userId, email, aud: 'bank-service'}
+  MB-->>F: {jwt, user}
+  F->>F: Store JWT in Hive userBox
+  F->>F: Navigate to Home Dashboard
+</div>
+
+<h2>12.2 Finvu Consent &amp; Bank Linking</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant F as Flutter
+  participant BS as Bank Service
+  participant FV as Finvu API
+  participant SDK as Finvu SDK
+
+  U->>F: Enter mobile number
+  F->>BS: POST /finvu/login
+  BS->>FV: Create consent request
+  FV-->>BS: consentHandleId
+  BS-->>F: consentHandleId
+  F->>SDK: init(endpoint, consentHandleId)
+  FV->>U: OTP via SMS
+  U->>F: Enter OTP
+  F->>SDK: verifyOTP(otp)
+  SDK-->>F: Success
+  F->>SDK: discoverAccounts(fipId)
+  SDK-->>F: DiscoveredAccountInfo[]
+  U->>F: Select &amp; confirm accounts
+  F->>SDK: linkAccounts(selected)
+  SDK-->>F: Linked
+  F->>BS: POST /finvu/fetchData
+  BS->>FV: Initiate FI request
+  FV-->>BS: sessionId
+  BS-->>F: {sessionId, success}
+  Note over BS: Bull job fetches data async
+  BS->>F: WebSocket: fetchedApiCall
+  F->>U: Show transactions
+</div>
+
+<h2>12.3 Transaction Fetch &amp; Processing</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant Q as Bull Queue
+  participant BS as Bank Service
+  participant FV as Finvu API
+  participant KMS as AWS KMS
+  participant MDB as MongoDB
+  participant WS as WebSocket
+
+  Q->>BS: Execute fetch-transactions job
+  BS->>FV: GET /v2/FI/fetch/{sessionId}
+  FV-->>BS: Encrypted FI data bundle
+  BS->>KMS: Decrypt DEK with master key
+  KMS-->>BS: Plaintext DEK
+  BS->>BS: Decrypt FI data with DEK
+  BS->>BS: Parse FI XML/JSON schema
+  loop For each transaction
+    BS->>BS: Normalize to Transaction model
+    BS->>BS: Check duplicate (txnId + timestamp)
+    BS->>BS: Parse narration (extract merchant, VPA)
+    BS->>BS: AI categorize
+    BS->>MDB: Upsert Transaction
+  end
+  BS->>BS: Run recurring payment detection
+  BS->>MDB: Update RecurringPayments
+  BS->>WS: Emit fetchedApiCall event
+  WS->>Q: Job complete
+</div>
+
+<h2>12.4 Collections Create, Split &amp; Settle</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant F as Flutter
+  participant CC as CollectionsController
+  participant BS as Bank Service
+  participant CS as CollectionService
+  participant MDB as MongoDB
+  participant WS as Socket
+
+  U->>F: Create collection
+  F->>CC: createCollectionWithMembers()
+  CC->>BS: POST /collections
+  BS->>CS: createCollection()
+  CS->>MDB: Create Collection + owner CollectionMember
+  BS-->>CC: Collection created
+  CC->>BS: POST /collections/:id/members
+  BS->>MDB: Create pending invitations
+
+  U->>F: Add selected transactions
+  F->>CC: addTransaction()
+  CC->>BS: POST /collections/:id/transactions
+  BS->>CS: addTransactions()
+  CS->>MDB: Create CollectionTransaction rows
+  alt Shared collection
+    CS->>MDB: Create Split document
+  else Personal collection
+    CS-->>BS: Skip split creation
+  end
+  BS->>WS: splitUpdate
+  CC->>BS: GET /collections/:id/splits
+  CC->>BS: GET /collections/:id/balances
+  CC-->>F: Render dashboard totals
+
+  U->>F: Pay or clear split
+  F->>CC: clearSplit() or clearSplitAmountComplete()
+  CC->>BS: POST /pay or /clear
+  BS->>CS: recordPayment() or clearPayment()
+  CS->>MDB: Insert SplitPayment
+  BS->>WS: splitUpdate
+  CC->>BS: Refresh balances
+</div>
+
+<h2>12.5 Email Statement Processing</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant F as Flutter
+  participant ES as Email Service
+  participant GM as Gmail API
+  participant Q as Bull Queue
+  participant MDB as MongoDB
+
+  U->>F: Connect Gmail + select bank
+  F->>ES: POST /generate-token {oauthCode}
+  ES->>GM: Exchange code
+  GM-->>ES: access_token + refresh_token
+  ES->>MDB: Store GoogleAuth
+  ES-->>F: Connected
+
+  F->>ES: POST /scrape {bankId}
+  ES->>GM: Search emails (bank sender)
+  GM-->>ES: Email list
+  loop For each email
+    ES->>GM: Fetch full email (MIME)
+    GM-->>ES: Email with attachments
+    alt Has PDF
+      ES->>Q: Enqueue PDF parse job
+      ES->>MDB: Store PendingStatement
+    else Has HTML statement
+      ES->>ES: Parse HTML transactions
+      ES->>MDB: Store ScrapeResult
+    end
+  end
+  ES-->>F: {processed, pending}
+
+  Q->>Q: Process PDF job
+  Q->>MDB: Load StatementPassword if needed
+  Q->>Q: pdfjs-dist parse PDF
+  Q->>Q: Extract transactions from text
+  Q->>MDB: Store CreditCardStatement
+  Q->>F: WebSocket notify complete
+</div>
+
+<!-- ENVIRONMENT VARIABLES -->
+<div class="page-break"></div>
+<h1 id="env">13. Environment Variables</h1>
+
+<h2>Bank Service</h2>
+<table>
+<tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>HOST</code></td><td>No</td><td>Server host (default: 127.0.0.1)</td></tr>
+<tr><td><code>PORT</code></td><td>Yes</td><td>Server port</td></tr>
+<tr><td><code>JWT_SECRET</code></td><td>Yes</td><td>JWT signing secret (main backend)</td></tr>
+<tr><td><code>SERVICE_JWT_SECRET</code></td><td>Yes</td><td>JWT secret for bank service audience verification</td></tr>
+<tr><td><code>MONGO_URI</code></td><td>Yes</td><td>MongoDB Atlas connection string</td></tr>
+<tr><td><code>FINVU_URL</code></td><td>Yes</td><td>Finvu API base URL</td></tr>
+<tr><td><code>FINVU_RID</code></td><td>Yes</td><td>Finvu registered entity ID</td></tr>
+<tr><td><code>FINVU_TS</code></td><td>Yes</td><td>Finvu timestamp/token</td></tr>
+<tr><td><code>FINVU_CHANNEL_ID</code></td><td>Yes</td><td>Finvu channel identifier</td></tr>
+<tr><td><code>REDIS_HOST</code></td><td>Yes</td><td>Redis hostname</td></tr>
+<tr><td><code>REDIS_PORT</code></td><td>Yes</td><td>Redis port (default: 6379)</td></tr>
+<tr><td><code>REDIS_PASSWORD</code></td><td>Yes (prod)</td><td>Redis auth password</td></tr>
+<tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>Yes</td><td>AWS credentials for KMS &amp; Secrets Manager</td></tr>
+<tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>Yes</td><td>AWS secret key</td></tr>
+<tr><td><code>AWS_REGION</code></td><td>Yes</td><td>AWS region (e.g., ap-south-1)</td></tr>
+<tr><td><code>KMS_KEY_ARN</code></td><td>Yes</td><td>AWS KMS CMK ARN for DEK encryption</td></tr>
+<tr><td><code>NODE_ENV</code></td><td>Yes</td><td>development / staging / production</td></tr>
+<tr><td><code>SENTRY_DSN</code></td><td>Yes (prod)</td><td>Sentry error tracking DSN</td></tr>
+</table>
+
+<h2>Email Service</h2>
+<table>
+<tr><th>Variable</th><th>Description</th></tr>
+<tr><td><code>GOOGLE_CLIENT_ID</code></td><td>Google OAuth 2.0 client ID</td></tr>
+<tr><td><code>GOOGLE_CLIENT_SECRET</code></td><td>Google OAuth 2.0 client secret</td></tr>
+<tr><td><code>GOOGLE_REDIRECT_URI</code></td><td>OAuth redirect URI</td></tr>
+<tr><td><code>MONGO_URI</code></td><td>MongoDB connection string</td></tr>
+<tr><td><code>PORT</code></td><td>Email service port</td></tr>
+<tr><td><code>SERVICE_JWT_SECRET</code></td><td>JWT verification for email service</td></tr>
+</table>
+
+<h2>Flutter App (dart-define / .env)</h2>
+<table>
+<tr><th>Variable</th><th>Description</th></tr>
+<tr><td><code>API_BASE_URL</code></td><td>Backend API base URL</td></tr>
+<tr><td><code>FINVU_ENDPOINT</code></td><td>Finvu SDK endpoint URL</td></tr>
+<tr><td><code>ONESIGNAL_APP_ID</code></td><td>OneSignal push notification app ID</td></tr>
+<tr><td><code>FIREBASE_PROJECT_ID</code></td><td>Firebase project identifier</td></tr>
+</table>
+
+<!-- SECURITY -->
+<div class="page-break"></div>
+<h1 id="security">14. Security Considerations</h1>
+<div class="two-col">
+<div class="card card-success">
+<h4>Data Encryption</h4>
+<ul>
+<li>Bank data: Field-level encryption with per-user DEKs</li>
+<li>DEKs encrypted with AWS KMS CMK (envelope encryption)</li>
+<li>Gmail OAuth tokens: stored encrypted in MongoDB</li>
+<li>PDF passwords: encrypted at rest</li>
+<li>All transit: HTTPS/TLS 1.3</li>
+</ul>
+</div>
+<div class="card card-info">
+<h4>Authentication</h4>
+<ul>
+<li>Firebase Auth for user identity (OAuth 2.0, email/password)</li>
+<li>Service-specific JWTs with audience restriction (<code>aud</code>)</li>
+<li>Short-lived tokens (configurable expiry)</li>
+<li>Refresh token rotation via Firebase</li>
+</ul>
+</div>
+</div>
+<div class="two-col">
+<div class="card card-warn">
+<h4>API Security</h4>
+<ul>
+<li>Helmet.js: CSP, HSTS, X-Frame-Options</li>
+<li>HPP: Parameter pollution prevention</li>
+<li>Rate limiting: 200 req/15min per IP (global)</li>
+<li>Joi validation on all request bodies</li>
+<li>CORS: Whitelist-only origins</li>
+</ul>
+</div>
+<div class="card">
+<h4>Compliance</h4>
+<ul>
+<li>Finvu: RBI Account Aggregator Framework compliant</li>
+<li>User consent required before any data access</li>
+<li>Consent TTL enforced (5 days max)</li>
+<li>Data minimization: only requested FI types fetched</li>
+<li>Sentry: No PII in error reports</li>
+</ul>
+</div>
+</div>
+
+<!-- ERROR HANDLING -->
+<h1 id="error-handling">15. Error Handling Strategy</h1>
+<h2>Backend Error Response Format</h2>
+<pre>// Standard error response
+{
+  "success": false,
+  "error": {
+    "code": "FINVU_CONSENT_REJECTED",
+    "message": "User rejected the consent request",
+    "statusCode": 400
+  }
+}
+
+// Validation error
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "details": [
+      { "field": "custId", "message": "custId is required" }
+    ]
+  }
+}</pre>
+
+<h2>Error Categories</h2>
+<table>
+<tr><th>HTTP Status</th><th>Category</th><th>Examples</th></tr>
+<tr><td>400</td><td>Validation / Bad Request</td><td>Invalid phone number, missing required fields, invalid consent state</td></tr>
+<tr><td>401</td><td>Unauthorized</td><td>Missing/expired JWT, invalid token signature</td></tr>
+<tr><td>403</td><td>Forbidden</td><td>Wrong JWT audience, accessing another user's data</td></tr>
+<tr><td>404</td><td>Not Found</td><td>Transaction/bank/account not found</td></tr>
+<tr><td>409</td><td>Conflict</td><td>Bank already linked, duplicate transaction</td></tr>
+<tr><td>429</td><td>Rate Limited</td><td>Too many requests from IP</td></tr>
+<tr><td>502</td><td>Bad Gateway</td><td>Finvu API unreachable, Gmail API error</td></tr>
+<tr><td>500</td><td>Internal Error</td><td>Unhandled exceptions (logged to Sentry)</td></tr>
+</table>
+
+<h2>Flutter Error Handling</h2>
+<table>
+<tr><th>Error Type</th><th>Handling</th></tr>
+<tr><td>Network error / timeout</td><td>GetX Snackbar with retry option</td></tr>
+<tr><td>401 Unauthorized</td><td>Auto-logout → navigate to login screen</td></tr>
+<tr><td>Finvu SDK error</td><td>Error screen with instructions to restart flow</td></tr>
+<tr><td>PDF parse failure</td><td>Prompt user to enter PDF password</td></tr>
+<tr><td>App crash</td><td>Firebase Crashlytics captures stack trace</td></tr>
+</table>
+
+<!-- DEPLOYMENT -->
+<div class="page-break"></div>
+<h1 id="deployment">16. Deployment Overview</h1>
+<div class="mermaid">
+graph TB
+  subgraph GCP["Cloud Infrastructure (AWS)"]
+    LB[Load Balancer]
+    subgraph SVC["Backend Services"]
+      MB[Mobile Backend]
+      BS[Bank Service]
+      ES[Email Service]
+    end
+    MDB[(MongoDB Atlas)]
+    RDS[(Redis Cloud)]
+    S3[AWS S3]
+    KMS[AWS KMS]
+    SM[Secrets Manager]
+    SN[Sentry]
+  end
+  subgraph EXT["External Services"]
+    FV[Finvu AA]
+    GM[Gmail API]
+    FB[Firebase]
+    OS[OneSignal]
+  end
+  MOB[Flutter App] --> LB
+  LB --> MB
+  LB --> BS
+  LB --> ES
+  BS --> MDB
+  ES --> MDB
+  MB --> MDB
+  BS --> RDS
+  BS --> KMS
+  BS --> SM
+  BS --> FV
+  ES --> GM
+  MB --> FB
+  MB --> OS
+  BS --> SN
+</div>
+
+<h2>Environment Strategy</h2>
+<table>
+<tr><th>Environment</th><th>Purpose</th><th>Finvu Mode</th><th>Data</th></tr>
+<tr><td>Development</td><td>Local development</td><td>Mock / Sandbox</td><td>Seeded test data</td></tr>
+<tr><td>Staging</td><td>QA &amp; integration testing</td><td>Polling (no webhooks)</td><td>Anonymized production-like</td></tr>
+<tr><td>Production</td><td>Live users</td><td>Webhook callbacks</td><td>Real user data (encrypted)</td></tr>
+</table>
+
+<h2>Key Operational Notes</h2>
+<div class="card card-warn">
+<ul>
+<li><strong>Staging vs Production:</strong> In non-production, transaction data fetching uses Bull job polling instead of Finvu webhooks. Webhook endpoints must be registered with Finvu for production.</li>
+<li><strong>Redis dependency:</strong> Bank Service requires Redis to be running. Without Redis, consent sessions and pub-sub events will fail.</li>
+<li><strong>AWS KMS:</strong> All bank data decryption requires AWS KMS availability. DEKs cannot be decrypted locally without KMS access.</li>
+<li><strong>MongoDB TTL indexes:</strong> ConsentHandleId (5 days) and FinvuSession (24h) are auto-cleaned by MongoDB TTL. Ensure TTL is enabled on Atlas cluster.</li>
+</ul>
+</div>
+
+<hr class="section-divider">
+<p style="text-align:center;color:var(--muted);padding:40px 0">StakePlot Technical Documentation v1.0 — Generated June 12, 2026<br>For internal use: Engineers · Product · QA · Stakeholders</p>
+
+</div><!-- /content -->
+</body>
+</html>
